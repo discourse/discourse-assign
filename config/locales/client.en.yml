@@ -4,3 +4,7 @@ en:
       assign:
         title: "Assign"
         help: "Assign Topic to User"
+      assign_modal:
+        title: "Assign Topic"
+        description: "Enter the username of the person you'd like to assign this topic"
+        assign: "Assign"
