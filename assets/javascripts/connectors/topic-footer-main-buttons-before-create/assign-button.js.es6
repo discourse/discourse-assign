@@ -7,7 +7,7 @@ export default {
 
   actions: {
     assign(){
-      showModal("assign-user");
+      showModal("assign-user", { model: this.topic });
     }
   }
 };

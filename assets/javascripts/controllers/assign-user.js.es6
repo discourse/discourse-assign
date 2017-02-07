@@ -13,7 +13,10 @@ export default Ember.Controller.extend({
     assign(){
       return ajax('/assign/assign',{
         type: 'PUT',
-        data: { username: this.get('username'), topic_id: 1 }
+        data: { username: this.get('username'), topic_id: this.get('model.id') }
+      }).then((user)=>{
+        console.log(user);
+        this.send('closeModal');
       }).catch(popupAjaxError);
     }
   }
