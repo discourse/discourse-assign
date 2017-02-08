@@ -37,10 +37,22 @@ SQL
       topic_id = params.require(:topic_id)
       username = params.require(:username)
 
-      assigned = AssignedUser.where(topic_id: topic_id).first_or_initialize
-      assigned.assigned_to_id = User.where(username_lower: username.downcase).pluck(:id).first
+      topic = Topic.find(topic_id.to_i)
+      assign_to = User.find_by(username_lower: username.downcase)
+
+      raise Discourse::NotFound unless assign_to
+
+      assigned = AssignedUser.where(topic_id: topic.id).first_or_initialize
+      assigned.assigned_to_id = assign_to.id
       assigned.assigned_by_id = current_user.id
       assigned.save!
+
+      topic.add_moderator_post(current_user,
+                               I18n.t('discourse_assign.assigned_to',
+                                       username: assign_to.username),
+                               { bump: false,
+                                 post_type: Post.types[:small_action],
+                                 action_code: "assigned"})
 
       render json: {status: "ok"}
     end

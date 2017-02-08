@@ -1,6 +1,8 @@
 en:
   js:
-    discourse_assigns:
+    action_codes:
+      assigned: "assigned"
+    discourse_assign:
       assign:
         title: "Assign"
         help: "Assign Topic to User"

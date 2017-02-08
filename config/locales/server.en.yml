@@ -1,0 +1,3 @@
+en:
+  discourse_assign:
+    assigned_to: "Topic assigned to @%{username}"
