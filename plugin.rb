@@ -66,6 +66,38 @@ after_initialize do
       render json: success_json
     end
 
+    require_dependency 'topic_view_serializer'
+    class ::TopicViewSerializer
+      attributes :assigned_to_user
+
+      def assigned_to_user
+        if user = User.find_by(id: assigned_to_user_id)
+
+          assigned_at = TopicCustomField.where(
+            topic_id: object.topic.id,
+            name: "assigned_to_id"
+          ).pluck(:created_at).first
+
+          {
+            username: user.username,
+            name: user.name,
+            avatar_template: user.avatar_template,
+            assigned_at: assigned_at
+          }
+        end
+      end
+
+      def include_assigned_to_user?
+        assigned_to_user_id
+      end
+
+      def assigned_to_user_id
+        id = object.topic.custom_fields["assigned_to_id"]
+        # a bit messy but race conditions can give us an array here, avoid
+        id && id.to_i rescue nil
+      end
+    end
+
     DiscourseAssign::Engine.routes.draw do
       put "/assign" => "assign#assign"
     end
