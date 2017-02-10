@@ -4,24 +4,6 @@
 # authors: Sam Saffron
 
 after_initialize do
-  sql =<<SQL
-  CREATE TABLE IF NOT EXISTS assigned_users(
-    id SERIAL NOT NULL PRIMARY KEY,
-    topic_id integer NOT NULL,
-    assigned_to_id integer NOT NULL,
-    assigned_by_id integer,
-    created_at timestamp without time zone
-  )
-SQL
-
-  User.exec_sql(sql)
-
-
-  class ::AssignedUser < ActiveRecord::Base
-    belongs_to :topic
-    belongs_to :assigned_to, class_name: 'User'
-    belongs_to :assigned_by, class_name: 'User'
-  end
 
   module ::DiscourseAssign
     class Engine < ::Rails::Engine
@@ -33,6 +15,10 @@ SQL
   class ::DiscourseAssign::AssignController < Admin::AdminController
     before_filter :ensure_logged_in
 
+    def unassign
+      _topic_id = params.require(:topic_id)
+    end
+
     def assign
       topic_id = params.require(:topic_id)
       username = params.require(:username)
@@ -42,19 +28,42 @@ SQL
 
       raise Discourse::NotFound unless assign_to
 
-      assigned = AssignedUser.where(topic_id: topic.id).first_or_initialize
-      assigned.assigned_to_id = assign_to.id
-      assigned.assigned_by_id = current_user.id
-      assigned.save!
+      topic.custom_fields["assigned_to_id"] = assign_to.id
+      topic.custom_fields["assigned_by_id"] = current_user.id
+      topic.save!
 
-      topic.add_moderator_post(current_user,
-                               I18n.t('discourse_assign.assigned_to',
-                                       username: assign_to.username),
-                               { bump: false,
-                                 post_type: Post.types[:small_action],
-                                 action_code: "assigned"})
+      #Scheduler::Defer.later "add moderator post" do
 
-      render json: {status: "ok"}
+        UserAction.log_action!(action_type: UserAction::ASSIGNED,
+                              user_id: assign_to.id,
+                              acting_user_id: current_user.id,
+                              target_post_id: topic.posts.find_by(post_number: 1).id,
+                              target_topic_id: topic.id)
+
+        topic.add_moderator_post(current_user,
+                                 I18n.t('discourse_assign.assigned_to',
+                                         username: assign_to.username),
+                                 { bump: false,
+                                   post_type: Post.types[:small_action],
+                                   action_code: "assigned"})
+
+        unless false && current_user.id == assign_to.id
+
+          Notification.create!(notification_type: Notification.types[:custom],
+                             user_id: assign_to.id,
+                             topic_id: topic.id,
+                             post_number: 1,
+                             data: {
+                               message: 'discourse_assign.assign_notification',
+                               display_username: current_user.username,
+                               topic_title: topic.title
+                             }.to_json
+                            )
+        end
+
+      #end
+
+      render json: success_json
     end
 
     DiscourseAssign::Engine.routes.draw do
