@@ -1,0 +1,7 @@
+{{#unless context.topic.tags}}
+{{#if context.topic.owner}}
+<div class='discourse-tags'>
+  <a class='assigned-to discourse-tag simple' href="{{context.topic.owner.path}}">@{{context.topic.owner.username}}</a>
+</div>
+{{/if}}
+{{/unless}}

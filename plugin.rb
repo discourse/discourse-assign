@@ -66,6 +66,46 @@ after_initialize do
       render json: success_json
     end
 
+    class ::Topic
+      def owner
+        @owner ||
+          if user_id = custom_fields["assigned_to_id"]
+            @owner = User.find_by(id: user_id)
+          end
+      end
+
+      def preload_owner(owner)
+        @owner = owner
+      end
+    end
+
+    TopicList.preloaded_custom_fields << "assigned_to_id"
+
+    TopicList.on_preload do |topics|
+      if topics.length > 0
+        users = User.where("id in (
+              SELECT value::int
+              FROM topic_custom_fields
+              WHERE name = 'assigned_to_id' AND topic_id IN (?)
+        )", topics.map(&:id))
+        .select(:id, :email, :username, :uploaded_avatar_id)
+
+        map = {}
+        users.each{|u| map[u.id] = u}
+
+        topics.each do |t|
+          if id = t.custom_fields['assigned_to_id']
+            t.preload_owner(map[id.to_i])
+          end
+        end
+      end
+    end
+
+    require_dependency 'listable_topic_serializer'
+    class ::ListableTopicSerializer
+      has_one :owner, serializer: BasicUserSerializer, embed: :objects
+    end
+
     require_dependency 'topic_view_serializer'
     class ::TopicViewSerializer
       attributes :assigned_to_user
