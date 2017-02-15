@@ -15,6 +15,8 @@ function initialize(api, container) {
 
   api.addPostSmallActionIcon('assigned','user-plus');
 
+  api.addDiscoveryQueryParam('assigned', {replace: true, refreshModel: true});
+
   api.decorateWidget('post-contents:after-cooked', dec => {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
@@ -35,7 +37,7 @@ function initialize(api, container) {
 export default {
   name: 'extend-for-assign',
   initialize(container) {
-    withPluginApi('0.8', api => {
+    withPluginApi('0.8.1', api => {
       initialize(api, container);
     });
   }
