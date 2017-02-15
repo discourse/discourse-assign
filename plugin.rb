@@ -106,6 +106,22 @@ after_initialize do
       end
     end
 
+    require_dependency 'topic_query'
+    TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
+      if topic_query.guardian.is_staff? || SiteSetting.assigns_public
+        username = topic_query.options[:assigned]
+        if username.present? && (user_id = User.where(username_lower: username.downcase).pluck(:id).first)
+          results = results.joins("JOIN topic_custom_fields tc_assign ON
+                                    topics.id = tc_assign.topic_id AND
+                                    tc_assign.name = 'assigned_to_id' AND
+                                    tc_assign.value = '#{user_id.to_i.to_s}'
+                                  ")
+        end
+      end
+
+      results
+    end
+
     require_dependency 'listable_topic_serializer'
     class ::ListableTopicSerializer
       has_one :assigned_to_user, serializer: BasicUserSerializer, embed: :objects
