@@ -1,3 +1,6 @@
 en:
+  site_settings:
+    assigns_public: "Allow general public to see topic assignments"
+    assigns_user_url_path: "Path to link all user links for assigned (use: {username} to subtitue username)"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"

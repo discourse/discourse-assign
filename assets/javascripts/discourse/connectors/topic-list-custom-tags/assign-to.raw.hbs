@@ -1,3 +1,3 @@
-{{#if context.topic.owner}}
-  <a class='assigned-to discourse-tag simple' href="{{context.topic.owner.path}}">@{{context.topic.owner.username}}</a>
+{{#if context.topic.assigned_to_user}}
+  <a class='assigned-to discourse-tag simple' href="{{context.topic.assignedToUserPath}}">@{{context.topic.assigned_to_user.username}}</a>
 {{/if}}

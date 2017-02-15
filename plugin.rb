@@ -40,11 +40,13 @@ after_initialize do
                               target_post_id: topic.posts.find_by(post_number: 1).id,
                               target_topic_id: topic.id)
 
+        post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+
         topic.add_moderator_post(current_user,
                                  I18n.t('discourse_assign.assigned_to',
                                          username: assign_to.username),
                                  { bump: false,
-                                   post_type: Post.types[:small_action],
+                                   post_type: post_type,
                                    action_code: "assigned"})
 
         unless false && current_user.id == assign_to.id
@@ -67,22 +69,25 @@ after_initialize do
     end
 
     class ::Topic
-      def owner
-        @owner ||
+      def assigned_to_user
+        @assigned_to_user ||
           if user_id = custom_fields["assigned_to_id"]
-            @owner = User.find_by(id: user_id)
+            @assigned_to_user = User.find_by(id: user_id)
           end
       end
 
-      def preload_owner(owner)
-        @owner = owner
+      def preload_assigned_to_user(assigned_to_user)
+        @assigned_to_user = assigned_to_user
       end
     end
 
     TopicList.preloaded_custom_fields << "assigned_to_id"
 
-    TopicList.on_preload do |topics|
-      if topics.length > 0
+    TopicList.on_preload do |topics, topic_list|
+      is_staff = topic_list.current_user && topic_list.current_user.staff?
+      allowed_access = SiteSetting.assigns_public || is_staff
+
+      if allowed_access && topics.length > 0
         users = User.where("id in (
               SELECT value::int
               FROM topic_custom_fields
@@ -95,7 +100,7 @@ after_initialize do
 
         topics.each do |t|
           if id = t.custom_fields['assigned_to_id']
-            t.preload_owner(map[id.to_i])
+            t.preload_assigned_to_user(map[id.to_i])
           end
         end
       end
@@ -103,7 +108,11 @@ after_initialize do
 
     require_dependency 'listable_topic_serializer'
     class ::ListableTopicSerializer
-      has_one :owner, serializer: BasicUserSerializer, embed: :objects
+      has_one :assigned_to_user, serializer: BasicUserSerializer, embed: :objects
+
+      def include_assigned_to_user?
+        (SiteSetting.assigns_public || scope.is_staff?) && object.assigned_to_user
+      end
     end
 
     require_dependency 'topic_view_serializer'
@@ -128,7 +137,9 @@ after_initialize do
       end
 
       def include_assigned_to_user?
-        assigned_to_user_id
+        if SiteSetting.assigns_public ||  scope.is_staff?
+          assigned_to_user_id
+        end
       end
 
       def assigned_to_user_id

@@ -1,0 +1,5 @@
+plugins:
+  assigns_public: false
+  assigns_user_url_path:
+    client: true
+    default: "/latest?assigned={username}"
