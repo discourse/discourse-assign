@@ -1,4 +1,5 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
+import { h } from 'virtual-dom';
 
 // should this be in API ?
 import Topic from 'discourse/models/topic';
@@ -10,12 +11,27 @@ function initialize(api, container) {
   Topic.reopen({
     assignedToUserPath: function(){
       return siteSettings.assigns_user_url_path.replace("{username}", this.get("assigned_to_user.username"));
-    }.property('owner')
+    }.property('assigned_to_user')
   });
 
   api.addPostSmallActionIcon('assigned','user-plus');
 
   api.addDiscoveryQueryParam('assigned', {replace: true, refreshModel: true});
+
+  api.decorateWidget('header-topic-info:after-tags', dec => {
+
+    const topic = dec.attrs.topic;
+    const assignedTo = topic.get('assigned_to_user.username');
+    if (assignedTo) {
+      const assignedPath = topic.get('assignedToUserPath');
+      return h('div.list-tags.assigned',
+          h('a.assigned-to.discourse-tag.simple', {href: assignedPath}, [
+            h('i.fa.fa-user-plus'),
+            assignedTo
+          ])
+      );
+    }
+  });
 
   api.decorateWidget('post-contents:after-cooked', dec => {
     if (dec.attrs.post_number === 1) {

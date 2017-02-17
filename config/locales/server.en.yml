@@ -4,3 +4,4 @@ en:
     assigns_user_url_path: "Path to link all user links for assigned (use: {username} to subtitue username)"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
+    unassigned: "Topic was unassigned"

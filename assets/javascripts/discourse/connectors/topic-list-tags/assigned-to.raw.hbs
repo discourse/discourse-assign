@@ -2,7 +2,7 @@
 
 {{#if context.topic.assigned_to_user}}
 <div class='discourse-tags'>
-  <a class='assigned-to discourse-tag simple' href="{{context.topic.assignedToUserPath}}">@{{context.topic.assigned_to_user.username}}</a>
+  <a class='assigned-to discourse-tag simple' href="{{context.topic.assignedToUserPath}}"><i class='fa fa-user-plus'></i>{{context.topic.assigned_to_user.username}}</a>
 </div>
 {{/if}}
 {{/unless}}

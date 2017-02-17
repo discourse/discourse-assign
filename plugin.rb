@@ -3,6 +3,8 @@
 # version: 0.1
 # authors: Sam Saffron
 
+register_asset 'stylesheets/assigns.scss'
+
 after_initialize do
 
   module ::DiscourseAssign
@@ -16,7 +18,42 @@ after_initialize do
     before_filter :ensure_logged_in
 
     def unassign
-      _topic_id = params.require(:topic_id)
+      topic_id = params.require(:topic_id)
+      topic = Topic.find(topic_id.to_i)
+      if assigned_to_id = topic.custom_fields["assigned_to_id"]
+        topic.custom_fields["assigned_to_id"] = nil
+        topic.custom_fields["assigned_by_id"] = nil
+        topic.save!
+
+        post = topic.posts.where(post_number: 1).first
+        post.publish_change_to_clients!(:revised, { reload_topic: true })
+
+        assigned_user = User.find_by(id: assigned_to_id)
+
+        UserAction.where(
+          action_type: UserAction::ASSIGNED,
+          target_post_id: post.id
+        ).destroy_all
+
+        # yank notification
+        Notification.where(
+           notification_type: Notification.types[:custom],
+           user_id: assigned_user.try(:id),
+           topic_id: topic.id,
+           post_number: 1
+        ).where("data like '%discourse_assign.assign_notification%'")
+         .destroy_all
+
+
+        post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+        topic.add_moderator_post(current_user,
+                                 I18n.t('discourse_assign.unassigned'),
+                                 { bump: false,
+                                   post_type: post_type,
+                                   action_code: "assigned"})
+      end
+
+      render json: success_json
     end
 
     def assign
@@ -28,11 +65,14 @@ after_initialize do
 
       raise Discourse::NotFound unless assign_to
 
-      topic.custom_fields["assigned_to_id"] = assign_to.id
-      topic.custom_fields["assigned_by_id"] = current_user.id
-      topic.save!
+      #Scheduler::Defer.later "assign topic" do
 
-      #Scheduler::Defer.later "add moderator post" do
+        topic.custom_fields["assigned_to_id"] = assign_to.id
+        topic.custom_fields["assigned_by_id"] = current_user.id
+        topic.save!
+
+        topic.posts.first.publish_change_to_clients!(:revised, { reload_topic: true })
+
 
         UserAction.log_action!(action_type: UserAction::ASSIGNED,
                               user_id: assign_to.id,
@@ -49,7 +89,7 @@ after_initialize do
                                    post_type: post_type,
                                    action_code: "assigned"})
 
-        unless false && current_user.id == assign_to.id
+        unless current_user.id == assign_to.id
 
           Notification.create!(notification_type: Notification.types[:custom],
                              user_id: assign_to.id,
@@ -63,7 +103,6 @@ after_initialize do
                             )
         end
 
-      #end
 
       render json: success_json
     end
@@ -167,6 +206,7 @@ after_initialize do
 
     DiscourseAssign::Engine.routes.draw do
       put "/assign" => "assign#assign"
+      put "/unassign" => "assign#unassign"
     end
 
     Discourse::Application.routes.append do

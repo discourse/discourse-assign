@@ -7,7 +7,12 @@ export default {
 
   actions: {
     assign(){
-      showModal("assign-user", { model: this.topic });
+      showModal("assign-user", {
+        model: {
+          topic: this.topic,
+          username: this.topic.get('assigned_to_user.username')
+        }
+      });
     }
   }
 };
