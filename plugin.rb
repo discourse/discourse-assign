@@ -169,8 +169,8 @@ after_initialize do
       results
     end
 
-    require_dependency 'listable_topic_serializer'
-    class ::ListableTopicSerializer
+    require_dependency 'topic_list_item_serializer'
+    class ::TopicListItemSerializer
       has_one :assigned_to_user, serializer: BasicUserSerializer, embed: :objects
 
       def include_assigned_to_user?
