@@ -149,11 +149,19 @@ after_initialize do
     TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
       if topic_query.guardian.is_staff? || SiteSetting.assigns_public
         username = topic_query.options[:assigned]
-        if username.present? && (user_id = User.where(username_lower: username.downcase).pluck(:id).first)
+        user_id = User.where(username_lower: username.downcase).pluck(:id).first if username.present? && username != "*"
+        if user_id || username == "*"
+
+          if username == "*"
+            filter = "AND tc_assign.value IS NOT NULL"
+          else
+            filter = "AND tc_assign.value = '#{user_id.to_i.to_s}'"
+          end
+
           results = results.joins("JOIN topic_custom_fields tc_assign ON
                                     topics.id = tc_assign.topic_id AND
-                                    tc_assign.name = 'assigned_to_id' AND
-                                    tc_assign.value = '#{user_id.to_i.to_s}'
+                                    tc_assign.name = 'assigned_to_id'
+                                    #{filter}
                                   ")
         end
       end
