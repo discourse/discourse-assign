@@ -16,10 +16,39 @@ after_initialize do
 
   class ::TopicAssigner
 
+    def self.backfill_auto_assign
+      staff_mention = User.where('moderator OR admin')
+                          .pluck('username')
+                          .map{|name| "p.cooked ILIKE '%mention%@#{name}%'"}
+                          .join(' OR ')
+
+      sql = <<SQL
+      SELECT p.topic_id, MAX(post_number) post_number
+      FROM posts p
+      LEFT JOIN topic_custom_fields tc ON tc.name = 'assigned_to_id' AND tc.topic_id = p.topic_id
+      WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin) AND
+        ( #{staff_mention} ) AND tc.value IS NULL
+      GROUP BY p.topic_id
+SQL
+
+      assigned = 0
+      puts
+
+      ActiveRecord::Base.connection.raw_connection.exec(sql).to_a.each do |row|
+        post = Post.find_by(post_number: row["post_number"].to_i,
+                            topic_id: row["topic_id"].to_i)
+        assigned += 1 if post && auto_assign(post)
+        putc "."
+      end
+
+      puts
+      puts "#{assigned} topics where automatically assigned to staff members"
+    end
+
     def self.auto_assign(post)
       return unless SiteSetting.assigns_by_staff_mention
 
-      if post.user && post.user.staff? && post.topic.custom_fields["assigned_to_id"].nil?
+      if post.user && post.topic && post.user.staff? && post.topic.custom_fields["assigned_to_id"].nil?
 
         if is_last_staff_post?(post) && user = mentioned_staff(post)
           assigner = new(post.topic, post.user)
@@ -94,6 +123,8 @@ after_initialize do
                             )
         end
       end
+
+      true
     end
 
     def unassign()
