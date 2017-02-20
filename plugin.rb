@@ -45,12 +45,12 @@ SQL
       puts "#{assigned} topics where automatically assigned to staff members"
     end
 
-    def self.auto_assign(post)
+    def self.auto_assign(post, force: false)
       return unless SiteSetting.assigns_by_staff_mention
 
-      if post.user && post.topic && post.user.staff? && post.topic.custom_fields["assigned_to_id"].nil?
-
-        if is_last_staff_post?(post) && user = mentioned_staff(post)
+      if post.user && post.topic && post.user.staff?
+        can_assign = force || post.topic.custom_fields["assigned_to_id"].nil?
+        if can_assign && is_last_staff_post?(post) && user = mentioned_staff(post)
           assigner = new(post.topic, post.user)
           assigner.assign(user, silent: true)
         end
@@ -308,11 +308,11 @@ SQL
 
 
   on(:post_created) do |post|
-    ::TopicAssigner.auto_assign(post)
+    ::TopicAssigner.auto_assign(post, force: true)
   end
 
   on(:post_edited) do |post, topic_changed|
-    ::TopicAssigner.auto_assign(post)
+    ::TopicAssigner.auto_assign(post, force: true)
   end
 
 end
