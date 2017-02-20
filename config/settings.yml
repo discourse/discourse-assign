@@ -1,4 +1,5 @@
 plugins:
+  assigns_by_staff_mention: false
   assigns_public: false
   assigns_user_url_path:
     client: true

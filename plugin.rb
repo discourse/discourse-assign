@@ -14,6 +14,92 @@ after_initialize do
     end
   end
 
+  class ::TopicAssigner
+
+    def self.auto_assign(post)
+      return unless SiteSetting.assigns_by_staff_mention
+
+      if post.user && post.user.staff? && post.topic.custom_fields["assigned_to_id"].nil?
+
+        if is_last_staff_post?(post) && user = mentioned_staff(post)
+          assigner = new(post.topic, post.user)
+          assigner.assign(user, silent: true)
+        end
+      end
+    end
+
+    def self.is_last_staff_post?(post)
+      Post.exec_sql("SELECT 1 FROM posts p
+                     JOIN users u ON u.id = p.user_id AND (moderator OR admin)
+                     WHERE p.deleted_at IS NULL AND p.topic_id = :topic_id
+                     having max(post_number) = :post_number
+                    ",
+                     topic_id: post.topic_id,
+                     post_number: post.post_number
+                   ).to_a.length == 1
+    end
+
+    def self.mentioned_staff(post)
+      mentions = post.raw_mentions
+      if mentions.present?
+        User.where('moderator OR admin')
+            .where('username_lower IN (?)', mentions.map(&:downcase))
+            .first
+      end
+    end
+
+
+    def initialize(topic, user)
+      @assigned_by = user
+      @topic = topic
+    end
+
+    def assign(assign_to, silent: false)
+      @topic.custom_fields["assigned_to_id"] = assign_to.id
+      @topic.custom_fields["assigned_by_id"] = @assigned_by.id
+      @topic.save!
+
+      first_post = @topic.posts.find_by(post_number: 1)
+      first_post.publish_change_to_clients!(:revised,
+            { reload_topic: true })
+
+
+      UserAction.log_action!(action_type: UserAction::ASSIGNED,
+                            user_id: assign_to.id,
+                            acting_user_id: @assigned_by.id,
+                            target_post_id: first_post.id,
+                            target_topic_id: @topic.id)
+
+      post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+
+      unless silent
+        @topic.add_moderator_post(@assigned_by,
+                               I18n.t('discourse_assign.assigned_to',
+                                       username: assign_to.username),
+                               { bump: false,
+                                 post_type: post_type,
+                                 action_code: "assigned"})
+
+        unless @assigned_by.id == assign_to.id
+
+          Notification.create!(notification_type: Notification.types[:custom],
+                             user_id: assign_to.id,
+                             topic_id: @topic.id,
+                             post_number: 1,
+                             data: {
+                               message: 'discourse_assign.assign_notification',
+                               display_username: @assigned_by.username,
+                               topic_title: @topic.title
+                             }.to_json
+                            )
+        end
+      end
+    end
+
+    def unassign()
+    end
+  end
+
   class ::DiscourseAssign::AssignController < Admin::AdminController
     before_filter :ensure_logged_in
 
@@ -65,44 +151,11 @@ after_initialize do
 
       raise Discourse::NotFound unless assign_to
 
+      assigner = TopicAssigner.new(topic, current_user)
+
+      # perhaps?
       #Scheduler::Defer.later "assign topic" do
-
-        topic.custom_fields["assigned_to_id"] = assign_to.id
-        topic.custom_fields["assigned_by_id"] = current_user.id
-        topic.save!
-
-        topic.posts.first.publish_change_to_clients!(:revised, { reload_topic: true })
-
-
-        UserAction.log_action!(action_type: UserAction::ASSIGNED,
-                              user_id: assign_to.id,
-                              acting_user_id: current_user.id,
-                              target_post_id: topic.posts.find_by(post_number: 1).id,
-                              target_topic_id: topic.id)
-
-        post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
-
-        topic.add_moderator_post(current_user,
-                                 I18n.t('discourse_assign.assigned_to',
-                                         username: assign_to.username),
-                                 { bump: false,
-                                   post_type: post_type,
-                                   action_code: "assigned"})
-
-        unless current_user.id == assign_to.id
-
-          Notification.create!(notification_type: Notification.types[:custom],
-                             user_id: assign_to.id,
-                             topic_id: topic.id,
-                             post_number: 1,
-                             data: {
-                               message: 'discourse_assign.assign_notification',
-                               display_username: current_user.username,
-                               topic_title: topic.title
-                             }.to_json
-                            )
-        end
-
+      assigner.assign(assign_to)
 
       render json: success_json
     end
@@ -220,6 +273,15 @@ after_initialize do
     Discourse::Application.routes.append do
       mount ::DiscourseAssign::Engine, at: "/assign"
     end
-
   end
+
+
+  on(:post_created) do |post|
+    ::TopicAssigner.auto_assign(post)
+  end
+
+  on(:post_edited) do |post, topic_changed|
+    ::TopicAssigner.auto_assign(post)
+  end
+
 end
