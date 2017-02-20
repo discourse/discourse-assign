@@ -127,22 +127,13 @@ SQL
       true
     end
 
-    def unassign()
-    end
-  end
-
-  class ::DiscourseAssign::AssignController < Admin::AdminController
-    before_filter :ensure_logged_in
-
     def unassign
-      topic_id = params.require(:topic_id)
-      topic = Topic.find(topic_id.to_i)
-      if assigned_to_id = topic.custom_fields["assigned_to_id"]
-        topic.custom_fields["assigned_to_id"] = nil
-        topic.custom_fields["assigned_by_id"] = nil
-        topic.save!
+      if assigned_to_id = @topic.custom_fields["assigned_to_id"]
+        @topic.custom_fields["assigned_to_id"] = nil
+        @topic.custom_fields["assigned_by_id"] = nil
+        @topic.save!
 
-        post = topic.posts.where(post_number: 1).first
+        post = @topic.posts.where(post_number: 1).first
         post.publish_change_to_clients!(:revised, { reload_topic: true })
 
         assigned_user = User.find_by(id: assigned_to_id)
@@ -156,19 +147,31 @@ SQL
         Notification.where(
            notification_type: Notification.types[:custom],
            user_id: assigned_user.try(:id),
-           topic_id: topic.id,
+           topic_id: @topic.id,
            post_number: 1
         ).where("data like '%discourse_assign.assign_notification%'")
          .destroy_all
 
-
-        post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
-        topic.add_moderator_post(current_user,
+        if SiteSetting.unassign_creates_tracking_post
+          post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+          @topic.add_moderator_post(@assigned_by,
                                  I18n.t('discourse_assign.unassigned'),
                                  { bump: false,
                                    post_type: post_type,
                                    action_code: "assigned"})
+        end
       end
+    end
+  end
+
+  class ::DiscourseAssign::AssignController < Admin::AdminController
+    before_filter :ensure_logged_in
+
+    def unassign
+      topic_id = params.require(:topic_id)
+      topic = Topic.find(topic_id.to_i)
+      assigner = TopicAssigner.new(topic, current_user)
+      assigner.unassign
 
       render json: success_json
     end

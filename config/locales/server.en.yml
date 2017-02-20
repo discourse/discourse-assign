@@ -3,6 +3,7 @@ en:
     assigns_public: "Allow general public to see topic assignments"
     assigns_user_url_path: "Path to link all user links for assigned (use: {username} to subtitue username)"
     assigns_by_staff_mention: "If a staff member mentions another staff member, topic is automatically assigned"
+    unassign_creates_tracking_post: "If you unassign a topic a whisper or small action will be created to track change"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"

@@ -1,5 +1,6 @@
 plugins:
   assigns_by_staff_mention: false
+  unassign_creates_tracking_post: true
   assigns_public: false
   assigns_user_url_path:
     client: true
