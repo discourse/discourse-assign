@@ -45,14 +45,36 @@ SQL
       puts "#{assigned} topics where automatically assigned to staff members"
     end
 
+    def self.assign_self_passes?(post)
+      return false unless SiteSetting.assign_self_regex.present?
+      regex = Regexp.new(SiteSetting.assign_self_regex) rescue nil
+
+      !!(regex && regex.match(post.raw))
+    end
+
+    def self.assign_other_passes?(post)
+      return true unless SiteSetting.assign_other_regex.present?
+      regex = Regexp.new(SiteSetting.assign_other_regex) rescue nil
+
+      !!(regex && regex.match(post.raw))
+    end
+
     def self.auto_assign(post, force: false)
       return unless SiteSetting.assigns_by_staff_mention
 
       if post.user && post.topic && post.user.staff?
         can_assign = force || post.topic.custom_fields["assigned_to_id"].nil?
-        if can_assign && is_last_staff_post?(post) && user = mentioned_staff(post)
+
+        assign_other = assign_other_passes?(post) && mentioned_staff(post)
+        assign_self = assign_self_passes?(post) && post.user
+
+        if can_assign && is_last_staff_post?(post)
           assigner = new(post.topic, post.user)
-          assigner.assign(user, silent: true)
+          if assign_other
+            assigner.assign(assign_other, silent: true)
+          elsif assign_self
+            assigner.assign(assign_self, silent: true)
+          end
         end
       end
     end

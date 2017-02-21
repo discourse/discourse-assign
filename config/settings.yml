@@ -2,6 +2,8 @@ plugins:
   assigns_by_staff_mention: false
   unassign_creates_tracking_post: true
   assigns_public: false
+  assign_self_regex: ""
+  assign_other_regex: ""
   assigns_user_url_path:
     client: true
     default: "/latest?assigned={username}"
