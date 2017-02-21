@@ -292,7 +292,7 @@ SQL
       attributes :assigned_to_user
 
       def assigned_to_user
-        if user = User.find_by(id: assigned_to_user_id)
+        if assigned_to_user_id && user = User.find_by(id: assigned_to_user_id)
 
           assigned_at = TopicCustomField.where(
             topic_id: object.topic.id,
@@ -310,7 +310,8 @@ SQL
 
       def include_assigned_to_user?
         if SiteSetting.assigns_public ||  scope.is_staff?
-          assigned_to_user_id
+          # subtle but need to catch cases where stuff is not assigned
+          object.topic.custom_fields.keys.include?("assigned_to_id")
         end
       end
 
