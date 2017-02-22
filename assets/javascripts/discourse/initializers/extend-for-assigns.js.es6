@@ -1,12 +1,52 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
 import { h } from 'virtual-dom';
+import { observes } from 'ember-addons/ember-computed-decorators';
+
 
 // should this be in API ?
 import Topic from 'discourse/models/topic';
+import TopicFooterDropdown from 'discourse/components/topic-footer-mobile-dropdown';
+import showModal from 'discourse/lib/show-modal';
 
 function initialize(api, container) {
 
   const siteSettings = container.lookup('site-settings:main');
+
+  // doing this mess while we come up with a better API
+  TopicFooterDropdown.reopen({
+    _createContent() {
+      this._super();
+
+      if (!this.get('currentUser.staff')) {
+        return;
+      }
+      const content = this.get('content');
+      content.push({ id: 'assign', icon: 'user-plus', name: I18n.t('discourse_assign.assign.title') });
+    },
+
+    @observes('value')
+    _gotAssigned() {
+
+      if (!this.get('currentUser.staff')) {
+        return;
+      }
+
+      const value = this.get('value');
+      const topic = this.get('topic');
+
+      if (value === 'assign') {
+
+        showModal("assign-user", {
+          model: {
+            topic: topic,
+            username: topic.get('assigned_to_user.username')
+          }
+        });
+        this._createContent();
+        this.set('value', null);
+      }
+    }
+  });
 
   Topic.reopen({
     assignedToUserPath: function(){

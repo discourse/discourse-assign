@@ -2,7 +2,8 @@ import showModal from 'discourse/lib/show-modal';
 
 export default {
   shouldRender(args, component) {
-    return component.currentUser && component.currentUser.get('staff');
+    const needsButton = component.currentUser && component.currentUser.get('staff');
+    return needsButton && (!component.get('site.mobileView') || args.topic.get('isPrivateMessage'));
   },
 
   actions: {
