@@ -1,0 +1,5 @@
+{{#if currentUser.staff}}
+{{#link-to 'userActivity.assigned'}}
+  <i class="glyph fa fa-user-plus"></i>{{i18n 'discourse_assign.assigned'}}
+{{/link-to}}
+{{/if}}
