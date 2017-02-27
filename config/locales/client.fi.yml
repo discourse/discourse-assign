@@ -1,0 +1,15 @@
+fi:
+  js:
+    action_codes:
+      assigned: "osoitettu"
+    discourse_assign:
+      assigned: "Osoitettu"
+      assign_html: "<p class='assigned-to'><i class='fa-user-plus fa'></i> Osoitettu käyttäjälle {{userLink}}</p>"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      assign:
+        title: "Osoita"
+        help: "Osoita ketju käyttäjälle"
+      assign_modal:
+        title: "Osoita ketju"
+        description: "Syötä sen käyttäjän nimi, jolle haluat tämän ketjun osoittaa"
+        assign: "Osoita"
