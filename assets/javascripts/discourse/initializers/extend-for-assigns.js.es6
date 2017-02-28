@@ -1,5 +1,4 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
-import { h } from 'virtual-dom';
 import { observes } from 'ember-addons/ember-computed-decorators';
 
 
@@ -58,19 +57,13 @@ function initialize(api, container) {
 
   api.addDiscoveryQueryParam('assigned', {replace: true, refreshModel: true});
 
-  api.decorateWidget('header-topic-info:after-tags', dec => {
-
-    const topic = dec.attrs.topic;
+  api.addTagsHtmlCallback((topic) => {
     const assignedTo = topic.get('assigned_to_user.username');
     if (assignedTo) {
       const assignedPath = topic.get('assignedToUserPath');
-      return h('div.list-tags.assigned',
-          h('a.assigned-to.discourse-tag.simple', {href: assignedPath}, [
-            h('i.fa.fa-user-plus'),
-            assignedTo
-          ])
-      );
+      return `<a class='assigned-to discourse-tag simple' href='${assignedPath}'><i class='fa fa-user-plus'></i>${assignedTo}</a>`;
     }
+
   });
 
   api.decorateWidget('post-contents:after-cooked', dec => {
@@ -93,7 +86,7 @@ function initialize(api, container) {
 export default {
   name: 'extend-for-assign',
   initialize(container) {
-    withPluginApi('0.8.1', api => {
+    withPluginApi('0.8.2', api => {
       initialize(api, container);
     });
   }
