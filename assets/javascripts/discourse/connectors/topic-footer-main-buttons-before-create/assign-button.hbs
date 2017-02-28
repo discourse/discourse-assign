@@ -1,5 +1,13 @@
+{{#if topic.assigned_to_user.username}}
+{{d-button class="assign"
+           icon="user-times"
+           action="unassign"
+           label="discourse_assign.unassign.title"
+           title="discourse_assign.unassign.help"}}
+{{else}}
 {{d-button class="assign"
            icon="user-plus"
            action="assign"
            label="discourse_assign.assign.title"
            title="discourse_assign.assign.help"}}
+{{/if}}
