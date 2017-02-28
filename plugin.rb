@@ -25,9 +25,10 @@ after_initialize do
       sql = <<SQL
       SELECT p.topic_id, MAX(post_number) post_number
       FROM posts p
+      JOIN topics t ON t.id = p.topic_id
       LEFT JOIN topic_custom_fields tc ON tc.name = 'assigned_to_id' AND tc.topic_id = p.topic_id
       WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin) AND
-        ( #{staff_mention} ) AND tc.value IS NULL
+        ( #{staff_mention} ) AND tc.value IS NULL AND NOT t.closed AND t.deleted_at IS NULL
       GROUP BY p.topic_id
 SQL
 
@@ -60,6 +61,12 @@ SQL
     end
 
     def self.auto_assign(post, force: false)
+
+      if SiteSetting.unassign_on_close && post.topic && post.topic.closed
+        assigner = new(post.topic, Discourse.system_user)
+        assigner.unassign(silent: true)
+      end
+
       return unless SiteSetting.assigns_by_staff_mention
 
       if post.user && post.topic && post.user.staff?
@@ -149,7 +156,7 @@ SQL
       true
     end
 
-    def unassign
+    def unassign(silent: false)
       if assigned_to_id = @topic.custom_fields["assigned_to_id"]
         @topic.custom_fields["assigned_to_id"] = nil
         @topic.custom_fields["assigned_by_id"] = nil
@@ -174,7 +181,7 @@ SQL
         ).where("data like '%discourse_assign.assign_notification%'")
          .destroy_all
 
-        if SiteSetting.unassign_creates_tracking_post
+        if SiteSetting.unassign_creates_tracking_post && !silent
           post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
           @topic.add_moderator_post(@assigned_by,
                                  I18n.t('discourse_assign.unassigned'),
@@ -339,6 +346,14 @@ SQL
 
   on(:post_edited) do |post, topic_changed|
     ::TopicAssigner.auto_assign(post, force: true)
+  end
+
+  on(:archive_message) do |info|
+    if SiteSetting.unassign_on_group_archive && info[:group]
+      assigner = TopicAssigner.new(info[:topic], Discourse.system_user)
+      # not forcing silent cause archive leaves no trace
+      assigner.unassign
+    end
   end
 
 end

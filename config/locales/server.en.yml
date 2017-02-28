@@ -1,11 +1,13 @@
 en:
   site_settings:
     assigns_public: "Allow general public to see topic assignments"
-    assigns_user_url_path: "Path to link all user links for assigned (use: {username} to subtitue username)"
+    assigns_user_url_path: "Assigned users link to the following path (use: {username} to subtitue username)"
     assigns_by_staff_mention: "If a staff member mentions another staff member, topic is automatically assigned"
     unassign_creates_tracking_post: "If you unassign a topic a whisper or small action will be created to track change"
     assign_self_regex: "Regex that needs to pass for self assign. Example 'my list'"
     assign_other_regex: "Regex that needs to pass for assigning topics to others via mention. Example 'your list'."
+    unassign_on_group_archive: "When a message is archived by a group, unassign message"
+    unassign_on_close: "When a topic is closed unassign topic"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
