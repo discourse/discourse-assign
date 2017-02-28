@@ -6,7 +6,7 @@ en:
     unassign_creates_tracking_post: "If you unassign a topic a whisper or small action will be created to track change"
     assign_self_regex: "Regex that needs to pass for self assign. Example 'my list'"
     assign_other_regex: "Regex that needs to pass for assigning topics to others via mention. Example 'your list'."
-    unassign_on_group_archive: "When a message is archived by a group, unassign message"
+    unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
     unassign_on_close: "When a topic is closed unassign topic"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
