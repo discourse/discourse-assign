@@ -329,6 +329,22 @@ SQL
       end
     end
 
+    require_dependency 'topic_query'
+    class ::TopicQuery
+      def list_private_messages_assigned(user)
+        list = private_messages_for(user, :user)
+        list = list.where("topics.id IN (
+            SELECT topic_id FROM topic_custom_fields WHERE name = 'assigned_to_id' AND value = ?
+        )", user.id.to_s)
+        create_list(:private_messages, {}, list)
+      end
+    end
+
+    require_dependency 'list_controller'
+    class ::ListController
+      generate_message_route(:private_messages_assigned)
+    end
+
     DiscourseAssign::Engine.routes.draw do
       put "/assign" => "assign#assign"
       put "/unassign" => "assign#unassign"
@@ -336,6 +352,8 @@ SQL
 
     Discourse::Application.routes.append do
       mount ::DiscourseAssign::Engine, at: "/assign"
+      get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
+        as: "topics_private_messages_assigned", constraints: {username: /[\w.\-]+?/}
     end
   end
 
