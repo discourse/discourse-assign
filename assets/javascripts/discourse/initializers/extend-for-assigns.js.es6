@@ -10,6 +10,7 @@ import showModal from 'discourse/lib/show-modal';
 function initialize(api, container) {
 
   const siteSettings = container.lookup('site-settings:main');
+  const currentUser = container.lookup('current-user:main');
 
   // doing this mess while we come up with a better API
   TopicFooterDropdown.reopen({
@@ -66,6 +67,15 @@ function initialize(api, container) {
 
   });
 
+  if (currentUser && currentUser.get("staff")) {
+    api.addUserMenuGlyph({
+      label: 'discourse_assign.assigned',
+      className: 'assigned',
+      icon: 'user-plus',
+      href: `${currentUser.get("path")}/activity/assigned`
+    });
+  }
+
   api.decorateWidget('post-contents:after-cooked', dec => {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
@@ -86,7 +96,7 @@ function initialize(api, container) {
 export default {
   name: 'extend-for-assign',
   initialize(container) {
-    withPluginApi('0.8.2', api => {
+    withPluginApi('0.8.3', api => {
       initialize(api, container);
     });
   }
