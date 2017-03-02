@@ -332,7 +332,7 @@ SQL
     require_dependency 'topic_query'
     class ::TopicQuery
       def list_private_messages_assigned(user)
-        list = private_messages_for(user, :user)
+        list = private_messages_for(user, :all)
         list = list.where("topics.id IN (
             SELECT topic_id FROM topic_custom_fields WHERE name = 'assigned_to_id' AND value = ?
         )", user.id.to_s)
