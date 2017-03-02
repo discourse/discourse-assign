@@ -265,20 +265,36 @@ SQL
     TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
       if topic_query.guardian.is_staff? || SiteSetting.assigns_public
         username = topic_query.options[:assigned]
-        user_id = User.where(username_lower: username.downcase).pluck(:id).first if username.present? && username != "*"
-        if user_id || username == "*"
 
-          if username == "*"
-            filter = "AND tc_assign.value IS NOT NULL"
+        user_id = topic_query.guardian.user.id if username == "me"
+
+        special = ["*", "nobody"].include?(username)
+
+        if username.present? && !special
+          user_id ||= User.where(username_lower: username.downcase).pluck(:id).first
+        end
+
+        if user_id || special
+
+          if username == "nobody"
+            results = results.joins("LEFT JOIN topic_custom_fields tc_assign ON
+                                      topics.id = tc_assign.topic_id AND
+                                      tc_assign.name = 'assigned_to_id'")
+                              .where("tc_assign.name IS NULL")
           else
-            filter = "AND tc_assign.value = '#{user_id.to_i.to_s}'"
-          end
 
-          results = results.joins("JOIN topic_custom_fields tc_assign ON
-                                    topics.id = tc_assign.topic_id AND
-                                    tc_assign.name = 'assigned_to_id'
-                                    #{filter}
-                                  ")
+            if username == "*"
+              filter = "AND tc_assign.value IS NOT NULL"
+            else
+              filter = "AND tc_assign.value = '#{user_id.to_i.to_s}'"
+            end
+
+            results = results.joins("JOIN topic_custom_fields tc_assign ON
+                                      topics.id = tc_assign.topic_id AND
+                                      tc_assign.name = 'assigned_to_id'
+                                      #{filter}
+                                    ")
+          end
         end
       end
 
