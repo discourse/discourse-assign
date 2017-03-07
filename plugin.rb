@@ -131,12 +131,12 @@ SQL
       post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
 
       unless silent
-        @topic.add_moderator_post(@assigned_by,
-                               I18n.t('discourse_assign.assigned_to',
-                                       username: assign_to.username),
+        @topic.add_moderator_post(@assigned_by, nil,
                                { bump: false,
                                  post_type: post_type,
-                                 action_code: "assigned"})
+                                 action_code: "assigned",
+                                 custom_fields: {"action_code_who" => assign_to.username}
+                                })
 
         unless @assigned_by.id == assign_to.id
 
@@ -183,11 +183,11 @@ SQL
 
         if SiteSetting.unassign_creates_tracking_post && !silent
           post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
-          @topic.add_moderator_post(@assigned_by,
-                                 I18n.t('discourse_assign.unassigned'),
+          @topic.add_moderator_post(@assigned_by, nil,
                                  { bump: false,
                                    post_type: post_type,
-                                   action_code: "assigned"})
+                                   custom_fields: {"action_code_who" => assigned_user&.username},
+                                   action_code: "unassigned"})
         end
       end
     end

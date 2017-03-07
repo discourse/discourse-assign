@@ -1,7 +1,8 @@
 en:
   js:
     action_codes:
-      assigned: "assigned"
+      assigned: "assigned %{who} %{when}"
+      unassigned: "unassigned %{who} %{when}"
     discourse_assign:
       assigned: "Assigned"
       assign_html: "<p class='assigned-to'><i class='fa-user-plus fa'></i> Assigned to {{userLink}}</p>"

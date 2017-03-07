@@ -55,6 +55,14 @@ function initialize(api, container) {
   });
 
   api.addPostSmallActionIcon('assigned','user-plus');
+  api.addPostSmallActionIcon('unassigned','user-times');
+
+  api.addPostTransformCallback((transformed) => {
+    if (transformed.actionCode === "assigned" || transformed.actionCode === "unassigned") {
+      transformed.isSmallAction = true;
+      transformed.canEdit = false;
+    }
+  });
 
   api.addDiscoveryQueryParam('assigned', {replace: true, refreshModel: true});
 
@@ -96,7 +104,7 @@ function initialize(api, container) {
 export default {
   name: 'extend-for-assign',
   initialize(container) {
-    withPluginApi('0.8.3', api => {
+    withPluginApi('0.8.5', api => {
       initialize(api, container);
     });
   }
