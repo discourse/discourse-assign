@@ -4,12 +4,22 @@ import { popupAjaxError } from 'discourse/lib/ajax-error';
 
 export default Ember.Controller.extend({
 
+  assignSuggestions: function(){
+    ajax("/assign/suggestions").then(users => {
+      this.set("assignSuggestions", users);
+    });
+  }.property(),
+
   // @computed("username")
   // disabled(username) {
   //   return Ember.isEmpty(username);
   // },
 
   actions: {
+    assignUser(user) {
+      this.set('model.username', user.username);
+      this.send('assign');
+    },
     assign(){
 
       let path = '/assign/assign';
@@ -19,12 +29,13 @@ export default Ember.Controller.extend({
         this.set('model.assigned_to_user', null);
       }
 
+      this.send('closeModal');
+
       return ajax(path,{
         type: 'PUT',
         data: { username: this.get('model.username'), topic_id: this.get('model.topic.id') }
       }).then(()=>{
-        //console.log(user);
-        this.send('closeModal');
+        // done
       }).catch(popupAjaxError);
     }
   }

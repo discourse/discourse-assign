@@ -196,6 +196,24 @@ SQL
   class ::DiscourseAssign::AssignController < Admin::AdminController
     before_filter :ensure_logged_in
 
+    def suggestions
+      users = [current_user]
+      users += User
+                .where('admin OR moderator')
+                .where('users.id <> ?', current_user.id)
+                .joins("join (
+                       SELECT value::integer user_id, MAX(created_at) last_assigned
+                       FROM topic_custom_fields
+                       WHERE name = 'assigned_to_id'
+                       GROUP BY value::integer
+                      ) as X ON X.user_id = users.id")
+                .order('X.last_assigned DESC')
+                .limit(6)
+
+      render json: ActiveModel::ArraySerializer.new(users,
+                            scope: guardian, each_serializer: BasicUserSerializer)
+    end
+
     def unassign
       topic_id = params.require(:topic_id)
       topic = Topic.find(topic_id.to_i)
@@ -364,6 +382,7 @@ SQL
     DiscourseAssign::Engine.routes.draw do
       put "/assign" => "assign#assign"
       put "/unassign" => "assign#unassign"
+      get "/suggestions" => "assign#suggestions"
     end
 
     Discourse::Application.routes.append do

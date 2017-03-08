@@ -10,6 +10,13 @@
     usernames=model.username
     placeholderKey=placeholderKey
     autocomplete="off"}}
+<div class='assign-suggestions'>
+  {{#each assignSuggestions as |user|}}
+    <a {{action "assignUser" user}}>
+    {{avatar user imageSize="small"}}
+    </a>
+  {{/each}}
+</div>
 {{/d-modal-body}}
 
 <div class="modal-footer">

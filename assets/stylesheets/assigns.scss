@@ -6,3 +6,12 @@ a.assigned-to .fa.fa-user-plus {
 .list-tags.assigned {
   margin-left: 5px;
 }
+
+.assign-suggestions {
+  height: 25px;
+  margin-top: 10px;
+  img {
+    margin-right: 5px;
+    cursor: pointer;
+  }
+}
