@@ -7,9 +7,16 @@ a.assigned-to .fa.fa-user-plus {
   margin-left: 5px;
 }
 
+.assign.modal-body .ember-text-field {
+  width: 300px;
+}
+.assign.modal-body .ac-wrap {
+  margin-top: 5px;
+}
+
 .assign-suggestions {
   height: 25px;
-  margin-top: 10px;
+  margin-top: 15px;
   img {
     margin-right: 5px;
     cursor: pointer;
