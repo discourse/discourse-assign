@@ -1,4 +1,4 @@
-en:
+de:
   site_settings:
     assigns_public: "Zuordnung von Themen öffentlich sichtbar machen"
     assigns_user_url_path: "Pfad zu Themen, die einem Benutzer zugeordnet sind (verwende {username}, um den Benutzernamen zu ersetzen)"
