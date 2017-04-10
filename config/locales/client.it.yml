@@ -1,0 +1,19 @@
+it:
+  js:
+    action_codes:
+      assigned: "assegnato %{who} %{when}"
+      unassigned: "assegnazione annullata %{who} %{when}"
+    discourse_assign:
+      assigned: "Assegnato"
+      assign_html: "<p class='assigned-to'><i class='fa-user-plus fa'></i> Assegnato a {{userLink}}</p>"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "Annulla assegnazione"
+        help: "Annulla assegnazione Argomento"
+      assign:
+        title: "Assegna"
+        help: "Assegna Argomento ad Utente"
+      assign_modal:
+        title: "Assegna Argomento"
+        description: "Inserisci lo username dell'utente a cui vorresti assegnare questo argomento"
+        assign: "Assegna"
