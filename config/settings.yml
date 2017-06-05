@@ -1,4 +1,7 @@
 plugins:
+  assign_enabled:
+    default: false
+    client: true
   assigns_by_staff_mention: false
   unassign_creates_tracking_post: true
   assigns_public: false

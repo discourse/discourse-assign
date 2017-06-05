@@ -17,7 +17,7 @@ function initialize(api, container) {
     _createContent() {
       this._super();
 
-      if (!this.get('currentUser.staff')) {
+      if (!this.get('currentUser.staff') || !siteSettings.assign_enabled) {
         return;
       }
       const content = this.get('content');
@@ -75,7 +75,7 @@ function initialize(api, container) {
 
   });
 
-  if (currentUser && currentUser.get("staff")) {
+  if (currentUser && currentUser.get("staff") && siteSettings.assign_enabled) {
     api.addUserMenuGlyph({
       label: 'discourse_assign.assigned',
       className: 'assigned',
