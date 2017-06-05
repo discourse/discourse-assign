@@ -3,6 +3,8 @@
 # version: 0.1
 # authors: Sam Saffron
 
+enabled_site_setting :assign_enabled
+
 register_asset 'stylesheets/assigns.scss'
 
 after_initialize do
