@@ -20,9 +20,9 @@ after_initialize do
 
     def self.backfill_auto_assign
       staff_mention = User.where('moderator OR admin')
-                          .pluck('username')
-                          .map{|name| "p.cooked ILIKE '%mention%@#{name}%'"}
-                          .join(' OR ')
+        .pluck('username')
+        .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
+        .join(' OR ')
 
       sql = <<SQL
       SELECT p.topic_id, MAX(post_number) post_number
@@ -263,15 +263,16 @@ SQL
       allowed_access = SiteSetting.assigns_public || is_staff
 
       if allowed_access && topics.length > 0
-        users = User.where("id in (
+        users = User.where("users.id in (
               SELECT value::int
               FROM topic_custom_fields
               WHERE name = 'assigned_to_id' AND topic_id IN (?)
         )", topics.map(&:id))
-        .select(:id, :email, :username, :uploaded_avatar_id)
+          .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
+          .select(:id, 'user_emails.email', :username, :uploaded_avatar_id)
 
         map = {}
-        users.each{|u| map[u.id] = u}
+        users.each { |u| map[u.id] = u }
 
         topics.each do |t|
           if id = t.custom_fields['assigned_to_id']
@@ -300,7 +301,7 @@ SQL
             results = results.joins("LEFT JOIN topic_custom_fields tc_assign ON
                                       topics.id = tc_assign.topic_id AND
                                       tc_assign.name = 'assigned_to_id'")
-                              .where("tc_assign.name IS NULL")
+              .where("tc_assign.name IS NULL")
           else
 
             if username == "*"
@@ -352,7 +353,7 @@ SQL
       end
 
       def include_assigned_to_user?
-        if SiteSetting.assigns_public ||  scope.is_staff?
+        if SiteSetting.assigns_public || scope.is_staff?
           # subtle but need to catch cases where stuff is not assigned
           object.topic.custom_fields.keys.include?("assigned_to_id")
         end
@@ -389,11 +390,9 @@ SQL
 
     Discourse::Application.routes.append do
       mount ::DiscourseAssign::Engine, at: "/assign"
-      get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
-        as: "topics_private_messages_assigned", constraints: {username: /[\w.\-]+?/}
+      get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: /[\w.\-]+?/ }
     end
   end
-
 
   on(:post_created) do |post|
     ::TopicAssigner.auto_assign(post, force: true)
