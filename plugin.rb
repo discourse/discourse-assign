@@ -196,7 +196,7 @@ SQL
   end
 
   class ::DiscourseAssign::AssignController < Admin::AdminController
-    before_filter :ensure_logged_in
+    before_action :ensure_logged_in
 
     def suggestions
       users = [current_user]
