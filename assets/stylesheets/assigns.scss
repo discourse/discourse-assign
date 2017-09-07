@@ -1,6 +1,29 @@
-a.assigned-to .fa.fa-user-plus {
-  margin-right: 2px;
-  color: #999;
+.assigned-to {
+  .d-icon, i.fa {
+    margin-right: 0.5em;
+    color: $primary-medium;
+  }
+  .assign-text {
+    margin-right: 0.25em;
+  }
+}
+
+.assigned-to-user {
+  display: flex;
+  align-items: center;
+
+  img.avatar {
+    margin-right: 0.3em;
+  }
+
+  .unassign {
+    margin-left: 0.5em;
+  }
+}
+
+.topic-assigned-to {
+  min-width: 15%;
+  width: 15%;
 }
 
 .list-tags.assigned {

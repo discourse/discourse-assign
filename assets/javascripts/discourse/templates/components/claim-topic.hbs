@@ -1,0 +1,21 @@
+{{#if topic.assigned_to_user}}
+  <div class='assigned-to-user'>
+    {{avatar topic.assigned_to_user imageSize="small"}}
+    <span class='assigned-username'>
+      {{topic.assigned_to_user.username}}
+    </span>
+    {{d-button
+      icon="times"
+      class="btn-small unassign"
+      action=(action "unassign")
+      disabled=unassigning
+      title="discourse_assign.unassign.help"}}
+  </div>
+{{else}}
+  {{d-button class="btn-small assign"
+    icon="user-plus"
+    action=(action "claim")
+    disabled=claiming
+    label="discourse_assign.claim.title"
+    title="discourse_assign.claim.help"}}
+{{/if}}

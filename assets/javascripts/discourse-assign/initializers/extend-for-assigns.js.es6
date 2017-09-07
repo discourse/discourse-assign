@@ -6,6 +6,8 @@ import { observes } from 'ember-addons/ember-computed-decorators';
 import Topic from 'discourse/models/topic';
 import TopicFooterDropdown from 'discourse/components/topic-footer-mobile-dropdown';
 import showModal from 'discourse/lib/show-modal';
+import { iconNode } from 'discourse-common/lib/icon-library';
+import { h } from 'virtual-dom';
 
 function initialize(api, container) {
 
@@ -84,16 +86,28 @@ function initialize(api, container) {
     });
   }
 
+  api.createWidget('assigned-to', {
+    html(attrs) {
+      let { assignedToUser, href } = attrs;
+
+      return h('p.assigned-to', [
+        iconNode('user-plus'),
+        h('span.assign-text', I18n.t('discourse_assign.assigned_to')),
+        h('a', { attributes: { class: 'assigned-to-username', href } }, assignedToUser.username)
+      ]);
+    }
+  });
+
   api.decorateWidget('post-contents:after-cooked', dec => {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
       if (postModel) {
         const assignedToUser = postModel.get('topic.assigned_to_user');
         if (assignedToUser) {
-          const path = postModel.get('topic.assignedToUserPath');
-          const userLink = `<a href='${path}'>${assignedToUser.username}</a>`;
-          const html = I18n.t('discourse_assign.assign_html', {userLink});
-          return dec.rawHtml(html);
+          return dec.widget.attach('assigned-to', {
+            assignedToUser,
+            href: postModel.get('topic.assignedToUserPath')
+          });
         }
       }
     }

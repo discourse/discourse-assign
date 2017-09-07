@@ -12,3 +12,4 @@ en:
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
+    already_claimed: "That topic has already been claimed."

@@ -5,7 +5,7 @@ en:
       unassigned: "unassigned %{who} %{when}"
     discourse_assign:
       assigned: "Assigned"
-      assign_html: "<p class='assigned-to'><i class='fa-user-plus fa'></i> Assigned to {{userLink}}</p>"
+      assigned_to: "Assigned to"
       assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Unassign"
@@ -17,3 +17,6 @@ en:
         title: "Assign Topic"
         description: "Enter the username of the person you'd like to assign this topic"
         assign: "Assign"
+      claim:
+        title: "claim"
+        help: "Assign topic to yourself"
