@@ -13,3 +13,4 @@ en:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
     already_claimed: "That topic has already been claimed."
+    flag_assigned: "Sorry, flag's topic is assigned to another user"

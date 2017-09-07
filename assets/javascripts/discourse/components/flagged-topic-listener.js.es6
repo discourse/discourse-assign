@@ -22,4 +22,3 @@ export default Ember.Component.extend({
     this.messageBus.unsubscribe("/staff/topic-assignment");
   }
 });
-

@@ -17,6 +17,22 @@ end
 after_initialize do
   require 'topic_assigner'
 
+  # Raise an invalid access error if a user tries to act on something
+  # not assigned to them
+  DiscourseEvent.on(:before_staff_flag_action) do |args|
+    if custom_fields = args[:post].topic.custom_fields
+      if assigned_to_id = custom_fields['assigned_to_id']
+        unless assigned_to_id.to_i == args[:user].id
+          raise Discourse::InvalidAccess.new(
+            "That flag has been assigned to another user",
+            nil,
+            custom_message: 'discourse_assign.flag_assigned'
+          )
+        end
+      end
+    end
+  end
+
   # We can remove this check once this method is stable
   if respond_to?(:add_preloaded_topic_list_custom_field)
     add_preloaded_topic_list_custom_field('assigned_to_id')

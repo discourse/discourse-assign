@@ -8,6 +8,16 @@
   }
 }
 
+.cant-act-flagged-post {
+  padding: 0.5em;
+  border: 1px dashed $primary-medium;
+  color: $primary;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .assigned-to-user {
   display: flex;
   align-items: center;
