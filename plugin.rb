@@ -41,24 +41,26 @@ after_initialize do
   end
 
   TopicList.on_preload do |topics, topic_list|
-    is_staff = topic_list.current_user && topic_list.current_user.staff?
-    allowed_access = SiteSetting.assigns_public || is_staff
+    if SiteSetting.assign_enabled?
+      is_staff = topic_list.current_user && topic_list.current_user.staff?
+      allowed_access = SiteSetting.assigns_public || is_staff
 
-    if allowed_access && topics.length > 0
-      users = User.where("users.id in (
-            SELECT value::int
-            FROM topic_custom_fields
-            WHERE name = 'assigned_to_id' AND topic_id IN (?)
-      )", topics.map(&:id))
-        .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
-        .select(:id, 'user_emails.email', :username, :uploaded_avatar_id)
+      if allowed_access && topics.length > 0
+        users = User.where("users.id in (
+              SELECT value::int
+              FROM topic_custom_fields
+              WHERE name = 'assigned_to_id' AND topic_id IN (?)
+        )", topics.map(&:id))
+          .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
+          .select(:id, 'user_emails.email', :username, :uploaded_avatar_id)
 
-      map = {}
-      users.each { |u| map[u.id] = u }
+        map = {}
+        users.each { |u| map[u.id] = u }
 
-      topics.each do |t|
-        if id = t.custom_fields['assigned_to_id']
-          t.preload_assigned_to_user(map[id.to_i])
+        topics.each do |t|
+          if id = t.custom_fields['assigned_to_id']
+            t.preload_assigned_to_user(map[id.to_i])
+          end
         end
       end
     end
