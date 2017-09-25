@@ -111,8 +111,9 @@ function initialize(api, container) {
         }
       }
     }
-
   });
+
+
 };
 
 export default {
@@ -120,6 +121,11 @@ export default {
   initialize(container) {
     withPluginApi('0.8.5', api => {
       initialize(api, container);
+    });
+
+    // Fix icons in new versions of discourse
+    withPluginApi('0.8.10', api => {
+      api.replaceIcon('notification.discourse_assign.assign_notification', 'user-plus');
     });
   }
 };
