@@ -107,8 +107,6 @@ function initialize(api) {
   });
 
   api.addUserMenuGlyph(widget => {
-    return undefined;
-
     if (widget.currentUser &&
         widget.currentUser.get('staff') &&
         widget.siteSettings.assign_enabled) {
