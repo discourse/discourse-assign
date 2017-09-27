@@ -44,12 +44,6 @@ SQL
   end
 
   def self.auto_assign(post, force: false)
-
-    if SiteSetting.unassign_on_close && post.topic && post.topic.closed
-      assigner = new(post.topic, Discourse.system_user)
-      assigner.unassign(silent: true)
-    end
-
     return unless SiteSetting.assigns_by_staff_mention
 
     if post.user && post.topic && post.user.staff?

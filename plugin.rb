@@ -174,6 +174,13 @@ after_initialize do
     ::TopicAssigner.auto_assign(post, force: true)
   end
 
+  on(:topic_closed) do |topic|
+    if SiteSetting.unassign_on_close
+      assigner = ::TopicAssigner.new(topic, Discourse.system_user)
+      assigner.unassign(silent: true)
+    end
+  end
+
   on(:move_to_inbox) do |info|
     if SiteSetting.unassign_on_group_archive && info[:group]
       if topic = info[:topic]
