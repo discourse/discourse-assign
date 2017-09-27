@@ -33,7 +33,12 @@ after_initialize do
     end
   end
 
-  TopicList.preloaded_custom_fields << "assigned_to_id"
+  # We can remove this check once this method is stable
+  if respond_to?(:add_preloaded_topic_list_custom_field)
+    add_preloaded_topic_list_custom_field('assigned_to_id')
+  else
+    TopicList.preloaded_custom_fields << "assigned_to_id"
+  end
 
   TopicList.on_preload do |topics, topic_list|
     if SiteSetting.assign_enabled?
