@@ -9,6 +9,7 @@ en:
     assign_other_regex: "Regex that needs to pass for assigning topics to others via mention. Example 'your list'."
     unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
     unassign_on_close: "When a topic is closed unassign topic"
+    assign_locks_flags: "When a topic is assigned to a staff member, its flags can only be handled by that person"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"

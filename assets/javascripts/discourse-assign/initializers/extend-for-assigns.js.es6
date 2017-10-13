@@ -12,7 +12,7 @@ function initialize(api) {
   api.modifyClass('component:flagged-post', {
     @computed('flaggedPost.topic.assigned_to_user_id', 'filter')
     canAct(assignedToUserId, filter) {
-      if (assignedToUserId && this.currentUser.id !== assignedToUserId) {
+      if (this.siteSettings.assign_locks_flags && assignedToUserId && this.currentUser.id !== assignedToUserId) {
         return false;
       }
 

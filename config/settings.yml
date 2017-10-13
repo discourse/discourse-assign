@@ -12,3 +12,6 @@ plugins:
   assigns_user_url_path:
     client: true
     default: "/latest?assigned={username}"
+  assign_locks_flags:
+    default: true
+    client: true
