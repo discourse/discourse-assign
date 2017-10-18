@@ -49,7 +49,7 @@ after_initialize do
               WHERE name = 'assigned_to_id' AND topic_id IN (?)
         )", topics.map(&:id))
           .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
-          .select(:id, 'user_emails.email', :username, :uploaded_avatar_id)
+          .select(AvatarLookup.lookup_columns)
 
         map = {}
         users.each { |u| map[u.id] = u }
