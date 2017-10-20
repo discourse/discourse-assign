@@ -1,5 +1,5 @@
 import { withPluginApi } from 'discourse/lib/plugin-api';
-import { default as computed, observes } from 'ember-addons/ember-computed-decorators';
+import { default as computed } from 'ember-addons/ember-computed-decorators';
 
 // should this be in API ?
 import showModal from 'discourse/lib/show-modal';
@@ -41,36 +41,43 @@ function initialize(api) {
 
   // doing this mess while we come up with a better API
   api.modifyClass('component:topic-footer-mobile-dropdown', {
-    _createContent() {
-      this._super();
+    @computed("value")
+    content() {
+      const content = this._super();
 
       if (!this.get('currentUser.staff') || !this.siteSettings.assign_enabled) {
         return;
       }
-      const content = this.get('content');
-      content.push({ id: 'assign', icon: 'user-plus', name: I18n.t('discourse_assign.assign.title') });
+
+      content.pushObject({
+        id: 'assign',
+        icon: 'user-plus',
+        name: I18n.t('discourse_assign.assign.title')
+      });
+
+      return content;
     },
 
-    @observes('value')
-    _gotAssigned() {
+    actions: {
+      onSelect(value) {
+        this._super(value);
 
-      if (!this.get('currentUser.staff')) {
-        return;
-      }
+        if (!this.get('currentUser.staff')) {
+          return;
+        }
 
-      const value = this.get('value');
-      const topic = this.get('topic');
+        const topic = this.get('topic');
 
-      if (value === 'assign') {
+        if (value === 'assign') {
 
-        showModal("assign-user", {
-          model: {
-            topic: topic,
-            username: topic.get('assigned_to_user.username')
-          }
-        });
-        this._createContent();
-        this.set('value', null);
+          showModal("assign-user", {
+            model: {
+              topic: topic,
+              username: topic.get('assigned_to_user.username')
+            }
+          });
+          this.set('value', null);
+        }
       }
     }
   });
