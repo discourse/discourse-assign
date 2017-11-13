@@ -1,3 +1,5 @@
+require_dependency 'email/sender'
+
 class ::TopicAssigner
   def self.backfill_auto_assign
     staff_mention = User.where('moderator OR admin')
@@ -109,6 +111,9 @@ SQL
       },
       user_ids: staff_ids
     )
+
+    message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
+    Email::Sender.new(message, :test_message).send
 
     UserAction.log_action!(
       action_type: UserAction::ASSIGNED,

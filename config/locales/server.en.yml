@@ -15,3 +15,14 @@ en:
     unassigned: "Topic was unassigned"
     already_claimed: "That topic has already been claimed."
     flag_assigned: "Sorry, flag's topic is assigned to another user"
+  assign_mailer:
+    title: "Assign Mailer"
+    subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
+    text_body_template: |
+      Hey, %{assignee_name} **assigned** you to a discussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      If you're interested, click the link below:
+      [%{topic_link}](%{topic_link})
