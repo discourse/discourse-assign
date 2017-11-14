@@ -15,3 +15,5 @@ plugins:
   assign_locks_flags:
     default: true
     client: true
+  assign_mailer_enabled: false
+  assign_mailer_disabled_for_muted_topics: true

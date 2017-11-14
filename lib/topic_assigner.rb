@@ -112,8 +112,12 @@ SQL
       user_ids: staff_ids
     )
 
-    message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
-    Email::Sender.new(message, :test_message).send
+    if SiteSetting.assign_mailer_enabled
+      if !SiteSetting.assign_mailer_disabled_for_muted_topics or !@topic.muted?(assign_to)
+        message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
+        Email::Sender.new(message, :assign_message).send
+      end
+    end
 
     UserAction.log_action!(
       action_type: UserAction::ASSIGNED,
