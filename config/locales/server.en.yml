@@ -10,6 +10,8 @@ en:
     unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
     unassign_on_close: "When a topic is closed unassign topic"
     assign_locks_flags: "When a topic is assigned to a staff member, its flags can only be handled by that person"
+    assign_mailer_enabled: "When enabled, the assigned user will receive a notification email on each assignment"
+    assign_mailer_disabled_for_muted_topics: "When enabled, the assigned user will not receive emails on muted topics"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
