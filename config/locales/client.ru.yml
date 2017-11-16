@@ -1,0 +1,23 @@
+ru:
+  js:
+    action_codes:
+      assigned: "назаначено %{who} %{when}"
+      unassigned: "%{who} %{when} снял(а) ответственного"
+    discourse_assign:
+      cant_act: "Вы не можете управлять флагами в теме, которая назначена на другого сотрудника"
+      assigned: "Назначено"
+      assigned_to: "Назначено на"
+      assign_notification: "<i title='назначено' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "Снять отв."
+        help: "Снять ответственного с темы"
+      assign:
+        title: "Назначить отв."
+        help: "Назначить ответственного за тему"
+      assign_modal:
+        title: "Назначение ответственного"
+        description: "Введите имя сотрудника, ответственного за тему"
+        assign: "Назначить"
+      claim:
+        title: "Пожаловаться"
+        help: "Назначить на себя"
