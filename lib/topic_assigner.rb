@@ -113,7 +113,7 @@ SQL
     )
 
     if SiteSetting.assign_mailer_enabled
-      if !SiteSetting.assign_mailer_disabled_for_muted_topics or !@topic.muted?(assign_to)
+      if !@topic.muted?(assign_to)
         message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
         Email::Sender.new(message, :assign_message).send
       end
