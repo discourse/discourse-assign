@@ -6,8 +6,38 @@ import showModal from 'discourse/lib/show-modal';
 import { iconNode } from 'discourse-common/lib/icon-library';
 import { h } from 'virtual-dom';
 
-function initialize(api) {
+function modifySelectKit(api) {
+  api.modifySelectKit("topic-footer-mobile-dropdown")
+     .modifyContent((context, existingContent) => {
+        if (context.get('currentUser.staff')) {
+          existingContent.push({
+            id: 'assign',
+            icon: 'user-plus',
+            name: I18n.t('discourse_assign.assign.title')
+          });
+        }
+        return existingContent;
+     })
+     .onSelect((context, value) => {
+       if (!context.get('currentUser.staff')) {
+         return;
+       }
 
+       const topic = context.get('topic');
+
+       if (value === 'assign') {
+         showModal("assign-user", {
+           model: {
+             topic,
+             username: topic.get('assigned_to_user.username')
+           }
+         });
+         context.set('value', null);
+       }
+     });
+}
+
+function initialize(api) {
   // You can't act on flags claimed by another user
   api.modifyClass('component:flagged-post', {
     @computed('flaggedPost.topic.assigned_to_user_id', 'filter')
@@ -38,49 +68,6 @@ function initialize(api) {
       this.messageBus.unsubscribe("/staff/topic-assignment");
     }
   }, { ignoreMissing: true });
-
-  // doing this mess while we come up with a better API
-  api.modifyClass('component:topic-footer-mobile-dropdown', {
-    @computed("value")
-    content() {
-      const content = this._super();
-
-      if (!this.get('currentUser.staff') || !this.siteSettings.assign_enabled) {
-        return;
-      }
-
-      content.pushObject({
-        id: 'assign',
-        icon: 'user-plus',
-        name: I18n.t('discourse_assign.assign.title')
-      });
-
-      return content;
-    },
-
-    actions: {
-      onSelect(value) {
-        this._super(value);
-
-        if (!this.get('currentUser.staff')) {
-          return;
-        }
-
-        const topic = this.get('topic');
-
-        if (value === 'assign') {
-
-          showModal("assign-user", {
-            model: {
-              topic: topic,
-              username: topic.get('assigned_to_user.username')
-            }
-          });
-          this.set('value', null);
-        }
-      }
-    }
-  });
 
   api.modifyClass('model:topic', {
     @computed('assigned_to_user')
@@ -185,5 +172,6 @@ export default {
   name: 'extend-for-assign',
   initialize(container) {
     withPluginApi('0.8.11', api => initialize(api, container));
+    withPluginApi('0.8.13', api => modifySelectKit(api, container));
   }
 };
