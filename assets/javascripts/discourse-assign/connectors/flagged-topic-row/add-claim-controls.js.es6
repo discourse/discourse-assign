@@ -4,4 +4,4 @@ export default {
       console.log('claim:', topic);
     }
   }
-}
+};
