@@ -115,9 +115,24 @@ after_initialize do
 
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|
     list = private_messages_for(user, :all)
-    list = list.where("topics.id IN (
+    user_id = user.id.to_s
+
+    list = list
+      .joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id")
+      .joins("
+        LEFT JOIN user_archived_messages um ON um.topic_id = topics.id AND um.user_id = #{user_id}
+      ")
+      .where("topics.id IN (
         SELECT topic_id FROM topic_custom_fields WHERE name = 'assigned_to_id' AND value = ?
-    )", user.id.to_s)
+      )", user_id)
+
+    list =
+      if @options[:status] == "archived"
+        list.where("gm.topic_id IS NOT NULL OR um.topic_id IS NOT NULL")
+      else
+        list.where("gm.topic_id IS NULL AND um.topic_id IS NULL")
+      end
+
     create_list(:private_messages, {}, list)
   end
 
