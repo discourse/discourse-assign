@@ -116,9 +116,14 @@ after_initialize do
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|
     list = private_messages_for(user, :all)
     user_id = user.id.to_s
+    group_ids = user.groups.pluck(:id)
 
     list = list
-      .joins("LEFT JOIN group_archived_messages gm ON gm.topic_id = topics.id")
+      .joins("
+        LEFT JOIN group_archived_messages gm
+        ON gm.topic_id = topics.id
+        AND gm.group_id IN (#{group_ids.join(',')})
+      ")
       .joins("
         LEFT JOIN user_archived_messages um ON um.topic_id = topics.id AND um.user_id = #{user_id}
       ")

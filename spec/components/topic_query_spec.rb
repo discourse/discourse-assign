@@ -29,12 +29,14 @@ describe TopicQuery do
     end
 
     let(:group) { Fabricate(:group).add(user) }
+    let(:group2) { Fabricate(:group) }
 
     let(:group_assigned_topic) do
       topic = Fabricate(:private_message_topic,
         topic_allowed_users: [],
         topic_allowed_groups: [
-          Fabricate.build(:topic_allowed_group, group: group)
+          Fabricate.build(:topic_allowed_group, group: group),
+          Fabricate.build(:topic_allowed_group, group: group2)
         ],
         posts: [Fabricate(:post)]
       )
@@ -67,6 +69,16 @@ describe TopicQuery do
       ).to eq([])
 
       UserArchivedMessage.archive!(user.id, assigned_topic.id)
+
+      expect(
+        TopicQuery.new(user).list_private_messages_assigned(user).topics
+      ).to contain_exactly(group_assigned_topic)
+
+      expect(
+        TopicQuery.new(user, options).list_private_messages_assigned(user).topics
+      ).to contain_exactly(assigned_topic)
+
+      GroupArchivedMessage.archive!(group2.id, group_assigned_topic.id)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
