@@ -5,4 +5,26 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_CN: {}
+zh_CN:
+  js:
+    action_codes:
+      assigned: "已指派 %{who} %{when}"
+      unassigned: "未指派 %{who} %{when}"
+    discourse_assign:
+      cant_act: "你不能动已经指派给别人的旗子"
+      assigned: "已指派"
+      assigned_to: "指派给"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "未指派"
+        help: "未指派主题"
+      assign:
+        title: "指派"
+        help: "指派主题给用户"
+      assign_modal:
+        title: "指派主题"
+        description: "输入你想指派这个主题给他的人的用户名"
+        assign: "指派"
+      claim:
+        title: "认领"
+        help: "指派这个主题给你自己"

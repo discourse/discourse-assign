@@ -5,4 +5,26 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-fr: {}
+fr:
+  js:
+    action_codes:
+      assigned: "%{who} a été affecté %{when}"
+      unassigned: "%{who} a été désaffecté %{when}"
+    discourse_assign:
+      cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été affectés à d'autres utilisateurs"
+      assigned: "Affecté"
+      assigned_to: "Affecté à"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "Désaffecter"
+        help: "Désaffecter le sujet"
+      assign:
+        title: "Affecter"
+        help: "Affecter le sujet à l'utilisateur"
+      assign_modal:
+        title: "Affecter le sujet"
+        description: "Entrez le nom de l'utilisateur dont vont souhaitez affecter le sujet"
+        assign: "Affecter"
+      claim:
+        title: "revendiquer"
+        help: "Affecter le sujet à vous-même"

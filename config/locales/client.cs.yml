@@ -5,4 +5,23 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-cs: {}
+cs:
+  js:
+    action_codes:
+      assigned: "zadáno %{who} %{when}"
+      unassigned: "zadání odebráno %{when}"
+    discourse_assign:
+      assigned: "Zadáno"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "Odebrat zadání"
+        help: "Odstranit zadání tématu"
+      assign:
+        title: "Zadání"
+        help: "Zadat téma uživateli"
+      assign_modal:
+        title: "Zadat téma"
+        description: "Uveďte uživatelské jméno osoby, které chcete zadat toto téma"
+        assign: "Zadat"
+      claim:
+        help: "Zadat téme sobě"

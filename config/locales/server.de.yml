@@ -7,6 +7,7 @@
 
 de:
   site_settings:
+    assign_enabled: "Aktiviere das Zuweisungs-Plugin"
     assigns_public: "Zuordnung von Themen öffentlich sichtbar machen"
     assigns_user_url_path: "Pfad zu Themen, die einem Benutzer zugeordnet sind (verwende {username}, um den Benutzernamen zu ersetzen)"
     assigns_by_staff_mention: "Wenn ein Mitarbeiter einen anderen Mitarbeiter erwähnt, wird das Thema automatisch zugeordnet"
@@ -15,6 +16,21 @@ de:
     assign_other_regex: "Regulärer Ausdruck, der erfüllt sein muss, um ein Thema jemand anderen zuzordnen. Beispiel: 'deine Liste'"
     unassign_on_group_archive: "Zuordnung aufheben, wenn eine Nachricht von einer Gruppe archiviert worden ist (Wieder zuordnen, wenn in den Posteingang verschoben)"
     unassign_on_close: "Wenn das Thema geschlossen wird, hebe die Zuordnung der Person zum Thema auf"
+    assign_locks_flags: "Wenn ein Thema einem Team-Mitglied zugewiesen wird, können die Meldungen nur von dieser Person bearbeitet werden"
+    assign_mailer_enabled: "Wenn aktiviert, erhält der zugewiesene Benutzer eine Benachrichtigungsmail bei jeder Zuweisung"
   discourse_assign:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
+    already_claimed: "Dieses Thema wurde bereits übernommen."
+    flag_assigned: "Entschuldige, das Thema der Meldung ist einem anderen Benutzer zugewiesen"
+  assign_mailer:
+    title: "E-Mail zuweisen"
+    subject_template: "[%{email_prefix}] %{assignee_name} hat dir '%{topic_title}' zugewiesen!"
+    text_body_template: |
+      Hey, %{assignee_name} hat dich einer Diskussion **zugewiesen**
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Wenn dich das interessiert, klicke auf den folgenden Link:
+      [%{topic_link}](%{topic_link})
