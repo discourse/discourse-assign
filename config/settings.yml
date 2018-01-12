@@ -15,4 +15,7 @@ plugins:
   assign_locks_flags:
     default: true
     client: true
+  flags_require_assign:
+    default: false
+    client: true
   assign_mailer_enabled: false

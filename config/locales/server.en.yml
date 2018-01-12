@@ -11,11 +11,13 @@ en:
     unassign_on_close: "When a topic is closed unassign topic"
     assign_locks_flags: "When a topic is assigned to a staff member, its flags can only be handled by that person"
     assign_mailer_enabled: "When enabled, the assigned user will receive a notification email on each assignment"
+    flags_require_assign: "When enabled, flags cannot be handled unless assigned to a user."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
     already_claimed: "That topic has already been claimed."
-    flag_assigned: "Sorry, flag's topic is assigned to another user"
+    flag_assigned: "Sorry, that flag's topic is assigned to another user"
+    flag_unclaimed: "You must claim that topic before acting on the flag"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"

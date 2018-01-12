@@ -40,13 +40,26 @@ function modifySelectKit(api) {
 function initialize(api) {
   // You can't act on flags claimed by another user
   api.modifyClass('component:flagged-post', {
-    @computed('flaggedPost.topic.assigned_to_user_id', 'filter')
-    canAct(assignedToUserId, filter) {
-      if (this.siteSettings.assign_locks_flags && assignedToUserId && this.currentUser.id !== assignedToUserId) {
-        return false;
+    @computed('flaggedPost.topic.assigned_to_user_id')
+    canAct(assignedToUserId) {
+      let { siteSettings } = this;
+
+      if (siteSettings.assign_locks_flags) {
+
+        let unassigned = (this.currentUser.id !== assignedToUserId);
+
+        // Can never act on another user's flags
+        if (assignedToUserId && unassigned) {
+          return false;
+        }
+
+        // If flags require assignment
+        if (this.siteSettings.flags_require_assign && unassigned) {
+          return false;
+        }
       }
 
-      return this._super(filter);
+      return this.get('actableFilter');
     },
 
     didInsertElement() {

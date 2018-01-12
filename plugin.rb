@@ -21,6 +21,7 @@ after_initialize do
   # not assigned to them
   DiscourseEvent.on(:before_staff_flag_action) do |args|
     if SiteSetting.assign_locks_flags?
+
       if custom_fields = args[:post].topic.custom_fields
         if assigned_to_id = custom_fields['assigned_to_id']
           unless assigned_to_id.to_i == args[:user].id
@@ -30,8 +31,15 @@ after_initialize do
               custom_message: 'discourse_assign.flag_assigned'
             )
           end
+        elsif SiteSetting.flags_require_assign?
+          raise Discourse::InvalidAccess.new(
+            "Flags must be assigned before they can be acted on",
+            nil,
+            custom_message: 'discourse_assign.flag_unclaimed'
+          )
         end
       end
+
     end
   end
 
