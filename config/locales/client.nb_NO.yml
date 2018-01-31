@@ -12,19 +12,20 @@ nb_NO:
       unassigned: "ikke tildelt %{who} %{when}"
     discourse_assign:
       cant_act: "Du kan ikke handle på flagg som har blitt tildelt andre brukere"
+      cant_act_unclaimed: "Du må ta denne tråden før du tar beslutninger om rapporteringer."
       assigned: "Tildelt"
       assigned_to: "Tildelt til"
       assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Fjern tildelning"
-        help: "Fjern tildelning av emne"
+        help: "Fjern tildelning av tråd"
       assign:
         title: "Tildel"
-        help: "Tildel emne til bruker"
+        help: "Tildel tråd til bruker"
       assign_modal:
-        title: "Tildel emne"
-        description: "Skriv inn brukernavnet du ønsker å tildele dette emnet"
+        title: "Tildel tråd"
+        description: "Skriv inn brukernavnet du ønsker å tildele denne tråden"
         assign: "Tildel"
       claim:
         title: "ta"
-        help: "Tildel emne til deg selv"
+        help: "Tildel tråd til deg selv"

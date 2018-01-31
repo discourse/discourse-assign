@@ -5,4 +5,26 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-tr_TR: {}
+tr_TR:
+  js:
+    action_codes:
+      assigned: "%{when}%{who} atandı"
+      unassigned: "%{when}%{who} atanmamış"
+    discourse_assign:
+      cant_act: "Diğer kullanıcılara atanan bayraklar üzerinde hareket edemezsiniz"
+      assigned: "Atandı"
+      assigned_to: "Atandı"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{kullanıcı adı}}</span> {{açıklama}}</p>"
+      unassign:
+        title: "Atamayı kaldırma"
+        help: "Konunun Atamasını Kaldır"
+      assign:
+        title: "Atamak"
+        help: "Kullanıcıya konu ata"
+      assign_modal:
+        title: "Konu Ata"
+        description: "Bu konuyu atamak istediğiniz kişinin kullanıcı adını girin"
+        assign: "Atamak"
+      claim:
+        title: "talep"
+        help: "Konuyu kendinize atayın"

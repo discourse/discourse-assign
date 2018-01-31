@@ -5,4 +5,13 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-et: {}
+et:
+  js:
+    discourse_assign:
+      assigned: "Määratud"
+      assigned_to: "Määratud kasutajale"
+      assign:
+        title: "Määra"
+      assign_modal:
+        title: "Määra teema"
+        assign: "Määra"

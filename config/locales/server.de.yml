@@ -18,11 +18,13 @@ de:
     unassign_on_close: "Wenn das Thema geschlossen wird, hebe die Zuordnung der Person zum Thema auf"
     assign_locks_flags: "Wenn ein Thema einem Team-Mitglied zugewiesen wird, können die Meldungen nur von dieser Person bearbeitet werden"
     assign_mailer_enabled: "Wenn aktiviert, erhält der zugewiesene Benutzer eine Benachrichtigungsmail bei jeder Zuweisung"
+    flags_require_assign: "Wenn aktiviert, können Meldungen nur behandelt werden, wenn sie einem Benutzer zugewiesen sind."
   discourse_assign:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
     already_claimed: "Dieses Thema wurde bereits übernommen."
-    flag_assigned: "Entschuldige, das Thema der Meldung ist einem anderen Benutzer zugewiesen"
+    flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugewiesen"
+    flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst."
   assign_mailer:
     title: "E-Mail zuweisen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir '%{topic_title}' zugewiesen!"

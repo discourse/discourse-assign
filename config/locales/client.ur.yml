@@ -5,4 +5,27 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ur: {}
+ur:
+  js:
+    action_codes:
+      assigned: "%{who} کو %{when} اسائین کیا  "
+      unassigned: "%{who} کو %{when} غیر اسائین کیا  "
+    discourse_assign:
+      cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
+      cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
+      assigned: "اسائین کردہ"
+      assigned_to: "جس کو اسائین کیا گیا"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{صارف نام}}</span>{{تفصیل}}</p>"
+      unassign:
+        title: "غیر اسائین کریں"
+        help: "ٹاپک غیر اسائین کریں"
+      assign:
+        title: "اسائین کریں"
+        help: "صارف کو ٹاپک اسائین کریں"
+      assign_modal:
+        title: "ٹاپک اسائین کریں"
+        description: "اُس شخص کا صارف نام درج کیجیے جسے آپ یہ ٹاپک اسائین کرنا چاہتے ہیں"
+        assign: "اسائین کریں"
+      claim:
+        title: "کلیم کریں"
+        help: "اپنے آپ کو ٹاپک اسائین کریں"
