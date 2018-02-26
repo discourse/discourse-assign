@@ -206,6 +206,16 @@ after_initialize do
     end
   end
 
+  # Unassign if there are no more flags in the topic
+  on(:flag_reviewed) do |post|
+    if SiteSetting.assign_locks_flags? &&
+      FlagQuery.flagged_post_actions(topic_id: post.topic_id).count == 0
+
+      assigner = ::TopicAssigner.new(post.topic, Discourse.system_user)
+      assigner.unassign
+    end
+  end
+
   on(:move_to_inbox) do |info|
     if SiteSetting.unassign_on_group_archive && info[:group]
       if topic = info[:topic]
