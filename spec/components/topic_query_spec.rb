@@ -58,7 +58,7 @@ describe TopicQuery do
       expect(TopicQuery.new(user).list_private_messages_assigned(user).topics)
         .to contain_exactly(assigned_topic, group_assigned_topic)
 
-      UserArchivedMessage.archive!(user2.id, assigned_topic.id)
+      UserArchivedMessage.archive!(user2.id, assigned_topic)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
@@ -68,7 +68,7 @@ describe TopicQuery do
         TopicQuery.new(user, options).list_private_messages_assigned(user).topics
       ).to eq([])
 
-      UserArchivedMessage.archive!(user.id, assigned_topic.id)
+      UserArchivedMessage.archive!(user.id, assigned_topic)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
@@ -78,7 +78,7 @@ describe TopicQuery do
         TopicQuery.new(user, options).list_private_messages_assigned(user).topics
       ).to contain_exactly(assigned_topic)
 
-      GroupArchivedMessage.archive!(group2.id, group_assigned_topic.id)
+      GroupArchivedMessage.archive!(group2.id, group_assigned_topic)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
@@ -88,7 +88,7 @@ describe TopicQuery do
         TopicQuery.new(user, options).list_private_messages_assigned(user).topics
       ).to contain_exactly(assigned_topic)
 
-      GroupArchivedMessage.archive!(group.id, group_assigned_topic.id)
+      GroupArchivedMessage.archive!(group.id, group_assigned_topic)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
