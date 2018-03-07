@@ -216,30 +216,45 @@ after_initialize do
     end
   end
 
+  add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, user_id|
+    return unless topic.private_message?
+
+    assigned_channel = "/private-messages/assigned"
+
+    [assigned_channel, "#{assigned_channel}/archive"].each do |channel|
+      MessageBus.publish(
+        channel,
+        { topic_id: topic.id },
+        user_ids: [user_id]
+      )
+    end
+  end
+
   on(:move_to_inbox) do |info|
-    if SiteSetting.unassign_on_group_archive && info[:group]
-      if topic = info[:topic]
-        if user_id = topic.custom_fields["prev_assigned_to_id"]
-          if user = User.find_by(id: user_id.to_i)
-            assigner = TopicAssigner.new(topic, Discourse.system_user)
-            assigner.assign(user, silent: true)
-          end
-        end
-      end
+    topic = info[:topic]
+    TopicTrackingState.publish_assigned_private_message(topic, info[:user].id)
+
+    if SiteSetting.unassign_on_group_archive && info[:group] &&
+       user_id = topic.custom_fields["prev_assigned_to_id"].to_i &&
+       previous_user = User.find_by(id: user_id)
+
+      assigner = TopicAssigner.new(topic, Discourse.system_user)
+      assigner.assign(previous_user, silent: true)
     end
   end
 
   on(:archive_message) do |info|
-    if SiteSetting.unassign_on_group_archive && info[:group]
-      topic = info[:topic]
-      if user_id = topic.custom_fields["assigned_to_id"]
-        if user = User.find_by(id: user_id.to_i)
-          topic.custom_fields["prev_assigned_to_id"] = user.id
-          topic.save
-          assigner = TopicAssigner.new(topic, Discourse.system_user)
-          assigner.unassign(silent: true)
-        end
-      end
+    topic = info[:topic]
+    TopicTrackingState.publish_assigned_private_message(topic, info[:user].id)
+
+    if SiteSetting.unassign_on_group_archive && info[:group] &&
+       user_id = topic.custom_fields["assigned_to_id"].to_i &&
+       assigned_user = User.find_by(id: user_id)
+
+      topic.custom_fields["prev_assigned_to_id"] = assigned_user.id
+      topic.save!
+      assigner = TopicAssigner.new(topic, Discourse.system_user)
+      assigner.unassign(silent: true)
     end
   end
 
