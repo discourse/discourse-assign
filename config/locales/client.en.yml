@@ -22,3 +22,7 @@ en:
       claim:
         title: "claim"
         help: "Assign topic to yourself"
+    user:
+      messages:
+        assigned: "Assigned"
+        assigned_archived: "Assigned Archived"
