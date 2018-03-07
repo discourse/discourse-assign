@@ -18,18 +18,21 @@ fr:
     unassign_on_close: "Quand un sujet est fermé, désaffecter le sujet"
     assign_locks_flags: "Quand un sujet est affecté à un responsable, ses signalements peuvent uniquement être gérés par cette personne"
     assign_mailer_enabled: "Quand activé, l'utilisateur affecté recevra une notification par courriel pour chaque affectation"
+    flags_require_assign: "Quand activé, les signalements ne peuvent être gérés que s'ils ont été affectés à un utilisateur."
   discourse_assign:
     assigned_to: "Sujet affecté à @%{username}"
     unassigned: "Le sujet a été désaffecté"
     already_claimed: "Le sujet a déjà été revendiqué."
+    flag_assigned: "Désolé, le sujet de ce signalement est attribué à un autre utilisateur."
+    flag_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur le signalement"
   assign_mailer:
     title: "Affecter le mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} vous a affecté à « %{topic_title} » !"
     text_body_template: |
-      Hey, %{assignee_name} vous a **affecté** a une discussion
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
+        Hey, %{assignee_name} vous a **affecté** a une discussion
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
 
-      Si vous êtes intéressés, cliquer sur le lien suivant :
-      [%{topic_link}](%{topic_link})
+        Si vous êtes intéressés, cliquer sur le lien suivant :
+        [%{topic_link}](%{topic_link})

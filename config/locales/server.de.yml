@@ -29,10 +29,10 @@ de:
     title: "E-Mail zuweisen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir '%{topic_title}' zugewiesen!"
     text_body_template: |
-      Hey, %{assignee_name} hat dich einer Diskussion **zugewiesen**
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
+        Hey, %{assignee_name} hat dich einer Diskussion **zugewiesen**
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
 
-      Wenn dich das interessiert, klicke auf den folgenden Link:
-      [%{topic_link}](%{topic_link})
+        Wenn dich das interessiert, klicke auf den folgenden Link:
+        [%{topic_link}](%{topic_link})

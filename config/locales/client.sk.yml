@@ -5,4 +5,24 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sk: {}
+sk:
+  js:
+    action_codes:
+      assigned: "priradené %{who}%{when}"
+      unassigned: "nepriradené %{who}%{when}"
+    discourse_assign:
+      assigned: "Priradené"
+      assigned_to: "Priradené komu"
+      unassign:
+        title: "Nepriradené"
+        help: "Nepriradená téma"
+      assign:
+        title: "Priradiť"
+        help: "Priradiť tému používateľovi"
+      assign_modal:
+        title: "Priradiť tému"
+        description: "Zadajte meno používateľa, ktorému chcete priradiť túto tému"
+        assign: "Priraď"
+      claim:
+        title: "prevziať"
+        help: "Priradiť tému sebe"

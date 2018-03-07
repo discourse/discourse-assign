@@ -23,10 +23,10 @@ es:
     title: "Asignación"
     subject_template: "[%{email_prefix}] %{assignee_name} te ha asignado a '%{topic_title}'"
     text_body_template: |
-      Hola, %{assignee_name} te ha **asignado** a un tema
-      > **%{topic_title}**
-      >
-      > %{topic_excerpt}
+        Hola, %{assignee_name} te ha **asignado** a un tema
+        > **%{topic_title}**
+        >
+        > %{topic_excerpt}
 
-      Para más información, haz clic en el siguiente enlace:
-      [%{topic_link}](%{topic_link})
+        Para más información, haz clic en el siguiente enlace:
+        [%{topic_link}](%{topic_link})
