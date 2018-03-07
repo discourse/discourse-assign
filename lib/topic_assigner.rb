@@ -112,6 +112,8 @@ SQL
       user_ids: staff_ids
     )
 
+    publish_topic_tracking_state(@topic, assign_to.id)
+
     if SiteSetting.assign_mailer_enabled
       if !@topic.muted?(assign_to)
         message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
@@ -177,6 +179,8 @@ SQL
         user_ids: staff_ids
       )
 
+      publish_topic_tracking_state(@topic, assigned_user.id)
+
       UserAction.where(
         action_type: UserAction::ASSIGNED,
         target_post_id: post.id
@@ -202,4 +206,16 @@ SQL
       end
     end
   end
+
+  private
+
+    def publish_topic_tracking_state(topic, user_id)
+      if topic.private_message?
+        MessageBus.publish(
+          "/private-messages/assigned",
+          { topic_id: topic.id },
+          user_ids: [user_id]
+        )
+      end
+    end
 end
