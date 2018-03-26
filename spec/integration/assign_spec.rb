@@ -18,25 +18,17 @@ describe 'integration tests' do
     let(:pm) { post.topic }
     let(:user) { pm.allowed_users.first }
     let(:user2) { pm.allowed_users.last }
-
-    let(:channels) do
-      [
-        "/private-messages/assigned",
-        "/private-messages/assigned/archive"
-      ]
-    end
+    let(:channel) { "/private-messages/assigned" }
 
     def assert_publish_topic_state(topic, user)
       messages = MessageBus.track_publish do
         yield
       end
 
-      channels.each do |channel|
-        message = messages.find { |message| message.channel == channel }
+      message = messages.find { |message| message.channel == channel }
 
-        expect(message.data[:topic_id]).to eq(topic.id)
-        expect(message.user_ids).to eq([user.id])
-      end
+      expect(message.data[:topic_id]).to eq(topic.id)
+      expect(message.user_ids).to eq([user.id])
     end
 
     it 'publishes the right message on archive and move to inbox' do
@@ -50,12 +42,6 @@ describe 'integration tests' do
       assert_publish_topic_state(pm, user) do
         UserArchivedMessage.move_to_inbox!(user.id, pm.reload)
       end
-
-      messages = MessageBus.track_publish do
-        UserArchivedMessage.archive!(user2.id, pm.reload)
-      end
-
-      expect(channels - messages.map(&:channel)).to eq(channels)
     end
   end
 end

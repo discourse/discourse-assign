@@ -45,8 +45,6 @@ describe TopicQuery do
       topic
     end
 
-    let(:options) { { status: 'archived' } }
-
     before do
       SiteSetting.assign_enabled = true
       user_topic
@@ -55,47 +53,26 @@ describe TopicQuery do
     end
 
     it 'should return the right topics' do
-      expect(TopicQuery.new(user).list_private_messages_assigned(user).topics)
-        .to contain_exactly(assigned_topic, group_assigned_topic)
-
-      UserArchivedMessage.archive!(user2.id, assigned_topic)
-
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
       ).to contain_exactly(assigned_topic, group_assigned_topic)
-
-      expect(
-        TopicQuery.new(user, options).list_private_messages_assigned(user).topics
-      ).to eq([])
 
       UserArchivedMessage.archive!(user.id, assigned_topic)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
-      ).to contain_exactly(group_assigned_topic)
-
-      expect(
-        TopicQuery.new(user, options).list_private_messages_assigned(user).topics
-      ).to contain_exactly(assigned_topic)
+      ).to contain_exactly(assigned_topic, group_assigned_topic)
 
       GroupArchivedMessage.archive!(group2.id, group_assigned_topic)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
-      ).to contain_exactly(group_assigned_topic)
-
-      expect(
-        TopicQuery.new(user, options).list_private_messages_assigned(user).topics
-      ).to contain_exactly(assigned_topic)
+      ).to contain_exactly(assigned_topic, group_assigned_topic)
 
       GroupArchivedMessage.archive!(group.id, group_assigned_topic)
 
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
-      ).to eq([])
-
-      expect(
-        TopicQuery.new(user, options).list_private_messages_assigned(user).topics
       ).to contain_exactly(assigned_topic, group_assigned_topic)
     end
   end
