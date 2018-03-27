@@ -123,29 +123,9 @@ after_initialize do
 
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|
     list = private_messages_for(user, :all)
-    user_id = user.id.to_s
-    group_ids = user.groups.pluck(:id)
-
-    list = list
-      .joins("
-        LEFT JOIN group_archived_messages gm
-        ON gm.topic_id = topics.id
-        AND gm.group_id IN (#{group_ids.join(',')})
-      ")
-      .joins("
-        LEFT JOIN user_archived_messages um ON um.topic_id = topics.id AND um.user_id = #{user_id}
-      ")
-      .where("topics.id IN (
+    list = list.where("topics.id IN (
         SELECT topic_id FROM topic_custom_fields WHERE name = 'assigned_to_id' AND value = ?
-      )", user_id)
-
-    list =
-      if @options[:status] == "archived"
-        list.where("gm.topic_id IS NOT NULL OR um.topic_id IS NOT NULL")
-      else
-        list.where("gm.topic_id IS NULL AND um.topic_id IS NULL")
-      end
-
+    )", user.id.to_s)
     create_list(:private_messages, {}, list)
   end
 
@@ -219,15 +199,11 @@ after_initialize do
   add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, user_id|
     return unless topic.private_message?
 
-    assigned_channel = "/private-messages/assigned"
-
-    [assigned_channel, "#{assigned_channel}/archive"].each do |channel|
-      MessageBus.publish(
-        channel,
-        { topic_id: topic.id },
-        user_ids: [user_id]
-      )
-    end
+    MessageBus.publish(
+      "/private-messages/assigned",
+      { topic_id: topic.id },
+      user_ids: [user_id]
+    )
   end
 
   on(:move_to_inbox) do |info|
