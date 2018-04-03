@@ -167,6 +167,8 @@ SQL
       @topic.save!
 
       post = @topic.posts.where(post_number: 1).first
+      return unless post.present?
+
       post.publish_change_to_clients!(:revised, reload_topic: true)
 
       assigned_user = User.find_by(id: assigned_to_id)
