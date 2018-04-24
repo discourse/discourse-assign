@@ -9,7 +9,7 @@ fr:
   site_settings:
     assign_enabled: "Activer le plugin d'affectation"
     assigns_public: "Autoriser le grand public à voir les affectations des sujets"
-    assigns_user_url_path: "Chemin vers les sujets affectés aux utilisateurs (utilisez {username} pour remplacer le nom d'utilisateur)"
+    assigns_user_url_path: "Chemin vers les sujets affectés aux utilisateurs (utilisez {username} pour remplacer le pseudo)"
     assigns_by_staff_mention: "Si un responsable mentionne un autre responsable, le sujet est automatiquement affecté"
     unassign_creates_tracking_post: "Si vous désaffectez un sujet, un murmure ou une action seront créés pour suivre le changement"
     assign_self_regex: "Expression régulière qui doit être validée pour s'affecter soi-même. Par exemple « ma liste »"

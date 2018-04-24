@@ -15,7 +15,7 @@ ur:
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
       assigned: "اسائین کردہ"
       assigned_to: "جس کو اسائین کیا گیا"
-      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{صارف نام}}</span>{{تفصیل}}</p>"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "غیر اسائین کریں"
         help: "ٹاپک غیر اسائین کریں"
@@ -29,3 +29,6 @@ ur:
       claim:
         title: "کلیم کریں"
         help: "اپنے آپ کو ٹاپک اسائین کریں"
+    user:
+      messages:
+        assigned: "اسائین کردہ"

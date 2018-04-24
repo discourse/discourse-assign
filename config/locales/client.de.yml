@@ -29,3 +29,6 @@ de:
       claim:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"
+    user:
+      messages:
+        assigned: "Zugeordnet"

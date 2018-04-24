@@ -7,18 +7,21 @@
 
 es:
   site_settings:
-    assign_enabled: "Activar el plugin assign"
-    assigns_public: "Permitir al público general ver las asignaciones de tema"
-    assigns_by_staff_mention: "Si un miembro del staff menciona a otro miembro del staff, el tema es asignado automáticamente"
-    unassign_creates_tracking_post: "Si desasignas un tema, se creará un susurro o una acción para llevar cuenta de ello"
+    assign_enabled: "Activar el plugin assign (asignaciones)"
+    assigns_public: "Permitir al público general ver las asignaciones de temas"
+    assigns_by_staff_mention: "Si un miembro del staff menciona a otro miembro del staff, asignar el tema automáticamente"
+    unassign_creates_tracking_post: "Si desasignas un tema, se creará un susurro o una acción para llevar una cuenta de ello"
     unassign_on_group_archive: "Cuando un mensaje sea archivado por un grupo, desasignarlo (reasignarlo al moverlo de nuevo a la bandeja de entrada)"
     unassign_on_close: "Cuando un tema se cierre, desasignarlo"
     assign_locks_flags: "Cuando un tema se asigne a un staff, sus reportes solo pueden ser llevados por esa persona"
     assign_mailer_enabled: "Enviar un email de notificación a los usuarios en cada asignación"
+    flags_require_assign: "Cuando esté activo, los reportes solo pueden ser gestionados por usuarios asignados a los temas correspondientes."
   discourse_assign:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "El tema ha sido desasignado"
     already_claimed: "Ese tema ya ha sido reclamado por alguien."
+    flag_assigned: "Lo sentimos, pero el tema de ese reporte está asignado a otro usuario"
+    flag_unclaimed: "Debes asignarte ese tema antes de actuar en el reporte"
   assign_mailer:
     title: "Asignación"
     subject_template: "[%{email_prefix}] %{assignee_name} te ha asignado a '%{topic_title}'"

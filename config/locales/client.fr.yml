@@ -29,3 +29,6 @@ fr:
       claim:
         title: "revendiquer"
         help: "Affecter le sujet à vous-même"
+    user:
+      messages:
+        assigned: "Affecté"
