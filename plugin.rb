@@ -17,6 +17,15 @@ end
 after_initialize do
   require 'topic_assigner'
 
+  # Assign the first staff member who replies to the topic as the owner.
+  DiscourseEvent.on(:post_created) do |post|
+    topic = post.topic
+    poster = post.user
+    if SiteSetting.assign_first_staff? && topic.custom_fields['assigned_to_id'].nil? && post.post_type != 4 && poster.staff?
+      assigner = TopicAssigner.new(topic, poster).assign(poster)
+    end
+  end
+
   # Raise an invalid access error if a user tries to act on something
   # not assigned to them
   DiscourseEvent.on(:before_staff_flag_action) do |args|
