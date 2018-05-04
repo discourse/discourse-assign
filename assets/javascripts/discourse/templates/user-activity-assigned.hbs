@@ -1,0 +1,11 @@
+{{#if canUnassignAll}}
+  <div class='assign-controls'>
+    {{d-button
+      action=(action "unassignAll")
+      icon="times"
+      label="discourse_assign.unassign_all.title"
+      class="btn-danger"}}
+  </div>
+{{/if}}
+
+{{outlet}}

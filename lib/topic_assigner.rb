@@ -1,6 +1,25 @@
 require_dependency 'email/sender'
 
 class ::TopicAssigner
+
+  def self.unassign_all(user, assigned_by)
+    topic_ids = TopicCustomField.where(name: 'assigned_to_id', value: user.id).pluck(:topic_id)
+
+    # Fast path: by doing this we can instantly refresh for the user showing no assigned topics
+    # while doing the "full" removal asynchronously.
+    TopicCustomField.where(
+      name: ['assigned_to_id', 'assigned_by_id'],
+      topic_id: topic_ids
+    ).delete_all
+
+    Jobs.enqueue(
+      :unassign_bulk,
+      user_id: user.id,
+      assigned_by_id: assigned_by.id,
+      topic_ids: topic_ids
+    )
+  end
+
   def self.backfill_auto_assign
     staff_mention = User.where('moderator OR admin')
       .pluck('username')
@@ -95,9 +114,7 @@ SQL
   end
 
   def assign(assign_to, silent: false)
-    @topic.custom_fields["assigned_to_id"] = assign_to.id
-    @topic.custom_fields["assigned_by_id"] = @assigned_by.id
-    @topic.save!
+    @topic.upsert_custom_fields(assigned_to_id: assign_to.id, assigned_by_id: @assigned_by.id)
 
     first_post = @topic.posts.find_by(post_number: 1)
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
@@ -162,9 +179,7 @@ SQL
 
   def unassign(silent: false)
     if assigned_to_id = @topic.custom_fields["assigned_to_id"]
-      @topic.custom_fields["assigned_to_id"] = nil
-      @topic.custom_fields["assigned_by_id"] = nil
-      @topic.save!
+      @topic.upsert_custom_fields(assigned_to_id: nil, assigned_by_id: nil)
 
       post = @topic.posts.where(post_number: 1).first
       return unless post.present?

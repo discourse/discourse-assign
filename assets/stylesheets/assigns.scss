@@ -1,3 +1,11 @@
+.user-right {
+  .assign-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5em;
+  }
+}
+
 .assigned-to {
   .d-icon, i.fa {
     margin-right: 0.5em;

@@ -70,5 +70,11 @@ module DiscourseAssign
 
       render json: success_json
     end
+
+    def unassign_all
+      user = User.find_by(id: params[:user_id])
+      TopicAssigner.unassign_all(user, current_user)
+      render json: success_json
+    end
   end
 end

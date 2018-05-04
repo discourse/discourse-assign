@@ -22,4 +22,25 @@ RSpec.describe TopicAssigner do
       assert_publish_topic_state(pm, user) { assigner.unassign }
     end
   end
+
+  context "assigning and unassigning" do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+    let(:moderator) { Fabricate(:moderator) }
+    let(:assigner) { TopicAssigner.new(topic, moderator) }
+
+    it "can assign and unassign correctly" do
+      assigner.assign(moderator)
+      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_present
+      assigner.unassign
+      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+    end
+
+    it "can unassign all a user's topics at once" do
+      assigner.assign(moderator)
+      TopicAssigner.unassign_all(moderator, moderator)
+      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+    end
+
+  end
 end

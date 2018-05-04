@@ -15,6 +15,7 @@ Discourse::Application.routes.append do
 end
 
 after_initialize do
+  require File.expand_path('../jobs/unassign_bulk', __FILE__)
   require 'topic_assigner'
 
   # Raise an invalid access error if a user tries to act on something
