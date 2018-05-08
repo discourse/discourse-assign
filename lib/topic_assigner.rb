@@ -114,7 +114,9 @@ SQL
   end
 
   def assign(assign_to, silent: false)
-    @topic.upsert_custom_fields(assigned_to_id: assign_to.id, assigned_by_id: @assigned_by.id)
+    @topic.custom_fields["assigned_to_id"] = assign_to.id
+    @topic.custom_fields["assigned_by_id"] = @assigned_by.id
+    @topic.save!
 
     first_post = @topic.posts.find_by(post_number: 1)
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
@@ -179,7 +181,9 @@ SQL
 
   def unassign(silent: false)
     if assigned_to_id = @topic.custom_fields["assigned_to_id"]
-      @topic.upsert_custom_fields(assigned_to_id: nil, assigned_by_id: nil)
+      @topic.custom_fields["assigned_to_id"] = nil
+      @topic.custom_fields["assigned_by_id"] = nil
+      @topic.save!
 
       post = @topic.posts.where(post_number: 1).first
       return unless post.present?
