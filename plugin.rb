@@ -168,7 +168,6 @@ after_initialize do
     end
   end
 
-
   add_to_serializer(:topic_view, :assigned_to_user, false) do
     DiscourseAssign::Helpers.build_assigned_to_user(assigned_to_user_id, object.topic)
   end
