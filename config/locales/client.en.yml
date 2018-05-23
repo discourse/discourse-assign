@@ -28,4 +28,5 @@ en:
         help: "Assign topic to yourself"
     user:
       messages:
+        assigned_title: "Assigned Messages (%{count})"
         assigned: "Assigned"

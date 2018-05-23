@@ -123,11 +123,19 @@ after_initialize do
   end
 
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|
-    list = private_messages_for(user, :all)
-    list = list.where("topics.id IN (
-        SELECT topic_id FROM topic_custom_fields WHERE name = 'assigned_to_id' AND value = ?
-    )", user.id.to_s)
+    list = private_messages_assigned_query(user)
     create_list(:private_messages, {}, list)
+  end
+
+  add_to_class(:topic_query, :private_messages_assigned_query) do |user|
+    list = private_messages_for(user, :all)
+
+    list = list.where("
+      topics.id IN (
+        SELECT topic_id FROM topic_custom_fields
+        WHERE name = 'assigned_to_id'
+        AND value = ?)
+    ", user.id.to_s)
   end
 
   add_to_class(:topic, :assigned_to_user) do
@@ -144,6 +152,22 @@ after_initialize do
   add_to_serializer(:topic_list_item, 'include_assigned_to_user?') do
     (SiteSetting.assigns_public || scope.is_staff?) && object.assigned_to_user
   end
+
+  add_to_serializer(:topic_list, :assigned_messages_count) do
+    TopicQuery.new(object.current_user, guardian: scope, limit: false)
+      .private_messages_assigned_query(object.current_user)
+      .count
+  end
+
+  add_to_serializer(:topic_list, 'include_assigned_messages_count?') do
+    return unless SiteSetting.assigns_public
+    options = object.instance_variable_get(:@opts)
+
+    if assigned_username = options[:assigned]&.downcase
+      assigned_username == object.current_user&.username_lower
+    end
+  end
+
 
   add_to_serializer(:topic_view, :assigned_to_user, false) do
     DiscourseAssign::Helpers.build_assigned_to_user(assigned_to_user_id, object.topic)
