@@ -162,8 +162,10 @@ after_initialize do
   add_to_serializer(:topic_list, 'include_assigned_messages_count?') do
     options = object.instance_variable_get(:@opts)
 
-    scope.is_staff? ||
-      options.dig(:assigned)&.downcase == scope.current_user&.username_lower
+    if assigned_user = options.dig(:assigned)
+      scope.is_staff? ||
+        assigned_user.downcase == scope.current_user&.username_lower
+    end
   end
 
   add_to_serializer(:topic_view, :assigned_to_user, false) do
