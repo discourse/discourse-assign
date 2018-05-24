@@ -6,6 +6,8 @@
 enabled_site_setting :assign_enabled
 
 register_asset 'stylesheets/assigns.scss'
+register_asset 'stylesheets/mobile/assigns.scss', :mobile
+
 load File.expand_path('../lib/discourse_assign/engine.rb', __FILE__)
 load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 
