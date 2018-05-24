@@ -160,12 +160,10 @@ after_initialize do
   end
 
   add_to_serializer(:topic_list, 'include_assigned_messages_count?') do
-    return unless SiteSetting.assigns_public
     options = object.instance_variable_get(:@opts)
 
-    if assigned_username = options[:assigned]&.downcase
-      assigned_username == object.current_user&.username_lower
-    end
+    scope.is_staff? ||
+      options.dig(:assigned)&.downcase == scope.current_user&.username_lower
   end
 
   add_to_serializer(:topic_view, :assigned_to_user, false) do

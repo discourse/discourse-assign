@@ -29,7 +29,6 @@ RSpec.describe TopicListSerializer do
 
   before do
     SiteSetting.assign_enabled = true
-    SiteSetting.assigns_public = true
   end
 
   describe '#assigned_messages_count' do
@@ -46,14 +45,23 @@ RSpec.describe TopicListSerializer do
         .to eq(1)
     end
 
-    describe 'when assigns are not public' do
-      before do
-        SiteSetting.assigns_public = false
+    describe 'viewing another user' do
+      describe 'as a staff' do
+        let(:guardian) { Guardian.new(Fabricate(:admin)) }
+
+        it 'should include the right attribute' do
+          expect(serializer.as_json[:topic_list][:assigned_messages_count])
+            .to eq(1)
+        end
       end
 
-      it 'should not include the attributes' do
-        expect(serializer.as_json[:topic_list][:assigned_messages_count])
-          .to eq(nil)
+      describe 'as a normal user' do
+        let(:guardian) { Guardian.new(Fabricate(:user)) }
+
+        it 'should not include the attribute' do
+          expect(serializer.as_json[:topic_list][:assigned_messages_count])
+            .to eq(nil)
+        end
       end
     end
   end
