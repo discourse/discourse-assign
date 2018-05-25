@@ -215,7 +215,8 @@ after_initialize do
   # Unassign if there are no more flags in the topic
   on(:flag_reviewed) do |post|
     if SiteSetting.assign_locks_flags? &&
-      FlagQuery.flagged_post_actions(topic_id: post.topic_id).count == 0
+      post.topic &&
+      FlagQuery.flagged_post_actions(topic_id: post.topic.id).count == 0
 
       assigner = ::TopicAssigner.new(post.topic, Discourse.system_user)
       assigner.unassign
