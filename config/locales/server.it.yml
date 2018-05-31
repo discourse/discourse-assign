@@ -8,7 +8,7 @@
 it:
   site_settings:
     assigns_public: "Consenti a chiunque di visualizzare le assegnazioni di un argomento"
-    assigns_user_url_path: "Percorso degli utenti assegnati agli argomenti (usa: {username} per sostituire un username)"
+    assigns_user_url_path: "Percorso agli argomenti assegnati agli utenti (usa: {username} per sostituire un nome utente)"
     assigns_by_staff_mention: "Se un menbro dello staff menziona un altro membro dello staff, l'argomento è assegnato automaticamente"
     unassign_creates_tracking_post: "Se annulli l'assegnazione di un argomento, verrà creato un sussurro o una piccola azione per tenere traccia delle modifiche"
     assign_self_regex: "L'espressione regolare che dovrà essere soddisfatta per l'auto-assegnazione. Ad esempio 'la mia lista'"

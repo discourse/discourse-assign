@@ -29,10 +29,10 @@ fr:
     title: "Affecter le mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} vous a affecté à « %{topic_title} » !"
     text_body_template: |
-        Hey, %{assignee_name} vous a **affecté** a une discussion
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
+      Hey, %{assignee_name} vous a **affecté** a une discussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
 
-        Si vous êtes intéressés, cliquer sur le lien suivant :
-        [%{topic_link}](%{topic_link})
+      Si vous êtes intéressés, cliquer sur le lien suivant :
+      [%{topic_link}](%{topic_link})

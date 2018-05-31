@@ -29,10 +29,10 @@ ur:
     title: "مَیلر اسائین کریں"
     subject_template: "[%{email_prefix}] %{assignee_name} نے آپ کو '%{topic_title}' اسائین کیا! "
     text_body_template: |
-        ارے، %{assignee_name} نے آپ کو ایک بحث **اسائین** کی ہے
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
+      ارے، %{assignee_name} نے آپ کو ایک بحث **اسائین** کی ہے
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
 
-        اگر آپ دلچسپی رکھتے ہیں تو، نیچے دیئے گئے لنک پر کلک کریں:
-        [%{topic_link}](%{topic_link})
+      اگر آپ دلچسپی رکھتے ہیں تو، نیچے دیئے گئے لنک پر کلک کریں:
+      [%{topic_link}](%{topic_link})

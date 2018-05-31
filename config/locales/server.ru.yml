@@ -26,10 +26,10 @@ ru:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} назначил(а) Вас ответственным в теме '%{topic_title}'!"
     text_body_template: |
-        Хэй, %{assignee_name} **назначил(а)** Вас ответственным в теме
-        > **%{topic_title}**
-        >
-        > %{topic_excerpt}
+      Хэй, %{assignee_name} **назначил(а)** Вас ответственным в теме
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
 
-        Если Вам интересно, то перейдите по ссылке ниже:
-        [%{topic_link}](%{topic_link})
+      Если Вам интересно, то перейдите по ссылке ниже:
+      [%{topic_link}](%{topic_link})
