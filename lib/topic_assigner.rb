@@ -230,13 +230,13 @@ SQL
 
   private
 
-    def publish_topic_tracking_state(topic, user_id)
-      if topic.private_message?
-        MessageBus.publish(
-          "/private-messages/assigned",
-          { topic_id: topic.id },
-          user_ids: [user_id]
-        )
-      end
+  def publish_topic_tracking_state(topic, user_id)
+    if topic.private_message?
+      MessageBus.publish(
+        "/private-messages/assigned",
+        { topic_id: topic.id },
+        user_ids: [user_id]
+      )
     end
+  end
 end
