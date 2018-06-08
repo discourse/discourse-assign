@@ -4,21 +4,23 @@ RSpec.describe TopicListSerializer do
   let(:user) { Fabricate(:user) }
 
   let(:private_message_topic) do
-    Fabricate(:private_message_topic,
-      posts: [Fabricate(:post)],
+    topic = Fabricate(:private_message_topic,
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: user)
       ]
     )
+    topic.posts << Fabricate(:post)
+    topic
   end
 
   let(:assigned_topic) do
     topic = Fabricate(:private_message_topic,
-      posts: [Fabricate(:post)],
       topic_allowed_users: [
         Fabricate.build(:topic_allowed_user, user: user)
       ]
     )
+
+    topic.posts << Fabricate(:post)
 
     TopicAssigner.new(topic, user).assign(user)
     topic

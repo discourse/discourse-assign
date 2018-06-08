@@ -6,13 +6,15 @@ describe TopicQuery do
     let(:user2) { Fabricate(:user) }
 
     let(:user_topic) do
-      Fabricate(:private_message_topic,
+      topic = Fabricate(:private_message_topic,
         topic_allowed_users: [
           Fabricate.build(:topic_allowed_user, user: user),
           Fabricate.build(:topic_allowed_user, user: user2)
         ],
-        posts: [Fabricate(:post)]
       )
+
+      topic.posts << Fabricate(:post)
+      topic
     end
 
     let(:assigned_topic) do
@@ -21,9 +23,9 @@ describe TopicQuery do
           Fabricate.build(:topic_allowed_user, user: user),
           Fabricate.build(:topic_allowed_user, user: user2)
         ],
-        posts: [Fabricate(:post)]
       )
 
+      topic.posts << Fabricate(:post)
       TopicAssigner.new(topic, user).assign(user)
       topic
     end
@@ -38,9 +40,9 @@ describe TopicQuery do
           Fabricate.build(:topic_allowed_group, group: group),
           Fabricate.build(:topic_allowed_group, group: group2)
         ],
-        posts: [Fabricate(:post)]
       )
 
+      topic.posts << Fabricate(:post)
       TopicAssigner.new(topic, user).assign(user)
       topic
     end
