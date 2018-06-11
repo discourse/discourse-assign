@@ -2,6 +2,7 @@
 # about: Assign users to topics
 # version: 0.1
 # authors: Sam Saffron
+# url: https://github.com/discourse/discourse-assign
 
 enabled_site_setting :assign_enabled
 
