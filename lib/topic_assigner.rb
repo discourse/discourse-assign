@@ -85,14 +85,25 @@ SQL
   end
 
   def self.is_last_staff_post?(post)
-    Post.exec_sql("SELECT 1 FROM posts p
-                   JOIN users u ON u.id = p.user_id AND (moderator OR admin)
-                   WHERE p.deleted_at IS NULL AND p.topic_id = :topic_id
-                   having max(post_number) = :post_number
-                  ",
-                   topic_id: post.topic_id,
-                   post_number: post.post_number
-                 ).to_a.length == 1
+    sql = <<~SQL
+      SELECT 1 FROM posts p
+       JOIN users u ON u.id = p.user_id AND (moderator OR admin)
+       WHERE p.deleted_at IS NULL AND p.topic_id = :topic_id
+       having max(post_number) = :post_number
+
+    SQL
+
+    args = {
+      topic_id: post.topic_id,
+      post_number: post.post_number
+    }
+
+    # TODO post 2.1 release remove
+    if defined?(DB)
+      DB.exec(sql, args) == 1
+    else
+      Post.exec_sql(sql, args).to_a.length == 1
+    end
   end
 
   def self.mentioned_staff(post)
