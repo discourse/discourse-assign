@@ -5,23 +5,24 @@ export default UserTopicListRoute.extend({
   noContentHelpKey: "discourse_assigns.no_assigns",
 
   model() {
-    return this.store.findFiltered(
-      'topicList',
-      {
-        filter: 'latest',
-        params: { assigned: this.modelFor('user').get('username_lower') }
+    return this.store.findFiltered("topicList", {
+      filter: "latest",
+      params: {
+        assigned: this.modelFor("user").get("username_lower"),
+        // core is a bit odd here and is not sending an array, should be fixed
+        exclude_category_ids: [-1]
       }
-    );
+    });
   },
 
   renderTemplate() {
-    this.render('user-activity-assigned');
-    this.render('user-topics-list', { into: 'user-activity-assigned' });
+    this.render("user-activity-assigned");
+    this.render("user-topics-list", { into: "user-activity-assigned" });
   },
 
   setupController(controller, model) {
     this._super(controller, model);
-    controller.set('model', model);
+    controller.set("model", model);
   },
 
   actions: {
