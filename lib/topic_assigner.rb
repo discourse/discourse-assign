@@ -127,7 +127,7 @@ SQL
   def assign(assign_to, silent: false)
     @topic.custom_fields["assigned_to_id"] = assign_to.id
     @topic.custom_fields["assigned_by_id"] = @assigned_by.id
-    @topic.save!
+    @topic.save_custom_fields
 
     first_post = @topic.posts.find_by(post_number: 1)
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
