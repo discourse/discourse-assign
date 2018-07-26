@@ -194,7 +194,7 @@ SQL
     if assigned_to_id = @topic.custom_fields["assigned_to_id"]
       @topic.custom_fields["assigned_to_id"] = nil
       @topic.custom_fields["assigned_by_id"] = nil
-      @topic.save!
+      @topic.save_custom_fields
 
       post = @topic.posts.where(post_number: 1).first
       return unless post.present?
