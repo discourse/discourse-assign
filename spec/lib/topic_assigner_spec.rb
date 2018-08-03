@@ -31,9 +31,22 @@ RSpec.describe TopicAssigner do
 
     it "can assign and unassign correctly" do
       assigner.assign(moderator)
-      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_present
+
+      expect(TopicQuery.new(
+        moderator, assigned: moderator.username
+      ).list_latest.topics).to eq([topic])
+
+      expect(TopicUser.find_by(user: moderator).notification_level)
+        .to eq(TopicUser.notification_levels[:watching])
+
       assigner.unassign
-      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+
+      expect(TopicQuery.new(
+        moderator, assigned: moderator.username
+      ).list_latest.topics).to eq([])
+
+      expect(TopicUser.find_by(user: moderator).notification_level)
+        .to eq(TopicUser.notification_levels[:tracking])
     end
 
     it "can unassign all a user's topics at once" do

@@ -144,6 +144,13 @@ SQL
 
     publish_topic_tracking_state(@topic, assign_to.id)
 
+    TopicUser.change(
+      assign_to.id,
+      @topic.id,
+      notification_level: TopicUser.notification_levels[:watching],
+      notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
+    )
+
     if SiteSetting.assign_mailer_enabled
       if !@topic.muted?(assign_to)
         message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
@@ -200,6 +207,13 @@ SQL
       return unless post.present?
 
       post.publish_change_to_clients!(:revised, reload_topic: true)
+
+      TopicUser.change(
+        assigned_to_id,
+        @topic.id,
+        notification_level: TopicUser.notification_levels[:tracking],
+        notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
+      )
 
       assigned_user = User.find_by(id: assigned_to_id)
       MessageBus.publish(
