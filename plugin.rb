@@ -217,7 +217,8 @@ after_initialize do
   on(:flag_reviewed) do |post|
     if SiteSetting.assign_locks_flags? &&
       post.topic &&
-      FlagQuery.flagged_post_actions(topic_id: post.topic.id).count == 0
+      FlagQuery.flagged_post_actions(topic_id: post.topic_id, filter: "old").count > 0 &&
+      FlagQuery.flagged_post_actions(topic_id: post.topic_id).count == 0
 
       assigner = ::TopicAssigner.new(post.topic, Discourse.system_user)
       assigner.unassign
