@@ -17,6 +17,7 @@ fr:
       assigned_to: "Affecté à"
       assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
       unassign_all:
+        title: "Désaffecter tous"
         confirm: "Êtes-vous sûr de vouloir désaffecter tous les sujets ?"
       unassign:
         title: "Désaffecter"
@@ -33,4 +34,5 @@ fr:
         help: "Affecter le sujet à vous-même"
     user:
       messages:
+        assigned_title: "Affecté(s) (%{count})"
         assigned: "Affecté"

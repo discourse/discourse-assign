@@ -5,15 +5,13 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ca:
+hu:
   js:
+    action_codes:
+      assigned: "Aláírta%{who} %{when}"
+      unassigned: "Nem aláírt%{who} %{when}"
     discourse_assign:
-      assigned: "Assignat"
-      assigned_to: "Assignat a"
-      assign:
-        title: "Assigna"
-      assign_modal:
-        assign: "Assigna"
-    user:
-      messages:
-        assigned: "Assignat"
+      assigned: "Aláírt"
+      assigned_to: "Aláírta"
+      claim:
+        title: "Lefoglal"

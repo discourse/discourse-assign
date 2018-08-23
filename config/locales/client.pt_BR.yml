@@ -5,4 +5,34 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-pt_BR: {}
+pt_BR:
+  js:
+    action_codes:
+      assigned: "atribuído %{who} %{when}"
+      unassigned: "não atribuído%{who} %{when}"
+    discourse_assign:
+      cant_act: "Você não pode agir em sinalizadores que foram atribuídos a outros usuários"
+      cant_act_unclaimed: "Você deve reivindicar este tópico antes de agir em bandeiras."
+      assigned: "Atribuído"
+      assigned_to: "Atribuído a"
+      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      unassign_all:
+        title: "Cancelar atribuição de todos"
+        confirm: "Tem certeza de que deseja cancelar a atribuição de todos os tópicos do {{username}}?"
+      unassign:
+        title: "Cancelar atribuição"
+        help: "Desatribuir Tópico"
+      assign:
+        title: "Atribuir"
+        help: "Atribuir Tópico ao Usuário"
+      assign_modal:
+        title: "Atribuir Tópico"
+        description: "Digite o nome de usuário da pessoa que você deseja atribuir a esse tópico"
+        assign: "Atribuir"
+      claim:
+        title: "afirmação"
+        help: "Atribuir tópico a você mesmo"
+    user:
+      messages:
+        assigned_title: "Atribuído (%{count})"
+        assigned: "Atribuído"

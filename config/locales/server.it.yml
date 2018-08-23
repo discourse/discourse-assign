@@ -13,7 +13,7 @@ it:
     unassign_creates_tracking_post: "Se annulli l'assegnazione di un argomento, verrà creato un sussurro o una piccola azione per tenere traccia delle modifiche"
     assign_self_regex: "L'espressione regolare che dovrà essere soddisfatta per l'auto-assegnazione. Ad esempio 'la mia lista'"
     assign_other_regex: "L'espressione regolare che dovrà essere soddisfatta per assegnare argomenti ad altri utenti usando la menzione. Ad esempio 'la tua lista'."
-    unassign_on_group_archive: "Quando un messaggio viene archiviato da un gruppo, annullare l'assegnazione (riassegnare nuovamente se viene spostato nella posta in arrivo)"
+    unassign_on_group_archive: "Quando un messaggio viene archiviato da un gruppo, annullare l'assegnazione (riassegnare se viene spostato nuovamente nella posta in arrivo)"
     unassign_on_close: "Quando un argomento viene chiuso annullare l'assegnazione"
   discourse_assign:
     assigned_to: "Argomento assegnato a @%{username}"
