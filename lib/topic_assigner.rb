@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
 require_dependency 'email/sender'
 
 class ::TopicAssigner
 
+  ASSIGNED_TO_ID = 'assigned_to_id'
+  ASSIGNED_BY_ID = 'assigned_by_id'
+
   def self.unassign_all(user, assigned_by)
-    topic_ids = TopicCustomField.where(name: 'assigned_to_id', value: user.id).pluck(:topic_id)
+    topic_ids = TopicCustomField.where(name: ASSIGNED_TO_ID, value: user.id).pluck(:topic_id)
 
     # Fast path: by doing this we can instantly refresh for the user showing no assigned topics
     # while doing the "full" removal asynchronously.
     TopicCustomField.where(
-      name: ['assigned_to_id', 'assigned_by_id'],
+      name: [ASSIGNED_TO_ID, ASSIGNED_BY_ID],
       topic_id: topic_ids
     ).delete_all
 
@@ -30,7 +35,7 @@ class ::TopicAssigner
     SELECT p.topic_id, MAX(post_number) post_number
     FROM posts p
     JOIN topics t ON t.id = p.topic_id
-    LEFT JOIN topic_custom_fields tc ON tc.name = 'assigned_to_id' AND tc.topic_id = p.topic_id
+    LEFT JOIN topic_custom_fields tc ON tc.name = '#{ASSIGNED_TO_ID}' AND tc.topic_id = p.topic_id
     WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin) AND
       ( #{staff_mention} ) AND tc.value IS NULL AND NOT t.closed AND t.deleted_at IS NULL
     GROUP BY p.topic_id
@@ -68,7 +73,7 @@ SQL
     return unless SiteSetting.assigns_by_staff_mention
 
     if post.user && post.topic && post.user.staff?
-      can_assign = force || post.topic.custom_fields["assigned_to_id"].nil?
+      can_assign = force || post.topic.custom_fields[ASSIGNED_TO_ID].nil?
 
       assign_other = assign_other_passes?(post) && mentioned_staff(post)
       assign_self = assign_self_passes?(post) && post.user
@@ -125,8 +130,8 @@ SQL
   end
 
   def assign(assign_to, silent: false)
-    @topic.custom_fields["assigned_to_id"] = assign_to.id
-    @topic.custom_fields["assigned_by_id"] = @assigned_by.id
+    @topic.custom_fields[ASSIGNED_TO_ID] = assign_to.id
+    @topic.custom_fields[ASSIGNED_BY_ID] = @assigned_by.id
     @topic.save_custom_fields
 
     first_post = @topic.posts.find_by(post_number: 1)
@@ -198,10 +203,29 @@ SQL
   end
 
   def unassign(silent: false)
-    if assigned_to_id = @topic.custom_fields["assigned_to_id"]
-      @topic.custom_fields["assigned_to_id"] = nil
-      @topic.custom_fields["assigned_by_id"] = nil
-      @topic.save_custom_fields
+    if assigned_to_id = @topic.custom_fields[ASSIGNED_TO_ID]
+
+      # TODO core needs an API for this stuff badly
+      # currently there is no 100% surefire way of deleting a custom field
+      TopicCustomField.where(
+        topic_id: @topic.id
+      ).where(
+        'name in (?)', [ASSIGNED_BY_ID, ASSIGNED_TO_ID]
+      ).destroy_all
+
+      if Array === assigned_to_id
+        # more custom field mess, try to recover
+        assigned_to_id = assigned_to_id.first
+      end
+
+      # clean up in memory object
+      @topic.custom_fields[ASSIGNED_TO_ID] = nil
+      @topic.custom_fields[ASSIGNED_BY_ID] = nil
+
+      if !assigned_to_id
+        # nothing to do here
+        return
+      end
 
       post = @topic.posts.where(post_number: 1).first
       return unless post.present?

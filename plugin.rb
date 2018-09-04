@@ -27,7 +27,7 @@ after_initialize do
     if SiteSetting.assign_locks_flags?
 
       if custom_fields = args[:post].topic.custom_fields
-        if assigned_to_id = custom_fields['assigned_to_id']
+        if assigned_to_id = custom_fields[TopicAssigner::ASSIGNED_TO_ID]
           unless assigned_to_id.to_i == args[:user].id
             raise Discourse::InvalidAccess.new(
               "That flag has been assigned to another user",
@@ -47,7 +47,7 @@ after_initialize do
     end
   end
 
-  TopicList.preloaded_custom_fields << "assigned_to_id"
+  TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
 
   TopicList.on_preload do |topics, topic_list|
     if SiteSetting.assign_enabled?
@@ -67,7 +67,7 @@ after_initialize do
         users.each { |u| map[u.id] = u }
 
         topics.each do |t|
-          if id = t.custom_fields['assigned_to_id']
+          if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
             t.preload_assigned_to_user(map[id.to_i])
           end
         end
@@ -143,7 +143,7 @@ after_initialize do
 
   add_to_class(:topic, :assigned_to_user) do
     @assigned_to_user ||
-      if user_id = custom_fields["assigned_to_id"]
+      if user_id = custom_fields[TopicAssigner::ASSIGNED_TO_ID]
         @assigned_to_user = User.find_by(id: user_id)
       end
   end
@@ -176,7 +176,7 @@ after_initialize do
   end
 
   add_to_class(:topic_view_serializer, :assigned_to_user_id) do
-    id = object.topic.custom_fields["assigned_to_id"]
+    id = object.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
     # a bit messy but race conditions can give us an array here, avoid
     id && id.to_i rescue nil
   end
@@ -184,7 +184,7 @@ after_initialize do
   add_to_serializer(:topic_view, 'include_assigned_to_user?') do
     if SiteSetting.assigns_public || scope.is_staff?
       # subtle but need to catch cases where stuff is not assigned
-      object.topic.custom_fields.keys.include?("assigned_to_id")
+      object.topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
     end
   end
 
@@ -193,7 +193,7 @@ after_initialize do
   end
 
   add_to_serializer(:flagged_topic, :assigned_to_user_id) do
-    id = object.custom_fields["assigned_to_id"]
+    id = object.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
     # a bit messy but race conditions can give us an array here, avoid
     id && id.to_i rescue nil
   end
@@ -238,7 +238,7 @@ after_initialize do
   on(:move_to_inbox) do |info|
     topic = info[:topic]
 
-    if (assigned_id = topic.custom_fields["assigned_to_id"].to_i) == info[:user]&.id
+    if (assigned_id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i) == info[:user]&.id
       TopicTrackingState.publish_assigned_private_message(topic, assigned_id)
     end
 
@@ -253,7 +253,7 @@ after_initialize do
 
   on(:archive_message) do |info|
     topic = info[:topic]
-    user_id = topic.custom_fields["assigned_to_id"].to_i
+    user_id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i
 
     if user_id == info[:user]&.id
       TopicTrackingState.publish_assigned_private_message(topic, user_id)

@@ -13,6 +13,19 @@ describe 'integration tests' do
     # should not explode for now
   end
 
+  describe 'data consistency' do
+    it 'can deal with problem custom fields' do
+      post = Fabricate(:post)
+      post.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] = [nil, nil]
+      post.topic.save_custom_fields
+
+      TopicAssigner.new(Topic.find(post.topic_id), Discourse.system_user).unassign
+
+      post.topic.reload
+      expect(post.topic.custom_fields).to eq({})
+    end
+  end
+
   describe 'for a private message' do
     let(:post) { Fabricate(:private_message_post) }
     let(:pm) { post.topic }
@@ -25,7 +38,7 @@ describe 'integration tests' do
         yield
       end
 
-      message = messages.find { |message| message.channel == channel }
+      message = messages.find { |m| m.channel == channel }
 
       expect(message.data[:topic_id]).to eq(topic.id)
       expect(message.user_ids).to eq([user.id])
