@@ -232,12 +232,20 @@ SQL
 
       post.publish_change_to_clients!(:revised, reload_topic: true)
 
-      TopicUser.change(
-        assigned_to_id,
-        @topic.id,
-        notification_level: TopicUser.notification_levels[:tracking],
+      if TopicUser.exists?(
+        user_id: assigned_to_id,
+        topic: @topic,
+        notification_level: TopicUser.notification_levels[:watching],
         notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
       )
+
+        TopicUser.change(
+          assigned_to_id,
+          @topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+          notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
+        )
+      end
 
       assigned_user = User.find_by(id: assigned_to_id)
       MessageBus.publish(
