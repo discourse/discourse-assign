@@ -149,12 +149,19 @@ SQL
 
     publish_topic_tracking_state(@topic, assign_to.id)
 
-    TopicUser.change(
-      assign_to.id,
-      @topic.id,
-      notification_level: TopicUser.notification_levels[:watching],
-      notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
+    if !TopicUser.exists?(
+      user_id: assign_to.id,
+      topic_id: @topic.id,
+      notification_level: TopicUser.notification_levels[:watching]
     )
+
+      TopicUser.change(
+        assign_to.id,
+        @topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+        notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
+      )
+    end
 
     if SiteSetting.assign_mailer_enabled
       if !@topic.muted?(assign_to)

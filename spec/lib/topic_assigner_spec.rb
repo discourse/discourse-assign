@@ -49,6 +49,16 @@ RSpec.describe TopicAssigner do
         .to eq(TopicUser.notification_levels[:tracking])
     end
 
+    it 'does not update notification level if already watching' do
+      TopicUser.change(moderator.id, topic.id,
+        notification_level: TopicUser.notification_levels[:watching]
+      )
+
+      expect do
+        assigner.assign(moderator)
+      end.to_not change { TopicUser.last.notifications_reason_id }
+    end
+
     it 'does not update notification level if it is not set by the plugin' do
       assigner.assign(moderator)
 
