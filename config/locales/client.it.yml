@@ -28,3 +28,5 @@ it:
         title: "Assegna Argomento"
         description: "Inserisci il nome utente della persona a cui vorresti assegnare questo argomento"
         assign: "Assegna"
+      claim:
+        help: "Assegna l'argomento a te stesso"

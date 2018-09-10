@@ -5,4 +5,14 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-he: {}
+he:
+  js:
+    action_codes:
+      assigned: "רשום על %{who} %{when}"
+    discourse_assign:
+      unassign_all:
+        title: "ביטול רישום של כולם"
+      assign:
+        help: "רישום משתמש לנושא"
+      assign_modal:
+        title: "רישום הנושא"
