@@ -26,7 +26,7 @@ after_initialize do
   DiscourseEvent.on(:before_staff_flag_action) do |args|
     if SiteSetting.assign_locks_flags?
 
-      if custom_fields = args[:post].topic.custom_fields
+      if custom_fields = args[:post].topic&.custom_fields
         if assigned_to_id = custom_fields[TopicAssigner::ASSIGNED_TO_ID]
           unless assigned_to_id.to_i == args[:user].id
             raise Discourse::InvalidAccess.new(
