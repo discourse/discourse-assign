@@ -61,11 +61,12 @@ describe 'integration tests' do
   describe "on before_staff_flag_action event" do
     let(:post) { Fabricate(:post) }
     let(:user) { Fabricate(:user) }
-    let(:args) {{ post: post, user: user }}
+    let(:args) { { post: post, user: user } }
 
     before do
       SiteSetting.assign_locks_flags = true
-      TopicCustomField.create(
+
+      TopicCustomField.create!(
         topic_id: post.topic_id,
         name: TopicAssigner::ASSIGNED_TO_ID,
         value: Discourse.system_user.id
@@ -73,12 +74,13 @@ describe 'integration tests' do
     end
 
     it "do not raise error if topic is deleted" do
-      expect { DiscourseEvent.trigger(:before_staff_flag_action, args) }.to raise_error(Discourse::InvalidAccess)
+      expect { DiscourseEvent.trigger(:before_staff_flag_action, args) }
+        .to raise_error(Discourse::InvalidAccess)
 
       post.topic.destroy!
       post.reload
 
-      expect { DiscourseEvent.trigger(:before_staff_flag_action, args) }.not_to raise_error
+      DiscourseEvent.trigger(:before_staff_flag_action, args)
     end
   end
 end
