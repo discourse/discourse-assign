@@ -11,13 +11,18 @@
 }
 
 .assigned-to {
-  padding-left: 11px;
   .d-icon, i.fa {
     margin-right: 0.25em;
     color: $primary-medium;
   }
   .assign-text {
     margin-right: 0.25em;
+  }
+}
+
+.topic-body {
+  .assigned-to {
+    padding-left: 11px;
   }
 }
 
