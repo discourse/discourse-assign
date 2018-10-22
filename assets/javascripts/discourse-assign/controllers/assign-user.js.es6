@@ -1,10 +1,9 @@
 //import { default as computed } from 'ember-addons/ember-computed-decorators';
-import { ajax } from 'discourse/lib/ajax';
-import { popupAjaxError } from 'discourse/lib/ajax-error';
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
-
-  assignSuggestions: function(){
+  assignSuggestions: function() {
     ajax("/assign/suggestions").then(users => {
       this.set("assignSuggestions", users);
     });
@@ -17,26 +16,30 @@ export default Ember.Controller.extend({
 
   actions: {
     assignUser(user) {
-      this.set('model.username', user.username);
-      this.send('assign');
+      this.set("model.username", user.username);
+      this.send("assign");
     },
-    assign(){
+    assign() {
+      let path = "/assign/assign";
 
-      let path = '/assign/assign';
-
-      if (Ember.isEmpty(this.get('model.username'))) {
-        path = '/assign/unassign';
-        this.set('model.assigned_to_user', null);
+      if (Ember.isEmpty(this.get("model.username"))) {
+        path = "/assign/unassign";
+        this.set("model.assigned_to_user", null);
       }
 
-      this.send('closeModal');
+      this.send("closeModal");
 
-      return ajax(path,{
-        type: 'PUT',
-        data: { username: this.get('model.username'), topic_id: this.get('model.topic.id') }
-      }).then(()=>{
-        // done
-      }).catch(popupAjaxError);
+      return ajax(path, {
+        type: "PUT",
+        data: {
+          username: this.get("model.username"),
+          topic_id: this.get("model.topic.id")
+        }
+      })
+        .then(() => {
+          // done
+        })
+        .catch(popupAjaxError);
     }
   }
 });
