@@ -9,6 +9,9 @@ enabled_site_setting :assign_enabled
 register_asset 'stylesheets/assigns.scss'
 register_asset 'stylesheets/mobile/assigns.scss', :mobile
 
+register_svg_icon "user-plus" if respond_to?(:register_svg_icon)
+register_svg_icon "user-times" if respond_to?(:register_svg_icon)
+
 load File.expand_path('../lib/discourse_assign/engine.rb', __FILE__)
 load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 
