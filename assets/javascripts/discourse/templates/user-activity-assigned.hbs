@@ -1,6 +1,6 @@
 <div class='assign-controls'>
   {{#if model.topic_list.assigned_messages_count}}
-    {{#link-to 'userPrivateMessages.assigned' user.model class="btn assign-messages-assigned"}}
+    {{#link-to 'userPrivateMessages.assigned' user.model class="btn btn-default assign-messages-assigned"}}
       {{d-icon "envelope" class="glyph"}}
       {{i18n 'user.messages.assigned_title' count=model.topic_list.assigned_messages_count}}
     {{/link-to}}
@@ -9,6 +9,7 @@
   {{#if canUnassignAll}}
     {{d-button
       action=(action "unassignAll")
+      class="btn-default"
       icon="times"
       label="discourse_assign.unassign_all.title"}}
   {{/if}}
