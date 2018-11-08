@@ -5,6 +5,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import showModal from "discourse/lib/show-modal";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
+import { iconHTML } from "discourse-common/lib/icon-library";
 
 function modifySelectKit(api) {
   api
@@ -115,7 +116,9 @@ function initialize(api) {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.get("assignedToUserPath");
-      return `<a class='assigned-to discourse-tag simple' href='${assignedPath}'><i class='fa fa-user-plus'></i>${assignedTo}</a>`;
+      return `<a class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
+        "user-plus"
+      )}${assignedTo}</a>`;
     }
   });
 
