@@ -39,7 +39,7 @@ function modifySelectKit(api) {
     });
 }
 
-function initialize(api) {
+function initialize(api, container) {
   // You can't act on flags claimed by another user
   api.modifyClass(
     "component:flagged-post",
@@ -153,42 +153,24 @@ function initialize(api) {
     }
   });
 
-  api.createWidget("assigned-to", {
-    html(attrs) {
-      let { assignedToUser, href } = attrs;
-
-      return h("p.assigned-to", [
-        iconNode("user-plus"),
-        h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
-        h(
-          "a",
-          { attributes: { class: "assigned-to-username", href } },
-          assignedToUser.username
-        )
-      ]);
-    }
-  });
-
-  api.createWidget("assigned-to", {
-    html(attrs) {
-      let { assignedToUser, href } = attrs;
-
-      return h("p.assigned-to", [
-        iconNode("user-plus"),
-        h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
-        h(
-          "a",
-          { attributes: { class: "assigned-to-username", href } },
-          assignedToUser.username
-        )
-      ]);
-    }
-  });
-
   api.decorateWidget("post-contents:after-cooked", dec => {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
       if (postModel) {
+        // Redraw widget when a message arrives.
+        const messageBus = container.lookup("message-bus:main");
+        messageBus.unsubscribe("/staff/topic-assignment");
+        messageBus.subscribe("/staff/topic-assignment", data => {
+          if (data.topic_id === postModel.get("topic.id")) {
+            postModel.set(
+              "topic.assigned_to_user_id",
+              data.type === "assigned" ? data.assigned_to.id : null
+            );
+            postModel.set("topic.assigned_to_user", data.assigned_to);
+          }
+          dec.widget.scheduleRerender();
+        });
+
         const assignedToUser = postModel.get("topic.assigned_to_user");
         if (assignedToUser) {
           return dec.widget.attach("assigned-to", {
