@@ -209,8 +209,8 @@ after_initialize do
     ::TopicAssigner.auto_assign(post, force: true)
   end
 
-  on(:topic_closed) do |topic|
-    if SiteSetting.unassign_on_close
+  on(:topic_status_updated) do |topic, status|
+    if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed')
       assigner = ::TopicAssigner.new(topic, Discourse.system_user)
       assigner.unassign(silent: true)
     end
