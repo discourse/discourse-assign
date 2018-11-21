@@ -82,4 +82,28 @@ RSpec.describe TopicAssigner do
     end
 
   end
+
+  context "unassign_on_close" do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+    let(:moderator) { Fabricate(:moderator) }
+    let(:assigner) { TopicAssigner.new(topic, moderator) }
+
+    before do
+      SiteSetting.assign_enabled = true
+      SiteSetting.unassign_on_close = true
+
+      assigner.assign(moderator)
+    end
+
+    it "will unassign on topic closed" do
+      topic.update_status("closed", true, moderator)
+      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+    end
+
+    it "will unassign on topic autoclosed" do
+      topic.update_status("autoclosed", true, moderator)
+      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+    end
+  end
 end
