@@ -1,5 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { default as computed } from "ember-addons/ember-computed-decorators";
+import { ajax } from "discourse/lib/ajax";
 
 // should this be in API ?
 import showModal from "discourse/lib/show-modal";
@@ -12,11 +13,19 @@ function modifySelectKit(api) {
     .modifySelectKit("topic-footer-mobile-dropdown")
     .modifyContent((context, existingContent) => {
       if (context.get("currentUser.staff")) {
-        existingContent.push({
-          id: "assign",
-          icon: "user-plus",
-          name: I18n.t("discourse_assign.assign.title")
-        });
+        if (context.get("topic.assigned_to_user")) {
+          existingContent.push({
+            id: "unassign",
+            icon: "user-times",
+            name: I18n.t("discourse_assign.unassign.title")
+          });
+        } else {
+          existingContent.push({
+            id: "assign",
+            icon: "user-plus",
+            name: I18n.t("discourse_assign.assign.title")
+          });
+        }
       }
       return existingContent;
     })
@@ -35,11 +44,18 @@ function modifySelectKit(api) {
           }
         });
         context.set("value", null);
+      } else if (value === "unassign") {
+        topic.set("assigned_to_user", null);
+
+        ajax("/assign/unassign", {
+          type: "PUT",
+          data: { topic_id: topic.get("id") }
+        });
       }
     });
 }
 
-function initialize(api, container) {
+function initialize(api) {
   // You can't act on flags claimed by another user
   api.modifyClass(
     "component:flagged-post",
