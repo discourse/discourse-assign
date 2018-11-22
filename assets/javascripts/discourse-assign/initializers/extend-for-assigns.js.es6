@@ -153,24 +153,34 @@ function initialize(api, container) {
     }
   });
 
+  api.modifyClass("controller:topic", {
+    subscribe() {
+      this._super();
+      this.messageBus.subscribe("/staff/topic-assignment", data => {
+        const topic = this.get("model");
+        const topicId = topic.get("id");
+
+        if (data.topic_id === topicId) {
+          topic.set(
+            "assigned_to_user_id",
+            data.type === "assigned" ? data.assigned_to.id : null
+          );
+          topic.set("assigned_to_user", data.assigned_to);
+        }
+        this.appEvents.trigger("header:update-topic", topic);
+      });
+    },
+    unsubscribe() {
+      this._super();
+      if (!this.get("content.id")) return;
+      this.messageBus.unsubscribe("/staff/topic-assignment");
+    }
+  });
+
   api.decorateWidget("post-contents:after-cooked", dec => {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
       if (postModel) {
-        // Redraw widget when a message arrives.
-        const messageBus = container.lookup("message-bus:main");
-        messageBus.unsubscribe("/staff/topic-assignment");
-        messageBus.subscribe("/staff/topic-assignment", data => {
-          if (data.topic_id === postModel.get("topic.id")) {
-            postModel.set(
-              "topic.assigned_to_user_id",
-              data.type === "assigned" ? data.assigned_to.id : null
-            );
-            postModel.set("topic.assigned_to_user", data.assigned_to);
-          }
-          dec.widget.scheduleRerender();
-        });
-
         const assignedToUser = postModel.get("topic.assigned_to_user");
         if (assignedToUser) {
           return dec.widget.attach("assigned-to", {
