@@ -141,8 +141,7 @@ function initialize(api) {
   api.addUserMenuGlyph(widget => {
     if (
       widget.currentUser &&
-      widget.currentUser.get("staff") &&
-      widget.siteSettings.assign_enabled
+      widget.currentUser.get("staff")
     ) {
       return {
         label: "discourse_assign.assigned",
@@ -217,6 +216,10 @@ function initialize(api) {
 export default {
   name: "extend-for-assign",
   initialize(container) {
+    const siteSettings = container.lookup("site-settings:main");
+    if (!siteSettings.assign_enabled) {
+      return;
+    }
     withPluginApi("0.8.11", api => initialize(api, container));
     withPluginApi("0.8.13", api => modifySelectKit(api, container));
   }
