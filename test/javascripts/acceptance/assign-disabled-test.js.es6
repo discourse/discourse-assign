@@ -6,7 +6,7 @@ acceptance("Assign disabled mobile", {
   settings: { assign_enabled: false }
 });
 
-QUnit.test("Footer dropdown does not contain button", async assert => {
+QUnit.skip("Footer dropdown does not contain button", async assert => {
   const menu = selectKit(".topic-footer-mobile-dropdown");
 
   await visit("/t/internationalization-localization/280");
