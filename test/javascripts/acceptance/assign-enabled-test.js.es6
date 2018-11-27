@@ -1,9 +1,13 @@
 import { acceptance } from "helpers/qunit-helpers";
+import { clearCallbacks } from "select-kit/mixins/plugin-api";
 
 acceptance("Assign mobile", {
   loggedIn: true,
   mobileView: true,
-  settings: { assign_enabled: true }
+  settings: { assign_enabled: true },
+  beforeEach() {
+    clearCallbacks();
+  }
 });
 
 QUnit.test("Footer dropdown contains button", async assert => {
