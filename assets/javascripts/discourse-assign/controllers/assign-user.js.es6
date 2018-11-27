@@ -14,11 +14,18 @@ export default Ember.Controller.extend({
   //   return Ember.isEmpty(username);
   // },
 
+  onClose() {
+    if (this.get("model.onClose") && this.get("model.username")) {
+      this.get("model.onClose")(this.get("model.username"));
+    }
+  },
+
   actions: {
     assignUser(user) {
       this.set("model.username", user.username);
       this.send("assign");
     },
+
     assign() {
       let path = "/assign/assign";
 

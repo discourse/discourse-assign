@@ -8,48 +8,54 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
+const ACTION_ID = "assign";
+
 function modifySelectKit(api) {
   api
     .modifySelectKit("topic-footer-mobile-dropdown")
     .modifyContent((context, existingContent) => {
       if (context.get("currentUser.staff")) {
-        if (context.get("topic.assigned_to_user")) {
-          existingContent.push({
-            id: "unassign",
-            icon: "user-times",
-            name: I18n.t("discourse_assign.unassign.title")
-          });
-        } else {
-          existingContent.push({
-            id: "assign",
-            icon: "user-plus",
-            name: I18n.t("discourse_assign.assign.title")
-          });
-        }
+        const hasAssignement = context.get("topic.assigned_to_user");
+        const button = {
+          id: ACTION_ID,
+          icon: hasAssignement ? "user-times" : "user-plus",
+          name: I18n.t(
+            `discourse_assign.${hasAssignement ? "unassign" : "assign"}.title`
+          )
+        };
+        existingContent.push(button);
       }
       return existingContent;
     })
     .onSelect((context, value) => {
-      if (!context.get("currentUser.staff")) {
+      if (!context.get("currentUser.staff") || value !== ACTION_ID) {
         return;
       }
 
       const topic = context.get("topic");
+      const assignedUser = topic.get("assigned_to_user.username");
 
-      if (value === "assign") {
-        showModal("assign-user", {
-          model: {
-            topic,
-            username: topic.get("assigned_to_user.username")
-          }
-        });
-        context.set("value", null);
-      } else if (value === "unassign") {
-        topic.set("assigned_to_user", null);
-
+      if (assignedUser) {
         ajax("/assign/unassign", {
           type: "PUT",
           data: { topic_id: topic.get("id") }
+        })
+          .then(result => {
+            if (result.success && result.success === "OK") {
+              topic.set("assigned_to_user", null);
+            }
+          })
+          .finally(() => context._compute());
+      } else {
+        showModal("assign-user", {
+          model: {
+            topic,
+            username: topic.get("assigned_to_user.username"),
+            onClose: assignedToUser => {
+              topic.set("assigned_to_user", assignedToUser);
+              context._compute();
+            }
+          }
         });
       }
     });
@@ -139,10 +145,7 @@ function initialize(api) {
   });
 
   api.addUserMenuGlyph(widget => {
-    if (
-      widget.currentUser &&
-      widget.currentUser.get("staff")
-    ) {
+    if (widget.currentUser && widget.currentUser.get("staff")) {
       return {
         label: "discourse_assign.assigned",
         className: "assigned",
@@ -220,6 +223,7 @@ export default {
     if (!siteSettings.assign_enabled) {
       return;
     }
+
     withPluginApi("0.8.11", api => initialize(api, container));
     withPluginApi("0.8.13", api => modifySelectKit(api, container));
   }
