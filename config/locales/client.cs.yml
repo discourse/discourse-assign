@@ -12,7 +12,6 @@ cs:
       unassigned: "zadání odebráno %{when}"
     discourse_assign:
       assigned: "Zadáno"
-      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Odebrat zadání"
         help: "Odstranit zadání tématu"

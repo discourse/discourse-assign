@@ -5,4 +5,8 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ro: {}
+ro:
+  js:
+    discourse_assign:
+      unassign_all:
+        confirm: "Sigur vrei să desprinzi toate discuțiile de numele de utilizator {{username}}?"

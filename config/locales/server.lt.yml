@@ -5,8 +5,6 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-zh_CN:
+lt:
   site_settings:
-    assign_enabled: "启用分配插件"
-    assigns_public: "允许一般公众查看主题指派"
-    assigns_user_url_path: "用户指派的主题路径（使用：{username}替换用户名）"
+    assign_enabled: "Įgalinti priskirtą įskiepį"

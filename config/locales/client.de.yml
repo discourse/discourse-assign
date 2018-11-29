@@ -15,7 +15,7 @@ de:
       cant_act_unclaimed: "Du musst das Thema übernehmen, bevor du Meldungen behandeln kannst."
       assigned: "Zugeordnet"
       assigned_to: "Zugewiesen an"
-      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign_all:
         title: "Alle Zuordnungen aufheben"
         confirm: "Möchtest du wirklich alle Zuordnungen von {{username}} aufheben?"

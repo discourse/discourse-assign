@@ -15,7 +15,6 @@ sw:
       cant_act_unclaimed: "Lazima uimiliki mada kabla ya kuweka bendera."
       assigned: "Kukabidhi"
       assigned_to: "Imekabidhiwa kwa"
-      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{jina la mtumiaji}}</span> {{maelezo}}</p>"
       unassign_all:
         title: "Ondoa Ukabidhi"
         confirm: "Je una uhakika na kitendo cha kuondoa ukabidhi wa mada zote kutoka kwa {{mtumiaji}}?"

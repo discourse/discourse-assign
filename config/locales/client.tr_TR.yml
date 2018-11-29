@@ -14,7 +14,6 @@ tr_TR:
       cant_act: "Diğer kullanıcılara atanan bildirimler üzerinde hareket edemezsiniz"
       assigned: "Atandı"
       assigned_to: "Atandı"
-      assign_notification: "<i title='yazdı' class='fa fa-reply'></i><p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Atamayı kaldır"
         help: "Konunun Atamasını Kaldır"

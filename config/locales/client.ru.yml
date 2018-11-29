@@ -14,7 +14,6 @@ ru:
       cant_act: "Вы не можете управлять флагами в теме, которая назначена на другого сотрудника"
       assigned: "Назначенные темы"
       assigned_to: "Назначено на"
-      assign_notification: "<i title='назначено' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Снять отв."
         help: "Снять ответственного с темы"

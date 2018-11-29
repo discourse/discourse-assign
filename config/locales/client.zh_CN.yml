@@ -12,9 +12,12 @@ zh_CN:
       unassigned: "未指派 %{who} %{when}"
     discourse_assign:
       cant_act: "你不能动已经指派给别人的旗子"
+      cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
       assigned: "已指派"
       assigned_to: "指派给"
-      assign_notification: "<i title='assigned' class='fa fa-user-plus'></i><p><span>{{username}}</span> {{description}}</p>"
+      unassign_all:
+        title: "全部取消指派"
+        confirm: "你确定要从{{username}}取消指派所有主题吗？"
       unassign:
         title: "未指派"
         help: "未指派主题"
@@ -28,3 +31,7 @@ zh_CN:
       claim:
         title: "认领"
         help: "指派这个主题给你自己"
+    user:
+      messages:
+        assigned_title: "已指派%{count}"
+        assigned: "已指派"
