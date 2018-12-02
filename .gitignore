@@ -1,3 +1,5 @@
 .bundle/
 auto_generated
 .DS_Store
+
+.rubocop-https---raw-githubusercontent-com-discourse-discourse-master--rubocop-yml
