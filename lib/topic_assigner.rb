@@ -115,6 +115,7 @@ SQL
     mentions = post.raw_mentions
     if mentions.present?
       User.where('moderator OR admin')
+        .human_users
         .where('username_lower IN (?)', mentions.map(&:downcase))
         .first
     end

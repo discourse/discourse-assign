@@ -81,6 +81,31 @@ RSpec.describe TopicAssigner do
       expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
     end
 
+    context "when assigns_by_staff_mention is set to true" do
+      let(:system_user) { Discourse.system_user }
+      let(:moderator) { Fabricate(:admin, username: "modi") }
+      let(:post) { Fabricate(:post, raw: "Hey you @system, stay unassigned", user: moderator) }
+      let(:topic) { post.topic }
+
+      before do
+        SiteSetting.assigns_by_staff_mention = true
+      end
+
+      it "doesn't assign system user" do
+        TopicAssigner.auto_assign(post)
+
+        expect(topic.custom_fields["assigned_to_id"])
+          .to eq(nil)
+      end
+
+      it "assigns first mentioned staff user after system user" do
+        post.raw = "Don't assign @system, assign @modi instead"
+        TopicAssigner.auto_assign(post)
+
+        expect(topic.custom_fields["assigned_to_id"].to_i)
+          .to eq(moderator.id)
+      end
+    end
   end
 
   context "unassign_on_close" do
