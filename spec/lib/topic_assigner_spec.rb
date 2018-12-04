@@ -27,10 +27,18 @@ RSpec.describe TopicAssigner do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator) }
-    let(:assigner) { TopicAssigner.new(topic, moderator) }
+    let(:moderator2) { Fabricate(:moderator) }
+    let(:assigner) { TopicAssigner.new(topic, moderator2) }
+    let(:assigner_self) { TopicAssigner.new(topic, moderator) }
 
     it "can assign and unassign correctly" do
-      assigner.assign(moderator)
+
+      messages = MessageBus.track_publish("/notification-alert/#{moderator.id}") do
+        assigner.assign(moderator)
+      end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.data[:excerpt]).to eq("@#{moderator2.username} assigned you the topic '#{topic.title}'")
 
       expect(TopicQuery.new(
         moderator, assigned: moderator.username
@@ -55,7 +63,7 @@ RSpec.describe TopicAssigner do
       )
 
       expect do
-        assigner.assign(moderator)
+        assigner_self.assign(moderator)
       end.to_not change { TopicUser.last.notifications_reason_id }
     end
 

@@ -181,7 +181,7 @@ SQL
 
     post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
 
-    unless silent
+    if !silent
       @topic.add_moderator_post(
         @assigned_by,
         nil,
@@ -191,7 +191,7 @@ SQL
         custom_fields: { "action_code_who" => assign_to.username }
       )
 
-      unless @assigned_by.id == assign_to.id
+      if @assigned_by.id != assign_to.id
 
         Notification.create!(
           notification_type: Notification.types[:custom],
@@ -205,6 +205,19 @@ SQL
           }.to_json
         )
       end
+    end
+
+    # we got to send a push notification as well
+    # what we created here is a whisper and notification will not raise a push
+    alerter = PostAlerter.new(first_post)
+    # TODO: remove June 2019
+    if alerter.respond_to?(:create_notification_alert) && @assigned_by.id != assign_to.id
+      alerter.create_notification_alert(
+        user: assign_to,
+        post: first_post,
+        notification_type: Notification.types[:custom],
+        excerpt: I18n.t("discourse_assign.topic_assigned_excerpt", title: @topic.title, username: @assigned_by.username)
+      )
     end
 
     true
