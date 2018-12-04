@@ -38,7 +38,7 @@ RSpec.describe TopicAssigner do
       end
 
       expect(messages.length).to eq(1)
-      expect(messages.first.data[:excerpt]).to eq("@#{moderator2.username} assigned you the topic '#{topic.title}'")
+      expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
 
       expect(TopicQuery.new(
         moderator, assigned: moderator.username

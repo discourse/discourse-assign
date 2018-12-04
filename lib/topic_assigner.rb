@@ -215,8 +215,9 @@ SQL
       alerter.create_notification_alert(
         user: assign_to,
         post: first_post,
+        username: @assigned_by.username,
         notification_type: Notification.types[:custom],
-        excerpt: I18n.t("discourse_assign.topic_assigned_excerpt", title: @topic.title, username: @assigned_by.username)
+        excerpt: I18n.t("discourse_assign.topic_assigned_excerpt", title: @topic.title)
       )
     end
 

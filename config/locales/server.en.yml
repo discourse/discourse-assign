@@ -18,7 +18,7 @@ en:
     already_claimed: "That topic has already been claimed."
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
-    topic_assigned_excerpt: "@%{username} assigned you the topic '%{title}'"
+    topic_assigned_excerpt: "assigned you the topic '%{title}'"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
