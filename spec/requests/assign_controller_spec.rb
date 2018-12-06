@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe AssignController do
+RSpec.describe DiscourseAssign::AssignController do
 
-  let(:user) { Fabricate(:active_user) }
-  let(:topic) { Fabricate(:topic) }
+  let(:user) { Fabricate(:admin) }
+  let(:post) { Fabricate(:post) }
   let(:user2) { Fabricate(:active_user) }
 
   context 'assign' do
@@ -11,24 +11,24 @@ RSpec.describe AssignController do
     it 'assigns topic to a user' do
       sign_in(user)
 
-      post 'assign.json', params: {
-        topic_id: topic.id, username: user.username
+      put '/assign/assign', params: {
+        topic_id: post.topic_id, username: user2.username
       }
 
       expect(response.status).to eq(200)
     end
 
-    it 'fails to assign topic to same user' do
+    it 'fails to assign topic to the user if its already assigned to the same user' do
       sign_in(user)
 
-      post 'assign.json', params: {
-        topic_id: topic.id, username: user.username
+      put '/assign/assign.json', params: {
+        topic_id: post.topic_id, username: user2.username
       }
 
       expect(response.status).to eq(200)
 
-      post 'assign.json', params: {
-        topic_id: topic.id, username: user.username
+      put '/assign/assign.json', params: {
+        topic_id: post.topic_id, username: user2.username
       }
 
       expect(response.status).to eq(400)
