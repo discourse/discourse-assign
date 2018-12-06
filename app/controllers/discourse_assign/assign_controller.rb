@@ -62,6 +62,10 @@ module DiscourseAssign
 
       raise Discourse::NotFound unless assign_to
 
+      if topic.custom_fields && topic.custom_fields['assigned_to_id'] == assign_to.id.to_s
+        return render json: { failed: 'Already assigned to the user' }, status: 400
+      end
+
       assigner = TopicAssigner.new(topic, current_user)
 
       # perhaps?
