@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe AssignController do
+RSpec.describe AssignController do
 
   let(:user) { Fabricate(:active_user) }
   let(:topic) { Fabricate(:topic) }
