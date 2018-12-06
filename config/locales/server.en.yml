@@ -16,6 +16,7 @@ en:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
     already_claimed: "That topic has already been claimed."
+    already_assigned: 'Topic is already assigned to @%{username}'
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
     topic_assigned_excerpt: "assigned you the topic '%{title}'"
