@@ -114,6 +114,19 @@ RSpec.describe TopicAssigner do
           .to eq(moderator.id)
       end
     end
+
+    it "doesn't assign the same user more than once" do
+      SiteSetting.assign_mailer_enabled = true
+
+      Email::Sender.any_instance.expects(:send).once
+      expect(assigner.assign(moderator)).to eq(true)
+
+      Email::Sender.any_instance.expects(:send).never
+      expect(assigner.assign(moderator)).to eq(false)
+
+      Email::Sender.any_instance.expects(:send).once
+      expect(assigner.assign(Fabricate(:moderator))).to eq(true)
+    end
   end
 
   context "unassign_on_close" do

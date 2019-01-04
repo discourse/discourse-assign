@@ -131,6 +131,8 @@ SQL
   end
 
   def assign(assign_to, silent: false)
+    return false if @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
+
     @topic.custom_fields[ASSIGNED_TO_ID] = assign_to.id
     @topic.custom_fields[ASSIGNED_BY_ID] = @assigned_by.id
     @topic.save_custom_fields
