@@ -50,6 +50,14 @@ after_initialize do
     end
   end
 
+  DiscourseEvent.on(:assign_topic) do |topic, user, assigning_user|
+    TopicAssigner.new(topic, assigning_user).assign(user)
+  end
+
+  DiscourseEvent.on(:unassign_topic) do |topic, unassigning_user|
+    TopicAssigner.new(topic, unassigning_user).unassign
+  end
+
   TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
 
   TopicList.on_preload do |topics, topic_list|
