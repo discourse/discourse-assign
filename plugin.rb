@@ -217,8 +217,8 @@ after_initialize do
     ::TopicAssigner.auto_assign(post, force: true)
   end
 
-  on(:topic_status_updated) do |topic, status|
-    if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed')
+  on(:topic_status_updated) do |topic, status, enabled|
+    if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed') && enabled
       assigner = ::TopicAssigner.new(topic, Discourse.system_user)
       assigner.unassign(silent: true)
     end

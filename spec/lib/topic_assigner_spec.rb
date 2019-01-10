@@ -142,14 +142,24 @@ RSpec.describe TopicAssigner do
       assigner.assign(moderator)
     end
 
-    it "will unassign on topic closed" do
+    it "unassigns on topic closed" do
       topic.update_status("closed", true, moderator)
       expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
     end
 
-    it "will unassign on topic autoclosed" do
+    it "unassigns on topic autoclosed" do
       topic.update_status("autoclosed", true, moderator)
       expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+    end
+
+    it "does not unassign on topic open" do
+      topic.update_status("closed", false, moderator)
+      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([topic])
+    end
+
+    it "does not unassign on automatic topic open" do
+      topic.update_status("autoclosed", false, moderator)
+      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([topic])
     end
   end
 end
