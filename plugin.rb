@@ -50,8 +50,10 @@ after_initialize do
     end
   end
 
-  DiscourseEvent.on(:assign_topic) do |topic, user, assigning_user|
-    TopicAssigner.new(topic, assigning_user).assign(user)
+  DiscourseEvent.on(:assign_topic) do |topic, user, assigning_user, force|
+    if force || !topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
+      TopicAssigner.new(topic, assigning_user).assign(user)
+    end
   end
 
   DiscourseEvent.on(:unassign_topic) do |topic, unassigning_user|

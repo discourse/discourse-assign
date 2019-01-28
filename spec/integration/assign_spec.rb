@@ -83,4 +83,23 @@ describe 'integration tests' do
       DiscourseEvent.trigger(:before_staff_flag_action, args)
     end
   end
+
+  describe "on assign_topic event" do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+    let(:admin) { Fabricate(:admin) }
+    let(:user1) { Fabricate(:user) }
+    let(:user2) { Fabricate(:user) }
+
+    it "assigns topic" do
+      DiscourseEvent.trigger(:assign_topic, topic, user1, admin)
+      expect(topic.reload.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i).to eq(user1.id)
+
+      DiscourseEvent.trigger(:assign_topic, topic, user2, admin)
+      expect(topic.reload.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i).to eq(user1.id)
+
+      DiscourseEvent.trigger(:assign_topic, topic, user2, admin, true)
+      expect(topic.reload.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i).to eq(user2.id)
+    end
+  end
 end
