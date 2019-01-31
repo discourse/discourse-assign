@@ -23,8 +23,10 @@ de:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
     already_claimed: "Dieses Thema wurde bereits übernommen."
+    already_assigned: 'Thema ist @%{username} zugewiesen'
     flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugewiesen"
     flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst."
+    topic_assigned_excerpt: "hat dich dem Thema '%{title}' zugewiesen"
   assign_mailer:
     title: "E-Mail zuweisen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir '%{topic_title}' zugewiesen!"

@@ -10,3 +10,11 @@ zh_CN:
     assign_enabled: "启用分配插件"
     assigns_public: "允许一般公众查看主题指派"
     assigns_user_url_path: "用户指派的主题路径（使用：{username}替换用户名）"
+    assigns_by_staff_mention: "如果一个管理人员分配给另一个管理人员，主题将会自动被指派过去。"
+  discourse_assign:
+    assigned_to: "主题被指派给 @%{username}"
+    unassigned: "主题未被指派"
+    already_assigned: '主题已被指派给 @%{username}'
+    topic_assigned_excerpt: "主题%{title}已分配给您"
+  assign_mailer:
+    title: "指派邮件发送者"

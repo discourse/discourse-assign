@@ -23,8 +23,10 @@ es:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "Tema ha sido desasignado"
     already_claimed: "Ese tema ya ha sido reclamado."
+    already_assigned: 'El tema ya está asignado a @%{username}'
     flag_assigned: "Disculpe, esos reportes del tema están asignados a otro usuario"
     flag_unclaimed: "Debe reclamar ese tema antes de actuar en el reporte"
+    topic_assigned_excerpt: "te asignó al tema '%{title}'"
   assign_mailer:
     title: "Mail de Asignación"
     subject_template: "[%{email_prefix}] %{assignee_name} te ha asignado '%{topic_title}'!"

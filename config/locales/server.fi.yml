@@ -23,8 +23,10 @@ fi:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
     already_claimed: "Ketju on jo omittu."
+    already_assigned: 'Ketju on jo osoitettu käyttäjälle %{username}'
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
     flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
+    topic_assigned_excerpt: "osoitti sinulle ketjun  '%{title}'"
   assign_mailer:
     title: "Osoitus"
     subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun '%{topic_title}'!"
