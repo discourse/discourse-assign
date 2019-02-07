@@ -16,6 +16,10 @@ function registerTopicFooterButtons(api) {
       return hasAssignement ? "user-times" : "user-plus";
     },
     priority: 250,
+    title() {
+      const hasAssignement = this.get("topic.assigned_to_user");
+      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.help`;
+    },
     label() {
       const hasAssignement = this.get("topic.assigned_to_user");
       return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.title`;
