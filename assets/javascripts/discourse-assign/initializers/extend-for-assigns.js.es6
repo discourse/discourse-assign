@@ -138,7 +138,7 @@ function initialize(api) {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.get("assignedToUserPath");
-      return `<a class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
+      return `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
         "user-plus"
       )}${assignedTo}</a>`;
     }
