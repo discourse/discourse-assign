@@ -7,29 +7,31 @@
 
 pt_BR:
   site_settings:
-    assign_enabled: "Habilitar o plugin de atribuição"
-    assigns_public: "Permitir que o público em geral veja as atribuições de tópico"
-    assigns_user_url_path: "Caminho para os tópicos atribuídos aos usuários (use: {username} para substituir o nome de usuário)"
-    assigns_by_staff_mention: "Se um membro da equipe menciona outro membro da equipe, o tópico é atribuído automaticamente"
-    unassign_creates_tracking_post: "Se você cancelar a atribuição de um tópico, um sussurro ou uma pequena ação será criada para rastrear a mudança"
-    assign_self_regex: "Regex que precisa passar por auto-atribuição. Exemplo 'minha lista'"
-    assign_other_regex: "Regex que precisa passar para atribuir tópicos a outros por meio de menção. Exemplo 'sua lista'."
-    unassign_on_group_archive: "Quando uma mensagem é arquivada por um grupo, cancelar a atribuição de mensagem (reatribuir se foi movida de volta para a caixa de entrada)"
-    unassign_on_close: "Quando um tópico é fechado, desatribuir tópico"
-    assign_locks_flags: "Quando um tópico é atribuído a um membro da equipe, suas sinalizações só podem ser manipulados por essa pessoa"
-    assign_mailer_enabled: "Quando ativado, o usuário atribuído receberá um e-mail de notificação em cada tarefa"
-    flags_require_assign: "Quando ativado, as sinalizações não podem ser manipuladas a menos que sejam atribuídos a um usuário."
+    assign_enabled: "Habilitar o plugin de designação"
+    assigns_public: "Permitir que o público em geral veja as designações de tópico"
+    assigns_user_url_path: "Caminho para os tópicos designados aos usuários (use: {username} para substituir o nome de usuário)"
+    assigns_by_staff_mention: "Se um membro da staff menciona outro membro da staff, o tópico é designado automaticamente"
+    unassign_creates_tracking_post: "Se você remover a designação de um tópico, um sussurro ou uma pequena ação será criada para registrar a mudança"
+    assign_self_regex: "Regex que precisa passar para auto-designação. Exemplo: 'minha lista'"
+    assign_other_regex: "Regex que precisa passar para designar tópicos a outros por meio de menção. Exemplo: 'sua lista'."
+    unassign_on_group_archive: "Quando uma mensagem é arquivada por um grupo, remover a designação da mensagem (designar novamente se ela for movida de volta para a caixa de entrada)"
+    unassign_on_close: "Quando um tópico for fechado, remover a designação do tópico"
+    assign_locks_flags: "Quando um tópico for designado à um membro da staff, suas sinalizações só podem ser resolvidas por aquela pessoa"
+    assign_mailer_enabled: "Quando habilitado, o usuário designado receberá um e-mail de notificação em cada designação"
+    flags_require_assign: "Quando habilitado, as sinalizações não podem ser resolvidas a menos que sejam designadas à um usuário."
   discourse_assign:
-    assigned_to: "Tópico atribuído a @%{username}"
-    unassigned: "Tópico não atribuído"
-    already_claimed: "Tópico não atribuído"
-    flag_assigned: "Desculpe, o tópico dessa sinalização é atribuído a outro usuário"
-    flag_unclaimed: "Você deve reivindicar esse tópico antes de agir na sinalização"
+    assigned_to: "Tópico designado à @%{username}"
+    unassigned: "A designação do tópico foi removida"
+    already_claimed: "Aquele tópico já foi reivindicado."
+    already_assigned: 'Tópico já está designado à @%{username}'
+    flag_assigned: "Desculpe, aquele tópico da sinalização está designado à outro usuário"
+    flag_unclaimed: "Você precisa reivindicar aquele tópico antes de atuar na sinalização"
+    topic_assigned_excerpt: "te designou ao tópico '%{title}'"
   assign_mailer:
-    title: "Atribuir Mailer"
-    subject_template: "[%{email_prefix}] %{assignee_name} atribuído a você '%{topic_title}'!"
+    title: "Correio de Designação"
+    subject_template: "[%{email_prefix}] %{assignee_name} te designou à '%{topic_title}'!"
     text_body_template: |
-      Hey, %{assignee_name} ** atribuído ** você a uma discussão
+      Ei, %{assignee_name} te **designou** à uma discussão
       > **%{topic_title}**
       >
       > %{topic_excerpt}

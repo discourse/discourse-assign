@@ -1,0 +1,38 @@
+# encoding: utf-8
+#
+# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+#
+# To work with us on translations, join this project:
+# https://www.transifex.com/projects/p/discourse-org/
+
+hy:
+  js:
+    action_codes:
+      assigned: "վերագրված է %{who}-ին %{when}"
+      unassigned: "Ետկանչված է %{who} -ից%{when}"
+    discourse_assign:
+      cant_act: "Դուք չեք կարող գործողություն կատարել դրոշակների հետ, որոնք վերագրված են այլ օգտատերերի"
+      cant_act_unclaimed: "Դուք պետք է պահանջեք այս թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
+      assigned: "Վերագրված"
+      assigned_to: "Վերագրված է"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      unassign_all:
+        title: "Ետ կանչել Բոլորը"
+        confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ետ կանչել բոլոր թեմաները {{username}}-ից:"
+      unassign:
+        title: "Ետ կանչել վերագրումը"
+        help: "Ետ կանչել Թեմայի վերագրումը"
+      assign:
+        title: "Վերագրել"
+        help: "Վերագրել Թեման Օգտատիրոջը"
+      assign_modal:
+        title: "Վերագրել Թեման"
+        description: "Մուտքագրեք այն անձի օգտանունը, ում Դուք կցանկանայիք վերագրել այս թեման:"
+        assign: "Վերագրել"
+      claim:
+        title: "պահանջ"
+        help: "Վերագրել թեման ինքներդ Ձեզ"
+    user:
+      messages:
+        assigned_title: "Վերագրված (%{count})"
+        assigned: "Վերագրված"

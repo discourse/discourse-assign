@@ -8,30 +8,31 @@
 pt_BR:
   js:
     action_codes:
-      assigned: "atribuído %{who} %{when}"
-      unassigned: "não atribuído%{who} %{when}"
+      assigned: "designou à %{who} %{when}"
+      unassigned: "removeu a designação à %{who} %{when}"
     discourse_assign:
-      cant_act: "Você não pode agir em sinalizadores que foram atribuídos a outros usuários"
-      cant_act_unclaimed: "Você deve reivindicar este tópico antes de agir em bandeiras."
-      assigned: "Atribuído"
-      assigned_to: "Atribuído a"
+      cant_act: "Você não pode atuar em sinalizações que foram atribuídas a outros usuários"
+      cant_act_unclaimed: "Você precisa reivindicar este tópico antes de atuar em sinalizações."
+      assigned: "Designado"
+      assigned_to: "Designado à"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign_all:
-        title: "Cancelar atribuição de todos"
-        confirm: "Tem certeza de que deseja cancelar a atribuição de todos os tópicos do {{username}}?"
+        title: "Remover Todas as Designações"
+        confirm: "Você tem certeza de que deseja remover todas as designações de {{username}} em todos os tópicos?"
       unassign:
-        title: "Cancelar atribuição"
-        help: "Desatribuir Tópico"
+        title: "Remover Designação"
+        help: "Remover Designação do Tópico"
       assign:
-        title: "Atribuir"
-        help: "Atribuir Tópico ao Usuário"
+        title: "Designar"
+        help: "Designar Tópico ao Usuário"
       assign_modal:
-        title: "Atribuir Tópico"
-        description: "Digite o nome de usuário da pessoa que você deseja atribuir a esse tópico"
-        assign: "Atribuir"
+        title: "Designar Tópico"
+        description: "Digite o nome de usuário da pessoa que você deseja designar à este tópico"
+        assign: "Designar"
       claim:
-        title: "afirmação"
-        help: "Atribuir tópico a você mesmo"
+        title: "reivindicar"
+        help: "Designar tópico à você mesmo"
     user:
       messages:
-        assigned_title: "Atribuído (%{count})"
-        assigned: "Atribuído"
+        assigned_title: "Designado (%{count})"
+        assigned: "Designado"

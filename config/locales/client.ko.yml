@@ -5,4 +5,25 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko: {}
+ko:
+  js:
+    discourse_assign:
+      assigned: "할당됨"
+      assigned_to: "다음으로 할당"
+      unassign_all:
+        title: "모두 할당 해제"
+      unassign:
+        title: "할당 해제"
+        help: "토픽 할당 해제"
+      assign:
+        title: "할당"
+        help: "사용자에게 토픽 할당"
+      assign_modal:
+        title: "토픽 할당"
+        assign: "할당"
+      claim:
+        help: "나에게 토픽 할당"
+    user:
+      messages:
+        assigned_title: "할당됨 (%{count})"
+        assigned: "할당됨"
