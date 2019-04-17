@@ -12,6 +12,7 @@ en:
     assign_locks_flags: "When a topic is assigned to a staff member, its flags can only be handled by that person"
     assign_mailer_enabled: "When enabled, the assigned user will receive a notification email on each assignment"
     flags_require_assign: "When enabled, flags cannot be handled unless assigned to a user."
+    remind_assigns: "Remind users about pending assigns."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
@@ -31,3 +32,22 @@ en:
 
       If you're interested, click the link below:
       [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "You have %{pending_assignments} pending assignments"
+    body: |
+      You currently have [%{pending_assignments} pending assignments](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+      
+      This reminder will be sent %{frequency} if you have more than one assigned topic.
+    newest: |
+      ### Newest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Oldest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

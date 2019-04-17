@@ -19,3 +19,13 @@ plugins:
     default: false
     client: true
   assign_mailer_enabled: false
+  remind_assigns:
+    client: true
+    default: 'monthly'
+    type: enum
+    choices:
+      - 'never'
+      - 'daily'
+      - 'weekly'
+      - 'monthly'
+      - 'quarterly'
