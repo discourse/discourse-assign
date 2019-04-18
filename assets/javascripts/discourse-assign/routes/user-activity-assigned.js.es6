@@ -6,9 +6,10 @@ export default UserTopicListRoute.extend({
 
   model() {
     return this.store.findFiltered("topicList", {
-      filter: "latest",
+      filter: `topics/messages-assigned/${this.modelFor("user").get(
+        "username_lower"
+      )}`,
       params: {
-        assigned: this.modelFor("user").get("username_lower"),
         // core is a bit odd here and is not sending an array, should be fixed
         exclude_category_ids: [-1]
       }

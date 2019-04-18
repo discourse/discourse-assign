@@ -1,10 +1,36 @@
 require 'rails_helper'
 
 describe TopicQuery do
-  describe '#list_private_messages_assigned' do
-    let(:user) { Fabricate(:user) }
-    let(:user2) { Fabricate(:user) }
+  before do
+    SiteSetting.assign_enabled = true
+  end
 
+  let(:user) { Fabricate(:user) }
+  let(:user2) { Fabricate(:user) }
+
+  describe '#list_messages_assigned' do
+    before do
+      @private_message = Fabricate(:private_message_topic, user: user)
+      @topic = Fabricate(:topic, user: user)
+
+      assign_to(@private_message, user)
+      assign_to(@topic, user)
+    end
+
+    it 'Includes topics and PMs assigned to user' do
+      assigned_messages = TopicQuery.new(user).list_messages_assigned(user).topics
+
+      expect(assigned_messages).to contain_exactly(@private_message, @topic)
+    end
+
+    it 'Excludes topics and PMs not assigned to user' do
+      assigned_messages = TopicQuery.new(user2).list_messages_assigned(user2).topics
+
+      expect(assigned_messages).to be_empty
+    end
+  end
+
+  describe '#list_private_messages_assigned' do
     let(:user_topic) do
       topic = Fabricate(:private_message_topic,
         topic_allowed_users: [
@@ -24,10 +50,7 @@ describe TopicQuery do
           Fabricate.build(:topic_allowed_user, user: user2)
         ],
       )
-
-      topic.posts << Fabricate(:post)
-      TopicAssigner.new(topic, user).assign(user)
-      topic
+      assign_to(topic, user)
     end
 
     let(:group) { Fabricate(:group).add(user) }
@@ -42,13 +65,10 @@ describe TopicQuery do
         ],
       )
 
-      topic.posts << Fabricate(:post)
-      TopicAssigner.new(topic, user).assign(user)
-      topic
+      assign_to(topic, user)
     end
 
     before do
-      SiteSetting.assign_enabled = true
       user_topic
       assigned_topic
       group_assigned_topic
@@ -76,6 +96,13 @@ describe TopicQuery do
       expect(
         TopicQuery.new(user).list_private_messages_assigned(user).topics
       ).to contain_exactly(assigned_topic, group_assigned_topic)
+    end
+  end
+
+  def assign_to(topic, user)
+    topic.tap do |t|
+      t.posts << Fabricate(:post)
+      TopicAssigner.new(t, user).assign(user)
     end
   end
 end

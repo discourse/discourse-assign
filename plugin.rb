@@ -18,6 +18,7 @@ load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: /[\w.\-]+?/ }
+  get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: /[\w.\-]+?/ }
 end
 
 after_initialize do
@@ -139,6 +140,17 @@ after_initialize do
   require_dependency 'list_controller'
   class ::ListController
     generate_message_route(:private_messages_assigned)
+    generate_message_route(:messages_assigned)
+  end
+
+  add_to_class(:topic_query, :list_messages_assigned) do |user|
+    list = joined_topic_user.where("
+      topics.id IN (
+        SELECT topic_id FROM topic_custom_fields
+        WHERE name = 'assigned_to_id'
+        AND value = ?)
+    ", user.id.to_s)
+    create_list(:assigned, {}, list)
   end
 
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|

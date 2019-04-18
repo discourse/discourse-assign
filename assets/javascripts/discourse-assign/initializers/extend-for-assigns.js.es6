@@ -138,9 +138,15 @@ function initialize(api) {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.get("assignedToUserPath");
-      return `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
+      let assignLabels = `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
         "user-plus"
       )}${assignedTo}</a>`;
+
+      if (topic.get("archetype") === "private_message") {
+        assignLabels += `<div>${iconHTML("envelope")} Message</div>`;
+      }
+
+      return assignLabels;
     }
   });
 
