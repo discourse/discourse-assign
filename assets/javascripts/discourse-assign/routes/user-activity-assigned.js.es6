@@ -18,7 +18,7 @@ export default UserTopicListRoute.extend({
 
   renderTemplate() {
     this.render("user-activity-assigned");
-    this.render("user-topics-list", { into: "user-activity-assigned" });
+    this.render("user-assigned-topics", { into: "user-activity-assigned" });
   },
 
   setupController(controller, model) {
@@ -27,7 +27,7 @@ export default UserTopicListRoute.extend({
   },
 
   actions: {
-    unassignedAll() {
+    changeAssigned() {
       this.refresh();
     }
   }
