@@ -40,6 +40,11 @@ export default Ember.Component.extend({
       : I18n.t("filters.new.lower_title");
   },
 
+  @computed("topic.archetype")
+  isPrivateMessage(archetype) {
+    return archetype === "private_message";
+  },
+
   actions: {
     toggleBookmark() {
       this.get("topic").toggleBookmark();

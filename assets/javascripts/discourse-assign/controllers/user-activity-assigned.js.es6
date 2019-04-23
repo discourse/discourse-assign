@@ -1,10 +1,10 @@
 import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
 import computed from "ember-addons/ember-computed-decorators";
 import UserTopicsList from "discourse/controllers/user-topics-list";
 
 export default UserTopicsList.extend({
   user: Ember.inject.controller(),
+  taskActions: Ember.inject.service(),
 
   @computed("model.topics")
   canUnassignAll(topics) {
@@ -29,19 +29,13 @@ export default UserTopicsList.extend({
       );
     },
     unassign(topic) {
-      ajax("/assign/unassign", {
-        type: "PUT",
-        data: { topic_id: topic.get("id") }
-      }).then(() => this.send("changeAssigned"));
+      this.get("taskActions")
+        .unassign(topic.get("id"))
+        .then(() => this.send("changeAssigned"));
     },
     reassign(topic) {
-      showModal("assign-user", {
-        model: {
-          topic: topic,
-          username: topic.get("assigned_to_user.username"),
-          onSuccess: () => this.send("changeAssigned")
-        }
-      });
+      const controller = this.get("taskActions").assign(topic);
+      controller.set("model.onSuccess", () => this.send("changeAssigned"));
     }
   }
 });
