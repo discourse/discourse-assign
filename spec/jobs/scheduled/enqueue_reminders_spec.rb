@@ -28,7 +28,7 @@ RSpec.describe Jobs::EnqueueReminders do
 
     it "Do not enqueue a reminder if it's too soon" do
       SiteSetting.remind_assigns = 'monthly'
-      user.update(last_tasks_reminder: 2.days.ago)
+      user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 2.days.ago)
       assign_multiple_tasks_to(user)
 
       Jobs.expects(:enqueue).with(:remind_user, user_id: user.id.to_s).never
@@ -38,7 +38,7 @@ RSpec.describe Jobs::EnqueueReminders do
 
     it 'Enqueues a reminder if the user was reminded more than a month ago' do
       SiteSetting.remind_assigns = 'monthly'
-      user.update(last_tasks_reminder: 31.days.ago)
+      user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 31.days.ago)
       assign_multiple_tasks_to(user)
 
       Jobs.expects(:enqueue).with(:remind_user, user_id: user.id.to_s).once

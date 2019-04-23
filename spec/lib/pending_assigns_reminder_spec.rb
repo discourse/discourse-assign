@@ -40,6 +40,18 @@ RSpec.describe PendingAssignsReminder do
       assert_remind_was_created_correctly(created_post.topic, created_post)
     end
 
+    it 'Sets the timestamp of the last reminder' do
+      expected_last_reminder = DateTime.now
+
+      freeze_time(expected_last_reminder) do
+        subject.remind(user)
+
+        reminded_at = user.reload.custom_fields[described_class::REMINDED_AT].to_datetime
+
+        expect(reminded_at).to eq_time(expected_last_reminder)
+      end
+    end
+
     def assert_remind_was_created_correctly(topic, post)
       expect(topic.user).to eq(system)
       expect(topic.archetype).to eq(Archetype.private_message)

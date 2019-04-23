@@ -1,19 +1,25 @@
 # frozen_string_literal: true
 
 class PendingAssignsReminder
+  REMINDED_AT = 'last_reminded_at'
+
   def remind(user)
     topics = assigned_topics(user)
     return if topics.size < 2
 
     title = I18n.t('pending_assigns_reminder.title', pending_assignments: topics.size)
 
-    PostCreator.create!(
-      Discourse.system_user,
-      title: title,
-      raw: reminder_body(user, topics),
-      archetype: Archetype.private_message,
-      target_usernames: user.username
-    )
+    ActiveRecord::Base.transaction do
+      PostCreator.create!(
+        Discourse.system_user,
+        title: title,
+        raw: reminder_body(user, topics),
+        archetype: Archetype.private_message,
+        target_usernames: user.username
+      )
+
+      update_last_reminded(user)
+    end
   end
 
   private
@@ -55,5 +61,16 @@ class PendingAssignsReminder
     FreedomPatches::Rails4.distance_of_time_in_words(
       Time.now, topic.assigned_at.to_time, false, scope: 'datetime.distance_in_words_verbose'
     )
+  end
+
+  def update_last_reminded(user)
+    update_last_reminded = { REMINDED_AT => DateTime.now }
+    # New API in Discouse that's better under concurrency
+    if user.respond_to?(:upsert_custom_fields)
+      user.upsert_custom_fields(update_last_reminded)
+    else
+      user.custom_fields.merge!(update_last_reminded)
+      user.save_custom_fields
+    end
   end
 end

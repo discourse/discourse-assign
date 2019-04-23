@@ -15,11 +15,17 @@ module Jobs
       interval = reminder_interval_in_minutes(SiteSetting.remind_assigns)
 
       TopicCustomField
-        .joins("LEFT JOIN users ON topic_custom_fields.value::INT = users.id")
-        .where("COALESCE(users.last_tasks_reminder, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * ?)", interval)
-        .where(name: TopicAssigner::ASSIGNED_TO_ID)
-        .group(:value).having('COUNT(value) > 1')
-        .pluck(:value)
+        .joins(<<~SQL
+          LEFT OUTER JOIN user_custom_fields ON topic_custom_fields.value::INT = user_custom_fields.user_id
+          AND user_custom_fields.name = '#{PendingAssignsReminder::REMINDED_AT}'
+        SQL
+        ).where(<<~SQL
+          user_custom_fields.value IS NULL OR
+          COALESCE(user_custom_fields.value, '2010-01-01')::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{interval})
+        SQL
+        ).where(name: TopicAssigner::ASSIGNED_TO_ID)
+        .group('topic_custom_fields.value').having('COUNT(topic_custom_fields.value) > 1')
+        .pluck('topic_custom_fields.value')
     end
 
     def reminder_interval_in_minutes(remind_frequency)
