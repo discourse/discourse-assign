@@ -13,6 +13,7 @@ en:
     assign_mailer_enabled: "When enabled, the assigned user will receive a notification email on each assignment"
     flags_require_assign: "When enabled, flags cannot be handled unless assigned to a user."
     remind_assigns: "Remind users about pending assigns."
+    remind_assigns_frequency: "Frequency for reminding users about assigned topics."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
@@ -21,6 +22,11 @@ en:
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
     topic_assigned_excerpt: "assigned you the topic '%{title}'"
+    reminders_frequency:
+        never: 'never'
+        daily: 'daily'
+        monthly: 'monthly'
+        quarterly: 'quarterly'
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"

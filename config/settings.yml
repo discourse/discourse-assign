@@ -19,13 +19,7 @@ plugins:
     default: false
     client: true
   assign_mailer_enabled: false
-  remind_assigns:
+  remind_assigns_frequency:
     client: true
-    default: 'monthly'
-    type: enum
-    choices:
-      - 'never'
-      - 'daily'
-      - 'weekly'
-      - 'monthly'
-      - 'quarterly'
+    enum: "RemindAssignsFrequencySiteSettings"
+    default: 43200

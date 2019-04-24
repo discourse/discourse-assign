@@ -1,5 +1,7 @@
 module Jobs
   class EnqueueReminders < Jobs::Scheduled
+    every 2.hours
+
     def execute(_args)
       return if skip_enqueue?
       user_ids.each { |id| Jobs.enqueue(:remind_user, user_id: id) }
@@ -8,11 +10,11 @@ module Jobs
     private
 
     def skip_enqueue?
-      SiteSetting.remind_assigns.nil? || SiteSetting.remind_assigns == 'never'
+      SiteSetting.remind_assigns_frequency.nil? || SiteSetting.remind_assigns_frequency.zero?
     end
 
     def user_ids
-      interval = reminder_interval_in_minutes(SiteSetting.remind_assigns)
+      interval = SiteSetting.remind_assigns_frequency
 
       TopicCustomField
         .joins(<<~SQL
@@ -21,24 +23,12 @@ module Jobs
         SQL
         ).where(<<~SQL
           user_custom_fields.value IS NULL OR
-          COALESCE(user_custom_fields.value, '2010-01-01')::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{interval})
+          user_custom_fields.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{interval})
         SQL
-        ).where(name: TopicAssigner::ASSIGNED_TO_ID)
+        ).where("topic_custom_fields.updated_at::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * ?)", interval)
+        .where(name: TopicAssigner::ASSIGNED_TO_ID)
         .group('topic_custom_fields.value').having('COUNT(topic_custom_fields.value) > 1')
         .pluck('topic_custom_fields.value')
-    end
-
-    def reminder_interval_in_minutes(remind_frequency)
-      case remind_frequency
-      when 'daily'
-        1440
-      when 'weekly'
-        10080
-      when 'monthly'
-        43200
-      else
-        131400 # quarterly
-      end
     end
   end
 end

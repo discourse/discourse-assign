@@ -1,11 +1,10 @@
 module Jobs
-  class RemindUser < Jobs::Scheduled
+  class RemindUser < Jobs::Base
     sidekiq_options queue: 'low'
 
     def execute(args)
-      raise Discourse::InvalidParameters.new(:user_id) unless args[:user_id].present?
-
-      user = User.find(args[:user_id])
+      user = User.find_by(args[:user_id])
+      raise Discourse::InvalidParameters.new(:user_id) if user.nil?
 
       PendingAssignsReminder.new.remind(user)
     end
