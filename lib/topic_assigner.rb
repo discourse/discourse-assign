@@ -121,6 +121,11 @@ SQL
     end
   end
 
+  def self.can_assign_to?(user)
+    assigned_total = TopicCustomField.where(name: ASSIGNED_TO_ID, value: user.id.to_s).count
+    assigned_total < SiteSetting.max_assigned_topics
+  end
+
   def initialize(topic, user)
     @assigned_by = user
     @topic = topic
@@ -131,7 +136,8 @@ SQL
   end
 
   def assign(assign_to, silent: false)
-    return false if @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
+    return { success: false, reason: :already_assigned } if @topic.custom_fields && @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
+    return { success: false, reason: :too_many_assigns } unless self.class.can_assign_to?(assign_to)
 
     @topic.custom_fields[ASSIGNED_TO_ID] = assign_to.id
     @topic.custom_fields[ASSIGNED_BY_ID] = @assigned_by.id
@@ -223,7 +229,7 @@ SQL
       )
     end
 
-    true
+    { success: true }
   end
 
   def unassign(silent: false)

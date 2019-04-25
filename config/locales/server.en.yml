@@ -14,11 +14,13 @@ en:
     flags_require_assign: "When enabled, flags cannot be handled unless assigned to a user."
     remind_assigns: "Remind users about pending assigns."
     remind_assigns_frequency: "Frequency for reminding users about assigned topics."
+    max_assigns_per_user: "Maximum number of topics that can be assigned to a user."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
     already_claimed: "That topic has already been claimed."
     already_assigned: 'Topic is already assigned to @%{username}'
+    too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
     topic_assigned_excerpt: "assigned you the topic '%{title}'"

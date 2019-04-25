@@ -23,3 +23,7 @@ plugins:
     client: true
     enum: "RemindAssignsFrequencySiteSettings"
     default: 0
+  max_assigned_topics:
+    client: true
+    default: 10
+    min: 1
