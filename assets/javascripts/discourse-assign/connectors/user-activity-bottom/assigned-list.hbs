@@ -1,4 +1,4 @@
-{{#if currentUser.staff}}
+{{#if currentUser.can_assign}}
   {{#link-to 'userActivity.assigned'}}
     {{d-icon "user-plus"}} {{i18n 'discourse_assign.assigned'}}
   {{/link-to}}

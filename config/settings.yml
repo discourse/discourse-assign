@@ -27,3 +27,11 @@ plugins:
     client: true
     default: 10
     min: 1
+  assign_allowed_on_groups:
+    client: true
+    type: list
+    list_type: compact
+    default: 'staff'
+    allow_any: false
+    refresh: true
+    choices: 'DiscourseAssign::Helpers.group_names'

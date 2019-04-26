@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
 module DiscourseAssign
-  class AssignController < Admin::AdminController
-    before_action :ensure_logged_in
+  class AssignController < ApplicationController
+    requires_login
+    before_action :ensure_logged_in, :ensure_assign_allowed
 
     def suggestions
       users = [current_user]
       users += User
-        .where('admin OR moderator')
         .where('users.id <> ?', current_user.id)
         .joins(<<~SQL
           JOIN(
@@ -18,7 +18,9 @@ module DiscourseAssign
                 HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
               ) as X ON X.user_id = users.id
         SQL
-        ).order('X.last_assigned DESC')
+        )
+        .assign_allowed
+        .order('X.last_assigned DESC')
         .limit(6)
 
       render json: ActiveModel::ArraySerializer.new(users,
@@ -87,6 +89,10 @@ module DiscourseAssign
         max = SiteSetting.max_assigned_topics
         { error: I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max) }
       end
+    end
+
+    def ensure_assign_allowed
+      raise Discourse::InvalidAccess.new unless current_user.can_assign?
     end
   end
 end

@@ -84,7 +84,8 @@ RSpec.describe TopicListSerializer do
       end
 
       describe 'as a staff' do
-        let(:guardian) { Guardian.new(Fabricate(:admin)) }
+        let(:admin) { Fabricate(:admin, groups: [Group.find_by(name: 'staff')]) }
+        let(:guardian) { Guardian.new(admin) }
 
         it 'should include the right attribute' do
           expect(serializer.as_json[:topic_list][:assigned_messages_count])

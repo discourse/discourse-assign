@@ -1,6 +1,6 @@
 export function shouldShowAssigned(args, component) {
   const needsButton =
-    component.currentUser && component.currentUser.get("staff");
+    component.currentUser && component.currentUser.get("can_assign");
   return (
     needsButton &&
     (!component.get("site.mobileView") || args.model.get("isPrivateMessage"))

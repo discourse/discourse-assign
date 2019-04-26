@@ -3,6 +3,9 @@
 require 'rails_helper'
 
 RSpec.describe TopicAssigner do
+  before { SiteSetting.assign_enabled = true }
+
+  let(:assign_allowed_group) { Group.find_by(name: 'staff') }
   let(:pm_post) { Fabricate(:private_message_post) }
   let(:pm) { pm_post.topic }
 
@@ -18,6 +21,7 @@ RSpec.describe TopicAssigner do
   describe 'assigning and unassigning private message' do
     it 'should publish the right message' do
       user = pm.allowed_users.first
+      user.groups << assign_allowed_group
       assigner = described_class.new(pm, user)
 
       assert_publish_topic_state(pm, user) { assigner.assign(user) }
@@ -26,15 +30,16 @@ RSpec.describe TopicAssigner do
   end
 
   context "assigning and unassigning" do
+    before { SiteSetting.assign_enabled = true }
+
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
-    let(:moderator) { Fabricate(:moderator) }
-    let(:moderator2) { Fabricate(:moderator) }
+    let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:moderator2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
     let(:assigner) { TopicAssigner.new(topic, moderator2) }
     let(:assigner_self) { TopicAssigner.new(topic, moderator) }
 
     it "can assign and unassign correctly" do
-
       messages = MessageBus.track_publish("/notification-alert/#{moderator.id}") do
         assigner.assign(moderator)
       end
@@ -87,7 +92,7 @@ RSpec.describe TopicAssigner do
 
     context "when assigns_by_staff_mention is set to true" do
       let(:system_user) { Discourse.system_user }
-      let(:moderator) { Fabricate(:admin, username: "modi") }
+      let(:moderator) { Fabricate(:admin, username: "modi", groups: [assign_allowed_group]) }
       let(:post) { Fabricate(:post, raw: "Hey you @system, stay unassigned", user: moderator) }
       let(:topic) { post.topic }
 
@@ -170,7 +175,7 @@ RSpec.describe TopicAssigner do
   context "unassign_on_close" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
-    let(:moderator) { Fabricate(:moderator) }
+    let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
     let(:assigner) { TopicAssigner.new(topic, moderator) }
 
     before do
