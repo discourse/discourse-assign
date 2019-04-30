@@ -22,35 +22,40 @@ RSpec.describe PendingAssignsReminder do
     let(:system) { Discourse.system_user }
 
     before do
-      @post = Fabricate(:post)
-      @another_post = Fabricate(:post)
-      TopicAssigner.new(@post.topic, user).assign(user)
-      TopicAssigner.new(@another_post.topic, user).assign(user)
-      @assigned_posts = 2
+      @post1 = Fabricate(:post)
+      @post2 = Fabricate(:post)
+      @post3 = Fabricate(:post)
+      TopicAssigner.new(@post1.topic, user).assign(user)
+      TopicAssigner.new(@post2.topic, user).assign(user)
+      TopicAssigner.new(@post3.topic, user).assign(user)
+      @post3.topic.trash!
     end
 
     it 'creates a reminder for a particular user and sets the timestamp of the last reminder' do
-      expected_last_reminder = DateTime.now
+      freeze_time
+      subject.remind(user)
 
-      freeze_time(expected_last_reminder) do
-        subject.remind(user)
+      post = Post.last
 
-        created_post = Post.includes(topic: %i[topic_allowed_users]).last
-        reminded_at = user.reload.custom_fields[described_class::REMINDED_AT].to_datetime
-
-        assert_remind_was_created_correctly(created_post)
-        expect(reminded_at).to eq_time(expected_last_reminder)
-      end
-    end
-
-    def assert_remind_was_created_correctly(post)
       topic = post.topic
       expect(topic.user).to eq(system)
       expect(topic.archetype).to eq(Archetype.private_message)
-      expect(topic.topic_allowed_users.pluck(:user_id)).to contain_exactly(system.id, user.id)
-      expect(topic.title).to eq(I18n.t('pending_assigns_reminder.title', pending_assignments: @assigned_posts))
-      expect(post.raw).to include(@post.topic.fancy_title)
-      expect(post.raw).to include(@another_post.topic.fancy_title)
+
+      expect(topic.topic_allowed_users.pluck(:user_id)).to contain_exactly(
+        system.id, user.id
+      )
+
+      expect(topic.title).to eq(I18n.t(
+        'pending_assigns_reminder.title',
+        pending_assignments: 2
+      ))
+
+      expect(post.raw).to include(@post1.topic.fancy_title)
+      expect(post.raw).to include(@post2.topic.fancy_title)
+
+      expect(
+        user.reload.custom_fields[described_class::REMINDED_AT].to_datetime
+      ).to eq_time(DateTime.now)
     end
   end
 end

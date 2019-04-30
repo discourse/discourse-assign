@@ -27,7 +27,10 @@ class PendingAssignsReminder
   private
 
   def assigned_count_for(user)
-    TopicCustomField.where(name: TopicAssigner::ASSIGNED_TO_ID, value: user.id).count
+    TopicCustomField
+      .joins(:topic)
+      .where(name: TopicAssigner::ASSIGNED_TO_ID, value: user.id)
+      .count
   end
 
   def assigned_topics(user, order:)
