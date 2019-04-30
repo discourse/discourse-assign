@@ -12,6 +12,8 @@ en:
     assign_locks_flags: "When a topic is assigned to a staff member, its flags can only be handled by that person"
     assign_mailer_enabled: "When enabled, the assigned user will receive a notification email on each assignment"
     flags_require_assign: "When enabled, flags cannot be handled unless assigned to a user."
+    remind_assigns: "Remind users about pending assigns."
+    remind_assigns_frequency: "Frequency for reminding users about assigned topics."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
@@ -20,6 +22,11 @@ en:
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
     topic_assigned_excerpt: "assigned you the topic '%{title}'"
+    reminders_frequency:
+        never: 'never'
+        daily: 'daily'
+        monthly: 'monthly'
+        quarterly: 'quarterly'
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
@@ -31,3 +38,22 @@ en:
 
       If you're interested, click the link below:
       [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "You have %{pending_assignments} pending assignments"
+    body: |
+      You currently have [%{pending_assignments} pending assignments](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+      
+      This reminder will be sent %{frequency} if you have more than one assigned topic.
+    newest: |
+      ### Newest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Oldest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

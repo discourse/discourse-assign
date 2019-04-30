@@ -19,3 +19,7 @@ plugins:
     default: false
     client: true
   assign_mailer_enabled: false
+  remind_assigns_frequency:
+    client: true
+    enum: "RemindAssignsFrequencySiteSettings"
+    default: 43200

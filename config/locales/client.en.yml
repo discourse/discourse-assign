@@ -12,7 +12,6 @@ en:
       unassign_all:
         title: "Unassign All"
         confirm: "Are you sure you want to unassign all topics from {{username}}?"
-
       unassign:
         title: "Unassign"
         help: "Unassign Topic"
@@ -26,6 +25,11 @@ en:
       claim:
         title: "claim"
         help: "Assign topic to yourself"
+      reminders_frequency:
+        never: 'Never'
+        daily: 'Daily'
+        monthly: 'Monthly'
+        quarterly: 'Quarterly'
     user:
       messages:
         assigned_title: "Assigned (%{count})"
