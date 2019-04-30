@@ -44,7 +44,7 @@ class PendingAssignsReminder
     I18n.t(
       'pending_assigns_reminder.body',
       pending_assignments: assigned_topics_count,
-      assignments_link: "#{Discourse.base_url}/u/#{user.username_lower}/assigned",
+      assignments_link: "#{Discourse.base_url}/u/#{user.username_lower}/activity/assigned",
       newest_assignments: newest_list,
       oldest_assignments: oldest_list,
       frequency: frequency_in_words
