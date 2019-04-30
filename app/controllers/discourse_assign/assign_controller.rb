@@ -3,7 +3,7 @@ module DiscourseAssign
     before_action :ensure_logged_in
 
     def suggestions
-      users = TopicAssigner.can_assign_to?(current_user) ? [current_user] : []
+      users = [current_user]
       users += User
         .where('admin OR moderator')
         .where('users.id <> ?', current_user.id)

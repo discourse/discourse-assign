@@ -11,16 +11,7 @@ RSpec.describe DiscourseAssign::AssignController do
   context "#suggestions" do
     before { SiteSetting.max_assigned_topics = 1 }
 
-    it 'Exclude current_user from the suggestions when they already reached the max assigns limit' do
-      TopicAssigner.new(post.topic, user).assign(user)
-
-      get '/assign/suggestions.json'
-      suggestions = JSON.parse(response.body)
-
-      expect(suggestions).to be_empty
-    end
-
-    it 'Exclude other users from the suggestions when they already reached the max assigns limit' do
+    it 'excludes other users from the suggestions when they already reached the max assigns limit' do
       another_admin = Fabricate(:admin)
       TopicAssigner.new(post.topic, user).assign(another_admin)
 
@@ -57,19 +48,20 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(JSON.parse(response.body)['error']).to eq(I18n.t('discourse_assign.already_assigned', username: user2.username))
     end
 
-    it 'Fails to assign topic to the user if they already reached the max assigns limit' do
+    it 'fails to assign topic to the user if they already reached the max assigns limit' do
+      another_admin = Fabricate(:admin)
       another_post = Fabricate(:post)
       max_assigns = 1
       SiteSetting.max_assigned_topics = max_assigns
-      TopicAssigner.new(post.topic, user).assign(user)
+      TopicAssigner.new(post.topic, user).assign(another_admin)
 
       put '/assign/assign.json', params: {
-        topic_id: another_post.topic_id, username: user.username
+        topic_id: another_post.topic_id, username: another_admin.username
       }
 
       expect(response.status).to eq(400)
       expect(JSON.parse(response.body)['error']).to eq(
-        I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max_assigns)
+        I18n.t('discourse_assign.too_many_assigns', username: another_admin.username, max: max_assigns)
       )
     end
   end

@@ -132,15 +132,25 @@ RSpec.describe TopicAssigner do
       assigner.assign(moderator).fetch(:success)
     end
 
-    it "Don't assign if the user has too many assigned topics" do
+    it "doesn't assign if the user has too many assigned topics" do
       SiteSetting.max_assigned_topics = 1
       another_post = Fabricate.build(:post)
       assigner.assign(moderator)
 
-      second_assign = TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+      second_assign = TopicAssigner.new(another_post.topic, moderator2).assign(moderator)
 
       expect(second_assign[:success]).to eq(false)
       expect(second_assign[:reason]).to eq(:too_many_assigns)
+    end
+
+    it "doesn't enforce the limit when self-assigning" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate(:post)
+      assigner.assign(moderator)
+
+      second_assign = TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+
+      expect(second_assign[:success]).to eq(true)
     end
   end
 
