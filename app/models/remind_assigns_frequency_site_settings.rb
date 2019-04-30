@@ -7,12 +7,27 @@ class RemindAssignsFrequencySiteSettings < EnumSiteSetting
     values.any? { |v| v[:value] == val.to_i }
   end
 
+  DAILY_MINUTES = 24 * 60 * 1
+  MONTHLY_MINUTES = DAILY_MINUTES * 30
+  QUARTERLY_MINUTES = DAILY_MINUTES * 90
+
   def self.values
     @values ||= [
-      { name: 'discourse_assign.reminders_frequency.never', value: 0 },
-      { name: 'discourse_assign.reminders_frequency.daily', value: 1440 },
-      { name: 'discourse_assign.reminders_frequency.monthly', value: 43200 },
-      { name: 'discourse_assign.reminders_frequency.quarterly', value: 131400 }
+      {
+        name: 'discourse_assign.reminders_frequency.never', value: 0
+      },
+      {
+        name: 'discourse_assign.reminders_frequency.daily',
+        value: DAILY_MINUTES
+      },
+      {
+        name: 'discourse_assign.reminders_frequency.monthly',
+        value: MONTHLY_MINUTES
+      },
+      {
+        name: 'discourse_assign.reminders_frequency.quarterly',
+        value: QUARTERLY_MINUTES
+      }
     ]
   end
 

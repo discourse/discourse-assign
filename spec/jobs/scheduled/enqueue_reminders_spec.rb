@@ -1,7 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe Jobs::EnqueueReminders do
-  let(:user) { Fabricate(:user) }
+  let(:user) { Fabricate(:user, admin: true) }
+
+  before do
+    SiteSetting.remind_assigns_frequency = RemindAssignsFrequencySiteSettings::MONTHLY_MINUTES
+  end
 
   describe '#execute' do
     it 'does not enqueue reminders when there are no assigned tasks' do

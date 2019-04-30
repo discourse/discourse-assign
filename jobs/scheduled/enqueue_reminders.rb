@@ -21,7 +21,9 @@ module Jobs
           LEFT OUTER JOIN user_custom_fields ON topic_custom_fields.value::INT = user_custom_fields.user_id
           AND user_custom_fields.name = '#{PendingAssignsReminder::REMINDED_AT}'
         SQL
-        ).where(<<~SQL
+        ).joins("INNER JOIN users ON topic_custom_fields.value::INT = users.id")
+        .where("users.moderator OR users.admin")
+        .where(<<~SQL
           user_custom_fields.value IS NULL OR
           user_custom_fields.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{interval})
         SQL
