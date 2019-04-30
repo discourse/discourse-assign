@@ -1,6 +1,6 @@
 module Jobs
   class EnqueueReminders < Jobs::Scheduled
-    every 2.hours
+    every 1.day
 
     def execute(_args)
       return if skip_enqueue?
