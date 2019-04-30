@@ -22,4 +22,4 @@ plugins:
   remind_assigns_frequency:
     client: true
     enum: "RemindAssignsFrequencySiteSettings"
-    default: 43200
+    default: 0
