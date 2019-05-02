@@ -131,8 +131,16 @@ SQL
   end
 
   def can_assign_to?(user)
-    assigned_total = TopicCustomField.where(name: ASSIGNED_TO_ID, value: user.id.to_s).count
-    assigned_total < SiteSetting.max_assigned_topics || @assigned_by.id == user.id
+    return true if @assigned_by.id == user.id
+
+    assigned_total = TopicCustomField
+      .where('name = ? OR name = ?', ASSIGNED_TO_ID, ASSIGNED_BY_ID)
+      .where(value: user.id)
+      .group(:topic_id)
+      .having('COUNT(*) = 1')
+      .count.length
+
+    assigned_total < SiteSetting.max_assigned_topics
   end
 
   def assign(assign_to, silent: false)

@@ -152,6 +152,16 @@ RSpec.describe TopicAssigner do
 
       expect(second_assign[:success]).to eq(true)
     end
+
+    it "doesn't count self-assigns when enforcing the limit" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate(:post)
+      TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+
+      second_assign = assigner.assign(moderator)
+
+      expect(second_assign[:success]).to eq(true)
+    end
   end
 
   context "unassign_on_close" do
