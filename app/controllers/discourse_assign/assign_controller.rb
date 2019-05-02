@@ -7,13 +7,16 @@ module DiscourseAssign
       users += User
         .where('admin OR moderator')
         .where('users.id <> ?', current_user.id)
-        .joins("join (
-                       SELECT value::integer user_id, MAX(created_at) last_assigned
-                       FROM topic_custom_fields
-                       WHERE name = 'assigned_to_id'
-                       GROUP BY value::integer
-                      ) as X ON X.user_id = users.id")
-        .order('X.last_assigned DESC')
+        .joins(<<~SQL
+          JOIN(
+                SELECT value::integer user_id, MAX(created_at) last_assigned
+                FROM topic_custom_fields
+                WHERE name = 'assigned_to_id'
+                GROUP BY value::integer
+                HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
+              ) as X ON X.user_id = users.id
+        SQL
+        ).order('X.last_assigned DESC')
         .limit(6)
 
       render json: ActiveModel::ArraySerializer.new(users,
@@ -62,23 +65,32 @@ module DiscourseAssign
 
       raise Discourse::NotFound unless assign_to
 
-      if topic.custom_fields && topic.custom_fields['assigned_to_id'] == assign_to.id.to_s
-        return render json: { failed: I18n.t('discourse_assign.already_assigned', username: username) }, status: 400
-      end
-
-      assigner = TopicAssigner.new(topic, current_user)
-
       # perhaps?
       #Scheduler::Defer.later "assign topic" do
-      assigner.assign(assign_to)
+      assign = TopicAssigner.new(topic, current_user).assign(assign_to)
 
-      render json: success_json
+      if assign[:success]
+        render json: success_json
+      else
+        render json: translate_failure(assign[:reason], assign_to), status: 400
+      end
     end
 
     def unassign_all
       user = User.find_by(id: params[:user_id])
       TopicAssigner.unassign_all(user, current_user)
       render json: success_json
+    end
+
+    private
+
+    def translate_failure(reason, user)
+      if reason == :already_assigned
+        { error: I18n.t('discourse_assign.already_assigned', username: user.username) }
+      else
+        max = SiteSetting.max_assigned_topics
+        { error: I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max) }
+      end
     end
   end
 end

@@ -119,13 +119,48 @@ RSpec.describe TopicAssigner do
       SiteSetting.assign_mailer_enabled = true
 
       Email::Sender.any_instance.expects(:send).once
-      expect(assigner.assign(moderator)).to eq(true)
+      expect(assigned_to?(moderator)).to eq(true)
 
       Email::Sender.any_instance.expects(:send).never
-      expect(assigner.assign(moderator)).to eq(false)
+      expect(assigned_to?(moderator)).to eq(false)
 
       Email::Sender.any_instance.expects(:send).once
-      expect(assigner.assign(Fabricate(:moderator))).to eq(true)
+      expect(assigned_to?(Fabricate(:moderator))).to eq(true)
+    end
+
+    def assigned_to?(moderator)
+      assigner.assign(moderator).fetch(:success)
+    end
+
+    it "doesn't assign if the user has too many assigned topics" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate.build(:post)
+      assigner.assign(moderator)
+
+      second_assign = TopicAssigner.new(another_post.topic, moderator2).assign(moderator)
+
+      expect(second_assign[:success]).to eq(false)
+      expect(second_assign[:reason]).to eq(:too_many_assigns)
+    end
+
+    it "doesn't enforce the limit when self-assigning" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate(:post)
+      assigner.assign(moderator)
+
+      second_assign = TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+
+      expect(second_assign[:success]).to eq(true)
+    end
+
+    it "doesn't count self-assigns when enforcing the limit" do
+      SiteSetting.max_assigned_topics = 1
+      another_post = Fabricate(:post)
+      TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+
+      second_assign = assigner.assign(moderator)
+
+      expect(second_assign[:success]).to eq(true)
     end
   end
 

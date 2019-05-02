@@ -130,8 +130,22 @@ SQL
     User.real.staff.pluck(:id)
   end
 
+  def can_assign_to?(user)
+    return true if @assigned_by.id == user.id
+
+    assigned_total = TopicCustomField
+      .where('name = ? OR name = ?', ASSIGNED_TO_ID, ASSIGNED_BY_ID)
+      .where(value: user.id)
+      .group(:topic_id)
+      .having('COUNT(*) = 1')
+      .count.length
+
+    assigned_total < SiteSetting.max_assigned_topics
+  end
+
   def assign(assign_to, silent: false)
-    return false if @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
+    return { success: false, reason: :already_assigned } if @topic.custom_fields && @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
+    return { success: false, reason: :too_many_assigns } unless can_assign_to?(assign_to)
 
     @topic.custom_fields[ASSIGNED_TO_ID] = assign_to.id
     @topic.custom_fields[ASSIGNED_BY_ID] = @assigned_by.id
@@ -223,7 +237,7 @@ SQL
       )
     end
 
-    true
+    { success: true }
   end
 
   def unassign(silent: false)
