@@ -134,11 +134,11 @@ SQL
     return true if @assigned_by.id == user.id
 
     assigned_total = TopicCustomField
-      .where('name = ? OR name = ?', ASSIGNED_TO_ID, ASSIGNED_BY_ID)
+      .joins(:topic)
+      .where(topics: { deleted_at: nil })
+      .where(name: ASSIGNED_TO_ID)
       .where(value: user.id)
-      .group(:topic_id)
-      .having('COUNT(*) = 1')
-      .count.length
+      .count
 
     assigned_total < SiteSetting.max_assigned_topics
   end
