@@ -10,6 +10,7 @@ class RemindAssignsFrequencySiteSettings < EnumSiteSetting
   end
 
   DAILY_MINUTES = 24 * 60 * 1
+  WEEKLY_MINUTES = DAILY_MINUTES * 7
   MONTHLY_MINUTES = DAILY_MINUTES * 30
   QUARTERLY_MINUTES = DAILY_MINUTES * 90
 
@@ -21,6 +22,10 @@ class RemindAssignsFrequencySiteSettings < EnumSiteSetting
       {
         name: 'discourse_assign.reminders_frequency.daily',
         value: DAILY_MINUTES
+      },
+      {
+        name: 'discourse_assign.reminders_frequency.weekly',
+        value: WEEKLY_MINUTES
       },
       {
         name: 'discourse_assign.reminders_frequency.monthly',

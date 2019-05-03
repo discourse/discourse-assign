@@ -2,6 +2,7 @@
 
 class PendingAssignsReminder
   REMINDED_AT = 'last_reminded_at'
+  REMINDERS_FREQUENCY = 'remind_assigns_frequency'
   REMINDER_THRESHOLD = 2
 
   def remind(user)
@@ -50,7 +51,7 @@ class PendingAssignsReminder
       assignments_link: "#{Discourse.base_url}/u/#{user.username_lower}/activity/assigned",
       newest_assignments: newest_list,
       oldest_assignments: oldest_list,
-      frequency: frequency_in_words
+      frequency: frequency_in_words(user)
     )
   end
 
@@ -71,8 +72,14 @@ class PendingAssignsReminder
     )
   end
 
-  def frequency_in_words
-    ::RemindAssignsFrequencySiteSettings.frequency_for(SiteSetting.remind_assigns_frequency)
+  def frequency_in_words(user)
+    frequency = if user.custom_fields && user.custom_fields.has_key?(REMINDERS_FREQUENCY)
+      user.custom_fields[REMINDERS_FREQUENCY]
+    else
+      SiteSetting.remind_assigns_frequency
+    end
+
+    ::RemindAssignsFrequencySiteSettings.frequency_for(frequency)
   end
 
   def update_last_reminded(user)

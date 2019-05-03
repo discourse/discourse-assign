@@ -1,0 +1,9 @@
+{{#if siteSettings.assign_enabled}}
+  <div class="controls controls-dropdown">
+    <label>{{i18n "discourse_assign.reminders_frequency.description"}}</label>
+    {{combo-box valueAttribute="value" 
+                content=translatedFrequencies 
+                value=user.custom_fields.remind_assigns_frequency
+    }}
+  </div>
+{{/if}}

@@ -12,26 +12,39 @@ module Jobs
     private
 
     def skip_enqueue?
-      SiteSetting.remind_assigns_frequency.nil? || SiteSetting.remind_assigns_frequency.zero?
+      SiteSetting.remind_assigns_frequency.nil? || !SiteSetting.assign_enabled?
     end
 
     def user_ids
-      interval = SiteSetting.remind_assigns_frequency
+      global_frequency = SiteSetting.remind_assigns_frequency.to_i
+      frequency = "COALESCE(user_frequency.value, '#{global_frequency}')::INT"
 
       TopicCustomField
         .joins(<<~SQL
-          LEFT OUTER JOIN user_custom_fields ON topic_custom_fields.value::INT = user_custom_fields.user_id
-          AND user_custom_fields.name = '#{PendingAssignsReminder::REMINDED_AT}'
+          LEFT OUTER JOIN user_custom_fields AS last_reminder ON topic_custom_fields.value::INT = last_reminder.user_id
+          AND last_reminder.name = '#{PendingAssignsReminder::REMINDED_AT}'
         SQL
-        ).joins("INNER JOIN users ON topic_custom_fields.value::INT = users.id")
+        )
+        .joins(<<~SQL
+          LEFT OUTER JOIN user_custom_fields AS user_frequency
+          ON topic_custom_fields.value::INT = user_frequency.user_id
+          AND user_frequency.name = '#{PendingAssignsReminder::REMINDERS_FREQUENCY}'
+        SQL
+        )
+        .joins("INNER JOIN users ON topic_custom_fields.value::INT = users.id")
         .where("users.moderator OR users.admin")
         .where(<<~SQL
-          user_custom_fields.value IS NULL OR
-          user_custom_fields.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{interval})
+          #{frequency} > 0 AND
+          (
+            last_reminder.value IS NULL OR
+            last_reminder.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})
+          )
         SQL
-        ).where("topic_custom_fields.updated_at::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * ?)", interval)
+        ).where("topic_custom_fields.updated_at::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})")
         .where(name: TopicAssigner::ASSIGNED_TO_ID)
-        .group('topic_custom_fields.value').having('COUNT(topic_custom_fields.value) > 1')
+        .joins(:topic)
+        .group('topic_custom_fields.value')
+        .having('COUNT(topic_custom_fields.value) > 1')
         .pluck('topic_custom_fields.value')
     end
   end

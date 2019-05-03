@@ -29,6 +29,14 @@ after_initialize do
   require 'topic_assigner'
   require 'pending_assigns_reminder'
 
+  frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
+  register_editable_user_custom_field frequency_field
+  User.register_custom_field_type frequency_field, :integer
+  DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
+  add_to_serializer(:user, :reminders_frequency) do
+    RemindAssignsFrequencySiteSettings.values
+  end
+
 =begin
   TODO: Remove this once 2.3 becomes the new stable.
   Also remove:

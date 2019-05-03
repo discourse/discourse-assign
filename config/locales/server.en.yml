@@ -27,6 +27,7 @@ en:
     reminders_frequency:
         never: 'never'
         daily: 'daily'
+        weekly: 'weekly'
         monthly: 'monthly'
         quarterly: 'quarterly'
   assign_mailer:
