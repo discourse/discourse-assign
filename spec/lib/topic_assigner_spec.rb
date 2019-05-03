@@ -156,11 +156,18 @@ RSpec.describe TopicAssigner do
     it "doesn't count self-assigns when enforcing the limit" do
       SiteSetting.max_assigned_topics = 1
       another_post = Fabricate(:post)
-      TopicAssigner.new(another_post.topic, moderator).assign(moderator)
 
-      second_assign = assigner.assign(moderator)
+      first_assign = assigner.assign(moderator)
 
-      expect(second_assign[:success]).to eq(true)
+      # reached limit so stop
+      second_assign = TopicAssigner.new(Fabricate(:topic), moderator2).assign(moderator)
+
+      # self assign has a bypass
+      third_assign = TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+
+      expect(first_assign[:success]).to eq(true)
+      expect(second_assign[:success]).to eq(false)
+      expect(third_assign[:success]).to eq(true)
     end
   end
 
