@@ -1,4 +1,5 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
+import { ListItemDefaults } from "discourse/components/topic-list-item";
 
 export default UserTopicListRoute.extend({
   userActionType: 16,
@@ -17,8 +18,12 @@ export default UserTopicListRoute.extend({
   },
 
   renderTemplate() {
+    // TODO: This has to be removed when 2.3 becomes the new stable version.
+    const template = ListItemDefaults
+      ? "user-assigned-topics"
+      : "user-topics-list";
     this.render("user-activity-assigned");
-    this.render("user-assigned-topics", { into: "user-activity-assigned" });
+    this.render(template, { into: "user-activity-assigned" });
   },
 
   setupController(controller, model) {

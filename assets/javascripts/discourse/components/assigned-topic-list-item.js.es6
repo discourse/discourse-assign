@@ -1,5 +1,5 @@
-import { ListItemDefaults } from "discourse/components/topic-list-item";
 import computed from "ember-addons/ember-computed-decorators";
+import { ListItemDefaults } from "discourse/components/topic-list-item";
 
 const privateMessageHelper = {
   @computed("topic.archetype")
