@@ -18,6 +18,9 @@ en:
       assign:
         title: "Assign"
         help: "Assign Topic to User"
+      reassign:
+        title: "Re-assign"
+        help: "Re-assign Topic to a different user"
       assign_modal:
         title: "Assign Topic"
         description: "Enter the username of the person you'd like to assign this topic"

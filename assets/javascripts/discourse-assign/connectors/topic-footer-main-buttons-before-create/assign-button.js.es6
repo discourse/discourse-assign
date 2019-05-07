@@ -1,5 +1,4 @@
-import showModal from "discourse/lib/show-modal";
-import { ajax } from "discourse/lib/ajax";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 export default {
   shouldRender(args, component) {
@@ -11,22 +10,18 @@ export default {
     );
   },
 
+  setupComponent(args, component) {
+    const taskActions = getOwner(this).lookup("service:task-actions");
+    component.set("taskActions", taskActions);
+  },
+
   actions: {
     unassign() {
       this.set("topic.assigned_to_user", null);
-
-      return ajax("/assign/unassign", {
-        type: "PUT",
-        data: { topic_id: this.get("topic.id") }
-      });
+      this.get("taskActions").unassign(this.get("topic.id"));
     },
     assign() {
-      showModal("assign-user", {
-        model: {
-          topic: this.topic,
-          username: this.topic.get("assigned_to_user.username")
-        }
-      });
+      this.get("taskActions").assign(this.topic);
     }
   }
 };

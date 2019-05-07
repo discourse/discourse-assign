@@ -1,0 +1,17 @@
+{{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
+  {{basic-assigned-topic-list topicList=model
+                        hideCategory=hideCategory
+                        showPosters=showPosters
+                        bulkSelectEnabled=bulkSelectEnabled
+                        selected=selected
+                        hasIncoming=hasIncoming
+                        incomingCount=incomingCount
+                        showInserted=(action "showInserted")
+                        tagsForUser=tagsForUser
+                        unassign=(action 'unassign')
+                        reassign=(action 'reassign')}}
+
+  {{conditional-loading-spinner condition=model.loadingMore}}
+{{/load-more}}
+
+

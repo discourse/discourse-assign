@@ -1,4 +1,5 @@
 import UserTopicListRoute from "discourse/routes/user-topic-list";
+import { ListItemDefaults } from "discourse/components/topic-list-item";
 
 export default UserTopicListRoute.extend({
   userActionType: 16,
@@ -6,9 +7,10 @@ export default UserTopicListRoute.extend({
 
   model() {
     return this.store.findFiltered("topicList", {
-      filter: "latest",
+      filter: `topics/messages-assigned/${this.modelFor("user").get(
+        "username_lower"
+      )}`,
       params: {
-        assigned: this.modelFor("user").get("username_lower"),
         // core is a bit odd here and is not sending an array, should be fixed
         exclude_category_ids: [-1]
       }
@@ -16,8 +18,12 @@ export default UserTopicListRoute.extend({
   },
 
   renderTemplate() {
+    // TODO: This has to be removed when 2.3 becomes the new stable version.
+    const template = ListItemDefaults
+      ? "user-assigned-topics"
+      : "user-topics-list";
     this.render("user-activity-assigned");
-    this.render("user-topics-list", { into: "user-activity-assigned" });
+    this.render(template, { into: "user-activity-assigned" });
   },
 
   setupController(controller, model) {
@@ -26,7 +32,7 @@ export default UserTopicListRoute.extend({
   },
 
   actions: {
-    unassignedAll() {
+    changeAssigned() {
       this.refresh();
     }
   }

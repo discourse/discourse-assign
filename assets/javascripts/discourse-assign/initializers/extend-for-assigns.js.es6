@@ -8,6 +8,9 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
+// TODO: This has to be removed when 2.3 becomes the new stable version.
+import { ListItemDefaults } from "discourse/components/topic-list-item";
+
 const ACTION_ID = "assign";
 
 function modifySelectKit(api) {
@@ -138,9 +141,18 @@ function initialize(api) {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.get("assignedToUserPath");
-      return `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
+      let assignLabels = `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
         "user-plus"
       )}${assignedTo}</a>`;
+
+      if (
+        ListItemDefaults === undefined &&
+        topic.get("archetype") === "private_message"
+      ) {
+        assignLabels += `<div>${iconHTML("envelope")} Message</div>`;
+      }
+
+      return assignLabels;
     }
   });
 
