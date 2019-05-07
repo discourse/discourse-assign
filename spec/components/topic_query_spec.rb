@@ -28,6 +28,14 @@ describe TopicQuery do
 
       expect(assigned_messages).to be_empty
     end
+
+    it 'Returns the results ordered by the bumped_at field' do
+      @topic.update(bumped_at: 2.weeks.ago)
+
+      assigned_messages = TopicQuery.new(user).list_messages_assigned(user).topics
+
+      expect(assigned_messages).to eq([@private_message, @topic])
+    end
   end
 
   describe '#list_private_messages_assigned' do

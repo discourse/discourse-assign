@@ -150,6 +150,8 @@ after_initialize do
         WHERE name = 'assigned_to_id'
         AND value = ?)
     ", user.id.to_s)
+      .order("topics.bumped_at DESC")
+
     create_list(:assigned, {}, list)
   end
 
