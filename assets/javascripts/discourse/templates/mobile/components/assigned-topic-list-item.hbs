@@ -1,0 +1,43 @@
+<td>
+  <div class='main-link'>
+    {{topic-status topic=topic}}
+    {{~#if isPrivateMessage}}
+      {{~d-icon "envelope" class="private-message-icon"}}
+    {{~/if}}
+    {{~topic-link topic}}
+    {{#if topic.unseen}}
+      <span class="badge-notification new-topic"></span>
+    {{/if}}
+    {{#if topic.hasExcerpt}}
+      <div class="topic-excerpt">
+        {{{topic.excerpt}}}
+        {{#if topic.excerptTruncated}}
+          {{#unless topic.canClearPin}}<a href="{{unbound topic.url}}">{{i18n 'read_more'}}</a>{{/unless}}
+        {{/if}}
+        {{#if topic.canClearPin}}
+          <a href {{action "clearPin" topic}} title="{{i18n 'topic.clear_pin.help'}}">{{i18n 'topic.clear_pin.title'}}</a>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+  <div class='pull-right'>
+    {{assign-actions-dropdown topic=topic
+                              user=username
+                              unassign=unassign
+                              reassign=reassign}}
+  </div>
+  <div class='clearfix'></div>
+  <div class="topic-item-stats clearfix">
+    {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+    <div class="pull-right">
+      {{raw "list/activity-column" topic=topic tagName="div" class="num activity last"}}
+      <a href="{{topic.lastPostUrl}}" title='{{i18n 'last_post'}}: {{{raw-date topic.bumped_at}}}'>{{topic.last_poster_username}}</a>
+    </div>
+    {{#unless hideCategory}}
+      <div class='category'>
+        {{category-link topic.category}}
+      </div>
+    {{/unless}}
+    <div class="clearfix"></div>
+  </div>
+</td>
