@@ -75,7 +75,7 @@ describe 'integration tests' do
       )
     end
 
-    it "do not raise error if topic is deleted" do
+    it "do not raise error if topic is deleted", unless: defined?(Reviewable) do
       expect { DiscourseEvent.trigger(:before_staff_flag_action, args) }
         .to raise_error(Discourse::InvalidAccess)
 

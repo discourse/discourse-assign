@@ -30,9 +30,24 @@ after_initialize do
   require 'topic_assigner'
   require 'pending_assigns_reminder'
 
+=begin
+  TODO: Remove this once 2.3 becomes the new stable.
+  Also remove:
+    - flagged-* connectors
+    - flagged queue code inside the JS initializer
+=end
+  reviewable_api_enabled = begin
+    'Reviewable'.constantize
+    true
+  rescue NameError
+    false
+  end
+
   # Raise an invalid access error if a user tries to act on something
   # not assigned to them
   DiscourseEvent.on(:before_staff_flag_action) do |args|
+    return if reviewable_api_enabled
+
     if SiteSetting.assign_locks_flags?
 
       if custom_fields = args[:post].topic&.custom_fields
@@ -247,6 +262,8 @@ after_initialize do
 
   # Unassign if there are no more flags in the topic
   on(:flag_reviewed) do |post|
+    return if reviewable_api_enabled
+
     if SiteSetting.assign_locks_flags? &&
       post.topic &&
       FlagQuery.flagged_post_actions(topic_id: post.topic_id, filter: "old").count > 0 &&
