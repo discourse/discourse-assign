@@ -17,18 +17,19 @@
 <tbody>
   {{#each filteredTopics as |topic|}}
     {{assigned-topic-list-item topic=topic
-                      showTopicPostBadges=showTopicPostBadges
-                      hideCategory=hideCategory
-                      showPosters=showPosters
-                      showLikes=showLikes
-                      showOpLikes=showOpLikes
-                      expandGloballyPinned=expandGloballyPinned
-                      expandAllPinned=expandAllPinned
-                      lastVisitedTopic=lastVisitedTopic
-                      selected=selected
-                      tagsForUser=tagsForUser
-                      unassign=unassign
-                      reassign=reassign}}
+                               showTopicPostBadges=showTopicPostBadges
+                               hideCategory=hideCategory
+                               showPosters=showPosters
+                               showLikes=showLikes
+                               showOpLikes=showOpLikes
+                               expandGloballyPinned=expandGloballyPinned
+                               expandAllPinned=expandAllPinned
+                               lastVisitedTopic=lastVisitedTopic
+                               selected=selected
+                               tagsForUser=tagsForUser
+                               unassign=unassign
+                               reassign=reassign}}
+
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}
 </tbody>
