@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseAssign
   class AssignController < Admin::AdminController
     before_action :ensure_logged_in

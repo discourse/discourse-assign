@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # name: discourse-assign
 # about: Assign users to topics
 # version: 0.1

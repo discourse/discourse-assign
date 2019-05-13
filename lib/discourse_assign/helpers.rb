@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module DiscourseAssign
   module Helpers
     def self.build_assigned_to_user(assigned_to_user_id, topic)

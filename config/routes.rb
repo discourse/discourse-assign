@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 DiscourseAssign::Engine.routes.draw do
   put "/claim/:topic_id" => "assign#claim"
   put "/assign" => "assign#assign"
