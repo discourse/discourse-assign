@@ -73,7 +73,7 @@ class PendingAssignsReminder
   end
 
   def frequency_in_words(user)
-    frequency = if user.custom_fields && user.custom_fields.has_key?(REMINDERS_FREQUENCY)
+    frequency = if user.custom_fields&.has_key?(REMINDERS_FREQUENCY)
       user.custom_fields[REMINDERS_FREQUENCY]
     else
       SiteSetting.remind_assigns_frequency

@@ -16,23 +16,24 @@ module Jobs
     end
 
     def user_ids
-      global_frequency = SiteSetting.remind_assigns_frequency.to_i
+      global_frequency = SiteSetting.remind_assigns_frequency
       frequency = "COALESCE(user_frequency.value, '#{global_frequency}')::INT"
 
       TopicCustomField
         .joins(<<~SQL
-          LEFT OUTER JOIN user_custom_fields AS last_reminder ON topic_custom_fields.value::INT = last_reminder.user_id
+          LEFT OUTER JOIN user_custom_fields AS last_reminder
+          ON topic_custom_fields.value::INT = last_reminder.user_id
           AND last_reminder.name = '#{PendingAssignsReminder::REMINDED_AT}'
         SQL
         )
+        .joins("INNER JOIN users ON topic_custom_fields.value::INT = users.id")
+        .where("users.moderator OR users.admin")
         .joins(<<~SQL
           LEFT OUTER JOIN user_custom_fields AS user_frequency
           ON topic_custom_fields.value::INT = user_frequency.user_id
           AND user_frequency.name = '#{PendingAssignsReminder::REMINDERS_FREQUENCY}'
         SQL
         )
-        .joins("INNER JOIN users ON topic_custom_fields.value::INT = users.id")
-        .where("users.moderator OR users.admin")
         .where(<<~SQL
           #{frequency} > 0 AND
           (

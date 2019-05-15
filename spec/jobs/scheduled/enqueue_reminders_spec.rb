@@ -67,7 +67,7 @@ RSpec.describe Jobs::EnqueueReminders do
       assert_reminders_enqueued(1)
     end
 
-    it "Doesn't count assigns from deleted topics" do
+    it "doesn't count assigns from deleted topics" do
       deleted_post = Fabricate(:post)
       assign_one_task_to(user, post: deleted_post)
       (PendingAssignsReminder::REMINDER_THRESHOLD - 1).times { assign_one_task_to(user) }

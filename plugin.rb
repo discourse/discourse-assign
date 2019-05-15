@@ -36,6 +36,9 @@ after_initialize do
   add_to_serializer(:user, :reminders_frequency) do
     RemindAssignsFrequencySiteSettings.values
   end
+  add_model_callback(UserCustomField, :before_save) do
+    self.value = self.value.to_i if self.name == frequency_field
+  end
 
 =begin
   TODO: Remove this once 2.3 becomes the new stable.
