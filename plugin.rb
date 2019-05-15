@@ -35,19 +35,12 @@ after_initialize do
     - flagged-* connectors
     - flagged queue code inside the JS initializer
 =end
-  reviewable_api_enabled = begin
-    'Reviewable'.constantize
-    true
-  rescue NameError
-    false
-  end
+  reviewable_api_enabled = defined?(Reviewable)
 
   # Raise an invalid access error if a user tries to act on something
   # not assigned to them
   DiscourseEvent.on(:before_staff_flag_action) do |args|
-    return if reviewable_api_enabled
-
-    if SiteSetting.assign_locks_flags?
+    if !reviewable_api_enabled && SiteSetting.assign_locks_flags?
 
       if custom_fields = args[:post].topic&.custom_fields
         if assigned_to_id = custom_fields[TopicAssigner::ASSIGNED_TO_ID]
@@ -261,12 +254,12 @@ after_initialize do
 
   # Unassign if there are no more flags in the topic
   on(:flag_reviewed) do |post|
-    if !reviewable_api_enabled && 
-      SiteSetting.assign_locks_flags? && 
+    if !reviewable_api_enabled &&
+      SiteSetting.assign_locks_flags? &&
       post.topic &&
       FlagQuery.flagged_post_actions(topic_id: post.topic_id, filter: "old").count > 0 &&
       FlagQuery.flagged_post_actions(topic_id: post.topic_id).count == 0
-      
+
       ::TopicAssigner.new(post.topic, Discourse.system_user).unassign
     end
   end
