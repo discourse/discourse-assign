@@ -24,7 +24,6 @@ Discourse::Application.routes.append do
 end
 
 after_initialize do
-  require File.expand_path('../jobs/unassign_bulk.rb', __FILE__)
   require File.expand_path('../jobs/scheduled/enqueue_reminders.rb', __FILE__)
   require File.expand_path('../jobs/regular/remind_user.rb', __FILE__)
   require 'topic_assigner'

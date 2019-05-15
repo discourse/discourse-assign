@@ -7,24 +7,6 @@ class ::TopicAssigner
   ASSIGNED_TO_ID = 'assigned_to_id'
   ASSIGNED_BY_ID = 'assigned_by_id'
 
-  def self.unassign_all(user, assigned_by)
-    topic_ids = TopicCustomField.where(name: ASSIGNED_TO_ID, value: user.id).pluck(:topic_id)
-
-    # Fast path: by doing this we can instantly refresh for the user showing no assigned topics
-    # while doing the "full" removal asynchronously.
-    TopicCustomField.where(
-      name: [ASSIGNED_TO_ID, ASSIGNED_BY_ID],
-      topic_id: topic_ids
-    ).delete_all
-
-    Jobs.enqueue(
-      :unassign_bulk,
-      user_id: user.id,
-      assigned_by_id: assigned_by.id,
-      topic_ids: topic_ids
-    )
-  end
-
   def self.backfill_auto_assign
     staff_mention = User.where('moderator OR admin')
       .pluck('username')

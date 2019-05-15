@@ -78,12 +78,6 @@ module DiscourseAssign
       end
     end
 
-    def unassign_all
-      user = User.find_by(id: params[:user_id])
-      TopicAssigner.unassign_all(user, current_user)
-      render json: success_json
-    end
-
     private
 
     def translate_failure(reason, user)

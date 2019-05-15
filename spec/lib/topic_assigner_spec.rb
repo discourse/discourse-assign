@@ -85,12 +85,6 @@ RSpec.describe TopicAssigner do
         .to eq(TopicUser.notification_levels[:muted])
     end
 
-    it "can unassign all a user's topics at once" do
-      assigner.assign(moderator)
-      TopicAssigner.unassign_all(moderator, moderator)
-      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
-    end
-
     context "when assigns_by_staff_mention is set to true" do
       let(:system_user) { Discourse.system_user }
       let(:moderator) { Fabricate(:admin, username: "modi") }

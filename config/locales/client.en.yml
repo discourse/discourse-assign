@@ -9,9 +9,6 @@ en:
       assigned: "Assigned"
       assigned_to: "Assigned to"
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
-      unassign_all:
-        title: "Unassign All"
-        confirm: "Are you sure you want to unassign all topics from {{username}}?"
       unassign:
         title: "Unassign"
         help: "Unassign Topic"
