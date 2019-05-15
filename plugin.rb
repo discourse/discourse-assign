@@ -262,15 +262,13 @@ after_initialize do
 
   # Unassign if there are no more flags in the topic
   on(:flag_reviewed) do |post|
-    return if reviewable_api_enabled
-
-    if SiteSetting.assign_locks_flags? &&
+    if !reviewable_api_enabled && 
+      SiteSetting.assign_locks_flags? && 
       post.topic &&
       FlagQuery.flagged_post_actions(topic_id: post.topic_id, filter: "old").count > 0 &&
       FlagQuery.flagged_post_actions(topic_id: post.topic_id).count == 0
-
-      assigner = ::TopicAssigner.new(post.topic, Discourse.system_user)
-      assigner.unassign
+      
+      ::TopicAssigner.new(post.topic, Discourse.system_user).unassign
     end
   end
 
