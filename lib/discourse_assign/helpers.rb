@@ -17,12 +17,5 @@ module DiscourseAssign
         }
       end
     end
-
-    def self.group_names
-      return [] unless ActiveRecord::Base.connection.table_exists?('groups')
-      Group.pluck(:name)
-    rescue ActiveRecord::NoDatabaseError
-      # Database might not have been created
-    end
   end
 end
