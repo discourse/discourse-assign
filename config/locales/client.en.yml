@@ -26,8 +26,10 @@ en:
         title: "claim"
         help: "Assign topic to yourself"
       reminders_frequency:
+        description: "Frequency for receiving assigned topics reminders"
         never: 'Never'
         daily: 'Daily'
+        weekly: 'Weekly'
         monthly: 'Monthly'
         quarterly: 'Quarterly'
     user:

@@ -226,6 +226,15 @@ function initialize(api) {
     "notification.discourse_assign.assign_notification",
     "user-plus"
   );
+
+  api.modifyClass("controller:preferences/notifications", {
+    actions: {
+      save() {
+        this.get("saveAttrNames").push("custom_fields");
+        this._super(...arguments);
+      }
+    }
+  });
 }
 
 export default {
