@@ -10,3 +10,14 @@ lt:
     action_codes:
       assigned: "priskirta %{who}%{when}"
       unassigned: "nepriskirta %{who}%{when}"
+    discourse_assign:
+      assigned: "Priskirta"
+      reminders_frequency:
+        never: 'Niekada'
+        daily: 'Kasdien'
+        weekly: 'Kas savaitę'
+        monthly: 'Kas mėnesį'
+        quarterly: 'Kas ketvirtį'
+    user:
+      messages:
+        assigned: "Priskirta"

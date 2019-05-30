@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ko: {}
+ko:
+  discourse_assign:
+    reminders_frequency:
+      never: '하지않음'
+      daily: '매일'
+      weekly: '매주'

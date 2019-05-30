@@ -27,6 +27,10 @@ hy:
     flag_assigned: "Ներողություն, այդ դրոշակի թեման վերագրված է մեկ այլ օգտատիրոջ"
     flag_unclaimed: "Դուք պետք է պահանջեք այդ թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
     topic_assigned_excerpt: "վերագրել է Ձեզ '%{title}' թեմային"
+    reminders_frequency:
+      never: 'երբեք'
+      daily: 'օրը մեկ'
+      weekly: 'շաբաթական'
   assign_mailer:
     title: "Վերագրել Ուղարկողին"
     subject_template: "[%{email_prefix}] %{assignee_name} -ը վերագրել է Ձեզ '%{topic_title}'!"

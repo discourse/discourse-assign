@@ -8,10 +8,20 @@
 hu:
   js:
     action_codes:
-      assigned: "Aláírta%{who} %{when}"
+      assigned: "Kiosztva %{who} részére %{when}"
       unassigned: "Nem aláírt%{who} %{when}"
     discourse_assign:
       assigned: "Aláírt"
-      assigned_to: "Aláírta"
+      assigned_to: "Kosztva"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       claim:
         title: "Lefoglal"
+      reminders_frequency:
+        never: 'Soha'
+        daily: 'Napi'
+        weekly: 'Heti'
+        monthly: 'Havi'
+        quarterly: 'Negyedévente'
+    user:
+      messages:
+        assigned: "Aláírt"

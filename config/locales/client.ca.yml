@@ -14,6 +14,12 @@ ca:
         title: "Assigna"
       assign_modal:
         assign: "Assigna"
+      reminders_frequency:
+        never: 'Mai'
+        daily: 'Diàriament'
+        weekly: 'Setmanalment'
+        monthly: 'Mensualment'
+        quarterly: 'Trimestralment'
     user:
       messages:
         assigned: "Assignat"

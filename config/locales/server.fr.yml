@@ -27,6 +27,10 @@ fr:
     flag_assigned: "Désolé, le sujet de ce signalement est attribué à un autre utilisateur."
     flag_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur le signalement"
     topic_assigned_excerpt: "vous a attribué le sujet '%{title}'"
+    reminders_frequency:
+      never: 'jamais'
+      daily: 'quotidien'
+      weekly: 'hebdomadaires'
   assign_mailer:
     title: "Affecter le mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} vous a affecté à « %{topic_title} » !"

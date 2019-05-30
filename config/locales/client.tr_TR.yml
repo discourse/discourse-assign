@@ -27,6 +27,12 @@ tr_TR:
       claim:
         title: "talep"
         help: "Konuyu kendinize atayın"
+      reminders_frequency:
+        never: 'Asla'
+        daily: 'Günlük'
+        weekly: 'Haftalık'
+        monthly: 'Aylık'
+        quarterly: 'Üç aylık'
     user:
       messages:
         assigned: "Atandı"

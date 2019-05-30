@@ -22,6 +22,10 @@ ru:
     assigned_to: "Тема назначена на @%{username}"
     unassigned: "Ответственный снят"
     already_claimed: "На эту тему уже жаловались."
+    reminders_frequency:
+      never: 'никогда'
+      daily: 'ежедневно'
+      weekly: 'еженедельно'
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} назначил(а) Вас ответственным в теме '%{topic_title}'!"

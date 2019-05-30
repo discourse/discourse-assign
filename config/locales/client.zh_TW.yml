@@ -27,3 +27,12 @@ zh_TW:
       claim:
         title: "認領"
         help: "指派主題給您自己"
+      reminders_frequency:
+        never: '永不'
+        daily: '日'
+        weekly: '周'
+        monthly: '月'
+        quarterly: '季度'
+    user:
+      messages:
+        assigned: "已指派"

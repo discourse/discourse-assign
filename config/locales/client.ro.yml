@@ -8,5 +8,9 @@
 ro:
   js:
     discourse_assign:
-      unassign_all:
-        confirm: "Sigur vrei să desprinzi toate discuțiile de numele de utilizator {{username}}?"
+      reminders_frequency:
+        never: 'Niciodată'
+        daily: 'Zilnic'
+        weekly: 'Săptămânal'
+        monthly: 'Lunar'
+        quarterly: 'Trimestrial'

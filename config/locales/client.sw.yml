@@ -15,9 +15,6 @@ sw:
       cant_act_unclaimed: "Lazima uimiliki mada kabla ya kuweka bendera."
       assigned: "Kukabidhi"
       assigned_to: "Imekabidhiwa kwa"
-      unassign_all:
-        title: "Ondoa Ukabidhi"
-        confirm: "Je una uhakika na kitendo cha kuondoa ukabidhi wa mada zote kutoka kwa {{mtumiaji}}?"
       unassign:
         title: "Haijakabithiwa"
         help: "Usikabidhi Mada"
@@ -31,6 +28,12 @@ sw:
       claim:
         title: "Miliki"
         help: "Jipe Mada"
+      reminders_frequency:
+        never: 'Kamwe'
+        daily: 'Kila siku'
+        weekly: 'Kila wiki'
+        monthly: 'Klla mwezi'
+        quarterly: 'Kila baada ya miezi mitatu'
     user:
       messages:
         assigned_title: "Amekabidhiwa (%{count})"

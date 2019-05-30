@@ -23,6 +23,10 @@ sw:
     already_claimed: "Hiyo mada imeshamilikiwa."
     flag_assigned: "Samahani nembo hii ya mada imegawiwa kwa mtu mwingine"
     flag_unclaimed: "Miliki mada kabla ya kutumia nembo"
+    reminders_frequency:
+      never: 'kamwe'
+      daily: 'kila siku'
+      weekly: 'kila wiki'
   assign_mailer:
     subject_template: "[%{email_prefix}] %{assignee_name} amekukabidhi '%{topic_title}'!"
     text_body_template: |

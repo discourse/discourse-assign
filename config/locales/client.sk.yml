@@ -26,3 +26,12 @@ sk:
       claim:
         title: "prevziať"
         help: "Priradiť tému sebe"
+      reminders_frequency:
+        never: 'Nikdy'
+        daily: 'Denne'
+        weekly: 'Týždenne'
+        monthly: 'Mesačne'
+        quarterly: 'Štvrťročne'
+    user:
+      messages:
+        assigned: "Priradené"

@@ -27,3 +27,12 @@ ru:
       claim:
         title: "Пожаловаться"
         help: "Назначить на себя"
+      reminders_frequency:
+        never: 'Никогда'
+        daily: 'За день'
+        weekly: 'За неделю'
+        monthly: 'За месяц'
+        quarterly: 'За квартал'
+    user:
+      messages:
+        assigned: "Назначенные темы"

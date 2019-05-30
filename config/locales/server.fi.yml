@@ -27,6 +27,10 @@ fi:
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
     flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
     topic_assigned_excerpt: "osoitti sinulle ketjun  '%{title}'"
+    reminders_frequency:
+      never: 'ei koskaan'
+      daily: 'päivittäin'
+      weekly: 'viikottain'
   assign_mailer:
     title: "Osoitus"
     subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun '%{topic_title}'!"

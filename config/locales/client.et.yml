@@ -15,3 +15,12 @@ et:
       assign_modal:
         title: "Määra teema"
         assign: "Määra"
+      reminders_frequency:
+        never: 'Mitte kunagi'
+        daily: 'Igapäevaselt'
+        weekly: 'Iganädalaselt'
+        monthly: 'Igakuiselt'
+        quarterly: 'Kvartaalselt'
+    user:
+      messages:
+        assigned: "Määratud"

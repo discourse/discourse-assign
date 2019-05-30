@@ -16,9 +16,6 @@ fi:
       assigned: "Osoitettu"
       assigned_to: "Osoitettu käyttäjälle"
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
-      unassign_all:
-        title: "Peru kaikki osoitukset"
-        confirm: "Haluatko varmasti perua kaikkien käyttäjälle {{username}} osoitettujen ketjujen osoituksen?"
       unassign:
         title: "Peru osoitus"
         help: "Peru ketjun osoitus"
@@ -32,6 +29,12 @@ fi:
       claim:
         title: "omi"
         help: "Osoita ketju itsellesi"
+      reminders_frequency:
+        never: 'Ei koskaan'
+        daily: 'Päivittäin'
+        weekly: 'Viikoittain'
+        monthly: 'Kuukausittain'
+        quarterly: 'Vuosineljännettäin'
     user:
       messages:
         assigned_title: "Osoitettu (%{count})"

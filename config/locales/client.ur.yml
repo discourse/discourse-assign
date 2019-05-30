@@ -15,12 +15,16 @@ ur:
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
       assigned: "اسائین کردہ"
       assigned_to: "جس کو اسائین کیا گیا"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "غیر اسائین کریں"
         help: "ٹاپک غیر اسائین کریں"
       assign:
         title: "اسائین کریں"
         help: "صارف کو ٹاپک اسائین کریں"
+      reassign:
+        title: "دوبارہ اسائین کریں"
+        help: "ایک مختلف صارف کو ٹاپک دوبارہ اسائین کریں"
       assign_modal:
         title: "ٹاپک اسائین کریں"
         description: "اُس شخص کا صارف نام درج کیجیے جسے آپ یہ ٹاپک اسائین کرنا چاہتے ہیں"
@@ -28,6 +32,13 @@ ur:
       claim:
         title: "کلیم کریں"
         help: "اپنے آپ کو ٹاپک اسائین کریں"
+      reminders_frequency:
+        never: 'کبھی نہیں '
+        daily: 'روزانہ '
+        weekly: 'ہفتہ وار'
+        monthly: 'ماہانہ'
+        quarterly: 'سہ ماہی'
     user:
       messages:
+        assigned_title: "اسائین کردہ (%{count})"
         assigned: "اسائین کردہ"

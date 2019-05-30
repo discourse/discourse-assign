@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-lv: {}
+lv:
+  discourse_assign:
+    reminders_frequency:
+      never: 'nekad'
+      daily: 'katru dienu'
+      weekly: 'katru nedēļu'

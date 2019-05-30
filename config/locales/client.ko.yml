@@ -10,8 +10,6 @@ ko:
     discourse_assign:
       assigned: "할당됨"
       assigned_to: "다음으로 할당"
-      unassign_all:
-        title: "모두 할당 해제"
       unassign:
         title: "할당 해제"
         help: "토픽 할당 해제"
@@ -23,6 +21,12 @@ ko:
         assign: "할당"
       claim:
         help: "나에게 토픽 할당"
+      reminders_frequency:
+        never: '알림 받지 않기'
+        daily: '일'
+        weekly: '주'
+        monthly: '월'
+        quarterly: '분기마다'
     user:
       messages:
         assigned_title: "할당됨 (%{count})"

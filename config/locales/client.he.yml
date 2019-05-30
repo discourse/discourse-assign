@@ -8,11 +8,38 @@
 he:
   js:
     action_codes:
-      assigned: "רשום על %{who} %{when}"
+      assigned: "מוקצה לטובת %{who} %{when}"
+      unassigned: "הוסרה ההקצאה של %{who} %{when}"
     discourse_assign:
-      unassign_all:
-        title: "ביטול רישום של כולם"
+      cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
+      cant_act_unclaimed: "עליך לדרוש את הנושא הזה לפני נקיטת פעולות על דגלים."
+      assigned: "מוקצה"
+      assigned_to: "מוקצה לטובת"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "ביטול הקצאה"
+        help: "ביטול הקצאת נושא"
       assign:
-        help: "רישום משתמש לנושא"
+        title: "הקצאה"
+        help: "הקצאת משתמש לנושא"
+      reassign:
+        title: "הקצאה מחדש"
+        help: "הקצאת נושא מחדש למשתמש אחר"
       assign_modal:
-        title: "רישום הנושא"
+        title: "הקצאת נושא"
+        description: "נא להקליד את שם המשתמש של מי שברצונך להקצות אליו את הנושא הזה"
+        assign: "הקצאה"
+      claim:
+        title: "דרישה"
+        help: "הקצאת נושא לעצמך"
+      reminders_frequency:
+        description: "תדירות קבלת תזכורות לנושאים מוקצים"
+        never: 'אף פעם'
+        daily: 'יומי'
+        weekly: 'שבועי'
+        monthly: 'חודשי'
+        quarterly: 'רבעוני'
+    user:
+      messages:
+        assigned_title: "מוקצים (%{count})"
+        assigned: "מוקצה"

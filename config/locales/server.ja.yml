@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-ja: {}
+ja:
+  discourse_assign:
+    reminders_frequency:
+      never: '追跡しない'
+      daily: '毎日'
+      weekly: '毎週'

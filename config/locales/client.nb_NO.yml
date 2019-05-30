@@ -28,3 +28,12 @@ nb_NO:
       claim:
         title: "ta"
         help: "Tildel emne til deg selv"
+      reminders_frequency:
+        never: 'Aldri'
+        daily: 'Daglig'
+        weekly: 'Ukentlig'
+        monthly: 'Månedlig'
+        quarterly: 'Kvartalsvis'
+    user:
+      messages:
+        assigned: "Tildelt"

@@ -19,14 +19,24 @@ de:
     assign_locks_flags: "Wenn ein Thema einem Team-Mitglied zugewiesen wird, können die Meldungen nur von dieser Person bearbeitet werden"
     assign_mailer_enabled: "Wenn aktiviert, erhält der zugewiesene Benutzer eine Benachrichtigungsmail bei jeder Zuweisung"
     flags_require_assign: "Wenn aktiviert, können Meldungen nur behandelt werden, wenn sie einem Benutzer zugewiesen sind."
+    remind_assigns: "Erinnere Benutzer an anstehende Zuweisungen."
+    remind_assigns_frequency: "Frequenz, um Benutzer an zugewiesene Themen zu erinnern."
+    max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugewiesen werden können."
   discourse_assign:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
     already_claimed: "Dieses Thema wurde bereits übernommen."
     already_assigned: 'Thema ist @%{username} zugewiesen'
+    too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugwiesenen Themen (%{max}). "
     flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugewiesen"
     flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst."
     topic_assigned_excerpt: "hat dich dem Thema '%{title}' zugewiesen"
+    reminders_frequency:
+      never: 'nie'
+      daily: 'täglich'
+      weekly: 'wöchentlich'
+      monthly: 'monatlich'
+      quarterly: 'vierteljährlich'
   assign_mailer:
     title: "E-Mail zuweisen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir '%{topic_title}' zugewiesen!"
@@ -38,3 +48,17 @@ de:
 
       Wenn dich das interessiert, klicke auf den folgenden Link:
       [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Du hast %{pending_assignments} anstehende Zuweisungen"
+    body: |
+      Du hast aktuell [%{pending_assignments} anstehende Zuweisungen](%{assignments_link}).%{newest_assignments}%{oldest_assignments}Diese Erinnerung wird %{frequency} zugesandt, wenn du mehr als ein zugewiesenes Thema hast.
+    newest: |
+      ### Neuestes
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Ältestes
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

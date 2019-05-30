@@ -5,4 +5,40 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-nl: {}
+nl:
+  js:
+    action_codes:
+      assigned: "heeft %{who} toegewezen op %{when}"
+      unassigned: "heeft toewijzing van %{who} opgeheven op %{when}"
+    discourse_assign:
+      cant_act: "U kunt geen handeling uitvoeren op markeringen die aan andere gebruikers zijn toegewezen"
+      cant_act_unclaimed: "U moet dit topic opeisen voordat u handelingen op markeringen kunt uitvoeren."
+      assigned: "Toegewezen"
+      assigned_to: "Toegewezen aan"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "Toewijzing opheffen"
+        help: "Toewijzing van topic opheffen"
+      assign:
+        title: "Toewijzen"
+        help: "Topic aan gebruiker toewijzen"
+      reassign:
+        title: "Opnieuw toewijzen"
+        help: "Topic opnieuw toewijzen aan een andere gebruiker"
+      assign_modal:
+        title: "Topic toewijzen"
+        description: "Voer de gebruikersnaam in van de persoon waaraan u dit topic wilt toewijzen"
+        assign: "Toewijzen"
+      claim:
+        title: "opeisen"
+        help: "Topic aan uzelf toewijzen"
+      reminders_frequency:
+        never: 'Nooit'
+        daily: 'Dagelijks'
+        weekly: 'Wekelijks'
+        monthly: 'Maandelijks'
+        quarterly: 'Per kwartaal'
+    user:
+      messages:
+        assigned_title: "Toegewezen (%{count})"
+        assigned: "Toegewezen"

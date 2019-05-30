@@ -24,3 +24,12 @@ cs:
         assign: "Zadat"
       claim:
         help: "Zadat téme sobě"
+      reminders_frequency:
+        never: 'Nikdy'
+        daily: 'Denně'
+        weekly: 'Týdně'
+        monthly: 'Měsíčně'
+        quarterly: 'Čtvrtletně'
+    user:
+      messages:
+        assigned: "Zadáno"

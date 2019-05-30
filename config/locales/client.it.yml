@@ -15,8 +15,7 @@ it:
       cant_act_unclaimed: "Devi prima rivendicare questo argomento per poter intervenire sulle segnalazioni. "
       assigned: "Assegnato"
       assigned_to: "Assegnato a"
-      unassign_all:
-        confirm: "Sicuro di voler ritogliere tutti gli argomenti a {{username}}?"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Annulla assegnazione"
         help: "Annulla assegnazione Argomento"
@@ -29,3 +28,12 @@ it:
         assign: "Assegna"
       claim:
         help: "Assegna l'argomento a te stesso"
+      reminders_frequency:
+        never: 'Mai'
+        daily: 'Giornaliero'
+        weekly: 'Settimanale'
+        monthly: 'Mensile'
+        quarterly: 'Trimestrale'
+    user:
+      messages:
+        assigned: "Assegnato"

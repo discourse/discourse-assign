@@ -8,5 +8,62 @@
 he:
   site_settings:
     assign_enabled: "הפעלת תוסף רישום על"
+    assigns_public: "לאפשר לציבור לצפות בהקצאות נושאים"
+    assigns_user_url_path: "נתיב לנושאים שמוקצים למשתמשים (יש להשתמש ב־{username} כחלופה לשם המשתמש)"
+    assigns_by_staff_mention: "אם חבר סגל מאוזכר על ידי חבר סגל אחר, הנושא מוקצה אוטומטית"
+    unassign_creates_tracking_post: "בעת ביטול הקצאת נושא תיווצר לחישה או פעולה קטנה כדי לעקוב אחר השינוי"
+    assign_self_regex: "ביטוי רגולרי שיש לצלוח כדי להקצות עצמית. למשל: ‚רשימה שלי’"
+    assign_other_regex: "ביטוי רגולרי שיש לצלוח כדי להקצות נושאים לאחרים דרך אזור. למשל: ‚רשימה שלך’"
+    unassign_on_group_archive: "כאשר הודעה מועברת לארכיון על ידי קבוצה, הקצאת ההודעה תבוטל (ההקצאה תחודש במקרה של החזרה לדואר הנכנס)"
+    unassign_on_close: "כאשר נושא נסגר יש לבטל את הקצאתו"
+    assign_locks_flags: "כאשר נושא מוקצה לחבר סגל, רק למי שהוקצה יש אפשרות לטפל בדגלים של הנושא"
+    assign_mailer_enabled: "כאשר האפשרות פעילה, המשתמש המוקצה יקבל התראה בדוא״ל עם כל הקצאה"
+    flags_require_assign: "כאשר האפשרות פעילה, אי אפשר לטפל בדגלים אלמלא הוקצו למשתמש."
+    remind_assigns: "להזכיר למשתמשים בנוגע להקצאות מתאימות."
+    remind_assigns_frequency: "תדירות לשליחת תזכורת למשתמשים בנוגע לנושאים מוקצים."
+    max_assigned_topics: "מספר הנושאים המרבי שניתן להקצות למשתמש."
   discourse_assign:
     assigned_to: "הנושא רשום ל@%{username}"
+    unassigned: "הקצאת הנושא בוטלה"
+    already_claimed: "נושא זה כבר נדרש."
+    already_assigned: 'הנושא כבר מוקצה לטובת ‎@%{username}'
+    too_many_assigns: "‎@%{username}‎ כבר הגיע לכמות הנושאים המרבית שניתן להקצות לטובתו (%{max})."
+    flag_assigned: "הנושא של דגל זה מוקצה למשתמש אחר, עמך הסליחה"
+    flag_unclaimed: "עליך לדרוש את הנושא הזה בטרם ביצוע פעילות על הדגל"
+    topic_assigned_excerpt: "הקצאה של הנושא ‚%{title}’ אליך"
+    reminders_frequency:
+      never: 'אף פעם'
+      daily: 'יומית'
+      weekly: 'שבועית'
+      monthly: 'חודשית'
+      quarterly: 'רבעונית'
+  assign_mailer:
+    title: "הקצאת שולח דוא״ל"
+    subject_template: "[%{email_prefix}] ‚%{topic_title}’ הוקצה אליך על ידי %{assignee_name} !"
+    text_body_template: |
+      היי, **הוקצה** אליך דיון על ידי %{assignee_name}
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      אם זה מעניין אותך, עליך ללחוץ על הקישור שלהלן:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "יש לך %{pending_assignments} הקצאות ממתינות"
+    body: |
+      כרגע יש לך [%{pending_assignments} מטלות ממתינות](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      תזכורת זו תישלח %{frequency} אם מוקצה אליך יותר מנושא אחד.
+    newest: |
+      ### החדשים ביותר
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### הישנים ביותר
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

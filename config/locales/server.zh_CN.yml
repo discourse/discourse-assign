@@ -16,5 +16,10 @@ zh_CN:
     unassigned: "主题未被指派"
     already_assigned: '主题已被指派给 @%{username}'
     topic_assigned_excerpt: "主题%{title}已分配给您"
+    reminders_frequency:
+      never: '从不'
+      daily: '每天'
+      weekly: '每周'
+      monthly: '月度'
   assign_mailer:
     title: "指派邮件发送者"

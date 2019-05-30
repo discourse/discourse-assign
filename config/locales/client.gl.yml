@@ -5,4 +5,12 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-gl: {}
+gl:
+  js:
+    discourse_assign:
+      reminders_frequency:
+        never: 'Nunca'
+        daily: 'Diario'
+        weekly: 'Semanal'
+        monthly: 'Mensual'
+        quarterly: 'Trimestral'

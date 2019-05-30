@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-sl: {}
+sl:
+  discourse_assign:
+    reminders_frequency:
+      never: 'nikoli'
+      daily: 'dnevno'
+      weekly: 'tedensko'

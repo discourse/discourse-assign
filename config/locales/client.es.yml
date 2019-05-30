@@ -11,27 +11,30 @@ es:
       assigned: "asignado por %{who} %{when}"
       unassigned: "desasignado por %{who} %{when}"
     discourse_assign:
-      cant_act: "No puedes accionar sobre reportes que han sido asignados a otros usuarios"
-      cant_act_unclaimed: "Debe reclamar este tema antes de actuar sobre reportes."
+      cant_act: "No puedes actuar sobre reportes que han sido asignados a otros usuarios"
+      cant_act_unclaimed: "Debes reclamar este tema antes de actuar sobre los reportes."
       assigned: "Asignado"
       assigned_to: "Asignado a"
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
-      unassign_all:
-        title: "Des-asignar Todos"
-        confirm: "¿Estás seguro que quieres quitar la asignación a todos los temas de {{username}}?"
       unassign:
-        title: "Sin asignar"
+        title: "Desasignar"
         help: "Tema sin asignar"
       assign:
         title: "Asignar"
         help: "Asignar tema a usuario"
       assign_modal:
-        title: "Asignar Tema"
-        description: "Ingresa el nombre de usuario de la persona que quisieras asignarle este tema"
+        title: "Asignar tema"
+        description: "Ingresa el nombre de usuario de la persona a la que te gustaría asignar este tema"
         assign: "Asignar"
       claim:
         title: "reclamar"
-        help: "Asignar tema a mí mismo"
+        help: "Asígnate el tema"
+      reminders_frequency:
+        never: 'Nunca'
+        daily: 'Diario'
+        weekly: 'Semana'
+        monthly: 'Mensual'
+        quarterly: 'Trimestral'
     user:
       messages:
         assigned_title: "Asignados (%{count})"

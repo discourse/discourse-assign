@@ -5,4 +5,9 @@
 # To work with us on translations, join this project:
 # https://www.transifex.com/projects/p/discourse-org/
 
-vi: {}
+vi:
+  discourse_assign:
+    reminders_frequency:
+      never: 'không  bao giờ'
+      daily: 'hàng ngày'
+      weekly: 'hàng tuần'

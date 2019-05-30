@@ -16,15 +16,14 @@ zh_CN:
       assigned: "已指派"
       assigned_to: "指派给"
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
-      unassign_all:
-        title: "全部取消指派"
-        confirm: "你确定要从{{username}}取消指派所有主题吗？"
       unassign:
         title: "未指派"
         help: "未指派主题"
       assign:
         title: "指派"
         help: "指派主题给用户"
+      reassign:
+        title: "重新指派"
       assign_modal:
         title: "指派主题"
         description: "输入你想指派这个主题给他的人的用户名"
@@ -32,6 +31,12 @@ zh_CN:
       claim:
         title: "认领"
         help: "指派这个主题给你自己"
+      reminders_frequency:
+        never: '从不'
+        daily: '每天'
+        weekly: '每周'
+        monthly: '月度'
+        quarterly: '季度的'
     user:
       messages:
         assigned_title: "已指派%{count}"

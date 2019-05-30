@@ -19,12 +19,24 @@ ur:
     assign_locks_flags: "جب کوئی ٹاپک کسی اسٹاف ممبر کو اسائین کیا جاتا ہے، تو اس کے فلَیگ صرف وہی شخص ترمیم کر سکتا ہے"
     assign_mailer_enabled: "فعال ہونے پر، اسائین کیے گئے صارف کو ہر اسائنمنٹس پر ایک نوٹیفکیشن ایمَیل وصول ہو گا"
     flags_require_assign: "جب فعال ہوں، فلَیگز پر کام نہیں کیا جاسکتا جب تک کہ وہ کسی صارف کو آسائین نہ کر دیے جائیں۔"
+    remind_assigns: "زیر التواء اسائین کردہ کے بارے میں صارفین کو یاد دہانی کرائیں۔"
+    remind_assigns_frequency: "اسائین کردہ ٹاپکس کے بارے میں صارفین کو یاد دہانی کرانے کی فریکوئینسی۔"
+    max_assigned_topics: "ٹاپکس کی زیادہ سے زیادہ تعداد جو ایک صارف کو اسائین کیے جاسکتے ہیں۔"
   discourse_assign:
     assigned_to: "ٹاپک @%{username} کو اسائین کر دیا گیا"
     unassigned: "ٹاپک اسائین شدہ نہیں تھا"
     already_claimed: "وہ ٹاپک پہلے سے ہی کََلیم کر لیا گیا ہے۔"
+    already_assigned: 'ٹاپک پہلے سے ہی @%{username} کو اسائین کیا ہوا ہے'
+    too_many_assigns: "@%{username} پہلے سے ہی اسائین کردہ ٹاپکس کی زیادہ سے زیادہ حد تک پہنچ چکا ہے (%{max})۔"
     flag_assigned: "معذرت، اُس فلَیگ کا ٹاپک ایک دوسرے صارف کو آسائین ہواوا ہے"
     flag_unclaimed: "فلَیگ پر عمل کرنے سے پہلے آپ کا یہ ٹاپک کلَیم کرنا ضروری ہے"
+    topic_assigned_excerpt: "نے ٹاپک '%{title}' اسائین کیا"
+    reminders_frequency:
+      never: 'کبھی نہیں '
+      daily: 'روزانہ '
+      weekly: 'ہفتہ وار'
+      monthly: 'ماہانہ'
+      quarterly: 'سہ ماہی'
   assign_mailer:
     title: "مَیلر اسائین کریں"
     subject_template: "[%{email_prefix}] %{assignee_name} نے آپ کو '%{topic_title}' اسائین کیا! "
@@ -36,3 +48,21 @@ ur:
 
       اگر آپ دلچسپی رکھتے ہیں تو، نیچے دیئے گئے لنک پر کلک کریں:
       [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "آپ کے پاس %{pending_assignments} زیر التواء اسائنمنٹس ہیں"
+    body: |
+      آپ کے پاس فی الحال [%{pending_assignments} زیر التواء اسائنمنٹس](%{assignments_link}) ہیں۔
+
+      %{newest_assignments}
+      %{oldest_assignments}
+      اگر آپ کے پاس ایک سے زائد اسائین کردہ ٹاپک موجود ہوں گے تو یہ یاد دہانی %{frequency} بھیجی جائے گی۔
+    newest: |
+      ### تازہ ترین
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### قدیم ترین
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

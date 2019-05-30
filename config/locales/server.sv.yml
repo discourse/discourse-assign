@@ -9,3 +9,8 @@ sv:
   site_settings:
     assign_enabled: "aktivera tilldelatillägg"
     assigns_public: "Tillåt allmänheten att se ämnestilldelningar"
+  discourse_assign:
+    reminders_frequency:
+      never: 'aldrig'
+      daily: 'dagligen'
+      weekly: 'veckovis'

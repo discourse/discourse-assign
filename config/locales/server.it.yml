@@ -19,3 +19,7 @@ it:
     assigned_to: "Argomento assegnato a @%{username}"
     unassigned: "L'argomento era inassegnato"
     already_claimed: "Quell'argomento è stato già rivendicato."
+    reminders_frequency:
+      never: 'mai'
+      daily: 'ogni giorno'
+      weekly: 'ogni settimana'

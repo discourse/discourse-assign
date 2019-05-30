@@ -27,6 +27,10 @@ pt_BR:
     flag_assigned: "Desculpe, aquele tópico da sinalização está designado à outro usuário"
     flag_unclaimed: "Você precisa reivindicar aquele tópico antes de atuar na sinalização"
     topic_assigned_excerpt: "te designou ao tópico '%{title}'"
+    reminders_frequency:
+      never: 'nunca'
+      daily: 'diário'
+      weekly: 'semanal'
   assign_mailer:
     title: "Correio de Designação"
     subject_template: "[%{email_prefix}] %{assignee_name} te designou à '%{topic_title}'!"
