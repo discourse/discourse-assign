@@ -17,7 +17,7 @@ function modifySelectKit(api) {
   api
     .modifySelectKit("topic-footer-mobile-dropdown")
     .modifyContent((context, existingContent) => {
-      if (context.get("currentUser.staff")) {
+      if (context.get("currentUser.can_assign")) {
         const hasAssignement = context.get("topic.assigned_to_user");
         const button = {
           id: ACTION_ID,
@@ -31,7 +31,7 @@ function modifySelectKit(api) {
       return existingContent;
     })
     .onSelect((context, value) => {
-      if (!context.get("currentUser.staff") || value !== ACTION_ID) {
+      if (!context.get("currentUser.can_assign") || value !== ACTION_ID) {
         return;
       }
 
@@ -157,7 +157,7 @@ function initialize(api) {
   });
 
   api.addUserMenuGlyph(widget => {
-    if (widget.currentUser && widget.currentUser.get("staff")) {
+    if (widget.currentUser && widget.currentUser.get("can_assign")) {
       return {
         label: "discourse_assign.assigned",
         className: "assigned",

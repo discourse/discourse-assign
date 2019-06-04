@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe PendingAssignsReminder do
+  before { SiteSetting.assign_enabled = true }
+
   let(:user) { Fabricate(:user) }
 
   it 'does not create a reminder if the user has 0 assigned topics' do

@@ -48,6 +48,34 @@ after_initialize do
 =end
   reviewable_api_enabled = defined?(Reviewable)
 
+  add_to_class(:user, :can_assign?) do
+    allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+    (groups.pluck(:name) & allowed_groups).present?
+  end
+
+  add_to_class(:guardian, :can_assign?) { user && user.can_assign? }
+
+  add_class_method(:user, :assign_allowed) do
+    allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+    where('users.id IN (
+      SELECT user_id FROM group_users
+      INNER JOIN groups ON group_users.group_id = groups.id
+      WHERE groups.name IN (?)
+    )', allowed_groups)
+  end
+
+  add_model_callback(Group, :before_update) do
+    if name_changed?
+      SiteSetting.assign_allowed_on_groups = SiteSetting.assign_allowed_on_groups.gsub(name_was, name)
+    end
+  end
+
+  add_model_callback(Group, :before_destroy) do
+    new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{name}[|]?/, '')
+    new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
+    SiteSetting.assign_allowed_on_groups = new_setting
+  end
+
   # Raise an invalid access error if a user tries to act on something
   # not assigned to them
   DiscourseEvent.on(:before_staff_flag_action) do |args|
@@ -88,8 +116,8 @@ after_initialize do
 
   TopicList.on_preload do |topics, topic_list|
     if SiteSetting.assign_enabled?
-      is_staff = topic_list.current_user && topic_list.current_user.staff?
-      allowed_access = SiteSetting.assigns_public || is_staff
+      can_assign = topic_list.current_user && topic_list.current_user.can_assign?
+      allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
         users = User.where("users.id in (
@@ -114,7 +142,7 @@ after_initialize do
 
   require_dependency 'topic_query'
   TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
-    if topic_query.guardian.is_staff? || SiteSetting.assigns_public
+    if topic_query.guardian.can_assign? || SiteSetting.assigns_public
       username = topic_query.options[:assigned]
 
       user_id = topic_query.guardian.user.id if username == "me"
@@ -202,10 +230,6 @@ after_initialize do
     @assigned_to_user = assigned_to_user
   end
 
-  add_to_serializer(:topic_list_item, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.is_staff?) && object.assigned_to_user
-  end
-
   add_to_serializer(:topic_list, :assigned_messages_count) do
     TopicQuery.new(object.current_user, guardian: scope, limit: false)
       .private_messages_assigned_query(object.current_user)
@@ -216,7 +240,7 @@ after_initialize do
     options = object.instance_variable_get(:@opts)
 
     if assigned_user = options.dig(:assigned)
-      scope.is_staff? ||
+      scope.can_assign? ||
         assigned_user.downcase == scope.current_user&.username_lower
     end
   end
@@ -225,17 +249,25 @@ after_initialize do
     DiscourseAssign::Helpers.build_assigned_to_user(assigned_to_user_id, object.topic)
   end
 
+  add_to_serializer(:topic_list_item, 'include_assigned_to_user?') do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to_user
+  end
+
+  add_to_serializer(:topic_view, 'include_assigned_to_user?') do
+    if SiteSetting.assigns_public || scope.can_assign?
+      # subtle but need to catch cases where stuff is not assigned
+      object.topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
+    end
+  end
+
+  add_to_serializer(:current_user, :can_assign) do
+    object.can_assign?
+  end
+
   add_to_class(:topic_view_serializer, :assigned_to_user_id) do
     id = object.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
     # a bit messy but race conditions can give us an array here, avoid
     id && id.to_i rescue nil
-  end
-
-  add_to_serializer(:topic_view, 'include_assigned_to_user?') do
-    if SiteSetting.assigns_public || scope.is_staff?
-      # subtle but need to catch cases where stuff is not assigned
-      object.topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
-    end
   end
 
   add_to_serializer(:flagged_topic, :assigned_to_user) do
@@ -318,5 +350,4 @@ after_initialize do
       assigner.unassign(silent: true)
     end
   end
-
 end

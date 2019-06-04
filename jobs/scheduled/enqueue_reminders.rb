@@ -15,6 +15,11 @@ module Jobs
       SiteSetting.remind_assigns_frequency.nil? || !SiteSetting.assign_enabled?
     end
 
+    def allowed_group_ids
+      allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+      Group.where(name: allowed_groups).pluck(:id).join(',')
+    end
+
     def user_ids
       global_frequency = SiteSetting.remind_assigns_frequency
       frequency = ActiveRecord::Base.sanitize_sql("COALESCE(user_frequency.value, '#{global_frequency}')::INT")
@@ -31,10 +36,10 @@ module Jobs
         ON topic_custom_fields.value::INT = user_frequency.user_id
         AND user_frequency.name = '#{PendingAssignsReminder::REMINDERS_FREQUENCY}'
 
-        INNER JOIN users ON topic_custom_fields.value::INT = users.id
+        INNER JOIN group_users ON topic_custom_fields.value::INT = group_users.user_id
         INNER JOIN topics ON topics.id = topic_custom_fields.topic_id AND (topics.deleted_at IS NULL)
 
-        WHERE (users.moderator OR users.admin)
+        WHERE group_users.group_id IN (#{allowed_group_ids})
         AND #{frequency} > 0
         AND (
           last_reminder.value IS NULL OR

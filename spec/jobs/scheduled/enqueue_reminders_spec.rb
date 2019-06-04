@@ -3,7 +3,8 @@
 require 'rails_helper'
 
 RSpec.describe Jobs::EnqueueReminders do
-  let(:user) { Fabricate(:user, admin: true) }
+  let(:assign_allowed_group) { Group.find_by(name: 'staff') }
+  let(:user) { Fabricate(:user, groups: [assign_allowed_group]) }
 
   before do
     SiteSetting.remind_assigns_frequency = RemindAssignsFrequencySiteSettings::MONTHLY_MINUTES

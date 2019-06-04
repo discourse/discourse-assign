@@ -3,6 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
+  taskActions: Ember.inject.service(),
   assignSuggestions: function() {
     ajax("/assign/suggestions").then(users => {
       this.set("assignSuggestions", users);
@@ -23,6 +24,7 @@ export default Ember.Controller.extend({
   actions: {
     assignUser(user) {
       this.set("model.username", user.username);
+      this.set("model.allowedGroups", this.get("taskActions").allowedGroups);
       this.send("assign");
     },
 

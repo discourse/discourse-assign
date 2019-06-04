@@ -8,20 +8,20 @@ class ::TopicAssigner
   ASSIGNED_BY_ID = 'assigned_by_id'
 
   def self.backfill_auto_assign
-    staff_mention = User.where('moderator OR admin')
+    staff_mention = User.assign_allowed
       .pluck('username')
-      .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
+      .map! { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
       .join(' OR ')
 
-    sql = <<SQL
-    SELECT p.topic_id, MAX(post_number) post_number
-    FROM posts p
-    JOIN topics t ON t.id = p.topic_id
-    LEFT JOIN topic_custom_fields tc ON tc.name = '#{ASSIGNED_TO_ID}' AND tc.topic_id = p.topic_id
-    WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin) AND
-      ( #{staff_mention} ) AND tc.value IS NULL AND NOT t.closed AND t.deleted_at IS NULL
-    GROUP BY p.topic_id
-SQL
+    sql = <<~SQL
+      SELECT p.topic_id, MAX(post_number) post_number
+      FROM posts p
+      JOIN topics t ON t.id = p.topic_id
+      LEFT JOIN topic_custom_fields tc ON tc.name = '#{ASSIGNED_TO_ID}' AND tc.topic_id = p.topic_id
+      WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin) AND
+        ( #{staff_mention} ) AND tc.value IS NULL AND NOT t.closed AND t.deleted_at IS NULL
+      GROUP BY p.topic_id
+    SQL
 
     assigned = 0
     puts
@@ -54,7 +54,7 @@ SQL
   def self.auto_assign(post, force: false)
     return unless SiteSetting.assigns_by_staff_mention
 
-    if post.user && post.topic && post.user.staff?
+    if post.user && post.topic && post.user.can_assign?
       can_assign = force || post.topic.custom_fields[ASSIGNED_TO_ID].nil?
 
       assign_other = assign_other_passes?(post) && mentioned_staff(post)
@@ -72,12 +72,14 @@ SQL
   end
 
   def self.is_last_staff_post?(post)
+    allowed_user_ids = User.assign_allowed.pluck(:id).join(',')
+
     sql = <<~SQL
       SELECT 1 FROM posts p
-       JOIN users u ON u.id = p.user_id AND (moderator OR admin)
+       JOIN users u ON u.id = p.user_id
        WHERE p.deleted_at IS NULL AND p.topic_id = :topic_id
+       AND u.id IN (#{allowed_user_ids})
        having max(post_number) = :post_number
-
     SQL
 
     args = {
@@ -85,19 +87,16 @@ SQL
       post_number: post.post_number
     }
 
-    # TODO post 2.1 release remove
-    if defined?(DB)
-      DB.exec(sql, args) == 1
-    else
-      Post.exec_sql(sql, args).to_a.length == 1
-    end
+    DB.exec(sql, args) == 1
   end
 
   def self.mentioned_staff(post)
     mentions = post.raw_mentions
     if mentions.present?
-      User.where('moderator OR admin')
-        .human_users
+      allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+
+      User.human_users
+        .joins(:groups).where(groups: { name: allowed_groups })
         .where('username_lower IN (?)', mentions.map(&:downcase))
         .first
     end
@@ -108,8 +107,8 @@ SQL
     @topic = topic
   end
 
-  def staff_ids
-    User.real.staff.pluck(:id)
+  def allowed_user_ids
+    User.assign_allowed.pluck(:id)
   end
 
   def can_assign_to?(user)
@@ -143,7 +142,7 @@ SQL
         topic_id: @topic.id,
         assigned_to: BasicUserSerializer.new(assign_to, root: false).as_json
       },
-      user_ids: staff_ids
+      user_ids: allowed_user_ids
     )
 
     publish_topic_tracking_state(@topic, assign_to.id)
@@ -274,7 +273,7 @@ SQL
           type: 'unassigned',
           topic_id: @topic.id,
         },
-        user_ids: staff_ids
+        user_ids: allowed_user_ids
       )
 
       publish_topic_tracking_state(@topic, assigned_user.id)

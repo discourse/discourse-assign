@@ -1,4 +1,4 @@
-import { acceptance } from "helpers/qunit-helpers";
+import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
 
 acceptance("Assign mobile", {
@@ -11,6 +11,7 @@ acceptance("Assign mobile", {
 });
 
 QUnit.test("Footer dropdown contains button", async assert => {
+  replaceCurrentUser({ can_assign: true });
   const menu = selectKit(".topic-footer-mobile-dropdown");
 
   await visit("/t/internationalization-localization/280");

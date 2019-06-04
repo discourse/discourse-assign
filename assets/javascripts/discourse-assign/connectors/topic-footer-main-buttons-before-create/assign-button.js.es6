@@ -3,7 +3,7 @@ import { getOwner } from "discourse-common/lib/get-owner";
 export default {
   shouldRender(args, component) {
     const needsButton =
-      component.currentUser && component.currentUser.get("staff");
+      component.currentUser && component.currentUser.get("can_assign");
     return (
       needsButton &&
       (!component.get("site.mobileView") || args.topic.get("isPrivateMessage"))

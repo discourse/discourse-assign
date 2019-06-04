@@ -4,17 +4,64 @@ require 'rails_helper'
 
 RSpec.describe DiscourseAssign::AssignController do
 
-  let(:user) { Fabricate(:admin) }
+  before { SiteSetting.assign_enabled = true }
+
+  let(:default_allowed_group) { Group.find_by(name: 'staff') }
+  let(:user) { Fabricate(:admin, groups: [default_allowed_group]) }
   let(:post) { Fabricate(:post) }
   let(:user2) { Fabricate(:active_user) }
 
-  before { sign_in(user) }
+  describe 'only allow users from allowed groups' do
+    before { sign_in(user2) }
+
+    it 'filters requests where current_user is not member of an allowed group' do
+      SiteSetting.assign_allowed_on_groups = ''
+
+      put '/assign/assign.json', params: {
+        topic_id: post.topic_id, username: user2.username
+      }
+
+      expect(response.status).to eq(403)
+    end
+
+    context '#suggestions' do
+      before { sign_in(user) }
+
+      it 'includes users in allowed groups' do
+        allowed_group = Group.find_by(name: 'everyone')
+        user2.groups << allowed_group
+        user2.groups << default_allowed_group
+        SiteSetting.assign_allowed_on_groups = 'staff|everyone'
+        TopicAssigner.new(post.topic, user).assign(user2)
+
+        get '/assign/suggestions.json'
+        suggestions = JSON.parse(response.body).map { |u| u['username'] }
+
+        expect(suggestions).to contain_exactly(user2.username, user.username)
+      end
+
+      it 'does not include users from disallowed groups' do
+        allowed_group = Group.find_by(name: 'everyone')
+        user2.groups << allowed_group
+        SiteSetting.assign_allowed_on_groups = 'staff'
+        TopicAssigner.new(post.topic, user).assign(user2)
+
+        get '/assign/suggestions.json'
+        suggestions = JSON.parse(response.body).map { |u| u['username'] }
+
+        expect(suggestions).to contain_exactly(user.username)
+      end
+    end
+  end
 
   context "#suggestions" do
-    before { SiteSetting.max_assigned_topics = 1 }
+    before do
+      SiteSetting.max_assigned_topics = 1
+      sign_in(user)
+    end
 
     it 'excludes other users from the suggestions when they already reached the max assigns limit' do
-      another_admin = Fabricate(:admin)
+      another_admin = Fabricate(:admin, groups: [default_allowed_group])
       TopicAssigner.new(post.topic, user).assign(another_admin)
 
       get '/assign/suggestions.json'
@@ -25,6 +72,10 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   context '#assign' do
+    before do
+      sign_in(user)
+    end
+
     it 'assigns topic to a user' do
       put '/assign/assign.json', params: {
         topic_id: post.topic_id, username: user2.username
