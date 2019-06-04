@@ -64,6 +64,18 @@ after_initialize do
     )', allowed_groups)
   end
 
+  add_model_callback(Group, :before_update) do
+    if name_changed?
+      SiteSetting.assign_allowed_on_groups = SiteSetting.assign_allowed_on_groups.gsub(name_was, name)
+    end
+  end
+
+  add_model_callback(Group, :before_destroy) do
+    new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{name}[|]?/, '')
+    new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
+    SiteSetting.assign_allowed_on_groups = new_setting
+  end
+
   # Raise an invalid access error if a user tries to act on something
   # not assigned to them
   DiscourseEvent.on(:before_staff_flag_action) do |args|
