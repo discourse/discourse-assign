@@ -49,8 +49,13 @@ after_initialize do
   reviewable_api_enabled = defined?(Reviewable)
 
   add_to_class(:user, :can_assign?) do
-    allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-    (groups.pluck(:name) & allowed_groups).present?
+    @can_assign ||=
+      begin
+        allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').compact
+        allowed_groups.present? && groups.where('name in (?)', allowed_groups).exists? ?
+          :true : :false
+      end
+    @can_assign == :true
   end
 
   add_to_class(:guardian, :can_assign?) { user && user.can_assign? }
