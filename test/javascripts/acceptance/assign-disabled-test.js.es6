@@ -1,3 +1,4 @@
+import selectKit from "helpers/select-kit-helper";
 import { acceptance, replaceCurrentUser } from "helpers/qunit-helpers";
 import { clearCallbacks } from "select-kit/mixins/plugin-api";
 
