@@ -21,11 +21,14 @@ es:
     flags_require_assign: "Cuando está habilitado, los reportes no se pueden manejar a menos que se asignen a un usuario."
     remind_assigns: "Recordar a los usuarios sobre asignaciones pendientes."
     remind_assigns_frequency: "Frecuencia para recordar a los usuarios sobre los temas asignados."
+    max_assigned_topics: "Número máximo de temas que se pueden asignar a un usuario."
+    assign_allowed_on_groups: "Grupos que tienen permitido asignar temas."
   discourse_assign:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "Tema sin asignar"
     already_claimed: "Ese tema ya ha sido reclamado."
     already_assigned: 'El tema ya está asignado a @%{username}'
+    too_many_assigns: "@%{username} ya ha alcanzado el número máximo de temas asignados (%{max})."
     flag_assigned: "Lo sentimos, el tema de ese reporte está asignado a otro usuario."
     flag_unclaimed: "Debes reclamar ese tema antes de actuar sobre el reporte."
     topic_assigned_excerpt: "te asignó el tema '%{title}'"

@@ -22,6 +22,9 @@ es:
       assign:
         title: "Asignar"
         help: "Asignar tema a usuario"
+      reassign:
+        title: "Reasignar"
+        help: "Reasignar tema a un usuario distinto"
       assign_modal:
         title: "Asignar tema"
         description: "Ingresa el nombre de usuario de la persona a la que te gustaría asignar este tema"
@@ -30,9 +33,10 @@ es:
         title: "reclamar"
         help: "Asígnate el tema"
       reminders_frequency:
+        description: "Frecuencia para recibir recordatorios de temas asignados."
         never: 'Nunca'
         daily: 'Diario'
-        weekly: 'Semana'
+        weekly: 'Semanalmente'
         monthly: 'Mensual'
         quarterly: 'Trimestral'
     user:

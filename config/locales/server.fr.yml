@@ -19,11 +19,16 @@ fr:
     assign_locks_flags: "Quand un sujet est affecté à un responsable, ses signalements peuvent uniquement être gérés par cette personne"
     assign_mailer_enabled: "Quand activé, l'utilisateur affecté recevra une notification par courriel pour chaque affectation"
     flags_require_assign: "Quand activé, les signalements ne peuvent être gérés que s'ils ont été affectés à un utilisateur."
+    remind_assigns: "Rappelez aux utilisateurs les assignations en attente."
+    remind_assigns_frequency: "Fréquence à laquelle rappeler les assignations aux utilisateurs."
+    max_assigned_topics: "Nombre maximum de sujets qui peuvent être assignés à un utilisateur."
+    assign_allowed_on_groups: "Groupes ayant la possibilité d'assigner des sujets."
   discourse_assign:
     assigned_to: "Sujet affecté à @%{username}"
     unassigned: "Le sujet a été désaffecté"
     already_claimed: "Le sujet a déjà été revendiqué."
     already_assigned: 'Sujet déjà affecté à @%{username}'
+    too_many_assigns: "@%{username} a atteint le nombre maximum de sujets assignés (%{max})."
     flag_assigned: "Désolé, le sujet de ce signalement est attribué à un autre utilisateur."
     flag_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur le signalement"
     topic_assigned_excerpt: "vous a attribué le sujet '%{title}'"
@@ -31,6 +36,8 @@ fr:
       never: 'jamais'
       daily: 'quotidien'
       weekly: 'hebdomadaires'
+      monthly: 'mensuel'
+      quarterly: 'trimestriel'
   assign_mailer:
     title: "Affecter le mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} vous a affecté à « %{topic_title} » !"
@@ -42,3 +49,22 @@ fr:
 
       Si vous êtes intéressés, cliquer sur le lien suivant :
       [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Vous avez %{pending_assignments} assignation(s) en attente"
+    body: |
+      Vous avez actuellement [%{pending_assignments} assignation(s) en attente](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Ce rappel vous sera envoyé %{frequency} si vous avez plus qu'une assignation.
+    newest: |
+      ### Plus récente(s)
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Plus ancienne(s)
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

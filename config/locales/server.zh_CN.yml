@@ -11,15 +11,59 @@ zh_CN:
     assigns_public: "允许一般公众查看主题指派"
     assigns_user_url_path: "用户指派的主题路径（使用：{username}替换用户名）"
     assigns_by_staff_mention: "如果一个管理人员分配给另一个管理人员，主题将会自动被指派过去。"
+    unassign_creates_tracking_post: "如果你取消分配一个主题， 一个密语或行为会被创建用于追踪变化"
+    assign_self_regex: "需要正则表达式用于自我指派。例如“我的列表”"
+    assign_other_regex: "需要正则表达式用于通过提及以指派主题。例如“你的列表”"
+    unassign_on_group_archive: "当消息被群组存档时取消分配消息（移回收件箱时重新分配）"
+    unassign_on_close: "当一个主题关闭时取消分配"
+    assign_locks_flags: "当一个主题被分配给一个工作人员时，其标记只能由该用户处理。"
+    assign_mailer_enabled: "启用时，被指派的用户会在每次指派时候收到一封提醒邮件"
+    flags_require_assign: "启用时，至少分配一个用户才能处理标记。"
+    remind_assigns: "提醒用户正在分配"
+    remind_assigns_frequency: "指派主题的用户提醒频率"
+    max_assigned_topics: "每个用户每天能分配的主题数量的最大值。"
+    assign_allowed_on_groups: "允许分配主题的组"
   discourse_assign:
     assigned_to: "主题被指派给 @%{username}"
     unassigned: "主题未被指派"
+    already_claimed: "这个主题已经被分配"
     already_assigned: '主题已被指派给 @%{username}'
+    too_many_assigns: "@%{username}已经到达指派主题的最大值（%{max}）。"
+    flag_assigned: "抱歉，这个标记的主题已被指派给其他用户"
+    flag_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
     topic_assigned_excerpt: "主题%{title}已分配给您"
     reminders_frequency:
       never: '从不'
       daily: '每天'
       weekly: '每周'
       monthly: '月度'
+      quarterly: '季度的'
   assign_mailer:
     title: "指派邮件发送者"
+    subject_template: "[%{email_prefix}]%{assignee_name}指派你到“%{topic_title}”！"
+    text_body_template: |
+      嘿，%{assignee_name}**指派**你到讨论
+      >**%{topic_title}**
+
+      >%{topic_excerpt}
+
+      如果你感兴趣，点击下方的链接
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "你有%{pending_assignments}个等待指派"
+    body: |
+      你当前有【%{pending_assignments}】个等待指派（%{assignments_link}）
+
+      %{newest_assignments}
+      %{oldest_assignments}
+      如果你有多个指派主题这个提醒会发送%{frequency}次。
+    newest: |
+      ###最新
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ###最旧
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

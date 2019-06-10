@@ -33,6 +33,7 @@ de:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"
       reminders_frequency:
+        description: "Intervall für das Erhalten von Erinnerungen an zugewiesene Themen"
         never: 'nie'
         daily: 'Täglich'
         weekly: 'Wöchentlich'

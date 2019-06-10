@@ -22,6 +22,9 @@ fr:
       assign:
         title: "Affecter"
         help: "Affecter le sujet à l'utilisateur"
+      reassign:
+        title: "Réattribuer"
+        help: "Réattribuer le sujet à un autre utilisateur"
       assign_modal:
         title: "Affecter le sujet"
         description: "Entrez le nom de l'utilisateur dont vont souhaitez affecter le sujet"
@@ -30,6 +33,7 @@ fr:
         title: "revendiquer"
         help: "Affecter le sujet à vous-même"
       reminders_frequency:
+        description: "Fréquence à laquelle recevoir des rappels de sujets assignés"
         never: 'Jamais'
         daily: 'Quotidien'
         weekly: 'Hebdomadaire'

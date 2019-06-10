@@ -10,11 +10,17 @@ et:
     discourse_assign:
       assigned: "Määratud"
       assigned_to: "Määratud kasutajale"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "Eemalda määramine"
+        help: "Eemalda teema määramine"
       assign:
         title: "Määra"
       assign_modal:
         title: "Määra teema"
         assign: "Määra"
+      claim:
+        help: "Määra teema endale"
       reminders_frequency:
         never: 'Mitte kunagi'
         daily: 'Igapäevaselt'
