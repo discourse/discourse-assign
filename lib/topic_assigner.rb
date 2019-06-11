@@ -18,8 +18,7 @@ class ::TopicAssigner
       FROM posts p
       JOIN topics t ON t.id = p.topic_id
       LEFT JOIN topic_custom_fields tc ON tc.name = '#{ASSIGNED_TO_ID}' AND tc.topic_id = p.topic_id
-      WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin) AND
-        ( #{staff_mention} ) AND tc.value IS NULL AND NOT t.closed AND t.deleted_at IS NULL
+      WHERE ( #{staff_mention} ) AND tc.value IS NULL AND NOT t.closed AND t.deleted_at IS NULL
       GROUP BY p.topic_id
     SQL
 
@@ -93,10 +92,8 @@ class ::TopicAssigner
   def self.mentioned_staff(post)
     mentions = post.raw_mentions
     if mentions.present?
-      allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-
       User.human_users
-        .joins(:groups).where(groups: { name: allowed_groups })
+        .assign_allowed
         .where('username_lower IN (?)', mentions.map(&:downcase))
         .first
     end
@@ -116,7 +113,6 @@ class ::TopicAssigner
 
     assigned_total = TopicCustomField
       .joins(:topic)
-      .where(topics: { deleted_at: nil })
       .where(name: ASSIGNED_TO_ID)
       .where(value: user.id)
       .count

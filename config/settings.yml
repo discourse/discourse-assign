@@ -30,7 +30,7 @@ plugins:
   assign_allowed_on_groups:
     client: true
     type: group_list
+    default: ''
     list_type: compact
-    default: 'staff'
     allow_any: false
     refresh: true
