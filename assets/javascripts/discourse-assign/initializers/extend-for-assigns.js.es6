@@ -200,9 +200,12 @@ function initialize(api) {
         this.appEvents.trigger("header:update-topic", topic);
       });
     },
+
     unsubscribe() {
-      this._super();
-      if (!this.get("content.id")) return;
+      this._super(...arguments);
+
+      if (!this.get("model.id")) return;
+
       this.messageBus.unsubscribe("/staff/topic-assignment");
     }
   });
