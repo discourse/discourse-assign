@@ -17,7 +17,16 @@ module Jobs
 
     def allowed_group_ids
       allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-      Group.where(name: allowed_groups).pluck(:id).join(',')
+      return [] if allowed_groups.empty?
+
+      Group.where(name: allowed_groups).pluck(:id)
+    end
+
+    def membership_condition
+      group_ids = allowed_group_ids.join(',')
+      condition = 'users.admin OR users.moderator'
+      condition += " OR group_users.group_id IN (#{group_ids})" if group_ids.present?
+      condition
     end
 
     def user_ids
@@ -36,10 +45,11 @@ module Jobs
         ON topic_custom_fields.value::INT = user_frequency.user_id
         AND user_frequency.name = '#{PendingAssignsReminder::REMINDERS_FREQUENCY}'
 
-        INNER JOIN group_users ON topic_custom_fields.value::INT = group_users.user_id
+        INNER JOIN users ON topic_custom_fields.value::INT = users.id
+        LEFT OUTER JOIN group_users ON topic_custom_fields.value::INT = group_users.user_id
         INNER JOIN topics ON topics.id = topic_custom_fields.topic_id AND (topics.deleted_at IS NULL)
 
-        WHERE group_users.group_id IN (#{allowed_group_ids})
+        WHERE (#{membership_condition})
         AND #{frequency} > 0
         AND (
           last_reminder.value IS NULL OR
