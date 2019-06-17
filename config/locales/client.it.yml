@@ -22,13 +22,18 @@ it:
       assign:
         title: "Assegna"
         help: "Assegna Argomento ad Utente"
+      reassign:
+        title: "Riassegna"
+        help: "Riassegna argomento a un altro utente"
       assign_modal:
         title: "Assegna Argomento"
         description: "Inserisci il nome utente della persona a cui vorresti assegnare questo argomento"
         assign: "Assegna"
       claim:
+        title: "rivendica"
         help: "Assegna l'argomento a te stesso"
       reminders_frequency:
+        description: "Frequenza per la ricezione di promemoria per argomenti assegnati"
         never: 'Mai'
         daily: 'Giornaliero'
         weekly: 'Settimanale'
@@ -36,4 +41,5 @@ it:
         quarterly: 'Trimestrale'
     user:
       messages:
+        assigned_title: "Assegnato (%{count})"
         assigned: "Assegnato"

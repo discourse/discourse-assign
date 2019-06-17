@@ -22,6 +22,9 @@ pt_BR:
       assign:
         title: "Designar"
         help: "Designar Tópico ao Usuário"
+      reassign:
+        title: "Designar Novamente"
+        help: "Designar Novamente o Tópico a um usuário diferente"
       assign_modal:
         title: "Designar Tópico"
         description: "Digite o nome de usuário da pessoa que você deseja designar à este tópico"
@@ -30,6 +33,7 @@ pt_BR:
         title: "reivindicar"
         help: "Designar tópico à você mesmo"
       reminders_frequency:
+        description: "Freqüência para receber lembretes de tópicos designados"
         never: 'Nunca'
         daily: 'Diariamente'
         weekly: 'Semanalmente'

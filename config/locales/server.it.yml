@@ -7,6 +7,7 @@
 
 it:
   site_settings:
+    assign_enabled: "Abilita il plugin Assign"
     assigns_public: "Consenti a chiunque di visualizzare le assegnazioni di un argomento"
     assigns_user_url_path: "Percorso agli argomenti assegnati agli utenti (usa: {username} per sostituire un nome utente)"
     assigns_by_staff_mention: "Se un menbro dello staff menziona un altro membro dello staff, l'argomento è assegnato automaticamente"
@@ -15,11 +16,56 @@ it:
     assign_other_regex: "L'espressione regolare che dovrà essere soddisfatta per assegnare argomenti ad altri utenti usando la menzione. Ad esempio 'la tua lista'."
     unassign_on_group_archive: "Quando un messaggio viene archiviato da un gruppo, annullare l'assegnazione (riassegnare se viene spostato nuovamente nella posta in arrivo)"
     unassign_on_close: "Quando un argomento viene chiuso annullare l'assegnazione"
+    assign_locks_flags: "Quando un argomento viene assegnato a un membro dello staff, le relative segnalazioni possono essere gestiti solo da quella persona"
+    assign_mailer_enabled: "Se abilitato, l'utente assegnato riceverà un'email di notifica per ciascuna assegnazione"
+    flags_require_assign: "Se abilitato, le segnalazioni non possono essere gestite se non vengono prima assegnate a un utente."
+    remind_assigns: "Ricorda agli utenti le assegnazioni in sospeso."
+    remind_assigns_frequency: "Frequenza di ricordo agli utenti degli argomenti assegnati."
+    max_assigned_topics: "Numero massimo di argomenti che possono essere assegnati a un utente."
+    assign_allowed_on_groups: "Gruppi a cui è consentito assegnare argomenti."
   discourse_assign:
     assigned_to: "Argomento assegnato a @%{username}"
     unassigned: "L'argomento era inassegnato"
     already_claimed: "Quell'argomento è stato già rivendicato."
+    already_assigned: 'L''argomento è già assegnato a @ %{username}'
+    too_many_assigns: "@ %{username} ha già raggiunto il numero massimo di argomenti assegnabili (%{max})."
+    flag_assigned: "Spiacenti, l'argomento oggetto di questa segnalazione è già assegnato a un altro utente"
+    flag_unclaimed: "Devi rivendicare l'argomento prima di lavorare sulla segnalazione"
+    topic_assigned_excerpt: "ti ha assegnato l'argomento '%{title}'"
     reminders_frequency:
       never: 'mai'
       daily: 'ogni giorno'
       weekly: 'ogni settimana'
+      monthly: 'mensilmente'
+      quarterly: 'ogni 3 mesi'
+  assign_mailer:
+    title: "Mailer Assegnazioni"
+    subject_template: "[%{email_prefix}] %{assignee_name} ti ha assegnato '%{topic_title}'!"
+    text_body_template: |
+      Ehi, %{assignee_name} ** ti ha assegnato ** una discussione
+
+      > ** %{topic_title} **
+      >
+      > %{topic_excerpt}
+
+      Se sei interessato, fai clic sul seguente link:
+      [%{topic_link}] (%{topic_link})
+  pending_assigns_reminder:
+    title: "Hai %{pending_assignments} assegnazioni in sospeso"
+    body: |
+      Al momento hai [%{pending_assignments} assegnazioni in sospeso] (%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Questo promemoria verrà inviato %{frequency} se si dispone di più di un argomento assegnato.
+    newest: |
+      ### I più recenti
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### I più vecchi
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

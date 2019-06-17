@@ -47,7 +47,7 @@ fr:
       >
       > %{topic_excerpt}
 
-      Si vous êtes intéressés, cliquer sur le lien suivant :
+      Si vous êtes intéressés, cliquer sur le lien suivant :
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "Vous avez %{pending_assignments} assignation(s) en attente"

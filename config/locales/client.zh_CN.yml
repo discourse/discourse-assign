@@ -24,6 +24,7 @@ zh_CN:
         help: "指派主题给用户"
       reassign:
         title: "重新指派"
+        help: "重新指派主题给另一用户"
       assign_modal:
         title: "指派主题"
         description: "输入你想指派这个主题给他的人的用户名"
@@ -32,6 +33,7 @@ zh_CN:
         title: "认领"
         help: "指派这个主题给你自己"
       reminders_frequency:
+        description: "接受指派主题提醒的频率"
         never: '从不'
         daily: '每天'
         weekly: '每周'
