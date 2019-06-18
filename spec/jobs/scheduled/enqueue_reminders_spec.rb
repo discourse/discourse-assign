@@ -3,24 +3,15 @@
 require 'rails_helper'
 
 RSpec.describe Jobs::EnqueueReminders do
-  let(:assign_allowed_group) { Fabricate(:group) }
+  let(:assign_allowed_group) { Group.find_by(name: 'staff') }
   let(:user) { Fabricate(:user, groups: [assign_allowed_group]) }
 
   before do
-    SiteSetting.assign_allowed_on_groups = assign_allowed_group.name
     SiteSetting.remind_assigns_frequency = RemindAssignsFrequencySiteSettings::MONTHLY_MINUTES
     SiteSetting.assign_enabled = true
   end
 
   describe '#execute' do
-    it 'enqueues a reminder when the user is an admin' do
-      SiteSetting.assign_allowed_on_groups = ''
-      admin = Fabricate(:admin)
-      assign_multiple_tasks_to(admin)
-
-      assert_reminders_enqueued(1)
-    end
-
     it 'does not enqueue reminders when there are no assigned tasks' do
       assert_reminders_enqueued(0)
     end

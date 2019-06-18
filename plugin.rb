@@ -49,8 +49,6 @@ after_initialize do
   reviewable_api_enabled = defined?(Reviewable)
 
   add_to_class(:user, :can_assign?) do
-    return true if staff?
-
     @can_assign ||=
       begin
         allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').compact
@@ -64,18 +62,11 @@ after_initialize do
 
   add_class_method(:user, :assign_allowed) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-
-    if allowed_groups.present?
-      real.where('
-        users.admin OR users.moderator OR
-        users.id IN (
-          SELECT user_id FROM group_users
-          INNER JOIN groups ON group_users.group_id = groups.id
-          WHERE groups.name IN (?)
-        )', allowed_groups)
-    else
-      real.where('users.admin OR users.moderator')
-    end
+    where('users.id IN (
+      SELECT user_id FROM group_users
+      INNER JOIN groups ON group_users.group_id = groups.id
+      WHERE groups.name IN (?)
+    )', allowed_groups)
   end
 
   add_model_callback(Group, :before_update) do
