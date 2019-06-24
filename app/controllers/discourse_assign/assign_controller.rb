@@ -23,8 +23,12 @@ module DiscourseAssign
         .order('X.last_assigned DESC')
         .limit(6)
 
-      render json: ActiveModel::ArraySerializer.new(users,
-                                                    scope: guardian, each_serializer: BasicUserSerializer)
+      render json: {
+        assign_allowed_groups: assign_allowed_groups,
+        suggested_users: ActiveModel::ArraySerializer.new(
+          users, scope: guardian, each_serializer: BasicUserSerializer
+        )
+      }
     end
 
     def claim
@@ -89,6 +93,12 @@ module DiscourseAssign
         max = SiteSetting.max_assigned_topics
         { error: I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max) }
       end
+    end
+
+    def assign_allowed_groups
+      staff_group = Group.select(:name).find_by(id:Group::AUTO_GROUPS[:staff])
+      allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+      (staff_group ? allowed_groups << staff_group.name : allowed_groups).uniq
     end
 
     def ensure_assign_allowed

@@ -35,7 +35,7 @@ RSpec.describe DiscourseAssign::AssignController do
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
-        suggestions = JSON.parse(response.body).map { |u| u['username'] }
+        suggestions = JSON.parse(response.body)['suggested_users'].map { |u| u['username'] }
 
         expect(suggestions).to contain_exactly(user2.username, user.username)
       end
@@ -47,7 +47,7 @@ RSpec.describe DiscourseAssign::AssignController do
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
-        suggestions = JSON.parse(response.body).map { |u| u['username'] }
+        suggestions = JSON.parse(response.body)['suggested_users'].map { |u| u['username'] }
 
         expect(suggestions).to contain_exactly(user.username)
       end
@@ -65,9 +65,30 @@ RSpec.describe DiscourseAssign::AssignController do
       TopicAssigner.new(post.topic, user).assign(another_admin)
 
       get '/assign/suggestions.json'
-      suggestions = JSON.parse(response.body).map { |u| u['username'] }
+      suggestions = JSON.parse(response.body)['suggested_users'].map { |u| u['username'] }
 
       expect(suggestions).to contain_exactly(user.username)
+    end
+
+    it 'always includes staff in the list of assign allowed groups' do
+      staff_group = Group.select(:name).find_by(id: Group::AUTO_GROUPS[:staff])
+
+      get '/assign/suggestions.json'
+      allowed_groups = JSON.parse(response.body).fetch('assign_allowed_groups')
+
+      expect(allowed_groups).to contain_exactly(staff_group.name)
+    end
+
+
+    it 'includes all the groups listed in the site setting' do
+      staff_group = Group.select(:name).find_by(id: Group::AUTO_GROUPS[:staff])
+      different_group_name = 'another_group'
+      SiteSetting.assign_allowed_on_groups = different_group_name
+
+      get '/assign/suggestions.json'
+      allowed_groups = JSON.parse(response.body).fetch('assign_allowed_groups')
+
+      expect(allowed_groups).to contain_exactly(staff_group.name, different_group_name)
     end
   end
 
