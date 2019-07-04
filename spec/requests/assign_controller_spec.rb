@@ -31,7 +31,7 @@ RSpec.describe DiscourseAssign::AssignController do
         allowed_group = Group.find_by(name: 'everyone')
         user2.groups << allowed_group
         user2.groups << default_allowed_group
-        SiteSetting.assign_allowed_on_groups = 'staff|everyone'
+        SiteSetting.assign_allowed_on_groups = "#{default_allowed_group.id}|#{allowed_group.id}"
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
@@ -43,7 +43,7 @@ RSpec.describe DiscourseAssign::AssignController do
       it 'does not include users from disallowed groups' do
         allowed_group = Group.find_by(name: 'everyone')
         user2.groups << allowed_group
-        SiteSetting.assign_allowed_on_groups = 'staff'
+        SiteSetting.assign_allowed_on_groups = default_allowed_group.id.to_s
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'

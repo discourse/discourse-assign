@@ -48,11 +48,21 @@ after_initialize do
 =end
   reviewable_api_enabled = defined?(Reviewable)
 
+  # TODO: Remove this once 2.4 becomes the new stable.
+  current_version = ActiveRecord::Migrator.current_version
+  min_version = 201_907_081_533_31
+  attribute = current_version >= min_version ? 'id' : 'name'
+
+  add_class_method(:group, :assign_allowed_groups) do
+    allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+    where("groups.#{attribute} IN (?)", allowed_groups)
+  end
+
   add_to_class(:user, :can_assign?) do
     @can_assign ||=
       begin
         allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').compact
-        allowed_groups.present? && groups.where('name in (?)', allowed_groups).exists? ?
+        allowed_groups.present? && groups.where("groups.#{attribute} in (?)", allowed_groups).exists? ?
           :true : :false
       end
     @can_assign == :true
@@ -62,21 +72,22 @@ after_initialize do
 
   add_class_method(:user, :assign_allowed) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-    where('users.id IN (
+    where("users.id IN (
       SELECT user_id FROM group_users
       INNER JOIN groups ON group_users.group_id = groups.id
-      WHERE groups.name IN (?)
-    )', allowed_groups)
+      WHERE groups.#{attribute} IN (?)
+    )", allowed_groups)
   end
 
   add_model_callback(Group, :before_update) do
-    if name_changed?
+    if !group_list_changed && name_changed?
       SiteSetting.assign_allowed_on_groups = SiteSetting.assign_allowed_on_groups.gsub(name_was, name)
     end
   end
 
   add_model_callback(Group, :before_destroy) do
-    new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{name}[|]?/, '')
+    to_remove = group_list_changed ? id : name
+    new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{to_remove}[|]?/, '')
     new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
     SiteSetting.assign_allowed_on_groups = new_setting
   end

@@ -10,19 +10,10 @@ RSpec.describe Group do
       SiteSetting.assign_enabled = true
     end
 
-    it 'updates the site setting when the group name changes' do
-      SiteSetting.assign_allowed_on_groups = "#{group.name}|staff|moderators"
-      different_name = 'different_name'
-
-      group.update!(name: different_name)
-
-      expect(SiteSetting.assign_allowed_on_groups).to eq "#{different_name}|staff|moderators"
-    end
-
-    let(:removed_group_setting) { 'staff|moderators' }
+    let(:removed_group_setting) { '3|4' }
 
     it 'removes the group from the setting when the group gets destroyed' do
-      SiteSetting.assign_allowed_on_groups = "#{group.name}|staff|moderators"
+      SiteSetting.assign_allowed_on_groups = "#{group.id}|3|4"
 
       group.destroy!
 
@@ -30,7 +21,7 @@ RSpec.describe Group do
     end
 
     it 'removes the group from the setting when this is the last one on the list' do
-      SiteSetting.assign_allowed_on_groups = "staff|moderators|#{group.name}"
+      SiteSetting.assign_allowed_on_groups = "3|4|#{group.id}"
 
       group.destroy!
 
@@ -38,7 +29,7 @@ RSpec.describe Group do
     end
 
     it 'removes the group from the list when it is on the middle of the list' do
-      SiteSetting.assign_allowed_on_groups = "staff|#{group.name}|moderators"
+      SiteSetting.assign_allowed_on_groups = "3|#{group.id}|4"
 
       group.destroy!
 
