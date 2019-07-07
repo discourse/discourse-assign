@@ -12,7 +12,7 @@ module Jobs
     private
 
     def skip_enqueue?
-      SiteSetting.remind_assigns_frequency.nil? || !SiteSetting.assign_enabled?
+      SiteSetting.remind_assigns_frequency.nil? || !SiteSetting.assign_enabled? || SiteSetting.assign_allowed_on_groups.blank?
     end
 
     def allowed_group_ids
