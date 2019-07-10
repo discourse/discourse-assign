@@ -16,7 +16,7 @@ RSpec.describe Jobs::EnqueueReminders do
       assert_reminders_enqueued(0)
     end
 
-    it 'does not enqueue remidners when no groups are allowed to assign' do
+    it 'does not enqueue reminders when no groups are allowed to assign' do
       SiteSetting.assign_allowed_on_groups = ''
 
       assign_multiple_tasks_to(user)
