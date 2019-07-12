@@ -214,7 +214,11 @@ class ::TopicAssigner
         post: first_post,
         username: @assigned_by.username,
         notification_type: Notification.types[:custom],
-        excerpt: I18n.t("discourse_assign.topic_assigned_excerpt", title: @topic.title)
+        excerpt: I18n.t(
+          "discourse_assign.topic_assigned_excerpt",
+          title: @topic.title,
+          locale: assign_to.effective_locale
+        )
       )
     end
 
