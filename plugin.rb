@@ -51,7 +51,15 @@ after_initialize do
   # TODO: Remove this once 2.4 becomes the new stable.
   current_version = ActiveRecord::Migrator.current_version
   min_version = 201_907_081_533_31
-  attribute = current_version >= min_version ? 'id' : 'name'
+  above_min_version = current_version >= min_version
+
+  # Dinamically sets the default value, supports older versions.
+  default_allowed_group_value = above_min_version ? Group::AUTO_GROUPS[:staff] : 'staff'
+  allowed_group_values = SiteSetting.assign_allowed_on_groups.split('|')
+  allowed_group_values << default_allowed_group_value if allowed_group_values.empty?
+  SiteSetting.assign_allowed_on_groups = allowed_group_values.join('|')
+
+  attribute = above_min_version ? 'id' : 'name'
 
   add_class_method(:group, :assign_allowed_groups) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
@@ -80,13 +88,13 @@ after_initialize do
   end
 
   add_model_callback(Group, :before_update) do
-    if !group_list_changed && name_changed?
+    if !above_min_version && name_changed?
       SiteSetting.assign_allowed_on_groups = SiteSetting.assign_allowed_on_groups.gsub(name_was, name)
     end
   end
 
   add_model_callback(Group, :before_destroy) do
-    to_remove = group_list_changed ? id : name
+    to_remove = above_min_version ? id : name
     new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{to_remove}[|]?/, '')
     new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
     SiteSetting.assign_allowed_on_groups = new_setting

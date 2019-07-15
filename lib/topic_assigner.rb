@@ -96,7 +96,7 @@ class ::TopicAssigner
       allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
 
       User.human_users
-        .joins(:groups).where(groups: { id: allowed_groups })
+        .assign_allowed
         .where('username_lower IN (?)', mentions.map(&:downcase))
         .first
     end

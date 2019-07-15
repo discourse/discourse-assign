@@ -31,6 +31,6 @@ plugins:
     client: true
     type: group_list
     list_type: compact
-    default: '3'
+    default: ''
     allow_any: false
     refresh: true
