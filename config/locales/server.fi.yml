@@ -26,7 +26,7 @@ fi:
     already_assigned: 'Ketju on jo osoitettu käyttäjälle %{username}'
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
     flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
-    topic_assigned_excerpt: "osoitti sinulle ketjun  '%{title}'"
+    topic_assigned_excerpt: "osoitti sinulle ketjun '%{title}'"
     reminders_frequency:
       never: 'ei koskaan'
       daily: 'päivittäin'

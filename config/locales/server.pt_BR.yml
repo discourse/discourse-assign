@@ -34,8 +34,8 @@ pt_BR:
     topic_assigned_excerpt: "te designou ao tópico '%{title}'"
     reminders_frequency:
       never: 'nunca'
-      daily: 'diário'
-      weekly: 'semanal'
+      daily: 'diariamente'
+      weekly: 'semanalmente'
       monthly: 'mensalmente'
       quarterly: 'trimestralmente'
   assign_mailer:

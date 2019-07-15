@@ -8,6 +8,6 @@
 vi:
   discourse_assign:
     reminders_frequency:
-      never: 'không  bao giờ'
+      never: 'không bao giờ'
       daily: 'hàng ngày'
       weekly: 'hàng tuần'

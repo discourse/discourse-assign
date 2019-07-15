@@ -12,6 +12,7 @@ ru:
       unassigned: "снял(а) ответственного %{who} %{when}"
     discourse_assign:
       cant_act: "Вы не можете управлять флагами в теме, которая назначена на другого сотрудника"
+      cant_act_unclaimed: "Вы должны пожаловаться на эту тему, прежде чем ставить метки."
       assigned: "Назначенные темы"
       assigned_to: "Назначено на"
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
@@ -21,6 +22,9 @@ ru:
       assign:
         title: "Назначить отв."
         help: "Назначить ответственного за тему"
+      reassign:
+        title: "Переподписать"
+        help: "Переподписать тему другому пользователю"
       assign_modal:
         title: "Назначьте ответственного в теме"
         description: "Введите имя сотрудника, ответственного за тему"
@@ -29,6 +33,7 @@ ru:
         title: "Пожаловаться"
         help: "Назначить на себя"
       reminders_frequency:
+        description: "Частота напоминаний на подписанные темы"
         never: 'Никогда'
         daily: 'За день'
         weekly: 'За неделю'
@@ -36,4 +41,5 @@ ru:
         quarterly: 'За квартал'
     user:
       messages:
+        assigned_title: "Подписанные (%{count})"
         assigned: "Назначенные темы"

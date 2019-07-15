@@ -8,8 +8,8 @@
 ur:
   js:
     action_codes:
-      assigned: "%{who} کو %{when} اسائین کیا  "
-      unassigned: "%{who} کو %{when} غیر اسائین کیا  "
+      assigned: "%{who} کو %{when} اسائین کیا "
+      unassigned: "%{who} کو %{when} غیر اسائین کیا "
     discourse_assign:
       cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
