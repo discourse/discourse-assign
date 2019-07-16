@@ -16,7 +16,8 @@ module Jobs
     end
 
     def allowed_group_ids
-      Group.assign_allowed_groups.pluck(:id).join(',')
+      allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+      Group.where(name: allowed_groups).pluck(:id).join(',')
     end
 
     def user_ids
