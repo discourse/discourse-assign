@@ -31,6 +31,6 @@ plugins:
     client: true
     type: group_list
     list_type: compact
-    default: ''
+    default: 'staff'
     allow_any: false
     refresh: true
