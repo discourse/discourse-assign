@@ -23,6 +23,13 @@ Discourse::Application.routes.append do
   get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: /[\w.\-]+?/ }
 end
 
+
+# TODO: Remove this once 2.4.0.beta3 is released.
+# HACK: Checking if the file exists, this means we can assume the migration happenned
+above_min_version = File.exist?(
+  File.expand_path('../../../db/migrate/20190717133743_migrate_group_list_site_settings.rb', __FILE__)
+)
+
 after_initialize do
   require File.expand_path('../jobs/scheduled/enqueue_reminders.rb', __FILE__)
   require File.expand_path('../jobs/regular/remind_user.rb', __FILE__)
@@ -49,16 +56,6 @@ after_initialize do
   reviewable_api_enabled = defined?(Reviewable)
 
   # TODO: Remove this once 2.4 becomes the new stable.
-  current_version = ActiveRecord::Migrator.current_version
-  min_version = 201_907_081_533_31
-  above_min_version = current_version >= min_version
-
-  # Dinamically sets the default value, supports older versions.
-  default_allowed_group_value = above_min_version ? Group::AUTO_GROUPS[:staff] : 'staff'
-  allowed_group_values = SiteSetting.assign_allowed_on_groups.split('|')
-  allowed_group_values << default_allowed_group_value if allowed_group_values.empty?
-  SiteSetting.assign_allowed_on_groups = allowed_group_values.join('|')
-
   attribute = above_min_version ? 'id' : 'name'
 
   add_class_method(:group, :assign_allowed_groups) do

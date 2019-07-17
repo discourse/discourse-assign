@@ -12,9 +12,10 @@ RSpec.describe DiscourseAssign::AssignController do
   let(:user2) { Fabricate(:active_user) }
 
   let(:above_min_version) do
-    current_version = ActiveRecord::Migrator.current_version
-    min_version = 201_907_081_533_31
-    current_version >= min_version
+    min_version = 201_907_171_337_43
+      migrated_site_setting = DB.query_single(
+        "SELECT schema_migrations.version FROM schema_migrations WHERE schema_migrations.version = '#{min_version}'"
+      ).first.present?
   end
 
   describe 'only allow users from allowed groups' do
