@@ -6,12 +6,12 @@ export default UserTopicsList.extend({
 
   actions: {
     unassign(topic) {
-      this.get("taskActions")
+      this.taskActions
         .unassign(topic.get("id"))
         .then(() => this.send("changeAssigned"));
     },
     reassign(topic) {
-      const controller = this.get("taskActions").assign(topic);
+      const controller = this.taskActions.assign(topic);
       controller.set("model.onSuccess", () => this.send("changeAssigned"));
     }
   }

@@ -28,10 +28,10 @@ export default DropdownSelectBoxComponent.extend({
     onSelect(id) {
       switch (id) {
         case "unassign":
-          this.unassign(this.get("topic"), this.get("user"));
+          this.unassign(this.topic, this.user);
           break;
         case "reassign":
-          this.reassign(this.get("topic"), this.get("user"));
+          this.reassign(this.topic, this.user);
           break;
       }
     }

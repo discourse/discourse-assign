@@ -25,7 +25,7 @@ export default Ember.Component.extend({
     claim() {
       this.set("claiming", true);
 
-      let topic = this.get("topic");
+      let topic = this.topic;
       ajax(`/assign/claim/${topic.id}`, {
         method: "PUT"
       })
