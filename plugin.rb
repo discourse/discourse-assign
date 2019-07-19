@@ -23,6 +23,13 @@ Discourse::Application.routes.append do
   get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: /[\w.\-]+?/ }
 end
 
+
+# TODO: Remove this once 2.4.0.beta3 is released.
+# HACK: Checking if the file exists, this means we can assume the migration happenned
+above_min_version = File.exist?(
+  File.expand_path('../../../db/migrate/20190717133743_migrate_group_list_site_settings.rb', __FILE__)
+)
+
 after_initialize do
   require File.expand_path('../jobs/scheduled/enqueue_reminders.rb', __FILE__)
   require File.expand_path('../jobs/regular/remind_user.rb', __FILE__)
@@ -48,11 +55,19 @@ after_initialize do
 =end
   reviewable_api_enabled = defined?(Reviewable)
 
+  # TODO: Remove this once 2.4 becomes the new stable.
+  attribute = above_min_version ? 'id' : 'name'
+
+  add_class_method(:group, :assign_allowed_groups) do
+    allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
+    where("groups.#{attribute} IN (?)", allowed_groups)
+  end
+
   add_to_class(:user, :can_assign?) do
     @can_assign ||=
       begin
         allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').compact
-        allowed_groups.present? && groups.where('name in (?)', allowed_groups).exists? ?
+        allowed_groups.present? && groups.where("groups.#{attribute} in (?)", allowed_groups).exists? ?
           :true : :false
       end
     @can_assign == :true
@@ -62,21 +77,22 @@ after_initialize do
 
   add_class_method(:user, :assign_allowed) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-    where('users.id IN (
+    where("users.id IN (
       SELECT user_id FROM group_users
       INNER JOIN groups ON group_users.group_id = groups.id
-      WHERE groups.name IN (?)
-    )', allowed_groups)
+      WHERE groups.#{attribute} IN (?)
+    )", allowed_groups)
   end
 
   add_model_callback(Group, :before_update) do
-    if name_changed?
+    if !above_min_version && name_changed?
       SiteSetting.assign_allowed_on_groups = SiteSetting.assign_allowed_on_groups.gsub(name_was, name)
     end
   end
 
   add_model_callback(Group, :before_destroy) do
-    new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{name}[|]?/, '')
+    to_remove = above_min_version ? id : name
+    new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{to_remove}[|]?/, '')
     new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
     SiteSetting.assign_allowed_on_groups = new_setting
   end

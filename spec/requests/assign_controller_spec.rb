@@ -11,6 +11,13 @@ RSpec.describe DiscourseAssign::AssignController do
   let(:post) { Fabricate(:post) }
   let(:user2) { Fabricate(:active_user) }
 
+  let(:above_min_version) do
+    min_version = 201_907_171_337_43
+      migrated_site_setting = DB.query_single(
+        "SELECT schema_migrations.version FROM schema_migrations WHERE schema_migrations.version = '#{min_version}'"
+      ).first.present?
+  end
+
   describe 'only allow users from allowed groups' do
     before { sign_in(user2) }
 
@@ -31,7 +38,13 @@ RSpec.describe DiscourseAssign::AssignController do
         allowed_group = Group.find_by(name: 'everyone')
         user2.groups << allowed_group
         user2.groups << default_allowed_group
-        SiteSetting.assign_allowed_on_groups = 'staff|everyone'
+        defaults = if above_min_version
+          "#{default_allowed_group.id}|#{allowed_group.id}"
+        else
+          "#{default_allowed_group.name}|#{allowed_group.name}"
+        end
+
+        SiteSetting.assign_allowed_on_groups = defaults
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
@@ -43,7 +56,7 @@ RSpec.describe DiscourseAssign::AssignController do
       it 'does not include users from disallowed groups' do
         allowed_group = Group.find_by(name: 'everyone')
         user2.groups << allowed_group
-        SiteSetting.assign_allowed_on_groups = 'staff'
+        SiteSetting.assign_allowed_on_groups = above_min_version ? default_allowed_group.id.to_s : default_allowed_group.name
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
