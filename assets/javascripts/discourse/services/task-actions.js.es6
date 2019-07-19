@@ -21,7 +21,7 @@ export default Ember.Service.extend({
   assign(topic) {
     return showModal("assign-user", {
       model: {
-        topic: topic,
+        topic,
         username: topic.get("assigned_to_user.username"),
         allowedGroups: this.allowedGroups
       }

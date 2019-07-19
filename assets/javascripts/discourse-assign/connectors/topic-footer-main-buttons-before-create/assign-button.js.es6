@@ -18,10 +18,10 @@ export default {
   actions: {
     unassign() {
       this.set("topic.assigned_to_user", null);
-      this.get("taskActions").unassign(this.get("topic.id"));
+      this.taskActions.unassign(this.get("topic.id"));
     },
     assign() {
-      this.get("taskActions").assign(this.topic);
+      this.taskActions.assign(this.topic);
     }
   }
 };

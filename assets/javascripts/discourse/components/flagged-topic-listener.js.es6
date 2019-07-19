@@ -8,11 +8,11 @@ export default Ember.Component.extend({
   didInsertElement() {
     this._super();
     this.messageBus.subscribe("/staff/topic-assignment", data => {
-      let flaggedTopics = this.get("flaggedTopics");
+      let flaggedTopics = this.flaggedTopics;
       if (flaggedTopics) {
         flaggedTopics.forEach(ft => assignIfEqual(ft.topic, data));
       } else {
-        assignIfEqual(this.get("topic"), data);
+        assignIfEqual(this.topic, data);
       }
     });
   },

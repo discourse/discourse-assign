@@ -4,8 +4,8 @@ export default Ember.Component.extend({
   selectedFrequency: null,
 
   @computed("user.reminders_frequency")
-  availableFrequencies() {
-    return this.get("user.reminders_frequency").map(freq => {
+  availableFrequencies(userRemindersFrequency) {
+    return userRemindersFrequency.map(freq => {
       return {
         name: I18n.t(freq.name),
         value: freq.value,
@@ -15,15 +15,17 @@ export default Ember.Component.extend({
   },
 
   didInsertElement() {
-    let current_frequency = this.get(
+    this._super(...arguments);
+
+    let currentFrequency = this.get(
       "user.custom_fields.remind_assigns_frequency"
     );
 
-    if (current_frequency === undefined) {
-      current_frequency = this.get("siteSettings.remind_assigns_frequency");
+    if (currentFrequency === undefined) {
+      currentFrequency = this.get("siteSettings.remind_assigns_frequency");
     }
 
-    this.set("selectedFrequency", current_frequency);
+    this.set("selectedFrequency", currentFrequency);
   },
 
   actions: {

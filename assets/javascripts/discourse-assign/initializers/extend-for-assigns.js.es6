@@ -35,13 +35,13 @@ function modifySelectKit(api) {
         return;
       }
 
-      const topic = context.get("topic");
+      const topic = context.topic;
       const assignedUser = topic.get("assigned_to_user.username");
 
       if (assignedUser) {
         ajax("/assign/unassign", {
           type: "PUT",
-          data: { topic_id: topic.get("id") }
+          data: { topic_id: topic.id }
         })
           .then(result => {
             if (result.success && result.success === "OK") {
@@ -87,13 +87,14 @@ function initialize(api) {
           }
         }
 
-        return this.get("actableFilter");
+        return this.actableFilter;
       },
 
       didInsertElement() {
-        this._super();
+        this._super(...arguments);
+
         this.messageBus.subscribe("/staff/topic-assignment", data => {
-          let flaggedPost = this.get("flaggedPost");
+          let flaggedPost = this.flaggedPost;
           if (data.topic_id === flaggedPost.get("topic.id")) {
             flaggedPost.set(
               "topic.assigned_to_user_id",
@@ -105,7 +106,8 @@ function initialize(api) {
       },
 
       willDestroyElement() {
-        this._super();
+        this._super(...arguments);
+
         this.messageBus.unsubscribe("/staff/topic-assignment");
       }
     },
@@ -140,14 +142,14 @@ function initialize(api) {
   api.addTagsHtmlCallback(topic => {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
-      const assignedPath = topic.get("assignedToUserPath");
+      const assignedPath = topic.assignedToUserPath;
       let assignLabels = `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
         "user-plus"
       )}${assignedTo}</a>`;
 
       if (
         ListItemDefaults === undefined &&
-        topic.get("archetype") === "private_message"
+        topic.archetype === "private_message"
       ) {
         assignLabels += `<div>${iconHTML("envelope")} Message</div>`;
       }
@@ -157,12 +159,12 @@ function initialize(api) {
   });
 
   api.addUserMenuGlyph(widget => {
-    if (widget.currentUser && widget.currentUser.get("can_assign")) {
+    if (widget.currentUser && widget.currentUser.can_assign) {
       return {
         label: "discourse_assign.assigned",
         className: "assigned",
         icon: "user-plus",
-        href: `${widget.currentUser.get("path")}/activity/assigned`
+        href: `${widget.currentUser.path}/activity/assigned`
       };
     }
   });
@@ -185,10 +187,11 @@ function initialize(api) {
 
   api.modifyClass("controller:topic", {
     subscribe() {
-      this._super();
+      this._super(...arguments);
+
       this.messageBus.subscribe("/staff/topic-assignment", data => {
-        const topic = this.get("model");
-        const topicId = topic.get("id");
+        const topic = this.model;
+        const topicId = topic.id;
 
         if (data.topic_id === topicId) {
           topic.set(
@@ -233,7 +236,7 @@ function initialize(api) {
   api.modifyClass("controller:preferences/notifications", {
     actions: {
       save() {
-        this.get("saveAttrNames").push("custom_fields");
+        this.saveAttrNames.push("custom_fields");
         this._super(...arguments);
       }
     }

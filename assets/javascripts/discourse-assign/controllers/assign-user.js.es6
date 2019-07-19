@@ -1,19 +1,17 @@
-//import { default as computed } from 'ember-addons/ember-computed-decorators';
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
+  assignSuggestions: null,
   taskActions: Ember.inject.service(),
-  assignSuggestions: function() {
-    ajax("/assign/suggestions").then(users => {
-      this.set("assignSuggestions", users);
-    });
-  }.property(),
 
-  // @computed("username")
-  // disabled(username) {
-  //   return Ember.isEmpty(username);
-  // },
+  init() {
+    this._super(...arguments);
+
+    ajax("/assign/suggestions").then(users =>
+      this.set("assignSuggestions", users)
+    );
+  },
 
   onClose() {
     if (this.get("model.onClose") && this.get("model.username")) {
@@ -23,8 +21,10 @@ export default Ember.Controller.extend({
 
   actions: {
     assignUser(user) {
-      this.set("model.username", user.username);
-      this.set("model.allowedGroups", this.get("taskActions").allowedGroups);
+      this.setProperties({
+        "model.username": user.username,
+        "model.allowedGroups": this.taskActions.allowedGroups
+      });
       this.send("assign");
     },
 
