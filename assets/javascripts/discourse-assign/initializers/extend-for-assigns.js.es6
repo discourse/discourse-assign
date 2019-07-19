@@ -11,44 +11,39 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 // TODO: This has to be removed when 2.3 becomes the new stable version.
 import { ListItemDefaults } from "discourse/components/topic-list-item";
 
-const ACTION_ID = "assign";
-
-function modifySelectKit(api) {
-  api
-    .modifySelectKit("topic-footer-mobile-dropdown")
-    .modifyContent((context, existingContent) => {
-      if (context.get("currentUser.can_assign")) {
-        const hasAssignement = context.get("topic.assigned_to_user");
-        const button = {
-          id: ACTION_ID,
-          icon: hasAssignement ? "user-times" : "user-plus",
-          name: I18n.t(
-            `discourse_assign.${hasAssignement ? "unassign" : "assign"}.title`
-          )
-        };
-        existingContent.push(button);
-      }
-      return existingContent;
-    })
-    .onSelect((context, value) => {
-      if (!context.get("currentUser.can_assign") || value !== ACTION_ID) {
+function registerTopicFooterButtons(api) {
+  api.registerTopicFooterButton({
+    id: "assign",
+    icon() {
+      const hasAssignement = this.get("topic.assigned_to_user");
+      return hasAssignement ? "user-times" : "user-plus";
+    },
+    priority: 250,
+    title() {
+      const hasAssignement = this.get("topic.assigned_to_user");
+      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.help`;
+    },
+    label() {
+      const hasAssignement = this.get("topic.assigned_to_user");
+      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.title`;
+    },
+    action() {
+      if (!this.get("currentUser.staff")) {
         return;
       }
 
-      const topic = context.topic;
+      const topic = this.topic;
       const assignedUser = topic.get("assigned_to_user.username");
 
       if (assignedUser) {
         ajax("/assign/unassign", {
           type: "PUT",
           data: { topic_id: topic.id }
-        })
-          .then(result => {
-            if (result.success && result.success === "OK") {
-              topic.set("assigned_to_user", null);
-            }
-          })
-          .finally(() => context._compute());
+        }).then(result => {
+          if (result.success && result.success === "OK") {
+            topic.set("assigned_to_user", null);
+          }
+        });
       } else {
         showModal("assign-user", {
           model: {
@@ -56,12 +51,25 @@ function modifySelectKit(api) {
             username: topic.get("assigned_to_user.username"),
             onClose: assignedToUser => {
               topic.set("assigned_to_user", assignedToUser);
-              context._compute();
             }
           }
         });
       }
-    });
+    },
+    dropdown() {
+      return this.site.mobileView && !this.get("topic.isPrivateMessage");
+    },
+    classNames: ["assign"],
+    dependentKeys: [
+      "topic.isPrivateMessage",
+      "topic.assigned_to_user",
+      "currentUser.staff",
+      "topic.assigned_to_user.username"
+    ],
+    displayed() {
+      return this.get("currentUser.staff");
+    }
+  });
 }
 
 function initialize(api) {
@@ -252,6 +260,6 @@ export default {
     }
 
     withPluginApi("0.8.11", api => initialize(api, container));
-    withPluginApi("0.8.13", api => modifySelectKit(api, container));
+    withPluginApi("0.8.28", api => registerTopicFooterButtons(api, container));
   }
 };
