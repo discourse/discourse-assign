@@ -23,8 +23,10 @@ module DiscourseAssign
         .order('X.last_assigned DESC')
         .limit(6)
 
-      render json: ActiveModel::ArraySerializer.new(users,
-                                                    scope: guardian, each_serializer: BasicUserSerializer)
+      render json: { 
+        assign_allowed_on_groups: Group.assign_allowed_groups.pluck(:name),
+        suggestions: ActiveModel::ArraySerializer.new(users, scope: guardian, each_serializer: BasicUserSerializer)
+      }
     end
 
     def claim

@@ -48,7 +48,7 @@ RSpec.describe DiscourseAssign::AssignController do
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
-        suggestions = JSON.parse(response.body).map { |u| u['username'] }
+        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
 
         expect(suggestions).to contain_exactly(user2.username, user.username)
       end
@@ -60,7 +60,7 @@ RSpec.describe DiscourseAssign::AssignController do
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
-        suggestions = JSON.parse(response.body).map { |u| u['username'] }
+        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
 
         expect(suggestions).to contain_exactly(user.username)
       end
@@ -78,7 +78,7 @@ RSpec.describe DiscourseAssign::AssignController do
       TopicAssigner.new(post.topic, user).assign(another_admin)
 
       get '/assign/suggestions.json'
-      suggestions = JSON.parse(response.body).map { |u| u['username'] }
+      suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
 
       expect(suggestions).to contain_exactly(user.username)
     end

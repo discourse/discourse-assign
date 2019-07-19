@@ -3,14 +3,6 @@ import showModal from "discourse/lib/show-modal";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Service.extend({
-  init() {
-    this._super(...arguments);
-
-    this.allowedGroups = getOwner(this)
-      .lookup("site-settings:main")
-      .assign_allowed_on_groups.split("|");
-  },
-
   unassign(topicId) {
     return ajax("/assign/unassign", {
       type: "PUT",
@@ -22,8 +14,7 @@ export default Ember.Service.extend({
     return showModal("assign-user", {
       model: {
         topic,
-        username: topic.get("assigned_to_user.username"),
-        allowedGroups: this.allowedGroups
+        username: topic.get("assigned_to_user.username")
       }
     });
   }
