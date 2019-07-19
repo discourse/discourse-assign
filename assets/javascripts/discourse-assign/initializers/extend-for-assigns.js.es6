@@ -1,15 +1,12 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { default as computed } from "ember-addons/ember-computed-decorators";
-import { ajax } from "discourse/lib/ajax";
-
-// should this be in API ?
-import showModal from "discourse/lib/show-modal";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
 
 // TODO: This has to be removed when 2.3 becomes the new stable version.
 import { ListItemDefaults } from "discourse/components/topic-list-item";
+import { getOwner } from "discourse-common/lib/get-owner";
 
 function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
@@ -32,28 +29,15 @@ function registerTopicFooterButtons(api) {
         return;
       }
 
+      const taskActions = getOwner(this).lookup("service:task-actions");
       const topic = this.topic;
       const assignedUser = topic.get("assigned_to_user.username");
 
       if (assignedUser) {
-        ajax("/assign/unassign", {
-          type: "PUT",
-          data: { topic_id: topic.id }
-        }).then(result => {
-          if (result.success && result.success === "OK") {
-            topic.set("assigned_to_user", null);
-          }
-        });
+        this.set("topic.assigned_to_user", null);
+        taskActions.unassign(topic.id);
       } else {
-        showModal("assign-user", {
-          model: {
-            topic,
-            username: topic.get("assigned_to_user.username"),
-            onClose: assignedToUser => {
-              topic.set("assigned_to_user", assignedToUser);
-            }
-          }
-        });
+        taskActions.assign(topic);
       }
     },
     dropdown() {
@@ -67,7 +51,7 @@ function registerTopicFooterButtons(api) {
       "topic.assigned_to_user.username"
     ],
     displayed() {
-      return this.get("currentUser.staff");
+      return this.currentUser && this.currentUser.can_assign;
     }
   });
 }
