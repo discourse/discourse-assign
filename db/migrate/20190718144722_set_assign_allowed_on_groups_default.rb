@@ -4,7 +4,7 @@ class SetAssignAllowedOnGroupsDefault < ActiveRecord::Migration[5.2]
   def up
     current_values = DB.query_single("SELECT value FROM site_settings WHERE name = 'assign_allowed_on_groups'").first
 
-    # Dinamically sets the default value, supports older versions.
+    # Dynamically sets the default value, supports older versions.
     if current_values.nil?
       min_version = 201_907_171_337_43
       migrated_site_setting = DB.query_single(
