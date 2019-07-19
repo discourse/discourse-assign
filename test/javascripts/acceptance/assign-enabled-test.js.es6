@@ -1,13 +1,13 @@
 import selectKit from "helpers/select-kit-helper";
 import { acceptance, updateCurrentUser } from "helpers/qunit-helpers";
-import { clearCallbacks } from "select-kit/mixins/plugin-api";
+import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
 acceptance("Assign mobile", {
   loggedIn: true,
   mobileView: true,
   settings: { assign_enabled: true },
   beforeEach() {
-    clearCallbacks();
+    clearTopicFooterButtons();
   }
 });
 
