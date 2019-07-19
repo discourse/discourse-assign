@@ -1,6 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
-import { getOwner } from "discourse-common/lib/get-owner";
 
 export default Ember.Service.extend({
   unassign(topicId) {
