@@ -5,4 +5,5 @@ DiscourseAssign::Engine.routes.draw do
   put "/assign" => "assign#assign"
   put "/unassign" => "assign#unassign"
   get "/suggestions" => "assign#suggestions"
+  get "/assigned" => "assign#assigned"
 end
