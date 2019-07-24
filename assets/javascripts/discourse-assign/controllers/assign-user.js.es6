@@ -3,11 +3,12 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
   assignSuggestions: null,
-  allowedGroups: [],
+  allowedGroups: null,
   taskActions: Ember.inject.service(),
 
   init() {
     this._super(...arguments);
+    this.allowedGroups = [];
 
     ajax("/assign/suggestions").then(data => {
       this.set("assignSuggestions", data.suggestions);
