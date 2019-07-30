@@ -23,7 +23,6 @@ Discourse::Application.routes.append do
   get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: /[\w.\-]+?/ }
 end
 
-
 # TODO: Remove this once 2.4.0.beta3 is released.
 # HACK: Checking if the file exists, this means we can assume the migration happenned
 above_min_version = File.exist?(
