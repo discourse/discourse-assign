@@ -17,6 +17,10 @@ export default UserTopicListRoute.extend({
     });
   },
 
+  titleToken() {
+    return I18n.t("discourse_assign.assigned");
+  },
+
   renderTemplate() {
     // TODO: This has to be removed when 2.3 becomes the new stable version.
     const template = ListItemDefaults
