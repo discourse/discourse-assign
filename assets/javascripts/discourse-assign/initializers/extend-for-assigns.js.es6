@@ -25,7 +25,7 @@ function registerTopicFooterButtons(api) {
       return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.title`;
     },
     action() {
-      if (!this.get("currentUser.staff")) {
+      if (!this.get("currentUser.can_assign")) {
         return;
       }
 
@@ -47,7 +47,7 @@ function registerTopicFooterButtons(api) {
     dependentKeys: [
       "topic.isPrivateMessage",
       "topic.assigned_to_user",
-      "currentUser.staff",
+      "currentUser.can_assign",
       "topic.assigned_to_user.username"
     ],
     displayed() {
