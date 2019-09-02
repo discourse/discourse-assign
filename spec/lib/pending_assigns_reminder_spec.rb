@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../support/assign_allowed_group'
 
 RSpec.describe PendingAssignsReminder do
   before { SiteSetting.assign_enabled = true }
@@ -25,7 +26,11 @@ RSpec.describe PendingAssignsReminder do
   describe 'when the user has multiple tasks' do
     let(:system) { Discourse.system_user }
 
+    include_context 'A group that is allowed to assign'
+
     before do
+      add_to_assign_allowed_group(user)
+
       @post1 = Fabricate(:post)
       @post2 = Fabricate(:post)
       @post3 = Fabricate(:post)

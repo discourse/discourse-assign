@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe TopicListSerializer do
-  let(:user) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
 
   let(:private_message_topic) do
     topic = Fabricate(:private_message_topic,
@@ -31,8 +31,11 @@ RSpec.describe TopicListSerializer do
   let(:guardian) { Guardian.new(user) }
   let(:serializer) { TopicListSerializer.new(topic_list, scope: guardian) }
 
+  include_context 'A group that is allowed to assign'
+
   before do
     SiteSetting.assign_enabled = true
+    add_to_assign_allowed_group(user)
   end
 
   describe '#assigned_messages_count' do

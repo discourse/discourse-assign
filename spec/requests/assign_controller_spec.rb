@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../support/assign_allowed_group'
 
 RSpec.describe DiscourseAssign::AssignController do
 
@@ -36,8 +37,8 @@ RSpec.describe DiscourseAssign::AssignController do
 
       it 'includes users in allowed groups' do
         allowed_group = Group.find_by(name: 'everyone')
-        user2.groups << allowed_group
-        user2.groups << default_allowed_group
+        allowed_group.add(user2)
+
         defaults = if above_min_version
           "#{default_allowed_group.id}|#{allowed_group.id}"
         else
@@ -55,7 +56,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
       it 'does not include users from disallowed groups' do
         allowed_group = Group.find_by(name: 'everyone')
-        user2.groups << allowed_group
+        allowed_group.add(user2)
         SiteSetting.assign_allowed_on_groups = above_min_version ? default_allowed_group.id.to_s : default_allowed_group.name
         TopicAssigner.new(post.topic, user).assign(user2)
 
@@ -85,8 +86,12 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   context '#assign' do
+
+    include_context 'A group that is allowed to assign'
+
     before do
       sign_in(user)
+      add_to_assign_allowed_group(user2)
     end
 
     it 'assigns topic to a user' do
@@ -115,19 +120,20 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     it 'fails to assign topic to the user if they already reached the max assigns limit' do
-      another_admin = Fabricate(:admin)
+      another_user = Fabricate(:user)
+      add_to_assign_allowed_group(another_user)
       another_post = Fabricate(:post)
       max_assigns = 1
       SiteSetting.max_assigned_topics = max_assigns
-      TopicAssigner.new(post.topic, user).assign(another_admin)
+      TopicAssigner.new(post.topic, user).assign(another_user)
 
       put '/assign/assign.json', params: {
-        topic_id: another_post.topic_id, username: another_admin.username
+        topic_id: another_post.topic_id, username: another_user.username
       }
 
       expect(response.status).to eq(400)
       expect(JSON.parse(response.body)['error']).to eq(
-        I18n.t('discourse_assign.too_many_assigns', username: another_admin.username, max: max_assigns)
+        I18n.t('discourse_assign.too_many_assigns', username: another_user.username, max: max_assigns)
       )
     end
   end

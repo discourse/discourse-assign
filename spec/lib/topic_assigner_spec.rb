@@ -21,7 +21,7 @@ RSpec.describe TopicAssigner do
   describe 'assigning and unassigning private message' do
     it 'should publish the right message' do
       user = pm.allowed_users.first
-      user.groups << assign_allowed_group
+      assign_allowed_group.add(user)
       assigner = described_class.new(pm, user)
 
       assert_publish_topic_state(pm, user) { assigner.assign(user) }
@@ -118,6 +118,7 @@ RSpec.describe TopicAssigner do
 
     it "doesn't assign the same user more than once" do
       SiteSetting.assign_mailer_enabled = true
+      another_mod = Fabricate(:moderator, groups: [assign_allowed_group])
 
       Email::Sender.any_instance.expects(:send).once
       expect(assigned_to?(moderator)).to eq(true)
@@ -126,11 +127,11 @@ RSpec.describe TopicAssigner do
       expect(assigned_to?(moderator)).to eq(false)
 
       Email::Sender.any_instance.expects(:send).once
-      expect(assigned_to?(Fabricate(:moderator))).to eq(true)
+      expect(assigned_to?(another_mod)).to eq(true)
     end
 
-    def assigned_to?(moderator)
-      assigner.assign(moderator).fetch(:success)
+    def assigned_to?(asignee)
+      assigner.assign(asignee).fetch(:success)
     end
 
     it "doesn't assign if the user has too many assigned topics" do
@@ -169,6 +170,31 @@ RSpec.describe TopicAssigner do
       expect(first_assign[:success]).to eq(true)
       expect(second_assign[:success]).to eq(false)
       expect(third_assign[:success]).to eq(true)
+    end
+
+    fab!(:admin) { Fabricate(:admin) }
+
+    it 'fails to assign when the assigned user cannot view the topic' do
+      assign = TopicAssigner.new(pm, admin).assign(moderator)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_assign_to)
+    end
+
+    it "assigns the PM to the moderator when it's included in the list of allowed users" do
+      pm.allowed_users << moderator
+
+      assign = TopicAssigner.new(pm, admin).assign(moderator)
+
+      expect(assign[:success]).to eq(true)
+    end
+
+    it "assigns the PM to the moderator when it's a member of an allowed group" do
+      pm.allowed_groups << assign_allowed_group
+
+      assign = TopicAssigner.new(pm, admin).assign(moderator)
+
+      expect(assign[:success]).to eq(true)
     end
   end
 

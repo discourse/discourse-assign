@@ -85,8 +85,11 @@ module DiscourseAssign
     private
 
     def translate_failure(reason, user)
-      if reason == :already_assigned
+      case reason
+      when :already_assigned
         { error: I18n.t('discourse_assign.already_assigned', username: user.username) }
+      when :forbidden_assign_to
+        { error: I18n.t('discourse_assign.forbidden_assign_to', username: user.username) }
       else
         max = SiteSetting.max_assigned_topics
         { error: I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max) }

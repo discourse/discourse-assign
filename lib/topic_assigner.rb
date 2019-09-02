@@ -108,7 +108,7 @@ class ::TopicAssigner
   end
 
   def allowed_user_ids
-    User.assign_allowed.pluck(:id)
+    @allowed_user_ids ||= User.assign_allowed.pluck(:id)
   end
 
   def can_assign_to?(user)
@@ -124,7 +124,25 @@ class ::TopicAssigner
     assigned_total < SiteSetting.max_assigned_topics
   end
 
+  def can_be_assigned?(assign_to)
+    return false unless allowed_user_ids.include?(assign_to.id)
+    return true if (!@topic.private_message? || assign_to.admin?)
+
+    results = DB.query_single(<<~SQL
+      SELECT 1
+      FROM topics
+      LEFT OUTER JOIN topic_allowed_users tau ON tau.topic_id = topics.id
+      LEFT OUTER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id
+      LEFT OUTER JOIN group_users gu ON gu.group_id = tag.group_id
+      WHERE topics.id = #{@topic.id} AND (gu.user_id = #{assign_to.id} OR tau.user_id = #{assign_to.id})
+    SQL
+    )
+
+    results.present?
+  end
+
   def assign(assign_to, silent: false)
+    return { success: false, reason: :forbidden_assign_to } unless can_be_assigned?(assign_to)
     return { success: false, reason: :already_assigned } if @topic.custom_fields && @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
     return { success: false, reason: :too_many_assigns } unless can_assign_to?(assign_to)
 
