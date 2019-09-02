@@ -4,9 +4,6 @@ import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { queryRegistry } from "discourse/widgets/widget";
-
-// TODO: This has to be removed when 2.3 becomes the new stable version.
-import { ListItemDefaults } from "discourse/components/topic-list-item";
 import { getOwner } from "discourse-common/lib/get-owner";
 
 function registerTopicFooterButtons(api) {
@@ -140,10 +137,7 @@ function initialize(api) {
         "user-plus"
       )}${assignedTo}</a>`;
 
-      if (
-        ListItemDefaults === undefined &&
-        topic.archetype === "private_message"
-      ) {
+      if (topic.archetype === "private_message") {
         assignLabels += `<div>${iconHTML("envelope")} Message</div>`;
       }
 

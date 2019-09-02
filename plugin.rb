@@ -46,14 +46,6 @@ after_initialize do
     self.value = self.value.to_i if self.name == frequency_field
   end
 
-=begin
-  TODO: Remove this once 2.3 becomes the new stable.
-  Also remove:
-    - flagged-* connectors
-    - flagged queue code inside the JS initializer
-=end
-  reviewable_api_enabled = defined?(Reviewable)
-
   # TODO: Remove this once 2.4 becomes the new stable.
   attribute = above_min_version ? 'id' : 'name'
 
@@ -94,32 +86,6 @@ after_initialize do
     new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{to_remove}[|]?/, '')
     new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
     SiteSetting.assign_allowed_on_groups = new_setting
-  end
-
-  # Raise an invalid access error if a user tries to act on something
-  # not assigned to them
-  DiscourseEvent.on(:before_staff_flag_action) do |args|
-    if !reviewable_api_enabled && SiteSetting.assign_locks_flags?
-
-      if custom_fields = args[:post].topic&.custom_fields
-        if assigned_to_id = custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-          unless assigned_to_id.to_i == args[:user].id
-            raise Discourse::InvalidAccess.new(
-              "That flag has been assigned to another user",
-              nil,
-              custom_message: 'discourse_assign.flag_assigned'
-            )
-          end
-        elsif SiteSetting.flags_require_assign?
-          raise Discourse::InvalidAccess.new(
-            "Flags must be assigned before they can be acted on",
-            nil,
-            custom_message: 'discourse_assign.flag_unclaimed'
-          )
-        end
-      end
-
-    end
   end
 
   DiscourseEvent.on(:assign_topic) do |topic, user, assigning_user, force|
@@ -312,18 +278,6 @@ after_initialize do
     if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed') && enabled
       assigner = ::TopicAssigner.new(topic, Discourse.system_user)
       assigner.unassign(silent: true)
-    end
-  end
-
-  # Unassign if there are no more flags in the topic
-  on(:flag_reviewed) do |post|
-    if !reviewable_api_enabled &&
-      SiteSetting.assign_locks_flags? &&
-      post.topic &&
-      FlagQuery.flagged_post_actions(topic_id: post.topic_id, filter: "old").count > 0 &&
-      FlagQuery.flagged_post_actions(topic_id: post.topic_id).count == 0
-
-      ::TopicAssigner.new(post.topic, Discourse.system_user).unassign
     end
   end
 
