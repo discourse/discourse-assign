@@ -22,6 +22,7 @@ en:
     already_claimed: "That topic has already been claimed."
     already_assigned: 'Topic is already assigned to @%{username}'
     too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't have access to this topic."
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
     topic_assigned_excerpt: "assigned you the topic '%{title}'"

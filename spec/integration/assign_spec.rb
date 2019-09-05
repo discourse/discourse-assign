@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../support/assign_allowed_group'
 
 describe 'integration tests' do
   before do
@@ -34,6 +35,13 @@ describe 'integration tests' do
     let(:user) { pm.allowed_users.first }
     let(:user2) { pm.allowed_users.last }
     let(:channel) { "/private-messages/assigned" }
+
+    include_context 'A group that is allowed to assign'
+
+    before do
+      add_to_assign_allowed_group(user)
+      add_to_assign_allowed_group(user2)
+    end
 
     def assert_publish_topic_state(topic, user)
       messages = MessageBus.track_publish do
@@ -92,6 +100,13 @@ describe 'integration tests' do
     let(:admin) { Fabricate(:admin) }
     let(:user1) { Fabricate(:user) }
     let(:user2) { Fabricate(:user) }
+
+    include_context 'A group that is allowed to assign'
+
+    before do
+      add_to_assign_allowed_group(user1)
+      add_to_assign_allowed_group(user2)
+    end
 
     it "assigns topic" do
       DiscourseEvent.trigger(:assign_topic, topic, user1, admin)
