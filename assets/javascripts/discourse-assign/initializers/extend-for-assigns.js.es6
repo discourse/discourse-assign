@@ -3,6 +3,7 @@ import { default as computed } from "ember-addons/ember-computed-decorators";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import { queryRegistry } from "discourse/widgets/widget";
 
 // TODO: This has to be removed when 2.3 becomes the new stable version.
 import { ListItemDefaults } from "discourse/components/topic-list-item";
@@ -152,14 +153,19 @@ function initialize(api) {
 
   api.addUserMenuGlyph(widget => {
     if (widget.currentUser && widget.currentUser.can_assign) {
-      return {
+      const glyph = {
         label: "discourse_assign.assigned",
         className: "assigned",
         icon: "user-plus",
-        href: `${widget.currentUser.path}/activity/assigned`,
-        action: "quickAccess",
-        actionParam: "assignments"
+        href: `${widget.currentUser.path}/activity/assigned`
       };
+
+      if (queryRegistry("quick-access-panel")) {
+        glyph["action"] = "quickAccess";
+        glyph["actionParam"] = "assignments";
+      }
+
+      return glyph;
     }
   });
 

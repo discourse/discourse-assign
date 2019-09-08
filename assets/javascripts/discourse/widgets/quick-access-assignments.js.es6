@@ -1,45 +1,48 @@
-import QuickAccessPanel from "discourse/widgets/quick-access-panel";
-import { createWidgetFrom } from "discourse/widgets/widget";
+import { createWidgetFrom, queryRegistry } from "discourse/widgets/widget";
 import { postUrl } from "discourse/lib/utilities";
 
 const ICON = "user-plus";
 
-createWidgetFrom(QuickAccessPanel, "quick-access-assignments", {
-  buildKey: () => "quick-access-assignments",
-  emptyStatePlaceholderItemKey: "choose_topic.none_found",
+const QuickAccessPanel = queryRegistry("quick-access-panel");
 
-  hasMore() {
-    // Always show the button to the assignments page. Users cannot
-    // unassign or reassign from the quick access panel.
-    return true;
-  },
+if (QuickAccessPanel) {
+  createWidgetFrom(QuickAccessPanel, "quick-access-assignments", {
+    buildKey: () => "quick-access-assignments",
+    emptyStatePlaceholderItemKey: "choose_topic.none_found",
 
-  showAllHref() {
-    return `${this.attrs.path}/activity/assigned`;
-  },
+    hasMore() {
+      // Always show the button to the assignments page. Users cannot
+      // unassign or reassign from the quick access panel.
+      return true;
+    },
 
-  findNewItems() {
-    return this.store
-      .findFiltered("topicList", {
-        filter: `topics/messages-assigned/${this.currentUser.username_lower}`,
-        params: {
-          exclude_category_ids: [-1]
-        }
-      })
-      .then(({ topic_list }) => {
-        return topic_list.topics.slice(0, this.estimateItemLimit());
+    showAllHref() {
+      return `${this.attrs.path}/activity/assigned`;
+    },
+
+    findNewItems() {
+      return this.store
+        .findFiltered("topicList", {
+          filter: `topics/messages-assigned/${this.currentUser.username_lower}`,
+          params: {
+            exclude_category_ids: [-1]
+          }
+        })
+        .then(({ topic_list }) => {
+          return topic_list.topics.slice(0, this.estimateItemLimit());
+        });
+    },
+
+    itemHtml(assignedTopic) {
+      return this.attach("quick-access-item", {
+        icon: ICON,
+        href: postUrl(
+          assignedTopic.slug,
+          assignedTopic.id,
+          assignedTopic.last_read_post_number + 1
+        ),
+        content: assignedTopic.fancy_title
       });
-  },
-
-  itemHtml(assignedTopic) {
-    return this.attach("quick-access-item", {
-      icon: ICON,
-      href: postUrl(
-        assignedTopic.slug,
-        assignedTopic.id,
-        assignedTopic.last_read_post_number + 1
-      ),
-      content: assignedTopic.fancy_title
-    });
-  }
-});
+    }
+  });
+}
