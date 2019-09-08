@@ -156,7 +156,9 @@ function initialize(api) {
         label: "discourse_assign.assigned",
         className: "assigned",
         icon: "user-plus",
-        href: `${widget.currentUser.path}/activity/assigned`
+        href: `${widget.currentUser.path}/activity/assigned`,
+        action: "quickAccess",
+        actionParam: "assignments"
       };
     }
   });
