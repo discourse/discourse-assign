@@ -24,7 +24,7 @@ module DiscourseAssign
         .limit(6)
 
       render json: {
-        assign_allowed_on_groups: Group.assign_allowed_groups.pluck(:name),
+        assign_allowed_on_groups: current_user.visible_groups.assign_allowed_groups.pluck(:name),
         suggestions: ActiveModel::ArraySerializer.new(users, scope: guardian, each_serializer: BasicUserSerializer)
       }
     end
