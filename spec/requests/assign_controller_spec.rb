@@ -65,6 +65,20 @@ RSpec.describe DiscourseAssign::AssignController do
 
         expect(suggestions).to contain_exactly(user.username)
       end
+
+      it 'does include only visible assign_allowed_on_groups' do
+        visible_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:members])
+        visible_group.add(user)
+        invisible_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:members])
+
+        SiteSetting.assign_allowed_on_groups = above_min_version ? "#{visible_group.id}|#{invisible_group.id}"
+                                                                 : "#{visible_group.name}|#{invisible_group.name}"
+
+        get '/assign/suggestions.json'
+        assign_allowed_on_groups = JSON.parse(response.body)['assign_allowed_on_groups']
+
+        expect(assign_allowed_on_groups).to contain_exactly(visible_group.name)
+      end
     end
   end
 
