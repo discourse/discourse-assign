@@ -41,7 +41,7 @@ if (QuickAccessPanel) {
           assignedTopic.id,
           assignedTopic.last_read_post_number + 1
         ),
-        content: assignedTopic.fancy_title
+        escapedContent: assignedTopic.fancy_title
       });
     }
   });
