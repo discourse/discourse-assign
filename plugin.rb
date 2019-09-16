@@ -57,6 +57,7 @@ after_initialize do
   add_to_class(:user, :can_assign?) do
     @can_assign ||=
       begin
+        return true if admin?
         allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').compact
         allowed_groups.present? && groups.where("groups.#{attribute} in (?)", allowed_groups).exists? ?
           :true : :false
