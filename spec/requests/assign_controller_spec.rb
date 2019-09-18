@@ -163,7 +163,7 @@ RSpec.describe DiscourseAssign::AssignController do
       add_to_assign_allowed_group(user2)
 
       TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user2).assign(user2)
+      TopicAssigner.new(post2.topic, user).assign(user2)
       TopicAssigner.new(post3.topic, user).assign(user)
 
       sign_in(user)
@@ -172,9 +172,7 @@ RSpec.describe DiscourseAssign::AssignController do
     it 'lists topics ordered by user' do
       get '/assign/assigned.json'
       expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post2.topic_id, post1.topic_id, post3.topic_id])
-    end
 
-    it 'works with offset and limit' do
       get '/assign/assigned.json', params: { limit: 2 }
       expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post2.topic_id, post1.topic_id])
 
