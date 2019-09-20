@@ -19,8 +19,8 @@ load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
-  get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: /[\w.\-]+?/ }
-  get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: /[\w.\-]+?/ }
+  get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
+  get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: ::RouteFormat.username }
 end
 
 # TODO: Remove this once 2.4.0.beta3 is released.
