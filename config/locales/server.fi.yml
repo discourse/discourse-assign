@@ -16,14 +16,17 @@ fi:
     assign_other_regex: "Säännöllinen lauseke, jolla osoitetaan toiselle maininnan avulla. Esimerkiksi 'sinun listalle'."
     unassign_on_group_archive: "Kun ryhmä arkistoi yksityiskeskustelun, peru viestin osoitus (osoitetaan uudelleen, jos siirretään takaisin saapuneisiin)"
     unassign_on_close: "Peru ketjun osoitus kun ketju suljetaan"
-    assign_locks_flags: "Kun ketju osoitetaan henkilökunnan jäsenelle, vain hän voi käsitellä sen ketjun liput."
     assign_mailer_enabled: "Kun käytössä, käyttäjä jolle osoitetaan saa ilmoitussähköpostin uudesta osoituksesta"
-    flags_require_assign: "Kun käytössä, liputuksia ei voi käsitellä jollei ole osoitettu kyseiselle käyttäjälle."
+    remind_assigns: "Muistuta käyttäjiä odottavista tehtävistä"
+    remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus"
+    max_assigned_topics: "Käyttäjälle osoitettavien ketjujen maksimi määrä. "
+    assign_allowed_on_groups: "Ryhmät, jotka voivat osoittaa ketjuja. "
   discourse_assign:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
     already_claimed: "Ketju on jo omittu."
     already_assigned: 'Ketju on jo osoitettu käyttäjälle %{username}'
+    too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen maksimi määrän (%{max}). "
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
     flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
     topic_assigned_excerpt: "osoitti sinulle ketjun '%{title}'"
@@ -31,6 +34,8 @@ fi:
       never: 'ei koskaan'
       daily: 'päivittäin'
       weekly: 'viikottain'
+      monthly: 'kuukausittain'
+      quarterly: 'vuosineljännettäin'
   assign_mailer:
     title: "Osoitus"
     subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun '%{topic_title}'!"
@@ -42,3 +47,22 @@ fi:
 
       Jos olet kiinnostunut, klikkaa linkkiä alla:
       [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Sinulla on %{pending_assignments} odottavia tehtäviä"
+    body: |
+      Sinulla on [%{pending_assignments} odottavaa tehtävää] (%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Tämä muistutus lähetetään%{frequency} jos sinulla on useampi kuin yksi osoitettu ketju.
+    newest: |
+      ### Uusin
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Vanhin
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

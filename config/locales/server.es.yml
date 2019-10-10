@@ -11,27 +11,26 @@ es:
     assigns_public: "Permitir que el público en general vea las asignaciones de temas"
     assigns_user_url_path: "Ruta a los temas asignados a los usuarios (usa: {nombre de usuario} para sustituir el nombre de usuario)"
     assigns_by_staff_mention: "Si un miembro del staff menciona a otro miembro del staff, el tema se asigna automáticamente"
-    unassign_creates_tracking_post: "Si anulas la asignación de un tema, se creará un susurro o una pequeña acción parahacer seguimiento del cambio."
-    assign_self_regex: "Regex que necesita pasar para auto asignar. Ejemplo 'mi lista'"
-    assign_other_regex: "Regex que necesita pasar para asignar temas a otros a través de una mención. Ejemplo 'tu lista'."
-    unassign_on_group_archive: "Cuando un mensaje es archivado por un grupo, desasigna un mensaje (reasigna si se mueve nuevamente a la bandeja de entrada)"
-    unassign_on_close: "Cuando un tema está cerrado, desasignar tema"
-    assign_locks_flags: "Cuando se asigna un tema a un miembro del staff, sus reportes solo pueden ser manejados por esa persona"
+    unassign_creates_tracking_post: "Si desasignas un tema, se creará un susurro o una pequeña acción para hacer seguimiento del cambio."
+    assign_self_regex: "Expresión regular que necesita pasar para asignar a sí mismo. Ejemplo «mi lista»"
+    assign_other_regex: "Expresión regular que necesita pasar para asignar temas a otros a través de una mención. Ejemplo «tu lista»."
+    unassign_on_group_archive: "Cuando un mensaje es archivado por un grupo, desasigna el mensaje (reasigna si se mueve nuevamente a la bandeja de entrada)"
+    unassign_on_close: "Cuando un tema se cierra, desasignar tema"
     assign_mailer_enabled: "Cuando está habilitado, el usuario asignado recibirá un correo electrónico de notificación en cada asignación"
-    flags_require_assign: "Cuando está habilitado, los reportes no se pueden manejar a menos que se asignen a un usuario."
     remind_assigns: "Recordar a los usuarios sobre asignaciones pendientes."
     remind_assigns_frequency: "Frecuencia para recordar a los usuarios sobre los temas asignados."
     max_assigned_topics: "Número máximo de temas que se pueden asignar a un usuario."
     assign_allowed_on_groups: "Grupos que tienen permitido asignar temas."
   discourse_assign:
     assigned_to: "Tema asignado a @%{username}"
-    unassigned: "Tema sin asignar"
+    unassigned: "El tema fue desasignado"
     already_claimed: "Ese tema ya ha sido reclamado."
     already_assigned: 'El tema ya está asignado a @%{username}'
     too_many_assigns: "@%{username} ya ha alcanzado el número máximo de temas asignados (%{max})."
+    forbidden_assign_to: "%{username} no puede ser asignado ya que no tienen acceso a este tema."
     flag_assigned: "Lo sentimos, el tema de ese reporte está asignado a otro usuario."
-    flag_unclaimed: "Debes reclamar ese tema antes de actuar sobre el reporte."
-    topic_assigned_excerpt: "te asignó el tema '%{title}'"
+    flag_unclaimed: "Debes reclamar este tema antes de actuar sobre el reporte."
+    topic_assigned_excerpt: "te asignó el tema «%{title}»"
     reminders_frequency:
       never: 'nunca'
       daily: 'diariamente'
@@ -40,10 +39,10 @@ es:
       quarterly: 'trimestralmente'
   assign_mailer:
     title: "Asignar correo"
-    subject_template: "[%{email_prefix}] %{assignee_name} te ha asignado a '%{topic_title}'!"
+    subject_template: "¡[%{email_prefix}] %{assignee_name} te ha asignado a «%{topic_title}»!"
     text_body_template: |
-      Hola, %{assignee_name} **te asignamos** a una discusión
-      >.**%{topic_title}**
+      Hola, %{assignee_name}, **te asignamos** a una discusión
+      > **%{topic_title}**
       >
       > %{topic_excerpt}
 
@@ -64,7 +63,7 @@ es:
       %{topic_1}
       %{topic_2}
     oldest: |
-      ### Lo más viejo
+      ### Lo más antiguo
       %{topic_0}
       %{topic_1}
       %{topic_2}

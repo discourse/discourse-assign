@@ -16,9 +16,7 @@ zh_CN:
     assign_other_regex: "需要正则表达式用于通过提及以指派主题。例如“你的列表”"
     unassign_on_group_archive: "当消息被群组存档时取消分配消息（移回收件箱时重新分配）"
     unassign_on_close: "当一个主题关闭时取消分配"
-    assign_locks_flags: "当一个主题被分配给一个工作人员时，其标记只能由该用户处理。"
     assign_mailer_enabled: "启用时，被指派的用户会在每次指派时候收到一封提醒邮件"
-    flags_require_assign: "启用时，至少分配一个用户才能处理标记。"
     remind_assigns: "提醒用户正在分配"
     remind_assigns_frequency: "指派主题的用户提醒频率"
     max_assigned_topics: "每个用户每天能分配的主题数量的最大值。"
@@ -29,6 +27,7 @@ zh_CN:
     already_claimed: "这个主题已经被分配"
     already_assigned: '主题已被指派给 @%{username}'
     too_many_assigns: "@%{username}已经到达指派主题的最大值（%{max}）。"
+    forbidden_assign_to: "不能指派给@%{username}，因为其没有访问过此主题。"
     flag_assigned: "抱歉，这个标记的主题已被指派给其他用户"
     flag_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
     topic_assigned_excerpt: "主题%{title}已分配给您"

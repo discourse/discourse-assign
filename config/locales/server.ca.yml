@@ -14,11 +14,9 @@ ca:
     unassign_creates_tracking_post: "Si desassigneu un tema, es crearà un xiuxiueig o una petita acció per a fer un seguiment del canvi."
     assign_self_regex: "Expressió regular que ha de complir-se per a l'autoassignació. Exemple: &quot;la meva llista&quot;"
     assign_other_regex: "Expressió regular que ha de complir-se per a assignar temes a altres persones mitjançant menció. Exemple: 'la vostra llista'."
-    unassign_on_group_archive: "Quan un missatge és arxivat per un grup, desassigna el missatge (reassigna'l si és mogut de nou a la safata d’entrada)."
+    unassign_on_group_archive: "Quan un missatge és arxivat per un grup, desassigna el missatge (reassigna'l si és mogut de nou a la safata d'entrada)."
     unassign_on_close: "Quan es tanca un tema, desassigna el tema."
-    assign_locks_flags: "Quan s'assigna un tema a un membre de l'equip responsable, aquesta persona és l'única que pot gestionar-ne les banderes."
-    assign_mailer_enabled: "Quan estigui activat, l’usuari assignat rebrà un correu electrònic de notificació a cada assignació"
-    flags_require_assign: "Quan estigui activat, les banderes no es poden gestionar tret que estiguin assignades a un usuari."
+    assign_mailer_enabled: "Quan estigui activat, l'usuari assignat rebrà un correu electrònic de notificació en cada assignació"
     remind_assigns: "Recorda als usuaris les assignacions pendents."
     remind_assigns_frequency: "Freqüència per a fer memòria als usuaris sobre temes assignats."
     max_assigned_topics: "Nombre màxim de temes que es poden assignar a un usuari."
@@ -29,9 +27,10 @@ ca:
     already_claimed: "El tema ja ha estat reclamat."
     already_assigned: 'El tema ja és assignat a @%{username}'
     too_many_assigns: "@%{username} ja ha assolit el nombre màxim de temes assignats (%{max})."
-    flag_assigned: "Ho sentim, el tema d’aquesta bandera és assignat a un altre usuari."
+    forbidden_assign_to: "No es pot assignar @%{username} perquè no té accés a aquest tema."
+    flag_assigned: "Ho sentim, el tema d'aquesta bandera és assignat a un altre usuari."
     flag_unclaimed: "Cal reclamar el tema abans d'actuar sobre la bandera"
-    topic_assigned_excerpt: "us ha assignat el tema &#39;%{title}&#39;"
+    topic_assigned_excerpt: "us ha assignat el tema '%{title}'"
     reminders_frequency:
       never: 'mai'
       daily: 'diari'
@@ -47,7 +46,7 @@ ca:
       >
       > %{topic_excerpt}
 
-      Si hi esteu interessats, feu clic en l'enllaç següent:
+      Si hi esteu interessat, feu clic en l'enllaç següent:
       [%{topic_link}] (%{topic_link})
   pending_assigns_reminder:
     title: "Teniu %{pending_assignments} assignacions pendents"

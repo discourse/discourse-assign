@@ -21,10 +21,10 @@ ca:
         help: "Tema no assignat"
       assign:
         title: "Assigna"
-        help: "Assigna el tema a l&#39;usuari"
+        help: "Assigna el tema a l'usuari"
       reassign:
-        title: "Torna a assignar"
-        help: "Torneu a assignar el tema a un altre usuari"
+        title: "Reassigna"
+        help: "Reassigna el tema a un altre usuari"
       assign_modal:
         title: "Assigna el tema"
         description: "Introduïu el nom d'usuari de la persona a qui voleu assignar aquest tema"
@@ -42,4 +42,4 @@ ca:
     user:
       messages:
         assigned_title: "Assignats (%{count})"
-        assigned: "Assignat"
+        assigned: "Assignats"

@@ -22,6 +22,9 @@ fi:
       assign:
         title: "Osoita"
         help: "Osoita ketju käyttäjälle"
+      reassign:
+        title: "Määritä uudelleen"
+        help: "Osoita ketju uudelleen toiselle käyttäjälle"
       assign_modal:
         title: "Osoita ketju"
         description: "Syötä sen käyttäjän nimi, jolle haluat tämän ketjun osoittaa"
@@ -30,6 +33,7 @@ fi:
         title: "omi"
         help: "Osoita ketju itsellesi"
       reminders_frequency:
+        description: "Osoitettujen ketjujen muistutusten toistuvuus"
         never: 'Ei koskaan'
         daily: 'Päivittäin'
         weekly: 'Viikoittain'

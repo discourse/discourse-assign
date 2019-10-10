@@ -16,9 +16,7 @@ pl_PL:
     assign_other_regex: "Regex, który musi przejść, by możliwe było przypisanie tematów innym użytkownikom dzięki wzmiankom. Przykład: ’twoja lista’"
     unassign_on_group_archive: "Kiedy wpis jest archiwizowany przez grupę, cofnij przypisanie wiadomości (po ponowieniu przypisania jest ona przenoszona z powrotem do skrzynki odbiorczej)"
     unassign_on_close: "Kiedy temat zostaje zamknięty, cofnij jego przypisanie"
-    assign_locks_flags: "Kiedy temat jest przypisany do członka zespołu, jego flagi mogą być zarządzane tylko przez tę osobę"
     assign_mailer_enabled: "Kiedy aktywowane, przypisany użytkownik otrzyma powiadomienie e‐mail po każdym przypisaniu"
-    flags_require_assign: "Jeśli aktywowane, flagi nie mogą być zarządzane, chyba że przydzieli się użytkownikowi."
     remind_assigns: "Przypominaj użytkownikom o oczekujących przypisaniach."
     remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
     max_assigned_topics: "Maksymalna liczba tematów, które można przypisać użytkownikowi."
@@ -29,6 +27,7 @@ pl_PL:
     already_claimed: "Ten temat został już przejęty."
     already_assigned: 'Temat jest już przypisany do @%{username}'
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
+    forbidden_assign_to: "@%{username} nie może zostać przypisany, bo nie ma dostępu do tego wątku. "
     flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
     flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
     topic_assigned_excerpt: "przypisano ci temat '%{title}'"

@@ -11,3 +11,5 @@ ar:
       never: 'أبدا'
       daily: 'يوميا'
       weekly: 'أسبوعيا'
+      monthly: 'شهري'
+      quarterly: 'فصلي'

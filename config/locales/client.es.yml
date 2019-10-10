@@ -18,10 +18,10 @@ es:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Desasignar"
-        help: "Tema sin asignar"
+        help: "Desasignar tema"
       assign:
         title: "Asignar"
-        help: "Asignar tema a usuario"
+        help: "Asignar tema al usuario"
       reassign:
         title: "Reasignar"
         help: "Reasignar tema a un usuario distinto"
@@ -36,7 +36,7 @@ es:
         description: "Frecuencia para recibir recordatorios de temas asignados."
         never: 'Nunca'
         daily: 'Diario'
-        weekly: 'Semanalmente'
+        weekly: 'Semanal'
         monthly: 'Mensual'
         quarterly: 'Trimestral'
     user:
