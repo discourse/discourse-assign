@@ -94,7 +94,7 @@ module DiscourseAssign
         .offset(offset)
         .limit(limit)
 
-      Topic.preload_custom_fields(topics, [TopicAssigner::ASSIGNED_TO_ID])
+      Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
       users = User
         .where("users.id IN (SELECT value::int FROM topic_custom_fields WHERE name = 'assigned_to_id' AND topic_id IN (?))", topics.map(&:id))
