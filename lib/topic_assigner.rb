@@ -56,11 +56,13 @@ class ::TopicAssigner
 
     if post.user && post.topic && post.user.can_assign?
       can_assign = force || post.topic.custom_fields[ASSIGNED_TO_ID].nil?
+      return unless can_assign
 
       assign_other = assign_other_passes?(post) && mentioned_staff(post)
       assign_self = assign_self_passes?(post) && post.user
+      return unless assign_other || assign_self
 
-      if can_assign && is_last_staff_post?(post)
+      if is_last_staff_post?(post)
         assigner = new(post.topic, post.user)
         if assign_other
           assigner.assign(assign_other, silent: true)
