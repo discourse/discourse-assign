@@ -69,7 +69,7 @@ after_initialize do
 
   add_class_method(:user, :assign_allowed) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-    where("users.id IN (
+    where("users.admin OR users.id IN (
       SELECT user_id FROM group_users
       INNER JOIN groups ON group_users.group_id = groups.id
       WHERE groups.#{attribute} IN (?)
