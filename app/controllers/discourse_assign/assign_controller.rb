@@ -98,8 +98,6 @@ module DiscourseAssign
 
       users = User
         .where("users.id IN (SELECT value::int FROM topic_custom_fields WHERE name = 'assigned_to_id' AND topic_id IN (?))", topics.map(&:id))
-        .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
-        .select(AvatarLookup.lookup_columns)
         .to_a
 
       User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
