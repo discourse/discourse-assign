@@ -1,34 +1,38 @@
 # frozen_string_literal: true
 
-require_dependency 'email/sender'
+require 'email/sender'
+require 'nokogiri'
 
 class ::TopicAssigner
 
-  ASSIGNED_TO_ID = 'assigned_to_id'
-  ASSIGNED_BY_ID = 'assigned_by_id'
+  ASSIGNED_TO_ID ||= 'assigned_to_id'
+  ASSIGNED_BY_ID ||= 'assigned_by_id'
 
   def self.backfill_auto_assign
-    staff_mention = User.assign_allowed
+    staff_mention = User
+      .assign_allowed
       .pluck('username')
-      .map! { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
+      .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
       .join(' OR ')
 
     sql = <<~SQL
       SELECT p.topic_id, MAX(post_number) post_number
-      FROM posts p
-      JOIN topics t ON t.id = p.topic_id
-      LEFT JOIN topic_custom_fields tc ON tc.name = '#{ASSIGNED_TO_ID}' AND tc.topic_id = p.topic_id
-      WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin) AND
-        ( #{staff_mention} ) AND tc.value IS NULL AND NOT t.closed AND t.deleted_at IS NULL
-      GROUP BY p.topic_id
+        FROM posts p
+        JOIN topics t ON t.id = p.topic_id
+        LEFT JOIN topic_custom_fields tc ON tc.name = '#{ASSIGNED_TO_ID}' AND tc.topic_id = p.topic_id
+       WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin)
+         AND (#{staff_mention})
+         AND tc.value IS NULL
+         AND NOT t.closed
+         AND t.deleted_at IS NULL
+       GROUP BY p.topic_id
     SQL
 
-    assigned = 0
     puts
+    assigned = 0
 
     ActiveRecord::Base.connection.raw_connection.exec(sql).to_a.each do |row|
-      post = Post.find_by(post_number: row["post_number"].to_i,
-                          topic_id: row["topic_id"].to_i)
+      post = Post.find_by(post_number: row["post_number"].to_i, topic_id: row["topic_id"].to_i)
       assigned += 1 if post && auto_assign(post)
       putc "."
     end
@@ -37,29 +41,31 @@ class ::TopicAssigner
     puts "#{assigned} topics where automatically assigned to staff members"
   end
 
-  def self.assign_self_passes?(post)
-    return false unless SiteSetting.assign_self_regex.present?
+  def self.assigned_self?(text)
+    return false if text.blank? || SiteSetting.assign_self_regex.blank?
     regex = Regexp.new(SiteSetting.assign_self_regex) rescue nil
-
-    !!(regex && regex.match(post.raw))
+    !!(regex && text[regex])
   end
 
-  def self.assign_other_passes?(post)
-    return true unless SiteSetting.assign_other_regex.present?
+  def self.assigned_other?(text)
+    return false unless text.blank? || SiteSetting.assign_other_regex.blank?
     regex = Regexp.new(SiteSetting.assign_other_regex) rescue nil
-
-    !!(regex && regex.match(post.raw))
+    !!(regex && text[regex])
   end
 
   def self.auto_assign(post, force: false)
     return unless SiteSetting.assigns_by_staff_mention
 
     if post.user && post.topic && post.user.can_assign?
-      can_assign = force || post.topic.custom_fields[ASSIGNED_TO_ID].nil?
-      return unless can_assign
+      return unless force || post.topic.custom_fields[ASSIGNED_TO_ID].nil?
 
-      assign_other = assign_other_passes?(post) && mentioned_staff(post)
-      assign_self = assign_self_passes?(post) && post.user
+      # remove quotes, oneboxes and code blocks
+      doc = Nokogiri::HTML.fragment(post.cooked)
+      doc.css(".quote, .onebox, pre, code").remove
+      text = doc.text.strip
+
+      assign_other = assigned_other?(text) && mentioned_staff(post)
+      assign_self = assigned_self?(text) && post.user
       return unless assign_other || assign_self
 
       if is_last_staff_post?(post)
@@ -77,11 +83,13 @@ class ::TopicAssigner
     allowed_user_ids = User.assign_allowed.pluck(:id).join(',')
 
     sql = <<~SQL
-      SELECT 1 FROM posts p
-       JOIN users u ON u.id = p.user_id
-       WHERE p.deleted_at IS NULL AND p.topic_id = :topic_id
-       AND u.id IN (#{allowed_user_ids})
-       having max(post_number) = :post_number
+      SELECT 1
+        FROM posts p
+        JOIN users u ON u.id = p.user_id
+       WHERE p.deleted_at IS NULL
+         AND p.topic_id = :topic_id
+         AND u.id IN (#{allowed_user_ids})
+      HAVING MAX(post_number) = :post_number
     SQL
 
     args = {
@@ -226,10 +234,8 @@ class ::TopicAssigner
 
     # we got to send a push notification as well
     # what we created here is a whisper and notification will not raise a push
-    alerter = PostAlerter.new(first_post)
-    # TODO: remove June 2019
-    if alerter.respond_to?(:create_notification_alert) && @assigned_by.id != assign_to.id
-      alerter.create_notification_alert(
+    if @assigned_by.id != assign_to.id
+      PostAlerter.new(first_post).create_notification_alert(
         user: assign_to,
         post: first_post,
         username: @assigned_by.username,
@@ -250,11 +256,10 @@ class ::TopicAssigner
 
       # TODO core needs an API for this stuff badly
       # currently there is no 100% surefire way of deleting a custom field
-      TopicCustomField.where(
-        topic_id: @topic.id
-      ).where(
-        'name in (?)', [ASSIGNED_BY_ID, ASSIGNED_TO_ID]
-      ).destroy_all
+      TopicCustomField
+        .where(topic_id: @topic.id)
+        .where('name in (?)', [ASSIGNED_BY_ID, ASSIGNED_TO_ID])
+        .destroy_all
 
       if Array === assigned_to_id
         # more custom field mess, try to recover
@@ -265,10 +270,8 @@ class ::TopicAssigner
       @topic.custom_fields[ASSIGNED_TO_ID] = nil
       @topic.custom_fields[ASSIGNED_BY_ID] = nil
 
-      if !assigned_to_id
-        # nothing to do here
-        return
-      end
+      # nothing to do here
+      return if !assigned_to_id
 
       post = @topic.posts.where(post_number: 1).first
       return unless post.present?
@@ -290,7 +293,6 @@ class ::TopicAssigner
         )
       end
 
-      assigned_user = User.find_by(id: assigned_to_id)
       MessageBus.publish(
         "/staff/topic-assignment",
         {
@@ -300,6 +302,7 @@ class ::TopicAssigner
         user_ids: allowed_user_ids
       )
 
+      assigned_user = User.find_by(id: assigned_to_id)
       publish_topic_tracking_state(@topic, assigned_user.id)
 
       UserAction.where(
@@ -310,7 +313,7 @@ class ::TopicAssigner
       # yank notification
       Notification.where(
          notification_type: Notification.types[:custom],
-         user_id: assigned_user.try(:id),
+         user_id: assigned_user.id,
          topic_id: @topic.id,
          post_number: 1
       ).where("data like '%discourse_assign.assign_notification%'").destroy_all
@@ -321,7 +324,7 @@ class ::TopicAssigner
           @assigned_by, nil,
           bump: false,
           post_type: post_type,
-          custom_fields: { "action_code_who" => assigned_user&.username },
+          custom_fields: { "action_code_who" => assigned_user.username },
           action_code: "unassigned"
         )
       end

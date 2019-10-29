@@ -198,6 +198,45 @@ RSpec.describe TopicAssigner do
     end
   end
 
+  context "assign_self_regex" do
+    fab!(:me) { Fabricate(:admin) }
+    fab!(:op) { Fabricate(:post) }
+    fab!(:reply) { Fabricate(:post, topic: op.topic, user: me, raw: "Will fix. Added to my list ;)") }
+
+    before do
+      SiteSetting.assign_enabled = true
+      SiteSetting.assigns_by_staff_mention = true
+      SiteSetting.assign_self_regex = "\\bmy list\\b"
+    end
+
+    it "automatically assigns to myself" do
+      expect(TopicAssigner.auto_assign(reply)).to eq(success: true)
+      expect(op.topic.custom_fields).to eq("assigned_to_id" => me.id.to_s, "assigned_by_id" => me.id.to_s)
+    end
+
+    it "does not automatically assign to myself" do
+      admin = Fabricate(:admin)
+      raw = <<~MD
+        [quote]
+        Will fix. Added to my list ;)
+        [/quote]
+
+        `my list`
+
+        ```text
+        my list
+        ```
+
+            my list
+
+        Excellent :clap: Can't wait!
+      MD
+
+      another_reply = Fabricate(:post, topic: op.topic, user: admin, raw: raw)
+      expect(TopicAssigner.auto_assign(another_reply)).to eq(nil)
+    end
+  end
+
   context "unassign_on_close" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
