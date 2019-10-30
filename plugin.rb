@@ -100,7 +100,6 @@ after_initialize do
   end
 
   TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
-  Site.preloaded_category_custom_fields << "enable_unassigned_filter" if Site.respond_to? :preloaded_category_custom_fields
 
   TopicList.on_preload do |topics, topic_list|
     if SiteSetting.assign_enabled?

@@ -5,7 +5,6 @@ import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
-import NavItem from "discourse/models/nav-item";
 
 function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
@@ -56,64 +55,6 @@ function registerTopicFooterButtons(api) {
 }
 
 function initialize(api) {
-  // START TEMPORARY HACK
-  //
-  // NavItem does not allow for proper customisation currently.
-  // The router sets "filterMode" which only includes partial data about the route
-  // This is the only information a nav item has when deciding if to highlight a route
-  // or not.
-  // Additionally short of monkey patching there is no way to insert a nav item prior to
-  // Top.
-  //
-  // This hack will be nuked when we add a new api like registerTopicFooterButtons for nav
-
-  api.modifyClass("route:discovery.latestParentCategory", {
-    _retrieveTopicList(category, transition) {
-      const params = transition.to.queryParams;
-      if (params && params["assigned"] === "nobody") {
-        this.controllerFor("navigation/category").setProperties({
-          filterMode: "Unassigned"
-        });
-      }
-      return this._super(category, transition);
-    }
-  });
-
-  const UnassignedNavItem = NavItem.extend({
-    @computed()
-    filterMode() {
-      return "Unassigned";
-    },
-    @computed("filterMode", "category")
-    href(filterMode, category) {
-      return Discourse.getURL(
-        "/c/" +
-          Discourse.Category.slugFor(category) +
-          "/l/latest?status=open&assigned=nobody"
-      );
-    }
-  });
-
-  api.modifyClass("component:d-navigation", {
-    @computed("filterMode", "category", "noSubcategories")
-    navItems(filterMode, category, noSubcategories) {
-      filterMode = "Unassigned";
-      let items = this._super(filterMode, category, noSubcategories);
-      if (category && category.enable_unassigned_filter) {
-        const args = {
-          name: "unassigned",
-          hasIcon: false,
-          category: category
-        };
-        const newItem = UnassignedNavItem.create(args);
-        items.splice(items.length - 1, 0, newItem);
-      }
-      return items;
-    }
-  });
-
-  // END TEMPORARY HACK
-
   // You can't act on flags claimed by another user
   api.modifyClass(
     "component:flagged-post",
