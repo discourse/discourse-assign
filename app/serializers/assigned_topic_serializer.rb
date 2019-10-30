@@ -9,5 +9,5 @@ class AssignedTopicSerializer < BasicTopicSerializer
              :updated_at
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
-  has_one :assigned_to_user, serializer: AssignedUserSerializer, embed: :objects
+  has_one :assigned_to_user, serializer: BasicUserSerializer, embed: :objects
 end
