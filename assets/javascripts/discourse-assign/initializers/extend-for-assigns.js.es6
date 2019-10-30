@@ -56,7 +56,6 @@ function registerTopicFooterButtons(api) {
 }
 
 function initialize(api) {
-
   // START TEMPORARY HACK
   //
   // NavItem does not allow for proper customisation currently.
