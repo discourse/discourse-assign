@@ -10,8 +10,11 @@ export default {
       enable_unassigned_filter: Ember.computed(
         "custom_fields.enable_unassigned_filter",
         {
-          get(fieldName) {
-            return Ember.get(this.custom_fields, fieldName) === "true";
+          get() {
+            if (this && this.custom_fields) {
+              return this.custom_fields.enable_unassigned_filter === "true";
+            }
+            return false;
           }
         }
       )
