@@ -90,7 +90,7 @@ module DiscourseAssign
         .includes(:tags)
         .includes(:user)
         .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .order('tcf.value')
+        .order('tcf.value, topics.bumped_at desc')
         .offset(offset)
         .limit(limit)
 

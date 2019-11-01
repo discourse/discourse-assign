@@ -14,9 +14,9 @@ RSpec.describe DiscourseAssign::AssignController do
 
   let(:above_min_version) do
     min_version = 201_907_171_337_43
-      migrated_site_setting = DB.query_single(
-        "SELECT schema_migrations.version FROM schema_migrations WHERE schema_migrations.version = '#{min_version}'"
-      ).first.present?
+    DB.query_single(
+      "SELECT schema_migrations.version FROM schema_migrations WHERE schema_migrations.version = '#{min_version}'"
+    ).first.present?
   end
 
   describe 'only allow users from allowed groups' do
@@ -162,8 +162,13 @@ RSpec.describe DiscourseAssign::AssignController do
     before do
       add_to_assign_allowed_group(user2)
 
+      freeze_time 1.hour.from_now
       TopicAssigner.new(post1.topic, user).assign(user)
+
+      freeze_time 1.hour.from_now
       TopicAssigner.new(post2.topic, user).assign(user2)
+
+      freeze_time 1.hour.from_now
       TopicAssigner.new(post3.topic, user).assign(user)
 
       sign_in(user)
@@ -174,10 +179,10 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post2.topic_id, post1.topic_id, post3.topic_id])
 
       get '/assign/assigned.json', params: { limit: 2 }
-      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post2.topic_id, post1.topic_id])
+      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post3.topic_id, post2.topic_id])
 
       get '/assign/assigned.json', params: { offset: 2 }
-      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post3.topic_id])
+      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post1.topic_id])
     end
   end
 
