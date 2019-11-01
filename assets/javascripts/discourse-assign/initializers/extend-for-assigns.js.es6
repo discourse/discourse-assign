@@ -55,6 +55,29 @@ function registerTopicFooterButtons(api) {
 }
 
 function initialize(api) {
+  api.addNavigationBarItem({
+    name: "unassigned",
+    customFilter: category => {
+      return category && category.enable_unassigned_filter;
+    },
+    customHref: category => {
+      if (category) {
+        return (
+          Discourse.getURL(category.url) +
+          "/l/latest?status=open&assigned=nobody"
+        );
+      }
+    },
+    forceActive: (category, args, router) => {
+      return (
+        router.currentURL &&
+        router.currentURL.indexOf("assigned=nobody") > -1 &&
+        router.currentURL.indexOf("status=open") > -1
+      );
+    },
+    before: "top"
+  });
+
   // You can't act on flags claimed by another user
   api.modifyClass(
     "component:flagged-post",

@@ -1,9 +1,14 @@
 en:
   js:
+    filters:
+      unassigned:
+        title: "Unassigned"
+        help: "Topics that are not assigned"
     action_codes:
       assigned: "assigned %{who} %{when}"
       unassigned: "unassigned %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
       cant_act_unclaimed: "You must claim this topic before acting on flags."
       assigned: "Assigned"
