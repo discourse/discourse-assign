@@ -69,10 +69,13 @@ function initialize(api) {
       }
     },
     forceActive: (category, args, router) => {
+      const queryParams = router.currentRoute.queryParams;
+
       return (
-        router.currentURL &&
-        router.currentURL.indexOf("assigned=nobody") > -1 &&
-        router.currentURL.indexOf("status=open") > -1
+        queryParams &&
+        Object.keys(queryParams).length === 2 &&
+        queryParams["assigned"] === "nobody" &&
+        queryParams["status"] === "open"
       );
     },
     before: "top"
