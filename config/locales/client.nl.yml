@@ -7,10 +7,15 @@
 
 nl:
   js:
+    filters:
+      unassigned:
+        title: "Niet toegewezen"
+        help: "Topics die niet zijn toegewezen"
     action_codes:
       assigned: "heeft %{who} toegewezen op %{when}"
       unassigned: "heeft toewijzing van %{who} opgeheven op %{when}"
     discourse_assign:
+      add_unassigned_filter: "Filter 'niet toegewezen' toevoegen aan categorie"
       cant_act: "U kunt geen handeling uitvoeren op markeringen die aan andere gebruikers zijn toegewezen"
       cant_act_unclaimed: "U moet dit topic opeisen voordat u handelingen op markeringen kunt uitvoeren."
       assigned: "Toegewezen"
@@ -33,6 +38,7 @@ nl:
         title: "opeisen"
         help: "Topic aan uzelf toewijzen"
       reminders_frequency:
+        description: "Frequentie voor het ontvangen van toegewezen-topic-herinneringen"
         never: 'Nooit'
         daily: 'Dagelijks'
         weekly: 'Wekelijks'

@@ -7,10 +7,15 @@
 
 he:
   js:
+    filters:
+      unassigned:
+        title: "לא מוקצה"
+        help: "נושאים שאינם מוקצים"
     action_codes:
       assigned: "מוקצה לטובת %{who} %{when}"
       unassigned: "הוסרה ההקצאה של %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "הוספת מסנן ‚ללא הקצאה’ לקטגוריה"
       cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
       cant_act_unclaimed: "עליך לדרוש את הנושא הזה לפני נקיטת פעולות על דגלים."
       assigned: "מוקצה"

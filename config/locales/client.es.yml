@@ -7,10 +7,15 @@
 
 es:
   js:
+    filters:
+      unassigned:
+        title: "Sin asignar"
+        help: "Temas sin asignar"
     action_codes:
-      assigned: "asignado por %{who} %{when}"
-      unassigned: "desasignado por %{who} %{when}"
+      assigned: "asignó a %{who} %{when}"
+      unassigned: "desasignó a %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Agregar el filtro «sin asignar» a la categoría"
       cant_act: "No puedes actuar sobre reportes que han sido asignados a otros usuarios"
       cant_act_unclaimed: "Debes reclamar este tema antes de actuar sobre los reportes."
       assigned: "Asignado"

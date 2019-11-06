@@ -7,6 +7,9 @@
 
 ca:
   js:
+    filters:
+      unassigned:
+        title: "No assignat"
     action_codes:
       assigned: "assignat %{who} %{when}"
       unassigned: "desassignat %{who} %{when}"
