@@ -30,8 +30,6 @@ RSpec.describe TopicAssigner do
   end
 
   context "assigning and unassigning" do
-    before { SiteSetting.assign_enabled = true }
-
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
@@ -205,7 +203,6 @@ RSpec.describe TopicAssigner do
     fab!(:reply) { Fabricate(:post, topic: op.topic, user: me, raw: "Will fix. Added to my list ;)") }
 
     before do
-      SiteSetting.assign_enabled = true
       SiteSetting.assigns_by_staff_mention = true
       SiteSetting.assign_self_regex = "\\bmy list\\b"
     end
@@ -245,7 +242,6 @@ RSpec.describe TopicAssigner do
     fab!(:reply) { Fabricate(:post, topic: op.topic, user: me, raw: "can you add this to your list, @#{other.username}") }
 
     before do
-      SiteSetting.assign_enabled = true
       SiteSetting.assigns_by_staff_mention = true
       SiteSetting.assign_other_regex = "\\byour (list|todo)\\b"
     end
@@ -263,7 +259,6 @@ RSpec.describe TopicAssigner do
     let(:assigner) { TopicAssigner.new(topic, moderator) }
 
     before do
-      SiteSetting.assign_enabled = true
       SiteSetting.unassign_on_close = true
 
       assigner.assign(moderator)
