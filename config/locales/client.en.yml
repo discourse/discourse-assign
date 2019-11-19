@@ -25,18 +25,18 @@ en:
         help: "Re-assign Topic to a different user"
       assign_modal:
         title: "Assign Topic"
-        description: "Enter the username of the person you'd like to assign this topic"
+        description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
       claim:
         title: "claim"
         help: "Assign topic to yourself"
       reminders_frequency:
         description: "Frequency for receiving assigned topics reminders"
-        never: 'Never'
-        daily: 'Daily'
-        weekly: 'Weekly'
-        monthly: 'Monthly'
-        quarterly: 'Quarterly'
+        never: "Never"
+        daily: "Daily"
+        weekly: "Weekly"
+        monthly: "Monthly"
+        quarterly: "Quarterly"
     user:
       messages:
         assigned_title: "Assigned (%{count})"
