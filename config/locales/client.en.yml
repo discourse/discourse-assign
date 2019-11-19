@@ -30,6 +30,10 @@ en:
       claim:
         title: "claim"
         help: "Assign topic to yourself"
+      assign_mailer:
+        never: 'Never'
+        different_users: 'Only if assigner and assignee are different users'
+        always: 'Always'
       reminders_frequency:
         description: "Frequency for receiving assigned topics reminders"
         never: "Never"

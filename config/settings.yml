@@ -12,7 +12,9 @@ plugins:
   assigns_user_url_path:
     client: true
     default: "/u/{username}/activity/assigned"
-  assign_mailer_enabled: false
+  assign_mailer:
+    default: "never"
+    enum: "AssignMailerSiteSettings"
   remind_assigns_frequency:
     client: true
     enum: "RemindAssignsFrequencySiteSettings"

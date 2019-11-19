@@ -189,7 +189,7 @@ class ::TopicAssigner
       )
     end
 
-    if SiteSetting.assign_mailer_enabled
+    if SiteSetting.assign_mailer == 'always' || (SiteSetting.assign_mailer == 'different_users' && @assigned_by.id != assign_to.id)
       if !@topic.muted?(assign_to)
         message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
         Email::Sender.new(message, :assign_message).send
