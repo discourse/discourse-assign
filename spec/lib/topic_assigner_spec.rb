@@ -98,6 +98,7 @@ RSpec.describe TopicAssigner do
 
       before do
         SiteSetting.assigns_by_staff_mention = true
+        SiteSetting.assign_other_regex = "\\byour (list|todo)\\b"
       end
 
       it "doesn't assign system user" do
@@ -108,7 +109,7 @@ RSpec.describe TopicAssigner do
       end
 
       it "assigns first mentioned staff user after system user" do
-        post.raw = "Don't assign @system, assign @modi instead"
+        post.update(raw: "Don't assign @system. @modi, can you add this to your list?")
         TopicAssigner.auto_assign(post)
 
         expect(topic.custom_fields["assigned_to_id"].to_i)
@@ -234,6 +235,24 @@ RSpec.describe TopicAssigner do
 
       another_reply = Fabricate(:post, topic: op.topic, user: admin, raw: raw)
       expect(TopicAssigner.auto_assign(another_reply)).to eq(nil)
+    end
+  end
+
+  context "assign_other_regex" do
+    fab!(:me) { Fabricate(:admin) }
+    fab!(:other) { Fabricate(:admin) }
+    fab!(:op) { Fabricate(:post) }
+    fab!(:reply) { Fabricate(:post, topic: op.topic, user: me, raw: "can you add this to your list, @#{other.username}") }
+
+    before do
+      SiteSetting.assign_enabled = true
+      SiteSetting.assigns_by_staff_mention = true
+      SiteSetting.assign_other_regex = "\\byour (list|todo)\\b"
+    end
+
+    it "automatically assigns to other" do
+      expect(TopicAssigner.auto_assign(reply)).to eq(success: true)
+      expect(op.topic.custom_fields).to eq("assigned_to_id" => other.id.to_s, "assigned_by_id" => me.id.to_s)
     end
   end
 

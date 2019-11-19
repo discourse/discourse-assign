@@ -48,7 +48,7 @@ class ::TopicAssigner
   end
 
   def self.assigned_other?(text)
-    return false unless text.blank? || SiteSetting.assign_other_regex.blank?
+    return false if text.blank? || SiteSetting.assign_other_regex.blank?
     regex = Regexp.new(SiteSetting.assign_other_regex) rescue nil
     !!(regex && text[regex])
   end
