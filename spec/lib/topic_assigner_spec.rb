@@ -30,8 +30,6 @@ RSpec.describe TopicAssigner do
   end
 
   context "assigning and unassigning" do
-    before { SiteSetting.assign_enabled = true }
-
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
@@ -98,6 +96,7 @@ RSpec.describe TopicAssigner do
 
       before do
         SiteSetting.assigns_by_staff_mention = true
+        SiteSetting.assign_other_regex = "\\byour (list|todo)\\b"
       end
 
       it "doesn't assign system user" do
@@ -108,7 +107,7 @@ RSpec.describe TopicAssigner do
       end
 
       it "assigns first mentioned staff user after system user" do
-        post.raw = "Don't assign @system, assign @modi instead"
+        post.update(raw: "Don't assign @system. @modi, can you add this to your list?")
         TopicAssigner.auto_assign(post)
 
         expect(topic.custom_fields["assigned_to_id"].to_i)
@@ -204,7 +203,6 @@ RSpec.describe TopicAssigner do
     fab!(:reply) { Fabricate(:post, topic: op.topic, user: me, raw: "Will fix. Added to my list ;)") }
 
     before do
-      SiteSetting.assign_enabled = true
       SiteSetting.assigns_by_staff_mention = true
       SiteSetting.assign_self_regex = "\\bmy list\\b"
     end
@@ -237,6 +235,23 @@ RSpec.describe TopicAssigner do
     end
   end
 
+  context "assign_other_regex" do
+    fab!(:me) { Fabricate(:admin) }
+    fab!(:other) { Fabricate(:admin) }
+    fab!(:op) { Fabricate(:post) }
+    fab!(:reply) { Fabricate(:post, topic: op.topic, user: me, raw: "can you add this to your list, @#{other.username}") }
+
+    before do
+      SiteSetting.assigns_by_staff_mention = true
+      SiteSetting.assign_other_regex = "\\byour (list|todo)\\b"
+    end
+
+    it "automatically assigns to other" do
+      expect(TopicAssigner.auto_assign(reply)).to eq(success: true)
+      expect(op.topic.custom_fields).to eq("assigned_to_id" => other.id.to_s, "assigned_by_id" => me.id.to_s)
+    end
+  end
+
   context "unassign_on_close" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
@@ -244,7 +259,6 @@ RSpec.describe TopicAssigner do
     let(:assigner) { TopicAssigner.new(topic, moderator) }
 
     before do
-      SiteSetting.assign_enabled = true
       SiteSetting.unassign_on_close = true
 
       assigner.assign(moderator)
