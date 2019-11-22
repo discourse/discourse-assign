@@ -10,9 +10,9 @@ class AssignMailerSiteSettings < EnumSiteSetting
 
   def self.values
     @values ||= [
-      { name: 'discourse_assign.assign_mailer.never', value: 'never' },
-      { name: 'discourse_assign.assign_mailer.different_users', value: 'different_users' },
-      { name: 'discourse_assign.assign_mailer.always', value: 'always' }
+      { name: 'discourse_assign.assign_mailer.never', value: AssignMailer.levels[:never] },
+      { name: 'discourse_assign.assign_mailer.different_users', value: AssignMailer.levels[:different_users] },
+      { name: 'discourse_assign.assign_mailer.always', value: AssignMailer.levels[:always] }
     ]
   end
 

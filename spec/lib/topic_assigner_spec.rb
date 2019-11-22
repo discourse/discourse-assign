@@ -116,7 +116,7 @@ RSpec.describe TopicAssigner do
     end
 
     it "doesn't assign the same user more than once" do
-      SiteSetting.assign_mailer = 'always'
+      SiteSetting.assign_mailer = AssignMailer.levels[:always]
       another_mod = Fabricate(:moderator, groups: [assign_allowed_group])
 
       Email::Sender.any_instance.expects(:send).once
@@ -292,28 +292,28 @@ RSpec.describe TopicAssigner do
     let(:moderator2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
 
     it "send an email if set to 'always'" do
-      SiteSetting.assign_mailer = 'always'
+      SiteSetting.assign_mailer = AssignMailer.levels[:always]
 
       expect { TopicAssigner.new(topic, moderator).assign(moderator) }
         .to change { ActionMailer::Base.deliveries.size }.by(1)
     end
 
     it "doesn't send an email if the assigner and assignee are not different" do
-      SiteSetting.assign_mailer = 'different_users'
+      SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { TopicAssigner.new(topic, moderator).assign(moderator2) }
         .to change { ActionMailer::Base.deliveries.size }.by(1)
     end
 
     it "doesn't send an email if the assigner and assignee are not different" do
-      SiteSetting.assign_mailer = 'different_users'
+      SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
       expect { TopicAssigner.new(topic, moderator).assign(moderator) }
         .to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "doesn't send an email" do
-      SiteSetting.assign_mailer = 'never'
+      SiteSetting.assign_mailer = AssignMailer.levels[:never]
 
       expect { TopicAssigner.new(topic, moderator).assign(moderator2) }
         .to change { ActionMailer::Base.deliveries.size }.by(0)
