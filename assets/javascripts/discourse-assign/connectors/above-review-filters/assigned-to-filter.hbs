@@ -1,0 +1,16 @@
+ <div class='reviewable-filter discourse-assign-assign-to-filter'>
+  <label class='filter-label'>{{i18n "discourse_assign.assigned_to"}}</label>
+  {{user-selector
+    single=true
+    fullWidthWrap=true
+    allowAny=false
+    group="staff"
+    groupMembersOf=allowedGroups
+    excludeCurrentUser=false
+    includeMentionableGroups=false
+    hasGroups=false
+    usernames=additionalFilters.assigned_to
+    placeholderKey=placeholderKey
+    autocomplete="off"
+  }}
+ </div>

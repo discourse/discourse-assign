@@ -268,6 +268,27 @@ after_initialize do
     id && id.to_i rescue nil
   end
 
+  # TODO: Remove this when 2.4 becomes the new stable
+  if self.respond_to?(:add_custom_reviewable_filter)
+    add_custom_reviewable_filter(
+      [
+        :assigned_to,
+        Proc.new do |results, value|
+          results.joins(<<~SQL
+            INNER JOIN posts p ON p.id = target_id
+            INNER JOIN topics t ON t.id = p.topic_id
+            INNER JOIN topic_custom_fields tcf ON tcf.topic_id = t.id
+            INNER JOIN users u ON u.id = tcf.value::integer
+          SQL
+          )
+          .where(target_type: Post.name)
+          .where('tcf.name = ?', TopicAssigner::ASSIGNED_TO_ID)
+          .where('u.username = ?', value)
+        end
+      ]
+    )
+  end
+
   on(:post_created) do |post|
     ::TopicAssigner.auto_assign(post, force: true)
   end
