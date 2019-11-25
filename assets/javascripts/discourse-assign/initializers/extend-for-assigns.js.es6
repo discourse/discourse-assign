@@ -133,9 +133,11 @@ function initialize(api) {
   api.modifyClass("model:topic", {
     @computed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
-      return this.siteSettings.assigns_user_url_path.replace(
-        "{username}",
-        Ember.get(assignedToUser, "username")
+      return Discourse.getURL(
+        this.siteSettings.assigns_user_url_path.replace(
+          "{username}",
+          assignedToUser.username
+        )
       );
     }
   });
