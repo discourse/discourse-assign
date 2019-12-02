@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RenameSiteSettingAssignEmailer < ActiveRecord::Migration[6.0]
+class RenameSiteSettingAssignEmailer < ActiveRecord::Migration[5.2]
   def up
     execute "UPDATE site_settings
              SET name = 'assign_mailer', value = '#{AssignMailer.levels[:always]}', data_type = #{SiteSettings::TypeSupervisor.types[:enum]}
