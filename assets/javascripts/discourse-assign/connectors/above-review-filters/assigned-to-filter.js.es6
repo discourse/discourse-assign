@@ -4,10 +4,12 @@ export default {
   },
 
   setupComponent(args, component) {
-    const groupIDs = component.siteSettings.assign_allowed_on_groups.split("|");
+    const groupIDs = component.siteSettings.assign_allowed_on_groups
+      .split("|")
+      .filter(Boolean);
     const groupNames = this.site.groups
       .filter(group => groupIDs.includes(group.id.toString()))
-      .map(group => group.name);
+      .mapBy("name");
     component.set("allowedGroups", groupNames);
   }
 };
