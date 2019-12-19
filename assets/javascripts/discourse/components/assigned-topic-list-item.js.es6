@@ -1,5 +1,5 @@
-import { ListItemDefaults } from "discourse/components/topic-list-item";
+import TopicListItem from "discourse/components/topic-list-item";
 
-export default Ember.Component.extend(ListItemDefaults, {
+export default TopicListItem.extend({
   isPrivateMessage: Ember.computed.equal("topic.archetype", "private_message")
 });
