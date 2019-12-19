@@ -9,9 +9,12 @@ ja:
   js:
     discourse_assign:
       assign_notification: "<p><span>{{username}}</span>{{description}}</p>"
-      reminders_frequency:
+      assign_mailer:
         never: '通知しない'
-        daily: '日ごと'
-        weekly: '毎週'
-        monthly: '月ごと'
-        quarterly: '3ヶ月おき'
+        always: '常時'
+      reminders_frequency:
+        never: "通知しない"
+        daily: "日ごと"
+        weekly: "毎週"
+        monthly: "月ごと"
+        quarterly: "3ヶ月おき"

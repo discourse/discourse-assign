@@ -32,18 +32,22 @@ nl:
         help: "Topic opnieuw toewijzen aan een andere gebruiker"
       assign_modal:
         title: "Topic toewijzen"
-        description: "Voer de gebruikersnaam in van de persoon waaraan u dit topic wilt toewijzen"
+        description: "Voer de naam in van de gebruiker waaraan u dit topic wilt toewijzen"
         assign: "Toewijzen"
       claim:
         title: "opeisen"
         help: "Topic aan uzelf toewijzen"
+      assign_mailer:
+        never: 'Nooit'
+        different_users: 'Alleen als toewijzer en toegewezen persoon verschillende gebruikers zijn'
+        always: 'Altijd'
       reminders_frequency:
         description: "Frequentie voor het ontvangen van toegewezen-topic-herinneringen"
-        never: 'Nooit'
-        daily: 'Dagelijks'
-        weekly: 'Wekelijks'
-        monthly: 'Maandelijks'
-        quarterly: 'Per kwartaal'
+        never: "Nooit"
+        daily: "Dagelijks"
+        weekly: "Wekelijks"
+        monthly: "Maandelijks"
+        quarterly: "Per kwartaal"
     user:
       messages:
         assigned_title: "Toegewezen (%{count})"

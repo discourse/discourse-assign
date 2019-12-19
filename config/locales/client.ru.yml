@@ -27,18 +27,20 @@ ru:
         help: "Переподписать тему другому пользователю"
       assign_modal:
         title: "Назначьте ответственного в теме"
-        description: "Введите имя сотрудника, ответственного за тему"
         assign: "Назначить"
       claim:
         title: "Пожаловаться"
         help: "Назначить на себя"
+      assign_mailer:
+        never: 'Никогда'
+        always: 'Всегда'
       reminders_frequency:
         description: "Частота напоминаний на подписанные темы"
-        never: 'Никогда'
-        daily: 'За день'
-        weekly: 'За неделю'
-        monthly: 'За месяц'
-        quarterly: 'За квартал'
+        never: "Никогда"
+        daily: "За день"
+        weekly: "За неделю"
+        monthly: "За месяц"
+        quarterly: "За квартал"
     user:
       messages:
         assigned_title: "Подписанные (%{count})"

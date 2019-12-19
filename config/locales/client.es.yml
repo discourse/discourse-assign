@@ -32,18 +32,22 @@ es:
         help: "Reasignar tema a un usuario distinto"
       assign_modal:
         title: "Asignar tema"
-        description: "Ingresa el nombre de usuario de la persona a la que te gustaría asignar este tema"
+        description: "Ingresa el nombre del usuario al que te gustaría asignar este tema"
         assign: "Asignar"
       claim:
         title: "reclamar"
         help: "Asígnate el tema"
+      assign_mailer:
+        never: 'Nunca'
+        different_users: 'Solo si quien asigna y quien es asignado son diferentes usuarios'
+        always: 'Siempre'
       reminders_frequency:
         description: "Frecuencia para recibir recordatorios de temas asignados."
-        never: 'Nunca'
-        daily: 'Diario'
-        weekly: 'Semanal'
-        monthly: 'Mensual'
-        quarterly: 'Trimestral'
+        never: "Nunca"
+        daily: "Diario"
+        weekly: "Semanal"
+        monthly: "Mensual"
+        quarterly: "Trimestral"
     user:
       messages:
         assigned_title: "Asignados (%{count})"

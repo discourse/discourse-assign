@@ -8,9 +8,12 @@
 bg:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'Никога'
-        daily: 'Дневно'
-        weekly: 'Седмично'
-        monthly: 'Месечно'
-        quarterly: 'Тримесечно'
+        always: 'Винаги'
+      reminders_frequency:
+        never: "Никога"
+        daily: "Дневно"
+        weekly: "Седмично"
+        monthly: "Месечно"
+        quarterly: "Тримесечно"

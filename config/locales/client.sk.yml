@@ -21,17 +21,19 @@ sk:
         help: "Priradiť tému používateľovi"
       assign_modal:
         title: "Priradiť tému"
-        description: "Zadajte meno používateľa, ktorému chcete priradiť túto tému"
         assign: "Priraď"
       claim:
         title: "prevziať"
         help: "Priradiť tému sebe"
-      reminders_frequency:
+      assign_mailer:
         never: 'Nikdy'
-        daily: 'Denne'
-        weekly: 'Týždenne'
-        monthly: 'Mesačne'
-        quarterly: 'Štvrťročne'
+        always: 'Vždy'
+      reminders_frequency:
+        never: "Nikdy"
+        daily: "Denne"
+        weekly: "Týždenne"
+        monthly: "Mesačne"
+        quarterly: "Štvrťročne"
     user:
       messages:
         assigned: "Priradené"

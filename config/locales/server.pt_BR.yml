@@ -16,7 +16,6 @@ pt_BR:
     assign_other_regex: "Regex que precisa passar para designar tópicos a outros por meio de menção. Exemplo: 'sua lista'."
     unassign_on_group_archive: "Quando uma mensagem é arquivada por um grupo, remover a designação da mensagem (designar novamente se ela for movida de volta para a caixa de entrada)"
     unassign_on_close: "Quando um tópico for fechado, remover a designação do tópico"
-    assign_mailer_enabled: "Quando habilitado, o usuário designado receberá um e-mail de notificação em cada designação"
     remind_assigns: "Lembrar usuários sobre designações pendentes."
     remind_assigns_frequency: "Frequência para lembrar usuários sobre tópicos designados."
     max_assigned_topics: "Número máximo de tópicos que podem ser designados a um usuário."

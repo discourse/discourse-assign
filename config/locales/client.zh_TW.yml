@@ -22,17 +22,19 @@ zh_TW:
         help: "指派主題給使用者"
       assign_modal:
         title: "指派主題"
-        description: "輸入您想要指派此主題給的對象的使用者名稱"
         assign: "指派"
       claim:
         title: "認領"
         help: "指派主題給您自己"
-      reminders_frequency:
+      assign_mailer:
         never: '永不'
-        daily: '日'
-        weekly: '周'
-        monthly: '月'
-        quarterly: '季度'
+        always: '總是'
+      reminders_frequency:
+        never: "永不"
+        daily: "日"
+        weekly: "周"
+        monthly: "月"
+        quarterly: "季度"
     user:
       messages:
         assigned: "已指派"

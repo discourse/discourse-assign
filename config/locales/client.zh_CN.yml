@@ -27,18 +27,21 @@ zh_CN:
         help: "重新指派主题给另一用户"
       assign_modal:
         title: "指派主题"
-        description: "输入你想指派这个主题给他的人的用户名"
+        description: "输入你想要指派到此主题的用户名"
         assign: "指派"
       claim:
         title: "认领"
         help: "指派这个主题给你自己"
+      assign_mailer:
+        never: '从不'
+        always: '始终'
       reminders_frequency:
         description: "接受指派主题提醒的频率"
-        never: '从不'
-        daily: '每天'
-        weekly: '每周'
-        monthly: '月度'
-        quarterly: '季度的'
+        never: "从不"
+        daily: "每天"
+        weekly: "每周"
+        monthly: "月度"
+        quarterly: "季度的"
     user:
       messages:
         assigned_title: "已指派%{count}"

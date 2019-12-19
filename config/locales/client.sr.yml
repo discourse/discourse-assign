@@ -8,9 +8,12 @@
 sr:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'Nikada'
-        daily: 'Top dnevne'
-        weekly: 'Top nedeljne'
-        monthly: 'Top mesečne'
-        quarterly: 'Top kvartalne'
+        always: 'Uvek'
+      reminders_frequency:
+        never: "Nikada"
+        daily: "Top dnevne"
+        weekly: "Top nedeljne"
+        monthly: "Top mesečne"
+        quarterly: "Top kvartalne"

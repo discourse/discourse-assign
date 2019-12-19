@@ -10,6 +10,7 @@ ca:
     filters:
       unassigned:
         title: "No assignat"
+        help: "Temes que no estan assignats"
     action_codes:
       assigned: "assignat %{who} %{when}"
       unassigned: "desassignat %{who} %{when}"
@@ -30,18 +31,21 @@ ca:
         help: "Reassigna el tema a un altre usuari"
       assign_modal:
         title: "Assigna el tema"
-        description: "Introduïu el nom d'usuari de la persona a qui voleu assignar aquest tema"
+        description: "Introduïu el nom de l’usuari a qui voleu assignar aquest tema"
         assign: "Assigna"
       claim:
         title: "reclama"
         help: "Assigneu-vos el tema"
+      assign_mailer:
+        never: 'Mai'
+        always: 'Sempre'
       reminders_frequency:
         description: "Freqüència per a rebre recordatoris de temes assignats"
-        never: 'Mai'
-        daily: 'Diàriament'
-        weekly: 'Setmanalment'
-        monthly: 'Mensualment'
-        quarterly: 'Trimestralment'
+        never: "Mai"
+        daily: "Diàriament"
+        weekly: "Setmanalment"
+        monthly: "Mensualment"
+        quarterly: "Trimestralment"
     user:
       messages:
         assigned_title: "Assignats (%{count})"

@@ -32,18 +32,22 @@ he:
         help: "הקצאת נושא מחדש למשתמש אחר"
       assign_modal:
         title: "הקצאת נושא"
-        description: "נא להקליד את שם המשתמש של מי שברצונך להקצות אליו את הנושא הזה"
+        description: "נא להקליד את שם המשתמש להקצאת הנושא"
         assign: "הקצאה"
       claim:
         title: "דרישה"
         help: "הקצאת נושא לעצמך"
+      assign_mailer:
+        never: 'אף פעם'
+        different_users: 'רק אם הצד המקצה או הצד שהוקצה אליו הם משתמשים שונים'
+        always: 'תמיד'
       reminders_frequency:
         description: "תדירות קבלת תזכורות לנושאים מוקצים"
-        never: 'אף פעם'
-        daily: 'יומי'
-        weekly: 'שבועי'
-        monthly: 'חודשי'
-        quarterly: 'רבעוני'
+        never: "אף פעם"
+        daily: "יומי"
+        weekly: "שבועי"
+        monthly: "חודשי"
+        quarterly: "רבעוני"
     user:
       messages:
         assigned_title: "מוקצים (%{count})"

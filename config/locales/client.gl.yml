@@ -8,9 +8,12 @@
 gl:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'Nunca'
-        daily: 'Diario'
-        weekly: 'Semanal'
-        monthly: 'Mensual'
-        quarterly: 'Trimestral'
+        always: 'Sempre'
+      reminders_frequency:
+        never: "Nunca"
+        daily: "Diario"
+        weekly: "Semanal"
+        monthly: "Mensual"
+        quarterly: "Trimestral"

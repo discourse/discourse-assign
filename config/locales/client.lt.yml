@@ -12,12 +12,15 @@ lt:
       unassigned: "nepriskirta %{who}%{when}"
     discourse_assign:
       assigned: "Priskirta"
-      reminders_frequency:
+      assign_mailer:
         never: 'Niekada'
-        daily: 'Kasdien'
-        weekly: 'Kas savaitę'
-        monthly: 'Kas mėnesį'
-        quarterly: 'Kas ketvirtį'
+        always: 'Visada'
+      reminders_frequency:
+        never: "Niekada"
+        daily: "Kasdien"
+        weekly: "Kas savaitę"
+        monthly: "Kas mėnesį"
+        quarterly: "Kas ketvirtį"
     user:
       messages:
         assigned: "Priskirta"

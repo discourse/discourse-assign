@@ -16,12 +16,15 @@ hu:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       claim:
         title: "Lefoglal"
-      reminders_frequency:
+      assign_mailer:
         never: 'Soha'
-        daily: 'Napi'
-        weekly: 'Heti'
-        monthly: 'Havi'
-        quarterly: 'Negyedévente'
+        always: 'Mindig'
+      reminders_frequency:
+        never: "Soha"
+        daily: "Napi"
+        weekly: "Heti"
+        monthly: "Havi"
+        quarterly: "Negyedévente"
     user:
       messages:
         assigned: "Aláírt"

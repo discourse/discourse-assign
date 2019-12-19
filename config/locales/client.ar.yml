@@ -8,9 +8,12 @@
 ar:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'أبدا'
-        daily: 'يوم'
-        weekly: 'اسبوع'
-        monthly: 'شهر'
-        quarterly: 'ربع سنة'
+        always: 'دوما'
+      reminders_frequency:
+        never: "أبدا"
+        daily: "يوم"
+        weekly: "اسبوع"
+        monthly: "شهر"
+        quarterly: "ربع سنة"

@@ -7,10 +7,15 @@
 
 pl_PL:
   js:
+    filters:
+      unassigned:
+        title: "Nieprzypisany"
+        help: "Wątki, które nie są przypisane"
     action_codes:
       assigned: "przypisany %{who}%{when}"
       unassigned: "nieprzypisany%{who}%{when}"
     discourse_assign:
+      add_unassigned_filter: "Dodaj filtr \"nieprzypisane\" do tej kategorii"
       cant_act: "Nie możesz działać na flagach, które nie zostały przydzielone innymi użytkownikom"
       cant_act_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na flagach."
       assigned: "Przypisany"
@@ -27,18 +32,22 @@ pl_PL:
         help: "Przypisz ponownie temat do innego użytkownika"
       assign_modal:
         title: "Przypisz temat"
-        description: "Wpisz nazwę użytkownika, któremu chcesz przypisać temat"
+        description: "Wpisz nazwę użytkownika, któremu chcesz przypisać ten wątek"
         assign: "Przypisz"
       claim:
         title: "przejmij"
         help: "Przypisz temat sobie"
+      assign_mailer:
+        never: 'Nigdy'
+        different_users: 'Tylko jeśli przypisujący lub przypisany są innymi użytkownikami'
+        always: 'Zawsze'
       reminders_frequency:
         description: "Częstotliwość otrzymwania przypomnień o przypisanych tematach"
-        never: 'Nigdy'
-        daily: 'Dziennie'
-        weekly: 'Tygodniowo'
-        monthly: 'Miesięcznie'
-        quarterly: 'Kwartalnie'
+        never: "Nigdy"
+        daily: "Dziennie"
+        weekly: "Tygodniowo"
+        monthly: "Miesięcznie"
+        quarterly: "Kwartalnie"
     user:
       messages:
         assigned_title: "Przypisano (%{count})"

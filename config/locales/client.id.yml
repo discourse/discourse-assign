@@ -8,5 +8,8 @@
 id:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'Tidak pernah'
+        always: 'Selalu'
+      reminders_frequency:
+        never: "Tidak pernah"

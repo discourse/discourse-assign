@@ -7,6 +7,7 @@
 
 vi:
   discourse_assign:
+    assigned_to: "Chủ đề được gán cho @%{username}"
     reminders_frequency:
       never: 'không bao giờ'
       daily: 'hàng ngày'

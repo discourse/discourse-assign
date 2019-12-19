@@ -8,9 +8,12 @@
 da:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'Aldrig'
-        daily: 'Dagligt'
-        weekly: 'Ugentligt'
-        monthly: 'Månedligt'
-        quarterly: 'Kvartalvis'
+        always: 'Altid'
+      reminders_frequency:
+        never: "Aldrig"
+        daily: "Dagligt"
+        weekly: "Ugentligt"
+        monthly: "Månedligt"
+        quarterly: "Kvartalvis"

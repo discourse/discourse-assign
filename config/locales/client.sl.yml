@@ -9,9 +9,12 @@ sl:
   js:
     discourse_assign:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
-      reminders_frequency:
+      assign_mailer:
         never: 'Nikoli'
-        daily: 'Dnevno'
-        weekly: 'Tedensko'
-        monthly: 'Mesečno'
-        quarterly: 'V četrtletju'
+        always: 'Vedno'
+      reminders_frequency:
+        never: "Nikoli"
+        daily: "Dnevno"
+        weekly: "Tedensko"
+        monthly: "Mesečno"
+        quarterly: "V četrtletju"

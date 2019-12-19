@@ -8,9 +8,12 @@
 ro:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'Niciodată'
-        daily: 'Zilnic'
-        weekly: 'Săptămânal'
-        monthly: 'Lunar'
-        quarterly: 'Trimestrial'
+        always: 'Întotdeauna'
+      reminders_frequency:
+        never: "Niciodată"
+        daily: "Zilnic"
+        weekly: "Săptămânal"
+        monthly: "Lunar"
+        quarterly: "Trimestrial"

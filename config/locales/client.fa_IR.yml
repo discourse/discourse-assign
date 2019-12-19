@@ -8,9 +8,12 @@
 fa_IR:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'هیچ‌وقت'
-        daily: 'روزانه'
-        weekly: 'هفتگی'
-        monthly: 'ماهیانه '
-        quarterly: 'چهار‌ماهه'
+        always: 'همیشه'
+      reminders_frequency:
+        never: "هیچ‌وقت"
+        daily: "روزانه"
+        weekly: "هفتگی"
+        monthly: "ماهیانه "
+        quarterly: "چهار‌ماهه"

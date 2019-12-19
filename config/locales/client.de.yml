@@ -27,18 +27,20 @@ de:
         help: "Thema an einen anderen Benutzer zuweisen"
       assign_modal:
         title: "Thema zuordnen"
-        description: "Gib den Benutzernamen der Person ein, der du dieses Thema zuordnen möchtest"
         assign: "Zuordnen"
       claim:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"
+      assign_mailer:
+        never: 'nie'
+        always: 'immer'
       reminders_frequency:
         description: "Intervall für das Erhalten von Erinnerungen an zugewiesene Themen"
-        never: 'nie'
-        daily: 'Täglich'
-        weekly: 'Wöchentlich'
-        monthly: 'Monatlich'
-        quarterly: 'Vierteljährlich'
+        never: "nie"
+        daily: "Täglich"
+        weekly: "Wöchentlich"
+        monthly: "Monatlich"
+        quarterly: "Vierteljährlich"
     user:
       messages:
         assigned_title: "Zugeordnet (%{count})"

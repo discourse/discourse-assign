@@ -27,18 +27,20 @@ fi:
         help: "Osoita ketju uudelleen toiselle käyttäjälle"
       assign_modal:
         title: "Osoita ketju"
-        description: "Syötä sen käyttäjän nimi, jolle haluat tämän ketjun osoittaa"
         assign: "Osoita"
       claim:
         title: "omi"
         help: "Osoita ketju itsellesi"
+      assign_mailer:
+        never: 'Ei koskaan'
+        always: 'Aina'
       reminders_frequency:
         description: "Osoitettujen ketjujen muistutusten toistuvuus"
-        never: 'Ei koskaan'
-        daily: 'Päivittäin'
-        weekly: 'Viikoittain'
-        monthly: 'Kuukausittain'
-        quarterly: 'Vuosineljännettäin'
+        never: "Ei koskaan"
+        daily: "Päivittäin"
+        weekly: "Viikoittain"
+        monthly: "Kuukausittain"
+        quarterly: "Vuosineljännettäin"
     user:
       messages:
         assigned_title: "Osoitettu (%{count})"

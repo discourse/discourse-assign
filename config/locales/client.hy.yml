@@ -24,17 +24,19 @@ hy:
         help: "Վերագրել Թեման Օգտատիրոջը"
       assign_modal:
         title: "Վերագրել Թեման"
-        description: "Մուտքագրեք այն անձի օգտանունը, ում Դուք կցանկանայիք վերագրել այս թեման:"
         assign: "Վերագրել"
       claim:
         title: "պահանջ"
         help: "Վերագրել թեման ինքներդ Ձեզ"
-      reminders_frequency:
+      assign_mailer:
         never: 'Երբեք'
-        daily: 'Օրվա Ընթացքում'
-        weekly: 'Շաբաթվա Ընթացքում'
-        monthly: 'Ամսվա Ընթացքում'
-        quarterly: 'Եռամսյակի Ընթացքում'
+        always: 'Միշտ'
+      reminders_frequency:
+        never: "Երբեք"
+        daily: "Օրվա Ընթացքում"
+        weekly: "Շաբաթվա Ընթացքում"
+        monthly: "Ամսվա Ընթացքում"
+        quarterly: "Եռամսյակի Ընթացքում"
     user:
       messages:
         assigned_title: "Վերագրված (%{count})"

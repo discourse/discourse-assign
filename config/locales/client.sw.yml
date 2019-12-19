@@ -23,17 +23,19 @@ sw:
         help: "Pangia Mada kwa Mtumiaji"
       assign_modal:
         title: "Awadha Mada"
-        description: "Andika jina la mtu unayepewa mada"
         assign: "Kabidhi"
       claim:
         title: "Miliki"
         help: "Jipe Mada"
-      reminders_frequency:
+      assign_mailer:
         never: 'Kamwe'
-        daily: 'Kila siku'
-        weekly: 'Kila wiki'
-        monthly: 'Klla mwezi'
-        quarterly: 'Kila baada ya miezi mitatu'
+        always: 'Mara kwa mara'
+      reminders_frequency:
+        never: "Kamwe"
+        daily: "Kila siku"
+        weekly: "Kila wiki"
+        monthly: "Klla mwezi"
+        quarterly: "Kila baada ya miezi mitatu"
     user:
       messages:
         assigned_title: "Amekabidhiwa (%{count})"

@@ -37,13 +37,17 @@ uk:
       claim:
         title: "претензія"
         help: "Призначте тему собі"
+      assign_mailer:
+        never: 'Ніколи'
+        different_users: 'Тільки якщо правонаступник і передавач є різними користувачами'
+        always: 'Завжди'
       reminders_frequency:
         description: "Частота прийому нагадувань про призначені теми"
-        never: 'Ніколи'
-        daily: 'Щодня'
-        weekly: 'Щотижня'
-        monthly: 'Щомісяця'
-        quarterly: 'Щоквартала'
+        never: "Ніколи"
+        daily: "Щодня"
+        weekly: "Щотижня"
+        monthly: "Щомісяця"
+        quarterly: "Щоквартала"
     user:
       messages:
         assigned_title: "Призначено (%{count})"

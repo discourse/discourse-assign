@@ -23,17 +23,19 @@ nb_NO:
         help: "Tildel emne til bruker"
       assign_modal:
         title: "Tildel emne"
-        description: "Skriv inn brukernavnet på personen du ønsker å tildele dette emnet"
         assign: "Tildel"
       claim:
         title: "ta"
         help: "Tildel emne til deg selv"
-      reminders_frequency:
+      assign_mailer:
         never: 'Aldri'
-        daily: 'Daglig'
-        weekly: 'Ukentlig'
-        monthly: 'Månedlig'
-        quarterly: 'Kvartalsvis'
+        always: 'Alltid'
+      reminders_frequency:
+        never: "Aldri"
+        daily: "Daglig"
+        weekly: "Ukentlig"
+        monthly: "Månedlig"
+        quarterly: "Kvartalsvis"
     user:
       messages:
         assigned: "Tildelt"

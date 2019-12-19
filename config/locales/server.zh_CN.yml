@@ -16,7 +16,6 @@ zh_CN:
     assign_other_regex: "需要正则表达式用于通过提及以指派主题。例如“你的列表”"
     unassign_on_group_archive: "当消息被群组存档时取消分配消息（移回收件箱时重新分配）"
     unassign_on_close: "当一个主题关闭时取消分配"
-    assign_mailer_enabled: "启用时，被指派的用户会在每次指派时候收到一封提醒邮件"
     remind_assigns: "提醒用户正在分配"
     remind_assigns_frequency: "指派主题的用户提醒频率"
     max_assigned_topics: "每个用户每天能分配的主题数量的最大值。"

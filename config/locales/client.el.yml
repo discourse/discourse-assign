@@ -8,9 +8,12 @@
 el:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'Ποτέ'
-        daily: 'Ημερήσια'
-        weekly: 'Εβδομαδιαία'
-        monthly: 'Μηνιαία'
-        quarterly: 'Τριμηνιαία'
+        always: 'Πάντα'
+      reminders_frequency:
+        never: "Ποτέ"
+        daily: "Ημερήσια"
+        weekly: "Εβδομαδιαία"
+        monthly: "Μηνιαία"
+        quarterly: "Τριμηνιαία"

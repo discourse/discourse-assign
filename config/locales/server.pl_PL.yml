@@ -16,7 +16,7 @@ pl_PL:
     assign_other_regex: "Regex, który musi przejść, by możliwe było przypisanie tematów innym użytkownikom dzięki wzmiankom. Przykład: ’twoja lista’"
     unassign_on_group_archive: "Kiedy wpis jest archiwizowany przez grupę, cofnij przypisanie wiadomości (po ponowieniu przypisania jest ona przenoszona z powrotem do skrzynki odbiorczej)"
     unassign_on_close: "Kiedy temat zostaje zamknięty, cofnij jego przypisanie"
-    assign_mailer_enabled: "Kiedy aktywowane, przypisany użytkownik otrzyma powiadomienie e‐mail po każdym przypisaniu"
+    assign_mailer: "Kiedy wysyłać powiadomienia e-mail dotyczące przypisań"
     remind_assigns: "Przypominaj użytkownikom o oczekujących przypisaniach."
     remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
     max_assigned_topics: "Maksymalna liczba tematów, które można przypisać użytkownikowi."

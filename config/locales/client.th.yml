@@ -8,9 +8,12 @@
 th:
   js:
     discourse_assign:
-      reminders_frequency:
+      assign_mailer:
         never: 'ไม่เคย'
-        daily: 'วัน'
-        weekly: 'อาทิตย์'
-        monthly: 'เดือน'
-        quarterly: 'สามเดือน'
+        always: 'เสมอ'
+      reminders_frequency:
+        never: "ไม่เคย"
+        daily: "วัน"
+        weekly: "อาทิตย์"
+        monthly: "เดือน"
+        quarterly: "สามเดือน"

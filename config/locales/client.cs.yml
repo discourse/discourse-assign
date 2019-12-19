@@ -20,16 +20,18 @@ cs:
         help: "Zadat téma uživateli"
       assign_modal:
         title: "Zadat téma"
-        description: "Uveďte uživatelské jméno osoby, které chcete zadat toto téma"
         assign: "Zadat"
       claim:
         help: "Zadat téme sobě"
-      reminders_frequency:
+      assign_mailer:
         never: 'Nikdy'
-        daily: 'Denně'
-        weekly: 'Týdně'
-        monthly: 'Měsíčně'
-        quarterly: 'Čtvrtletně'
+        always: 'Vždy'
+      reminders_frequency:
+        never: "Nikdy"
+        daily: "Denně"
+        weekly: "Týdně"
+        monthly: "Měsíčně"
+        quarterly: "Čtvrtletně"
     user:
       messages:
         assigned: "Zadáno"

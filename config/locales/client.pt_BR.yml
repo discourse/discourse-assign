@@ -27,18 +27,20 @@ pt_BR:
         help: "Designar Novamente o Tópico a um usuário diferente"
       assign_modal:
         title: "Designar Tópico"
-        description: "Digite o nome de usuário da pessoa que você deseja designar à este tópico"
         assign: "Designar"
       claim:
         title: "reivindicar"
         help: "Designar tópico à você mesmo"
+      assign_mailer:
+        never: 'Nunca'
+        always: 'Sempre'
       reminders_frequency:
         description: "Freqüência para receber lembretes de tópicos designados"
-        never: 'Nunca'
-        daily: 'Diariamente'
-        weekly: 'Semanalmente'
-        monthly: 'Mensalmente'
-        quarterly: 'Trimestralmente'
+        never: "Nunca"
+        daily: "Diariamente"
+        weekly: "Semanalmente"
+        monthly: "Mensalmente"
+        quarterly: "Trimestralmente"
     user:
       messages:
         assigned_title: "Designado (%{count})"

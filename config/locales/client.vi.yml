@@ -8,9 +8,15 @@
 vi:
   js:
     discourse_assign:
-      reminders_frequency:
+      cant_act: "Bạn không thể hành động trên các cờ đã được gán cho Thành viên khác"
+      assign:
+        help: "Gán chủ đề cho Thành viên"
+      assign_mailer:
         never: 'Không'
-        daily: 'Hàng ngày'
-        weekly: 'Hàng tuần'
-        monthly: 'Hàng tháng'
-        quarterly: 'Hàng quý'
+        always: 'Luôn luôn'
+      reminders_frequency:
+        never: "Không"
+        daily: "Hàng ngày"
+        weekly: "Hàng tuần"
+        monthly: "Hàng tháng"
+        quarterly: "Hàng quý"

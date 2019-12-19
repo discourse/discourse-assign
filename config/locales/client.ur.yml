@@ -27,18 +27,20 @@ ur:
         help: "ایک مختلف صارف کو ٹاپک دوبارہ اسائین کریں"
       assign_modal:
         title: "ٹاپک اسائین کریں"
-        description: "اُس شخص کا صارف نام درج کیجیے جسے آپ یہ ٹاپک اسائین کرنا چاہتے ہیں"
         assign: "اسائین کریں"
       claim:
         title: "کلیم کریں"
         help: "اپنے آپ کو ٹاپک اسائین کریں"
+      assign_mailer:
+        never: 'کبھی نہیں '
+        always: 'ہمیشہ'
       reminders_frequency:
         description: "اسائین کردہ ٹاپکس کے بارے میں یاد دہانیاں وصول کرنے کی فریکوئینسی"
-        never: 'کبھی نہیں '
-        daily: 'روزانہ '
-        weekly: 'ہفتہ وار'
-        monthly: 'ماہانہ'
-        quarterly: 'سہ ماہی'
+        never: "کبھی نہیں "
+        daily: "روزانہ "
+        weekly: "ہفتہ وار"
+        monthly: "ماہانہ"
+        quarterly: "سہ ماہی"
     user:
       messages:
         assigned_title: "اسائین کردہ (%{count})"
