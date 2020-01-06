@@ -1,4 +1,7 @@
-import { ListItemDefaults, default as TopicListItem } from "discourse/components/topic-list-item";
+import {
+  ListItemDefaults,
+  default as TopicListItem
+} from "discourse/components/topic-list-item";
 
 // This is a backward compatible fix so that this change:
 // https://github.com/discourse/discourse/pull/8589
