@@ -5,7 +5,6 @@ import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
-import { get } from "@ember/object";
 
 function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
@@ -234,11 +233,11 @@ function initialize(api) {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
       if (postModel) {
-        const assignedToUser = get(postModel, "topic.assigned_to_user");
+        const assignedToUser = Ember.get(postModel, "topic.assigned_to_user");
         if (assignedToUser) {
           return dec.widget.attach("assigned-to", {
             assignedToUser,
-            href: get(postModel, "topic.assignedToUserPath")
+            href: Ember.get(postModel, "topic.assignedToUserPath")
           });
         }
       }
