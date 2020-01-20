@@ -7,10 +7,63 @@
 
 sv:
   site_settings:
-    assign_enabled: "aktivera tilldelatillägg"
+    assign_enabled: "Aktivera tilldela-tillägget"
     assigns_public: "Tillåt allmänheten att se ämnestilldelningar"
+    assigns_user_url_path: "Sökväg till användares tilldelade ämnen (använd: {användarnamn} för att ersätta användarnamn)"
+    assigns_by_staff_mention: "Om en anställd nämner en annan anställd tilldelas ämnet automatiskt"
+    unassign_creates_tracking_post: "Om du tar bort ett ämnes tilldelning skapas det en viskning eller liten åtgärd för att spåra ändringen"
+    assign_self_regex: "Regex som måste godkännas för självtilldelning. T.ex. 'min lista'"
+    assign_other_regex: "Regex som måste godkännas för att tilldela ämnen till andra via omnämnande. T.ex. 'din lista'."
+    unassign_on_group_archive: "När ett meddelande arkiveras av en grupp tas meddelandets tilldelning bort (tilldela igen om det flyttas tillbaka till inkorgen)"
+    unassign_on_close: "När ett ämne stängs tas ämnets tilldelning bort"
+    assign_mailer: "När ett e-postmeddelande om tilldelningar ska skickas"
+    remind_assigns: "Påminn användare om väntande tilldelningar."
+    remind_assigns_frequency: "Hur ofta användare påminns om tilldelade ämnen."
+    max_assigned_topics: "Maximalt antal ämnen som kan tilldelas en användare."
+    assign_allowed_on_groups: "Grupper som får tilldela ämnen."
   discourse_assign:
+    assigned_to: "Ämne tilldelat @%{username}"
+    unassigned: "Ämnets tilldelning togs bort"
+    already_claimed: "Det har redan gjorts anspråk på det ämnet."
+    already_assigned: 'Ämnet har redan tilldelats till @%{username}'
+    too_many_assigns: "@%{username} har redan nått maximalt antal tilldelade ämnen (%{max})."
+    forbidden_assign_to: "@%{username} kan inte tilldelas eftersom de inte har tillgång till det här ämnet."
+    flag_assigned: "Tyvärr har den flaggans ämne tilldelats en annan användare"
+    flag_unclaimed: "Du måste göra anspråk på det ämnet innan du gör något åt flaggan"
+    topic_assigned_excerpt: "tilldelade ämnet '%{title}' till dig"
     reminders_frequency:
       never: 'aldrig'
       daily: 'dagligen'
       weekly: 'veckovis'
+      monthly: 'månadsvis'
+      quarterly: 'varje kvartal'
+  assign_mailer:
+    title: "Tilldela mailskrivare"
+    subject_template: "[%{email_prefix}] %{assignee_name} tilldelade dig till '%{topic_title}'!"
+    text_body_template: |
+      Hallå där, %{assignee_name} **tilldelade** dig till en diskussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      Om du är intresserad kan du klicka på länken nedan:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "Du har %{pending_assignments} väntande tilldelningar"
+    body: |
+      Du har för närvarande [%{pending_assignments} väntande tilldelningar](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Den här påminnelsen kommer att skickas %{frequency} om du har mer än ett tilldelat ämne.
+    newest: |
+      ### Nyaste
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Äldsta
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

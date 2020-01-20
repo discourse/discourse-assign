@@ -7,11 +7,17 @@
 
 tr_TR:
   js:
+    filters:
+      unassigned:
+        title: "Atanmamışlar"
+        help: "Atanmamış konular"
     action_codes:
       assigned: "%{when}%{who} atandı"
       unassigned: "%{when}%{who} atanmamış"
     discourse_assign:
+      add_unassigned_filter: "Kategoriye 'atanmamış' filtre ekle"
       cant_act: "Diğer kullanıcılara atanan bildirimler üzerinde hareket edemezsiniz"
+      cant_act_unclaimed: "Raporlara geçmeden önce bu konuyu talep etmelisiniz."
       assigned: "Atandı"
       assigned_to: "Atandı"
       assign_notification: "<p><span>{{username}}</span>{{description}}</p>"
@@ -21,16 +27,22 @@ tr_TR:
       assign:
         title: "Ata"
         help: "Kullanıcıya konu ata"
+      reassign:
+        title: "Yeniden atama"
+        help: "Konuyu farklı bir kullanıcıya yeniden atayın"
       assign_modal:
         title: "Konu Ata"
+        description: "Bu konuyu atamak istediğiniz kullanıcının adını girin"
         assign: "Ata"
       claim:
         title: "talep"
         help: "Konuyu kendinize atayın"
       assign_mailer:
         never: 'Asla'
+        different_users: 'Yalnızca atanan ve vekil kullanıcılar farklıysa'
         always: 'Her zaman'
       reminders_frequency:
+        description: "Atanan konu hatırlatıcılarını alma sıklığı"
         never: "Asla"
         daily: "Günlük"
         weekly: "Haftalık"
@@ -38,4 +50,5 @@ tr_TR:
         quarterly: "Üç aylık"
     user:
       messages:
+        assigned_title: "Atandı (%{count})"
         assigned: "Atandı"

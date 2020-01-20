@@ -6,8 +6,64 @@
 # https://www.transifex.com/projects/p/discourse-org/
 
 tr_TR:
+  site_settings:
+    assign_enabled: "Atama eklentisini etkinleştir"
+    assigns_public: "Bütün kullanıcıların konu atamalarını görmesine izin ver"
+    assigns_user_url_path: "Konuya atanan kullanıcılar (kullanıcı adını değiştirmek için {kullanıcıadı} kullanın)"
+    assigns_by_staff_mention: "Bir moderatör başka bir moderatörden bahsederse, konu otomatik olarak atanır"
+    unassign_creates_tracking_post: "Bir konunun atamasını kaldırırsanız, değişikliği takip etmek için size fısıltı gönderilir"
+    assign_self_regex: "Kendi kendine atama yapılabilmesi için geçmesi gereken ifade. Örnek &#39;listem&#39;"
+    assign_other_regex: "Konuları başkalarına atamak için geçmesi gereken ifade. Örnek &#39;listeniz&#39;."
+    unassign_on_group_archive: "Bir mesaj bir grup tarafından arşivlendiğinde, mesajın atamasını kaldırın (tekrar gelen kutusuna taşınırsa yeniden ata)"
+    unassign_on_close: "Bir konu kapatıldığında konunun atamasını kaldır"
+    assign_mailer: "Atamalar için e-posta bildirimi gönderildiğinde"
+    remind_assigns: "Kullanıcılara bekleyen atamaları hatırlatın."
+    remind_assigns_frequency: "Kullanıcılara atanan konular hakkında hatırlatma sıklığı."
+    max_assigned_topics: "Bir kullanıcıya atanabilecek maksimum konu sayısı."
+    assign_allowed_on_groups: "Konu atamasına izin verilen gruplar."
   discourse_assign:
+    assigned_to: "@%{username} olarak atanan konu"
+    unassigned: "Konu atanmadı"
+    already_claimed: "Bu konu zaten atandı."
+    already_assigned: 'Konu zaten %{username}&#39;a atandı'
+    too_many_assigns: "@ %{username} zaten atanmış maksimum konu sayısına ulaştı (%{max})."
+    forbidden_assign_to: "@%{username} kullanıcısının bu konuya erişim izni olmadığı için atanamıyor."
+    flag_assigned: "Maalesef, raporun konusu başka bir kullanıcıya atandı"
+    flag_unclaimed: "Raporlama yapmadan önce bu konuyu talep etmelisiniz"
+    topic_assigned_excerpt: "size &#39;%{title}&#39; konusunu atadı"
     reminders_frequency:
       never: 'asla'
       daily: 'günlük'
       weekly: 'haftalık'
+      monthly: 'aylık'
+      quarterly: 'üç aylık'
+  assign_mailer:
+    title: "E-posta Göndericisi Ata"
+    subject_template: "[%{email_prefix}] %{assignee_name} sizi &#39;%{topic_title}&#39; a atadı!"
+    text_body_template: |
+      Hey,%{assignee_name}sizi bir tartışmaya **atadı**
+      >**%{topic_title}**
+      >
+      >%{topic_excerpt}
+
+      Eğer ilgileniyorsanız,aşağıdaki linke tıklayın:
+      [%{topic_link}][%{topic_link}]
+  pending_assigns_reminder:
+    title: "Bekleyen %{pending_assignments} atamanız var"
+    body: |
+      Şuan [%{pending_assignments} atamasına] sahipsiniz. (%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Eğer birden fazla atanmış konunuz varsa hatırlatıcı sizin için %{frequency} sıklığında çalışacak.
+    newest: |
+      ### En yeni
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### En eski
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

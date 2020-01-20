@@ -7,10 +7,15 @@
 
 fi:
   js:
+    filters:
+      unassigned:
+        title: "Osoittamattomat"
+        help: "Ketjut joita ei ole osoitettu"
     action_codes:
       assigned: "osoitti käyttäjälle %{who} %{when}"
       unassigned: "perui osoituksen käyttäjälle %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Lisää alueille osoittamattomat-suodatin"
       cant_act: "Et voi käsitellä lippua, joka on osoitettu toiselle käyttäjälle"
       cant_act_unclaimed: "Sinun täytyy omia ketju ennen kuin käsittelet lippuja."
       assigned: "Osoitettu"
@@ -27,12 +32,14 @@ fi:
         help: "Osoita ketju uudelleen toiselle käyttäjälle"
       assign_modal:
         title: "Osoita ketju"
+        description: "Syötä sen käyttäjän nimi, jolle haluat ketjun osoittaa"
         assign: "Osoita"
       claim:
         title: "omi"
         help: "Osoita ketju itsellesi"
       assign_mailer:
         never: 'Ei koskaan'
+        different_users: 'Vain jos osoittaja ja osoitettu ovat eri käyttäjiä'
         always: 'Aina'
       reminders_frequency:
         description: "Osoitettujen ketjujen muistutusten toistuvuus"

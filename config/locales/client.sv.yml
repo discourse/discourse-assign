@@ -7,13 +7,48 @@
 
 sv:
   js:
+    filters:
+      unassigned:
+        title: "Otilldelad"
+        help: "Ämnen som inte är tilldelade"
+    action_codes:
+      assigned: "tilldelad %{who} %{when}"
+      unassigned: "otilldelad %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Lägg till 'otilldelad' som en filterkategori"
+      cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
+      cant_act_unclaimed: "Du måste ta kontroll över detta ämne innan du kan agera på flaggor."
+      assigned: "Tilldelad"
+      assigned_to: "Tilldelad till"
+      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      unassign:
+        title: "Otilldela"
+        help: "Otilldela ämne"
+      assign:
+        title: "Tilldela"
+        help: "Tilldela ämne till användare"
+      reassign:
+        title: "Åter-tilldela"
+        help: "Åter-tilldela ämne till en annan användare"
+      assign_modal:
+        title: "Tilldela ämne"
+        description: "Ange namn på den användare som du vill tilldela detta ämne."
+        assign: "Tilldela"
+      claim:
+        title: "begär"
+        help: "Tilldela ämne till dig själv"
       assign_mailer:
         never: 'Aldrig'
+        different_users: 'Enbart om tilldelare och tilldelad är olika användare'
         always: 'Alltid'
       reminders_frequency:
+        description: "Frekvens för att erhålla ämnespåminnelser"
         never: "Aldrig"
         daily: "Dagligen"
         weekly: "Veckovis"
         monthly: "Månadsvis"
         quarterly: "En gång i kvartalet"
+    user:
+      messages:
+        assigned_title: "Tilldelade (%{count})"
+        assigned: "Tilldelad"
