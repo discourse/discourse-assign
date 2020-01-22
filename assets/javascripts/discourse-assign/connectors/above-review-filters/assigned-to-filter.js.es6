@@ -4,7 +4,7 @@ export default {
   },
 
   setupComponent(args, component) {
-    const groupIDs = component.siteSettings.assign_allowed_on_groups
+    const groupIDs = (component.siteSettings.assign_allowed_on_groups || "")
       .split("|")
       .filter(Boolean);
     const groupNames = this.site.groups
