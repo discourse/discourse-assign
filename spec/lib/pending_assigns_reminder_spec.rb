@@ -33,6 +33,7 @@ RSpec.describe PendingAssignsReminder do
 
       @post1 = Fabricate(:post)
       @post2 = Fabricate(:post)
+      @post2.topic.update_column(:fancy_title, nil)
       @post3 = Fabricate(:post)
       TopicAssigner.new(@post1.topic, user).assign(user)
       TopicAssigner.new(@post2.topic, user).assign(user)
