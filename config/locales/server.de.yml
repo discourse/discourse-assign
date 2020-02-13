@@ -16,6 +16,7 @@ de:
     assign_other_regex: "Regulärer Ausdruck, der erfüllt sein muss, um ein Thema jemand anderen zuzordnen. Beispiel: 'deine Liste'"
     unassign_on_group_archive: "Zuordnung aufheben, wenn eine Nachricht von einer Gruppe archiviert worden ist (Wieder zuordnen, wenn in den Posteingang verschoben)"
     unassign_on_close: "Wenn das Thema geschlossen wird, hebe die Zuordnung der Person zum Thema auf"
+    assign_mailer: "Wann für Zuweisungen Notifizierungs E-Mails gesendet werden"
     remind_assigns: "Erinnere Benutzer an anstehende Zuweisungen."
     remind_assigns_frequency: "Frequenz, um Benutzer an zugewiesene Themen zu erinnern."
     max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugewiesen werden können."
