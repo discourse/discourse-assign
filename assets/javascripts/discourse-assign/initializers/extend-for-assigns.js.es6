@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { default as computed } from "ember-addons/ember-computed-decorators";
+import { default as computed } from "discourse-common/utils/decorators";
 import { iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
