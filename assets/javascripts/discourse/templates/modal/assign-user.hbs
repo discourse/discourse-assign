@@ -1,25 +1,26 @@
 {{#d-modal-body title="discourse_assign.assign_modal.title" class="assign"}}
-{{i18n 'discourse_assign.assign_modal.description'}}
-{{user-selector
-    single=true
-    allowAny=false
-    group="staff"
-    groupMembersOf=allowedGroups
-    excludeCurrentUser=false
-    includeMentionableGroups=false
-    hasGroups=false
-    usernames=model.username
-    placeholderKey=placeholderKey
-    autocomplete="off"}}
-<div class='assign-suggestions'>
-  {{#each assignSuggestions as |user|}}
-    <a {{action "assignUser" user}}>
-    {{avatar user imageSize="small"}}
-    </a>
-  {{/each}}
+<div>
+  {{i18n 'discourse_assign.assign_modal.description'}}
+  {{user-selector
+      single=true
+      allowAny=false
+      group="staff"
+      groupMembersOf=allowedGroups
+      excludeCurrentUser=false
+      includeMentionableGroups=false
+      hasGroups=false
+      usernames=model.username
+      placeholderKey=placeholderKey
+      autocomplete="off"}}
+  <div class='assign-suggestions'>
+    {{#each assignSuggestions as |user|}}
+      <a {{action "assignUser" user}}>
+      {{avatar user imageSize="small"}}
+      </a>
+    {{/each}}
+  </div>
 </div>
 {{/d-modal-body}}
-
 <div class="modal-footer">
 {{d-button label='discourse_assign.assign_modal.assign' icon=inviteIcon action=(action "assign") class="btn-primary" disabled=disabled}}
 </div>
