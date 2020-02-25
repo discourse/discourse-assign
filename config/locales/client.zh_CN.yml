@@ -7,10 +7,15 @@
 
 zh_CN:
   js:
+    filters:
+      unassigned:
+        title: "未指派的"
+        help: "主题未指定"
     action_codes:
       assigned: "已指派 %{who} %{when}"
       unassigned: "未指派 %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "将“未指派的”过滤器添加到分类"
       cant_act: "你不能动已经指派给别人的旗子"
       cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
       assigned: "已指派"
@@ -34,6 +39,7 @@ zh_CN:
         help: "指派这个主题给你自己"
       assign_mailer:
         never: '从不'
+        different_users: '仅当转让人和受让人是不同的用户时'
         always: '始终'
       reminders_frequency:
         description: "接受指派主题提醒的频率"
