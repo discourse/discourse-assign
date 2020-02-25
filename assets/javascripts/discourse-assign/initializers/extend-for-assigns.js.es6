@@ -133,8 +133,9 @@ function initialize(api) {
   api.modifyClass("model:topic", {
     @computed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
+      const siteSettings = api.container.lookup("site-settings:main");
       return Discourse.getURL(
-        this.siteSettings.assigns_user_url_path.replace(
+        siteSettings.assigns_user_url_path.replace(
           "{username}",
           assignedToUser.username
         )
