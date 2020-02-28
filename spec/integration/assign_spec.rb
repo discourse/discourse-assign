@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require_relative '../support/assign_allowed_group'
+require_relative '../fabricators/assign_hook_fabricator.rb'
 
 describe 'integration tests' do
   before do
@@ -91,6 +92,23 @@ describe 'integration tests' do
 
       DiscourseEvent.trigger(:assign_topic, topic, user2, admin, true)
       expect(topic.reload.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i).to eq(user2.id)
+    end
+
+    it "triggers a webhook for assigned and unassigned" do
+      Fabricate(:assign_web_hook)
+      DiscourseEvent.trigger(:assign_topic, topic, user2, admin, true)
+      job_args = Jobs::EmitWebHookEvent.jobs[0]["args"].first
+      expect(job_args["event_name"]).to eq("assigned")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["topic_id"]).to eq(topic.id)
+      expect(payload["assigned_to_id"]).to eq(user2.id)
+
+      DiscourseEvent.trigger(:unassign_topic, topic, admin)
+      job_args = Jobs::EmitWebHookEvent.jobs[1]["args"].first
+      expect(job_args["event_name"]).to eq("unassigned")
+      payload = JSON.parse(job_args["payload"])
+      expect(payload["topic_id"]).to eq(topic.id)
+      expect(payload["unassigned_to_id"]).to eq(user2.id)
     end
   end
 end

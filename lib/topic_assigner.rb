@@ -248,7 +248,23 @@ class ::TopicAssigner
       )
     end
 
+    # Create a webhook event
+    if WebHook.active_web_hooks(:assign).exists?
+      type = :assigned
+      payload = {
+        type: type,
+        topic_id: @topic.id,
+        topic_title: @topic.title,
+        assigned_to_id: assign_to.id,
+        assigned_to_username: assign_to.username,
+        assigned_by_id: @assigned_by.id,
+        assigned_by_username: @assigned_by.username
+      }.to_json
+      WebHook.enqueue_assign_hooks(type, payload)
+    end
+
     { success: true }
+
   end
 
   def unassign(silent: false)
@@ -327,6 +343,21 @@ class ::TopicAssigner
           custom_fields: { "action_code_who" => assigned_user.username },
           action_code: "unassigned"
         )
+      end
+
+      # Create a webhook event
+      if WebHook.active_web_hooks(:assign).exists?
+        type = :unassigned
+        payload = {
+          type: type,
+          topic_id: @topic.id,
+          topic_title: @topic.title,
+          unassigned_to_id: assigned_user.id,
+          unassigned_to_username: assigned_user.username,
+          unassigned_by_id: @assigned_by.id,
+          unassigned_by_username: @assigned_by.username
+        }.to_json
+        WebHook.enqueue_assign_hooks(type, payload)
       end
     end
   end

@@ -45,3 +45,8 @@ en:
       messages:
         assigned_title: "Assigned (%{count})"
         assigned: "Assigned"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Assign Event"
+          details: "When a user assigns or unassigns a topic."
