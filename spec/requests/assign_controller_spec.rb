@@ -12,13 +12,6 @@ RSpec.describe DiscourseAssign::AssignController do
   let(:post) { Fabricate(:post) }
   let(:user2) { Fabricate(:active_user) }
 
-  let(:above_min_version) do
-    min_version = 201_907_171_337_43
-    DB.query_single(
-      "SELECT schema_migrations.version FROM schema_migrations WHERE schema_migrations.version = '#{min_version}'"
-    ).first.present?
-  end
-
   describe 'only allow users from allowed groups' do
     before { sign_in(user2) }
 
@@ -39,11 +32,7 @@ RSpec.describe DiscourseAssign::AssignController do
         allowed_group = Group.find_by(name: 'everyone')
         allowed_group.add(user2)
 
-        defaults = if above_min_version
-          "#{default_allowed_group.id}|#{allowed_group.id}"
-        else
-          "#{default_allowed_group.name}|#{allowed_group.name}"
-        end
+        defaults = "#{default_allowed_group.id}|#{allowed_group.id}"
 
         SiteSetting.assign_allowed_on_groups = defaults
         TopicAssigner.new(post.topic, user).assign(user2)
@@ -57,7 +46,7 @@ RSpec.describe DiscourseAssign::AssignController do
       it 'does not include users from disallowed groups' do
         allowed_group = Group.find_by(name: 'everyone')
         allowed_group.add(user2)
-        SiteSetting.assign_allowed_on_groups = above_min_version ? default_allowed_group.id.to_s : default_allowed_group.name
+        SiteSetting.assign_allowed_on_groups = default_allowed_group.id.to_s
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
@@ -71,8 +60,7 @@ RSpec.describe DiscourseAssign::AssignController do
         visible_group.add(user)
         invisible_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:members])
 
-        SiteSetting.assign_allowed_on_groups = above_min_version ? "#{visible_group.id}|#{invisible_group.id}"
-                                                                 : "#{visible_group.name}|#{invisible_group.name}"
+        SiteSetting.assign_allowed_on_groups = "#{visible_group.id}|#{invisible_group.id}"
 
         get '/assign/suggestions.json'
         assign_allowed_on_groups = JSON.parse(response.body)['assign_allowed_on_groups']

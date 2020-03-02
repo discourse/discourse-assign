@@ -10,15 +10,8 @@ RSpec.describe Group do
       SiteSetting.assign_enabled = true
     end
 
-    let(:above_min_version) do
-      min_version = 201_907_171_337_43
-      migrated_site_setting = DB.query_single(
-        "SELECT schema_migrations.version FROM schema_migrations WHERE schema_migrations.version = '#{min_version}'"
-      ).first.present?
-    end
-
-    let(:removed_group_setting) { above_min_version ? '3|4' : 'staff|moderators' }
-    let(:group_attribute) { above_min_version ? group.id : group.name }
+    let(:removed_group_setting) { '3|4' }
+    let(:group_attribute) { group.id }
 
     it 'removes the group from the setting when the group gets destroyed' do
       SiteSetting.assign_allowed_on_groups = "#{group_attribute}|#{removed_group_setting}"
@@ -37,7 +30,7 @@ RSpec.describe Group do
     end
 
     it 'removes the group from the list when it is on the middle of the list' do
-      allowed_groups = above_min_version ? "3|#{group_attribute}|4" : "staff|#{group_attribute}|moderators"
+      allowed_groups = "3|#{group_attribute}|4"
       SiteSetting.assign_allowed_on_groups = allowed_groups
 
       group.destroy!
