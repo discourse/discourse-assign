@@ -35,12 +35,6 @@ after_initialize do
   require 'topic_assigner'
   require 'pending_assigns_reminder'
 
-  class ::WebHookEventType
-    ASSIGN = 101.freeze
-  end
-
-  SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-assign", "db", "fixtures").to_s
-
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
   register_editable_user_custom_field frequency_field
   User.register_custom_field_type frequency_field, :integer
