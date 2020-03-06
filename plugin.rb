@@ -334,4 +334,15 @@ after_initialize do
       assigner.unassign(silent: true)
     end
   end
+
+  class ::WebHook
+    def self.enqueue_assign_hooks(event, payload)
+      if active_web_hooks('assign').exists?
+        WebHook.enqueue_hooks(:assign, event,
+          payload: payload
+        )
+      end
+    end
+  end
+
 end
