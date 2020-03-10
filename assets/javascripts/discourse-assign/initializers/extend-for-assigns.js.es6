@@ -142,6 +142,18 @@ function initialize(api) {
     }
   });
 
+  api.modifyClass("model:bookmark", {
+    @computed("assigned_to_user")
+    assignedToUserPath(assignedToUser) {
+      return Discourse.getURL(
+        this.siteSettings.assigns_user_url_path.replace(
+          "{username}",
+          assignedToUser.username
+        )
+      );
+    }
+  });
+
   api.addPostSmallActionIcon("assigned", "user-plus");
   api.addPostSmallActionIcon("unassigned", "user-times");
 
