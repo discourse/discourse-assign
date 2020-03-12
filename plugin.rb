@@ -238,6 +238,25 @@ after_initialize do
     end
   end
 
+  if defined? UserBookmarkSerializer
+    add_to_class(:user_bookmark_serializer, :assigned_to_user_id) do
+      id = object.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
+      # a bit messy but race conditions can give us an array here, avoid
+      id && id.to_i rescue nil
+    end
+
+    add_to_serializer(:user_bookmark, :assigned_to_user, false) do
+      DiscourseAssign::Helpers.build_assigned_to_user(assigned_to_user_id, object.topic)
+    end
+
+    add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
+      if SiteSetting.assigns_public || scope.can_assign?
+        # subtle but need to catch cases where stuff is not assigned
+        object.topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
+      end
+    end
+  end
+
   add_to_serializer(:current_user, :can_assign) do
     object.can_assign?
   end
