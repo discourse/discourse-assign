@@ -92,6 +92,26 @@ after_initialize do
   TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
   Site.preloaded_category_custom_fields << "enable_unassigned_filter" if Site.respond_to? :preloaded_category_custom_fields
 
+  if defined? BookmarkQuery
+    if BookmarkQuery.respond_to?(:preloaded_custom_fields) && BookmarkQuery.respond_to?(:on_preload)
+      BookmarkQuery.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
+      BookmarkQuery.on_preload do |bookmarks, bookmark_query|
+        if SiteSetting.assign_enabled?
+          assigned_user_ids = bookmarks.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
+          assigned_users = {}
+          User.where(id: assigned_user_ids).each do |user|
+            assigned_users[user.id] = user
+          end
+          bookmarks.each do |bookmark|
+            bookmark.topic.preload_assigned_to_user(
+              assigned_users[bookmark.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
+            )
+          end
+        end
+      end
+    end
+  end
+
   TopicList.on_preload do |topics, topic_list|
     if SiteSetting.assign_enabled?
       can_assign = topic_list.current_user && topic_list.current_user.can_assign?
@@ -246,14 +266,11 @@ after_initialize do
     end
 
     add_to_serializer(:user_bookmark, :assigned_to_user, false) do
-      DiscourseAssign::Helpers.build_assigned_to_user(assigned_to_user_id, topic)
+      topic.assigned_to_user
     end
 
     add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
-      if SiteSetting.assigns_public || scope.can_assign?
-        # subtle but need to catch cases where stuff is not assigned
-        topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
-      end
+      (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to_user
     end
   end
 
