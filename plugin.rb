@@ -90,20 +90,24 @@ after_initialize do
   end
 
   TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
-  BookmarkQuery.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
   Site.preloaded_category_custom_fields << "enable_unassigned_filter" if Site.respond_to? :preloaded_category_custom_fields
 
-  BookmarkQuery.on_preload do |bookmarks, bookmark_query|
-    if SiteSetting.assign_enabled?
-      assigned_user_ids = bookmarks.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
-      assigned_users = {}
-      User.where(id: assigned_user_ids).each do |user|
-        assigned_users[user.id] = user
-      end
-      bookmarks.each do |bookmark|
-        bookmark.topic.preload_assigned_to_user(
-          assigned_users[bookmark.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
-        )
+  if defined? BookmarkQuery
+    if BookmarkQuery.respond_to?(:preloaded_custom_fields) && BookmarkQuery.respond_to?(:on_preload)
+      BookmarkQuery.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
+      BookmarkQuery.on_preload do |bookmarks, bookmark_query|
+        if SiteSetting.assign_enabled?
+          assigned_user_ids = bookmarks.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
+          assigned_users = {}
+          User.where(id: assigned_user_ids).each do |user|
+            assigned_users[user.id] = user
+          end
+          bookmarks.each do |bookmark|
+            bookmark.topic.preload_assigned_to_user(
+              assigned_users[bookmark.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
+            )
+          end
+        end
       end
     end
   end
