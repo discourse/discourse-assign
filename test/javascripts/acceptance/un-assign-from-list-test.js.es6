@@ -15,7 +15,7 @@ acceptance("UnAssign/Re-assign from the topics list", {
   }
 });
 
-QUnit.test("Unassing/Re-assign options are visible", async assert => {
+test("Unassing/Re-assign options are visible", async assert => {
   const options = selectKit(".assign-actions-dropdown");
 
   await visit("/u/eviltrout/activity/assigned");

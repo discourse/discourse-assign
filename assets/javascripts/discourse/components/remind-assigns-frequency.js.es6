@@ -1,4 +1,5 @@
 import computed from "discourse-common/utils/decorators";
+import { action } from "@ember/object";
 
 export default Ember.Component.extend({
   selectedFrequency: null,
@@ -28,9 +29,8 @@ export default Ember.Component.extend({
     this.set("selectedFrequency", currentFrequency);
   },
 
-  actions: {
-    setFrequency(newFrequency) {
-      this.set("user.custom_fields.remind_assigns_frequency", newFrequency);
-    }
+  @action
+  setFrequency(newFrequency) {
+    this.set("user.custom_fields.remind_assigns_frequency", newFrequency);
   }
 });

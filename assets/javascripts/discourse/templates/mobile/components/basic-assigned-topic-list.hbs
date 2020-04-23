@@ -1,7 +1,7 @@
 {{#conditional-loading-spinner condition=loading}}
   {{#if hasIncoming}}
   <div class="show-mores">
-    <div class='alert alert-info clickable' {{action showInserted}}>
+    <div class="alert alert-info clickable" {{action showInserted}}>
       {{count-i18n key="topic_count_" suffix="latest" count=incomingCount}}
     </div>
   </div>
@@ -10,21 +10,23 @@
   {{#if topics}}
     <table class="topic-list">
       <tbody>
-      {{#each topics as |t|}}
-        {{assigned-topic-list-item topic=t
-                                   expandGloballyPinned=expandGloballyPinned
-                                   expandAllPinned=expandAllPinned
-                                   lastVisitedTopic=lastVisitedTopic
-                                   selected=selected
-                                   tagsForUser=tagsForUser
-                                   unassign=unassign
-                                   reassign=reassign}}
-      {{/each}}
+        {{#each topics as |t|}}
+          {{assigned-topic-list-item
+            topic=t
+            expandGloballyPinned=expandGloballyPinned
+            expandAllPinned=expandAllPinned
+            lastVisitedTopic=lastVisitedTopic
+            selected=selected
+            tagsForUser=tagsForUser
+            unassign=unassign
+            reassign=reassign
+          }}
+        {{/each}}
       </tbody>
     </table>
   {{else}}
-    <div class='alert alert-info'>
-      {{i18n 'choose_topic.none_found'}}
+    <div class="alert alert-info">
+      {{i18n "choose_topic.none_found"}}
     </div>
   {{/if}}
 {{/conditional-loading-spinner}}

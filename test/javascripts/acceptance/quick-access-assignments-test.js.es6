@@ -17,7 +17,7 @@ acceptance("Quick access assignments panel", {
   }
 });
 
-QUnit.test("Quick access assignments panel", async assert => {
+test("Quick access assignments panel", async assert => {
   updateCurrentUser({ can_assign: true });
 
   await visit("/");

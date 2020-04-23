@@ -57,9 +57,7 @@ function registerTopicFooterButtons(api) {
 function initialize(api) {
   api.addNavigationBarItem({
     name: "unassigned",
-    customFilter: category => {
-      return category && category.enable_unassigned_filter;
-    },
+    customFilter: category => category && category.enable_unassigned_filter,
     customHref: category => {
       if (category) {
         return (
@@ -87,7 +85,7 @@ function initialize(api) {
     {
       @computed("flaggedPost.topic.assigned_to_user_id")
       canAct(assignedToUserId) {
-        let { siteSettings } = this;
+        const { siteSettings } = this;
 
         if (siteSettings.assign_locks_flags) {
           let unassigned = this.currentUser.id !== assignedToUserId;

@@ -5,7 +5,8 @@
       class="btn-small unassign"
       action=(action "unassign")
       disabled=unassigning
-      title="discourse_assign.unassign.help"}}
+      title="discourse_assign.unassign.help"
+    }}
   {{/assigned-to}}
 {{else}}
   {{d-button class="btn-small assign"
@@ -13,5 +14,6 @@
     action=(action "claim")
     disabled=claiming
     label="discourse_assign.claim.title"
-    title="discourse_assign.claim.help"}}
+    title="discourse_assign.claim.help"
+  }}
 {{/if}}

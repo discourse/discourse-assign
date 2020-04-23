@@ -7,9 +7,11 @@ export default {
     const groupIDs = (component.siteSettings.assign_allowed_on_groups || "")
       .split("|")
       .filter(Boolean);
+
     const groupNames = this.site.groups
       .filter(group => groupIDs.includes(group.id.toString()))
       .mapBy("name");
+
     component.set("allowedGroups", groupNames);
   }
 };
