@@ -270,6 +270,8 @@ function initialize(api) {
       }
     }
   });
+
+  api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
 
 export default {
