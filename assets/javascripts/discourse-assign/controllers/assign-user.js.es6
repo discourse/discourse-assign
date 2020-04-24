@@ -22,16 +22,16 @@ export default Ember.Controller.extend({
   },
 
   onClose() {
-    if (this.get("model.onClose") && this.get("model.username")) {
-      this.get("model.onClose")(this.get("model.username"));
+    if (this.model.onClose && this.model.username) {
+      this.model.onClose(this.model.username);
     }
   },
 
   @action
   assignUser(user) {
-    this.setProperties({
-      "model.username": user.username,
-      "model.allowedGroups": this.taskActions.allowedGroups
+    this.model.setProperties({
+      username: user.username,
+      allowedGroups: this.taskActions.allowedGroups
     });
     this.send("assign");
   },
@@ -40,9 +40,9 @@ export default Ember.Controller.extend({
   assign() {
     let path = "/assign/assign";
 
-    if (isEmpty(this.get("model.username"))) {
+    if (isEmpty(this.model.username)) {
       path = "/assign/unassign";
-      this.set("model.assigned_to_user", null);
+      this.model.set("assigned_to_user", null);
     }
 
     this.send("closeModal");
@@ -50,15 +50,11 @@ export default Ember.Controller.extend({
     return ajax(path, {
       type: "PUT",
       data: {
-        username: this.get("model.username"),
-        topic_id: this.get("model.topic.id")
+        username: this.model.username,
+        topic_id: this.model.topic.id
       }
     })
-      .then(() => {
-        if (this.get("model.onSuccess")) {
-          this.get("model.onSuccess")();
-        }
-      })
+      .then(() => this.model.onSuccess && this.model.onSuccess())
       .catch(popupAjaxError);
   }
 });
