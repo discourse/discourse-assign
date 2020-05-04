@@ -52,3 +52,8 @@ es:
       messages:
         assigned_title: "Asignados (%{count})"
         assigned: "Asignado"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Asignar evento"
+          details: "Cuando un usuario asigna o desasigna un tema."

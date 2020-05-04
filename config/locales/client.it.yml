@@ -7,10 +7,15 @@
 
 it:
   js:
+    filters:
+      unassigned:
+        title: "Non assegnato"
+        help: "Argomenti non assegnati"
     action_codes:
-      assigned: "assegnato %{who} %{when}"
-      unassigned: "non assegnato %{who} %{when}"
+      assigned: "assegnato a %{who} %{when}"
+      unassigned: "non assegnato a %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Aggiungi il filtro 'non assegnato' alla categoria"
       cant_act: "Non puoi intervenire su segnalazioni assegnate ad altri utenti"
       cant_act_unclaimed: "Devi prima rivendicare questo argomento per poter intervenire sulle segnalazioni. "
       assigned: "Assegnato"
@@ -27,12 +32,14 @@ it:
         help: "Riassegna argomento a un altro utente"
       assign_modal:
         title: "Assegna Argomento"
+        description: "Inserisci il nome dell'utente a cui desideri assegnare questo argomento"
         assign: "Assegna"
       claim:
         title: "rivendica"
         help: "Assegna l'argomento a te stesso"
       assign_mailer:
         never: 'Mai'
+        different_users: 'Solo se cedente e assegnatario sono utenti diversi'
         always: 'Sempre'
       reminders_frequency:
         description: "Frequenza per la ricezione di promemoria per argomenti assegnati"
@@ -45,3 +52,8 @@ it:
       messages:
         assigned_title: "Assegnato (%{count})"
         assigned: "Assegnato"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Evento Assegna"
+          details: "Quando un utente assegna o annulla l'assegnazione di un argomento."

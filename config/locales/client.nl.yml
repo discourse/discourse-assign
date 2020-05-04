@@ -52,3 +52,8 @@ nl:
       messages:
         assigned_title: "Toegewezen (%{count})"
         assigned: "Toegewezen"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Toewijzingsgebeurtenis"
+          details: "Wanneer een gebruiker een topic toewijst of toewijzing ervan opheft."

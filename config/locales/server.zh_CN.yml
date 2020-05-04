@@ -36,7 +36,7 @@ zh_CN:
       daily: '每天'
       weekly: '每周'
       monthly: '月度'
-      quarterly: '季度的'
+      quarterly: '季度'
   assign_mailer:
     title: "指派邮件发送者"
     subject_template: "[%{email_prefix}]%{assignee_name}指派你到“%{topic_title}”！"

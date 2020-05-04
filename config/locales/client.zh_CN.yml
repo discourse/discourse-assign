@@ -47,8 +47,13 @@ zh_CN:
         daily: "每天"
         weekly: "每周"
         monthly: "月度"
-        quarterly: "季度的"
+        quarterly: "季度"
     user:
       messages:
         assigned_title: "已指派%{count}"
         assigned: "已指派"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "指派事件"
+          details: "当用户被分配或取消分配一个主题时。"

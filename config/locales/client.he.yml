@@ -52,3 +52,8 @@ he:
       messages:
         assigned_title: "מוקצים (%{count})"
         assigned: "מוקצה"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "הקצאת אירוע"
+          details: "כאשר משתמש מקצה או מבטל הקצאה של נושא."

@@ -52,3 +52,8 @@ sv:
       messages:
         assigned_title: "Tilldelade (%{count})"
         assigned: "Tilldelad"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Tilldela händelse"
+          details: "När en användare tilldelar eller återtar tilldelning för ett ämne."
