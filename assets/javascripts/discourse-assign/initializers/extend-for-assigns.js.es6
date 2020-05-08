@@ -1,3 +1,4 @@
+import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { default as computed } from "discourse-common/utils/decorators";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -5,22 +6,38 @@ import { h } from "virtual-dom";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
+import { htmlSafe } from "@ember/template";
 
 function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "assign",
     icon() {
       const hasAssignement = this.get("topic.assigned_to_user");
-      return hasAssignement ? "user-times" : "user-plus";
+      return hasAssignement ? null : "user-plus";
     },
     priority: 250,
     title() {
       const hasAssignement = this.get("topic.assigned_to_user");
       return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.help`;
     },
-    label() {
+    ariaLabel() {
       const hasAssignement = this.get("topic.assigned_to_user");
-      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.title`;
+      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.help`;
+    },
+    translatedLabel() {
+      const user = this.get("topic.assigned_to_user");
+
+      if (user) {
+        const label = I18n.t("discourse_assign.unassign.title");
+        return htmlSafe(
+          `${renderAvatar(user, {
+            imageSize: "tiny",
+            ignoreTitle: true
+          })} <span class="unassign-label">${label}</span>`
+        );
+      } else {
+        return I18n.t("discourse_assign.assign.title");
+      }
     },
     action() {
       if (!this.get("currentUser.can_assign")) {

@@ -80,3 +80,19 @@
     margin-right: 5px;
   }
 }
+
+.topic-footer-button {
+  .d-button-label {
+    position: relative;
+
+    .avatar {
+      position: absolute;
+      top: -2px;
+      left: -2px;
+    }
+
+    .avatar + .unassign-label {
+      margin-left: 25px;
+    }
+  }
+}

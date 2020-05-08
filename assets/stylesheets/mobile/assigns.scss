@@ -4,3 +4,20 @@
     margin-top: 1em;
   }
 }
+
+.select-kit-row.assign {
+  .name {
+    position: relative;
+    overflow: visible;
+
+    .avatar {
+      position: absolute;
+      top: -1px;
+      left: -2px;
+    }
+
+    .avatar + .unassign-label {
+      margin-left: 25px;
+    }
+  }
+}
