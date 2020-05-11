@@ -88,6 +88,22 @@ RSpec.describe TopicAssigner do
         .to eq(TopicUser.notification_levels[:muted])
     end
 
+    it "sends a high priority notification to the assignee" do
+      Notification.expects(:create!).with(
+        notification_type: Notification.types[:custom],
+        user_id: moderator.id,
+        topic_id: topic.id,
+        post_number: 1,
+        high_priority: true,
+        data: {
+          message: 'discourse_assign.assign_notification',
+          display_username: moderator2.username,
+          topic_title: topic.title
+        }.to_json
+      )
+      assigner.assign(moderator)
+    end
+
     context "when assigns_by_staff_mention is set to true" do
       let(:system_user) { Discourse.system_user }
       let(:moderator) { Fabricate(:admin, username: "modi", groups: [assign_allowed_group]) }

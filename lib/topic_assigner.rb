@@ -223,6 +223,7 @@ class ::TopicAssigner
           user_id: assign_to.id,
           topic_id: @topic.id,
           post_number: 1,
+          high_priority: true,
           data: {
             message: 'discourse_assign.assign_notification',
             display_username: @assigned_by.username,
