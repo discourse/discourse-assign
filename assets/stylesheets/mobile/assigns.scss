@@ -7,17 +7,20 @@
 
 .select-kit-row.assign {
   .name {
-    position: relative;
-    overflow: visible;
-
-    .avatar {
-      position: absolute;
-      top: -1px;
-      right: -2px;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
     .unassign-label {
       margin-right: 25px;
+      display: inline-flex;
+      flex-direction: column;
+      width: auto;
+
+      .username {
+        font-size: $font-down-1;
+        color: $primary-medium;
+      }
     }
   }
 }

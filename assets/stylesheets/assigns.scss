@@ -81,18 +81,25 @@
   }
 }
 
-.topic-footer-button {
+// we can't use flex for buttons yet
+// so this is an attempt to have a pixel perfection positioning
+#topic-footer-button-assign {
+  height: 30px;
+  padding: 0 12px;
+
   .d-button-label {
-    position: relative;
+    display: inline-flex;
+    align-items: center;
 
     .avatar {
-      position: absolute;
-      top: -1px;
-      right: -2px;
+      margin-left: 0.25em;
+      margin-top: -1px;
     }
+  }
 
-    .unassign-label {
-      margin-right: 25px;
-    }
+  .d-icon {
+    // special case font-size here to account for the fact that at same font-size
+    // this icon looks smaller
+    font-size: 1.16em;
   }
 }

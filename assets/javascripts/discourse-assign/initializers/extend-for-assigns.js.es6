@@ -8,6 +8,16 @@ import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 
+function titleForState(user) {
+  if (user) {
+    return I18n.t("discourse_assign.unassign.help", {
+      username: user.username
+    });
+  } else {
+    return I18n.t("discourse_assign.assign.help");
+  }
+}
+
 function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "assign",
@@ -16,25 +26,35 @@ function registerTopicFooterButtons(api) {
       return hasAssignement ? "user-times" : "user-plus";
     },
     priority: 250,
-    title() {
-      const hasAssignement = this.get("topic.assigned_to_user");
-      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.help`;
+    translatedTitle() {
+      return titleForState(this.get("topic.assigned_to_user"));
     },
-    ariaLabel() {
-      const hasAssignement = this.get("topic.assigned_to_user");
-      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.help`;
+    translatedAriaLabel() {
+      return titleForState(this.get("topic.assigned_to_user"));
     },
     translatedLabel() {
       const user = this.get("topic.assigned_to_user");
 
       if (user) {
         const label = I18n.t("discourse_assign.unassign.title");
-        return htmlSafe(
-          `<span class="unassign-label">${label}</span>${renderAvatar(user, {
-            imageSize: "tiny",
-            ignoreTitle: true
-          })}`
-        );
+
+        if (this.site.mobileView) {
+          return htmlSafe(
+            `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
+              user.username
+            }</span></span>${renderAvatar(user, {
+              imageSize: "small",
+              ignoreTitle: true
+            })}`
+          );
+        } else {
+          return htmlSafe(
+            `<span class="unassign-label">${label}</span>${renderAvatar(user, {
+              imageSize: "tiny",
+              ignoreTitle: true
+            })}`
+          );
+        }
       } else {
         return I18n.t("discourse_assign.assign.title");
       }
