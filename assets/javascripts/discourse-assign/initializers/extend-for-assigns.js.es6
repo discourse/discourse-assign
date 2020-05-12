@@ -13,7 +13,7 @@ function registerTopicFooterButtons(api) {
     id: "assign",
     icon() {
       const hasAssignement = this.get("topic.assigned_to_user");
-      return hasAssignement ? null : "user-plus";
+      return hasAssignement ? "user-times" : "user-plus";
     },
     priority: 250,
     title() {
@@ -30,10 +30,10 @@ function registerTopicFooterButtons(api) {
       if (user) {
         const label = I18n.t("discourse_assign.unassign.title");
         return htmlSafe(
-          `${renderAvatar(user, {
+          `<span class="unassign-label">${label}</span>${renderAvatar(user, {
             imageSize: "tiny",
             ignoreTitle: true
-          })} <span class="unassign-label">${label}</span>`
+          })}`
         );
       } else {
         return I18n.t("discourse_assign.assign.title");

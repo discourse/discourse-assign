@@ -88,11 +88,11 @@
     .avatar {
       position: absolute;
       top: -1px;
-      left: -2px;
+      right: -2px;
     }
 
-    .avatar + .unassign-label {
-      margin-left: 25px;
+    .unassign-label {
+      margin-right: 25px;
     }
   }
 }
