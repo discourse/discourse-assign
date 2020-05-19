@@ -88,12 +88,10 @@
   padding: 0 12px;
 
   .d-button-label {
-    display: inline-flex;
-    align-items: center;
-
     .avatar {
-      margin-left: 0.25em;
+      margin-right: 0.25em;
       margin-top: -1px;
+      vertical-align: sub;
     }
   }
 }

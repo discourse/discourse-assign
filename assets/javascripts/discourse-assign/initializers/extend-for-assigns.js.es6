@@ -23,7 +23,11 @@ function registerTopicFooterButtons(api) {
     id: "assign",
     icon() {
       const hasAssignement = this.get("topic.assigned_to_user");
-      return hasAssignement ? "user-times" : "user-plus";
+      return hasAssignement
+        ? this.site.mobileView
+          ? "user-times"
+          : null
+        : "user-plus";
     },
     priority: 250,
     translatedTitle() {
@@ -49,10 +53,10 @@ function registerTopicFooterButtons(api) {
           );
         } else {
           return htmlSafe(
-            `<span class="unassign-label">${label}</span>${renderAvatar(user, {
+            `${renderAvatar(user, {
               imageSize: "tiny",
               ignoreTitle: true
-            })}`
+            })}<span class="unassign-label">${label}</span>`
           );
         }
       } else {
