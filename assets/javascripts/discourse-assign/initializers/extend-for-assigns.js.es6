@@ -42,7 +42,7 @@ function registerTopicFooterButtons(api) {
       if (user) {
         const label = I18n.t("discourse_assign.unassign.title");
 
-        if (this.site.mobileView && !this.get("topic.isPrivateMessage")) {
+        if (this.site.mobileView) {
           return htmlSafe(
             `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
               user.username
