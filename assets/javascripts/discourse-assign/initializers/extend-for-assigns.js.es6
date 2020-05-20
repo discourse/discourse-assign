@@ -84,7 +84,6 @@ function registerTopicFooterButtons(api) {
     },
     classNames: ["assign"],
     dependentKeys: [
-      "topic.isPrivateMessage",
       "topic.assigned_to_user",
       "currentUser.can_assign",
       "topic.assigned_to_user.username"
