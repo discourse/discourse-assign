@@ -80,7 +80,7 @@ function registerTopicFooterButtons(api) {
       }
     },
     dropdown() {
-      return this.site.mobileView && !this.get("topic.isPrivateMessage");
+      return this.site.mobileView;
     },
     classNames: ["assign"],
     dependentKeys: [
