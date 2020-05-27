@@ -17,7 +17,6 @@ nb_NO:
       assigned_to: "Tildelt til"
       unassign:
         title: "Fjern tildelning"
-        help: "Fjern tildelning av emne"
       assign:
         title: "Tildel"
         help: "Tildel emne til bruker"
@@ -28,8 +27,8 @@ nb_NO:
         title: "ta"
         help: "Tildel emne til deg selv"
       assign_mailer:
-        never: 'Aldri'
-        always: 'Alltid'
+        never: "Aldri"
+        always: "Alltid"
       reminders_frequency:
         never: "Aldri"
         daily: "Daglig"

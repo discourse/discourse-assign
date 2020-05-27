@@ -23,7 +23,6 @@ fi:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Peru osoitus"
-        help: "Peru ketjun osoitus"
       assign:
         title: "Osoita"
         help: "Osoita ketju käyttäjälle"
@@ -38,9 +37,9 @@ fi:
         title: "omi"
         help: "Osoita ketju itsellesi"
       assign_mailer:
-        never: 'Ei koskaan'
-        different_users: 'Vain jos osoittaja ja osoitettu ovat eri käyttäjiä'
-        always: 'Aina'
+        never: "Ei koskaan"
+        different_users: "Vain jos osoittaja ja osoitettu ovat eri käyttäjiä"
+        always: "Aina"
       reminders_frequency:
         description: "Osoitettujen ketjujen muistutusten toistuvuus"
         never: "Ei koskaan"

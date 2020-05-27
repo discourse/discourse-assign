@@ -18,7 +18,6 @@ hy:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Ետ կանչել վերագրումը"
-        help: "Ետ կանչել Թեմայի վերագրումը"
       assign:
         title: "Վերագրել"
         help: "Վերագրել Թեման Օգտատիրոջը"
@@ -29,8 +28,8 @@ hy:
         title: "պահանջ"
         help: "Վերագրել թեման ինքներդ Ձեզ"
       assign_mailer:
-        never: 'Երբեք'
-        always: 'Միշտ'
+        never: "Երբեք"
+        always: "Միշտ"
       reminders_frequency:
         never: "Երբեք"
         daily: "Օրվա Ընթացքում"

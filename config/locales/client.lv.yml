@@ -9,8 +9,8 @@ lv:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'Nekad'
-        always: 'Vienmēr'
+        never: "Nekad"
+        always: "Vienmēr"
       reminders_frequency:
         never: "Nekad"
         daily: "Dienas"

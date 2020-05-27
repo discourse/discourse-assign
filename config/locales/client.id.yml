@@ -9,7 +9,7 @@ id:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'Tidak pernah'
-        always: 'Selalu'
+        never: "Tidak pernah"
+        always: "Selalu"
       reminders_frequency:
         never: "Tidak pernah"

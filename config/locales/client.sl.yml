@@ -10,8 +10,8 @@ sl:
     discourse_assign:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       assign_mailer:
-        never: 'Nikoli'
-        always: 'Vedno'
+        never: "Nikoli"
+        always: "Vedno"
       reminders_frequency:
         never: "Nikoli"
         daily: "Dnevno"

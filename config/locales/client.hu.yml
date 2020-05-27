@@ -17,8 +17,8 @@ hu:
       claim:
         title: "Lefoglal"
       assign_mailer:
-        never: 'Soha'
-        always: 'Mindig'
+        never: "Soha"
+        always: "Mindig"
       reminders_frequency:
         never: "Soha"
         daily: "Napi"

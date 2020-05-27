@@ -15,7 +15,6 @@ sk:
       assigned_to: "Priradené komu"
       unassign:
         title: "Nepriradené"
-        help: "Nepriradená téma"
       assign:
         title: "Priradiť"
         help: "Priradiť tému používateľovi"
@@ -26,8 +25,8 @@ sk:
         title: "prevziať"
         help: "Priradiť tému sebe"
       assign_mailer:
-        never: 'Nikdy'
-        always: 'Vždy'
+        never: "Nikdy"
+        always: "Vždy"
       reminders_frequency:
         never: "Nikdy"
         daily: "Denne"

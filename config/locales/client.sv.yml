@@ -23,7 +23,7 @@ sv:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Otilldela"
-        help: "Otilldela ämne"
+        help: "Otilldela %{username}för ämne"
       assign:
         title: "Tilldela"
         help: "Tilldela ämne till användare"
@@ -38,9 +38,9 @@ sv:
         title: "begär"
         help: "Tilldela ämne till dig själv"
       assign_mailer:
-        never: 'Aldrig'
-        different_users: 'Enbart om tilldelare och tilldelad är olika användare'
-        always: 'Alltid'
+        never: "Aldrig"
+        different_users: "Enbart om tilldelare och tilldelad är olika användare"
+        always: "Alltid"
       reminders_frequency:
         description: "Frekvens för att erhålla ämnespåminnelser"
         never: "Aldrig"

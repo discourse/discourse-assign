@@ -13,7 +13,6 @@ et:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Eemalda määramine"
-        help: "Eemalda teema määramine"
       assign:
         title: "Määra"
       assign_modal:
@@ -22,8 +21,8 @@ et:
       claim:
         help: "Määra teema endale"
       assign_mailer:
-        never: 'Mitte kunagi'
-        always: 'Alati'
+        never: "Mitte kunagi"
+        always: "Alati"
       reminders_frequency:
         never: "Mitte kunagi"
         daily: "Igapäevaselt"

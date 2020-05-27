@@ -9,8 +9,8 @@ pt:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'Nunca'
-        always: 'Sempre'
+        never: "Nunca"
+        always: "Sempre"
       reminders_frequency:
         never: "Nunca"
         daily: "Diário"

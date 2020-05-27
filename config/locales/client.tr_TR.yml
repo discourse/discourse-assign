@@ -23,7 +23,6 @@ tr_TR:
       assign_notification: "<p><span>{{username}}</span>{{description}}</p>"
       unassign:
         title: "Atamayı kaldır"
-        help: "Konunun Atamasını Kaldır"
       assign:
         title: "Ata"
         help: "Kullanıcıya konu ata"
@@ -38,9 +37,9 @@ tr_TR:
         title: "talep"
         help: "Konuyu kendinize atayın"
       assign_mailer:
-        never: 'Asla'
-        different_users: 'Yalnızca atanan ve vekil kullanıcılar farklıysa'
-        always: 'Her zaman'
+        never: "Asla"
+        different_users: "Yalnızca atanan ve vekil kullanıcılar farklıysa"
+        always: "Her zaman"
       reminders_frequency:
         description: "Atanan konu hatırlatıcılarını alma sıklığı"
         never: "Asla"

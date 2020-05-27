@@ -23,7 +23,6 @@ ko:
       assign_notification: "<p> <span>{{username}}</span> {{description}} </p>"
       unassign:
         title: "할당 해제"
-        help: "토픽 할당 해제"
       assign:
         title: "할당"
         help: "사용자에게 토픽 할당"
@@ -38,9 +37,9 @@ ko:
         title: "청구"
         help: "나에게 토픽 할당"
       assign_mailer:
-        never: '알림 받지 않기'
-        different_users: '담당자와 담당자가 다른 사용자 인 경우에만'
-        always: '항상 알림받기'
+        never: "알림 받지 않기"
+        different_users: "담당자와 담당자가 다른 사용자 인 경우에만"
+        always: "항상 알림받기"
       reminders_frequency:
         description: "할당 된 주제 알림 수신 빈도"
         never: "알림 받지 않기"

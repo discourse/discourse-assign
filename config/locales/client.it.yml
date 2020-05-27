@@ -23,7 +23,7 @@ it:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Annulla assegnazione"
-        help: "Annulla assegnazione Argomento"
+        help: "Dissocia %{username} dall'Argomento"
       assign:
         title: "Assegna"
         help: "Assegna Argomento ad Utente"
@@ -38,9 +38,9 @@ it:
         title: "rivendica"
         help: "Assegna l'argomento a te stesso"
       assign_mailer:
-        never: 'Mai'
-        different_users: 'Solo se cedente e assegnatario sono utenti diversi'
-        always: 'Sempre'
+        never: "Mai"
+        different_users: "Solo se cedente e assegnatario sono utenti diversi"
+        always: "Sempre"
       reminders_frequency:
         description: "Frequenza per la ricezione di promemoria per argomenti assegnati"
         never: "Mai"

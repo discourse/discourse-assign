@@ -23,7 +23,7 @@ he:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "ביטול הקצאה"
-        help: "ביטול הקצאת נושא"
+        help: "לבטל את הקצאת %{username} מהנושא"
       assign:
         title: "הקצאה"
         help: "הקצאת משתמש לנושא"
@@ -38,9 +38,9 @@ he:
         title: "דרישה"
         help: "הקצאת נושא לעצמך"
       assign_mailer:
-        never: 'אף פעם'
-        different_users: 'רק אם הצד המקצה או הצד שהוקצה אליו הם משתמשים שונים'
-        always: 'תמיד'
+        never: "אף פעם"
+        different_users: "רק אם הצד המקצה או הצד שהוקצה אליו הם משתמשים שונים"
+        always: "תמיד"
       reminders_frequency:
         description: "תדירות קבלת תזכורות לנושאים מוקצים"
         never: "אף פעם"

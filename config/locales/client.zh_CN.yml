@@ -23,7 +23,6 @@ zh_CN:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "未指派"
-        help: "未指派主题"
       assign:
         title: "指派"
         help: "指派主题给用户"
@@ -38,9 +37,9 @@ zh_CN:
         title: "认领"
         help: "指派这个主题给你自己"
       assign_mailer:
-        never: '从不'
-        different_users: '仅当转让人和受让人是不同的用户时'
-        always: '始终'
+        never: "从不"
+        different_users: "仅当转让人和受让人是不同的用户时"
+        always: "始终"
       reminders_frequency:
         description: "接受指派主题提醒的频率"
         never: "从不"

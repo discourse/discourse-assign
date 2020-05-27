@@ -9,8 +9,8 @@ th:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'ไม่เคย'
-        always: 'เสมอ'
+        never: "ไม่เคย"
+        always: "เสมอ"
       reminders_frequency:
         never: "ไม่เคย"
         daily: "วัน"

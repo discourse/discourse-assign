@@ -18,7 +18,6 @@ de:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Zuordnung aufheben"
-        help: "Zuordnung der Person zum Thema aufheben"
       assign:
         title: "Zuordnen"
         help: "Thema einer Person zuordnen"
@@ -32,8 +31,8 @@ de:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"
       assign_mailer:
-        never: 'nie'
-        always: 'immer'
+        never: "nie"
+        always: "immer"
       reminders_frequency:
         description: "Intervall für das Erhalten von Erinnerungen an zugewiesene Themen"
         never: "nie"

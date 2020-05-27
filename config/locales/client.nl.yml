@@ -23,7 +23,7 @@ nl:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Toewijzing opheffen"
-        help: "Toewijzing van topic opheffen"
+        help: "Toewijzing van topic aan %{username} opheffen"
       assign:
         title: "Toewijzen"
         help: "Topic aan gebruiker toewijzen"
@@ -38,9 +38,9 @@ nl:
         title: "opeisen"
         help: "Topic aan uzelf toewijzen"
       assign_mailer:
-        never: 'Nooit'
-        different_users: 'Alleen als toewijzer en toegewezen persoon verschillende gebruikers zijn'
-        always: 'Altijd'
+        never: "Nooit"
+        different_users: "Alleen als toewijzer en toegewezen persoon verschillende gebruikers zijn"
+        always: "Altijd"
       reminders_frequency:
         description: "Frequentie voor het ontvangen van toegewezen-topic-herinneringen"
         never: "Nooit"

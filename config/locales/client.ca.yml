@@ -22,7 +22,6 @@ ca:
       assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Desassigna"
-        help: "Tema no assignat"
       assign:
         title: "Assigna"
         help: "Assigna el tema a l'usuari"
@@ -37,8 +36,8 @@ ca:
         title: "reclama"
         help: "Assigneu-vos el tema"
       assign_mailer:
-        never: 'Mai'
-        always: 'Sempre'
+        never: "Mai"
+        always: "Sempre"
       reminders_frequency:
         description: "Freqüència per a rebre recordatoris de temes assignats"
         never: "Mai"
