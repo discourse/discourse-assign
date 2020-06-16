@@ -21,6 +21,11 @@ Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
   get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: ::RouteFormat.username }
+  %w{groups g}.each do |root_path|
+    resources :groups, id: RouteFormat.username, path: root_path do
+      get "assignments" => 'groups#show'
+    end
+  end
 end
 
 after_initialize do
