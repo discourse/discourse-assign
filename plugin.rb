@@ -21,11 +21,8 @@ Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
   get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: ::RouteFormat.username }
-  %w{groups g}.each do |root_path|
-    resources :groups, id: RouteFormat.username, path: root_path do
-      get "assignments" => 'groups#show'
-    end
-  end
+  get "topics/group-messages-assigned/:group_name" => "list#group_messages_assigned", as: "topics_group_messages_assigned", constraints: { group_name: ::RouteFormat.username }
+  get "/g/:id/assignments" => "groups#index"
 end
 
 after_initialize do
@@ -192,6 +189,7 @@ after_initialize do
   class ::ListController
     generate_message_route(:private_messages_assigned)
     generate_message_route(:messages_assigned)
+    generate_message_route(:group_messages_assigned)
   end
 
   add_to_class(:topic_query, :list_messages_assigned) do |user|
@@ -201,6 +199,18 @@ after_initialize do
         WHERE name = 'assigned_to_id'
         AND value = ?)
     ", user.id.to_s)
+      .order("topics.bumped_at DESC")
+
+    create_list(:assigned, {}, list)
+  end
+
+  add_to_class(:topic_query, :list_group_messages_assigned) do |group|
+    list = joined_topic_user.where("
+      topics.id IN (
+        SELECT topic_id FROM topic_custom_fields
+        WHERE name = 'assigned_to_id'
+        AND value IN (SELECT user_id::varchar(255) FROM group_users WHERE group_id = ?))
+    ", group.id)
       .order("topics.bumped_at DESC")
 
     create_list(:assigned, {}, list)
