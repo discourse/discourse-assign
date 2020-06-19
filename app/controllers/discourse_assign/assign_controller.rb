@@ -2,6 +2,7 @@
 
 module DiscourseAssign
   class AssignController < ApplicationController
+    include TopicListResponder
     requires_login
     before_action :ensure_logged_in, :ensure_assign_allowed
 
@@ -112,6 +113,37 @@ module DiscourseAssign
       end
 
       render json: { topics: serialize_data(topics, AssignedTopicSerializer) }
+    end
+
+    def group_assignments
+      offset = (params[:offset] || 0).to_i
+      limit = (params[:limit] || 100).to_i
+
+      topics = Topic
+        .includes(:tags)
+        .includes(:user)
+        .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
+        .order('tcf.value::integer, topics.bumped_at desc')
+        .offset(offset)
+        .limit(limit)
+
+      Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
+
+      users = User.where("users.id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
+
+      User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
+
+      users = users.to_h { |u| [u.id, u] }
+
+      topics.each do |t|
+        if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
+          t.preload_assigned_to_user(users[id.to_i])
+        end
+      end
+
+      topic_list = TopicQuery.new.create_list(:group_assigned, {}, topics)
+      respond_with_list(topic_list)
     end
 
     private
