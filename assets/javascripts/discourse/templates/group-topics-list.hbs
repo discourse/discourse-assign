@@ -1,6 +1,9 @@
-{{log 'yaha pe'}}
-{{log model}}
-{{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
+<section class="user-secondary-navigation">
+
+</section>
+<section class="user-content">
+  {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
+<div>
   {{basic-assigned-topic-list topicList=model
                               hideCategory=hideCategory
                               showPosters=showPosters
@@ -14,4 +17,9 @@
                               reassign=(action 'reassign')}}
 
   {{conditional-loading-spinner condition=model.loadingMore}}
+  </div>
 {{/load-more}}
+</section>
+
+
+

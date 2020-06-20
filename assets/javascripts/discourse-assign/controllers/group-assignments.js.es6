@@ -1,7 +1,3 @@
-// import Controller from "@ember/controller";
-
-// export default Controller.extend({
-
 import UserTopicsList from "discourse/controllers/user-topics-list";
 
 export default UserTopicsList.extend({
