@@ -1,15 +1,12 @@
-import DiscourseRoute from "discourse/routes/discourse";
+import { ajax } from "discourse/lib/ajax";
+import Route from "@ember/routing/route";
 
-export default DiscourseRoute.extend({
-
+export default Route.extend({
   model() {
-    return this.store.findFiltered("topicList", {
-      filter: `assign/assigned/${this.modelFor("group").get("display_name")}`,
-    });
+    return ajax(`/groups/${this.modelFor("group").get("display_name")}/members.json`, { data: {offset: 0, order:null, asc:true, filter:null} });
   },
 
-  renderTemplate() {
-    this.render("group-topics-list");
-  },
-
+  afterModel() {
+    this.transitionTo("group.assignments.show", "everyone");
+  }
 });

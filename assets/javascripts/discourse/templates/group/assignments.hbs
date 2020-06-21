@@ -1,0 +1,11 @@
+<section class="user-secondary-navigation">
+  {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked" currentPath=router._router.currentPath}}
+    {{group-assignments-filter filter="everyone" routeType=route_type}}
+      {{#each model.members as |member|}}
+        {{group-assignments-filter filter=member.username routeType=route_type}}
+      {{/each}}
+  {{/mobile-nav}}
+</section>
+<section class="user-content">
+  {{outlet}}
+</section>
