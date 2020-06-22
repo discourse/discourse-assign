@@ -116,21 +116,56 @@ module DiscourseAssign
     end
 
     def group_assignments
-      offset = (params[:offset] || 0).to_i
-      limit = (params[:limit] || 100).to_i
+      offset = (params[:page].to_i * 30 || 0).to_i
+      is_group = (params[:is_group] || 1).to_i
 
-      topics = Topic
-        .includes(:tags)
-        .includes(:user)
-        .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
-        .order('tcf.value::integer, topics.bumped_at desc')
-        .offset(offset)
-        .limit(limit)
+      if is_group == 1
+        topics = Topic
+          .includes(:tags)
+          .includes(:user)
+          .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+          .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
+          .order('tcf.value::integer, topics.bumped_at desc')
+          .offset(offset)
+          .limit(30)
 
+        topics_length = Topic
+          .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+          .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
+          .select("COUNT(topics.id)").group('topics.id')
+
+        users = User.where("users.id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
+      else
+        users = User.where("username = ?", params[:group_name])
+
+        topics = Topic
+          .includes(:tags)
+          .includes(:user)
+          .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+          .where("tcf.value::int = ?",users[0].id)
+          .order('tcf.value::integer, topics.bumped_at desc')
+          .offset(offset)
+          .limit(30)
+
+        topics_length = Topic
+          .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+          .where("tcf.value::int = ?",users[0].id)
+
+      end
+
+      load_more = topics_length.to_a.length > 30 * (params[:page].to_i + 1)
+
+      more_topics_url = "/assign/assigned/"+params[:group_name]+"?page="+(params[:page].to_i+1).to_s if load_more
+
+      more_topics_url += "&is_group=0" if load_more && is_group==0
+
+      display_topic_list(topics, users, more_topics_url)
+    end
+
+    private
+
+    def display_topic_list(topics, users, more_topics_url)
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
-
-      users = User.where("users.id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
 
       User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
 
@@ -143,10 +178,10 @@ module DiscourseAssign
       end
 
       topic_list = TopicQuery.new.create_list(:group_assigned, {}, topics)
+      topic_list.more_topics_url = more_topics_url
+
       respond_with_list(topic_list)
     end
-
-    private
 
     def translate_failure(reason, user)
       case reason

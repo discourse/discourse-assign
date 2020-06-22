@@ -1,12 +1,10 @@
-<center>
-  {{#if show-avatar}}
-    {{#link-to "group.assignments.show" filter.username (query-params route_type=routeType)}}
-      {{avatar filter avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}} {{filter.username}}
-    {{/link-to}}
-  {{else}}
-    {{#link-to "group.assignments.show" filter (query-params route_type=routeType)}}
-      {{filter}}
-    {{/link-to}}
-  {{/if}}
-</center>
+{{#if show-avatar}}
+  {{#link-to "group.assignments.show" filter.username (query-params route_type=routeType)}}
+    {{avatar filter avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}} {{filter.username}}
+  {{/link-to}}
+{{else}}
+  {{#link-to "group.assignments.show" filter (query-params route_type=routeType)}}
+    {{filter}}
+  {{/link-to}}
+{{/if}}
 

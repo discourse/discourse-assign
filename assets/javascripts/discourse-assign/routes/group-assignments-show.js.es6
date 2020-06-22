@@ -3,19 +3,18 @@ import DiscourseRoute from "discourse/routes/discourse";
 export default DiscourseRoute.extend({
 
   model(params) {
-    if(params.filter === "everyone"){
-      return this.store.findFiltered("topicList", {
-        filter: `assign/assigned/${this.modelFor("group").get("display_name")}`,
-      });
+    let param = null;
+    let route = null;
+    if(params.filter !== "everyone"){
+      param = {is_group: 0};
+      route = params.filter;
     }else{
-      return this.store.findFiltered("topicList", {
-        filter: `topics/messages-assigned/${params.filter}`,
-        params: {
-          // core is a bit odd here and is not sending an array, should be fixed
-          exclude_category_ids: [-1]
-        }
-      });
+      route = this.modelFor("group").get("name");
     }
+    return this.store.findFiltered("topicList", {
+      filter: `assign/assigned/${route}`,
+      params: param
+    });
   },
 
   renderTemplate() {
