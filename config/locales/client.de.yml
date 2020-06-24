@@ -15,7 +15,6 @@ de:
       cant_act_unclaimed: "Du musst das Thema übernehmen, bevor du Meldungen behandeln kannst."
       assigned: "Zugeordnet"
       assigned_to: "Zugewiesen an"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Zuordnung aufheben"
       assign:

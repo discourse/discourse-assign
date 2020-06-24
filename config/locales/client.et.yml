@@ -10,7 +10,6 @@ et:
     discourse_assign:
       assigned: "Määratud"
       assigned_to: "Määratud kasutajale"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Eemalda määramine"
       assign:

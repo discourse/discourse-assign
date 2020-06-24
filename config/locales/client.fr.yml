@@ -20,7 +20,7 @@ fr:
       cant_act_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur les signalements."
       assigned: "Affecté"
       assigned_to: "Affecté à"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Désaffecter"
         help: "Désaffecter %{username} du sujet"
@@ -32,7 +32,7 @@ fr:
         help: "Réattribuer le sujet à un autre utilisateur"
       assign_modal:
         title: "Affecter le sujet"
-        description: "Saisir le nom de l&#39;utilisateur auquel attribuer ce sujet"
+        description: "Saisir le nom de l'utilisateur auquel attribuer ce sujet"
         assign: "Affecter"
       claim:
         title: "revendiquer"

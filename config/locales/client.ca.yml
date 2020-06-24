@@ -19,9 +19,10 @@ ca:
       cant_act_unclaimed: "Cal reclamar el tema abans d'actuar sobre les banderes"
       assigned: "Assignat"
       assigned_to: "Assignat a"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Desassigna"
+        help: "Desassigna %{username} del tema"
       assign:
         title: "Assigna"
         help: "Assigna el tema a l'usuari"

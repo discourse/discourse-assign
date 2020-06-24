@@ -8,7 +8,6 @@
 ja:
   js:
     discourse_assign:
-      assign_notification: "<p><span>{{username}}</span>{{description}}</p>"
       assign_mailer:
         never: "通知しない"
         always: "常時"

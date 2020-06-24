@@ -20,7 +20,6 @@ ko:
       cant_act_unclaimed: "플래그에 대해 조치를 취하기 전에이 주제를 청구해야합니다."
       assigned: "할당됨"
       assigned_to: "다음으로 할당"
-      assign_notification: "<p> <span>{{username}}</span> {{description}} </p>"
       unassign:
         title: "할당 해제"
       assign:

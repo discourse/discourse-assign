@@ -13,7 +13,6 @@ hu:
     discourse_assign:
       assigned: "Aláírt"
       assigned_to: "Kosztva"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       claim:
         title: "Lefoglal"
       assign_mailer:

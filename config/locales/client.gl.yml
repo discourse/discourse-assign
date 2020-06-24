@@ -8,6 +8,7 @@
 gl:
   js:
     discourse_assign:
+      assigned: "Asignado"
       assign_mailer:
         never: "Nunca"
         always: "Sempre"
@@ -17,3 +18,6 @@ gl:
         weekly: "Semanal"
         monthly: "Mensual"
         quarterly: "Trimestral"
+    user:
+      messages:
+        assigned: "Asignado"
