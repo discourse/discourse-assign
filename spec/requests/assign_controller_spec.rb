@@ -177,4 +177,37 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
+  context '#group_assignments' do
+    include_context 'A group that is allowed to assign'
+
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
+    fab!(:post3) { Fabricate(:post) }
+
+    before do
+      add_to_assign_allowed_group(user2)
+      add_to_assign_allowed_group(user)
+
+      freeze_time 1.hour.from_now
+      TopicAssigner.new(post1.topic, user).assign(user)
+
+      freeze_time 1.hour.from_now
+      TopicAssigner.new(post2.topic, user).assign(user2)
+
+      freeze_time 1.hour.from_now
+      TopicAssigner.new(post3.topic, user).assign(user)
+
+      sign_in(user)
+    end
+
+    it 'lists topics ordered by group' do
+      get `/assign/assigned/#{get_assigned_allowed_group}.json`
+      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post2.topic_id, post1.topic_id, post3.topic_id])
+  
+      get `/assign/assigned/#{user.name}.json`, params: { is_group: 0 }
+      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post1.topic_id, post3.topic_id])
+    end
+
+  end
+
 end
