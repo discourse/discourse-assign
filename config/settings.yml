@@ -4,7 +4,9 @@ plugins:
     client: true
   assigns_by_staff_mention: false
   unassign_creates_tracking_post: true
-  assigns_public: false
+  assigns_public:
+    default: false
+    client: true
   assign_self_regex: ""
   assign_other_regex: ""
   unassign_on_close: false

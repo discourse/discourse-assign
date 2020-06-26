@@ -201,11 +201,11 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     it 'lists topics ordered by group' do
-      get `/assign/assigned/#{get_assigned_allowed_group}.json`
-      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post2.topic_id, post1.topic_id, post3.topic_id])
+      get "/assign/assigned/#{get_assigned_allowed_group}.json"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([post2.topic_id, post1.topic_id, post3.topic_id])
   
-      get `/assign/assigned/#{user.name}.json`, params: { is_group: 0 }
-      expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post1.topic_id, post3.topic_id])
+      get "/assign/assigned/#{user.username}.json", params: { is_group: 0 }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([post1.topic_id, post3.topic_id])
     end
 
   end

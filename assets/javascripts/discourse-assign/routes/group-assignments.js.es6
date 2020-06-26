@@ -7,6 +7,6 @@ export default Route.extend({
   },
 
   afterModel() {
-    this.transitionTo("group.assignments.show", "everyone");
+    this.transitionTo("group.assignments.show");
   }
 });
