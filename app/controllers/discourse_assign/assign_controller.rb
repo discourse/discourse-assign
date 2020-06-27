@@ -126,13 +126,12 @@ module DiscourseAssign
           .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
           .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
           .order('tcf.value::integer, topics.bumped_at desc')
+
+        load_more = topics.to_a.length > 30 * (params[:page].to_i + 1)
+
+        topics = topics
           .offset(offset)
           .limit(30)
-
-        topics_length = Topic
-          .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-          .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
-          .select("COUNT(topics.id)").group('topics.id')
 
         users = User.where("users.id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))",params[:group_name])
       else
@@ -144,16 +143,14 @@ module DiscourseAssign
           .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
           .where("tcf.value::int = ?",users[0].id)
           .order('tcf.value::integer, topics.bumped_at desc')
+
+        load_more = topics.to_a.length > 30 * (params[:page].to_i + 1)
+
+        topics = topics
           .offset(offset)
           .limit(30)
 
-        topics_length = Topic
-          .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-          .where("tcf.value::int = ?",users[0].id)
-
       end
-
-      load_more = topics_length.to_a.length > 30 * (params[:page].to_i + 1)
 
       more_topics_url = "/assign/assigned/"+params[:group_name]+"?page="+(params[:page].to_i+1).to_s if load_more
 
