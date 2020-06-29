@@ -4,7 +4,7 @@
   {{/link-to}}
 {{else}}
   {{#link-to "group.assignments.show" filter (query-params route_type=routeType)}}
-    {{filter}}
+    {{i18n 'discourse_assign.group_everyone'}}
   {{/link-to}}
 {{/if}}
 

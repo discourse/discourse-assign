@@ -4,12 +4,7 @@ export default UserTopicsList.extend({
   user: Ember.inject.controller(),
   taskActions: Ember.inject.service(),
 
-  init() {
-    this._super(...arguments);
-  },
-
   actions: {
-
     unassign(topic) {
       this.taskActions
         .unassign(topic.get("id"))

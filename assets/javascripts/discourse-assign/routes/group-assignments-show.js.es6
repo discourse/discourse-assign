@@ -1,14 +1,13 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
-
   model(params) {
     let param = null;
     let route = null;
-    if(params.filter !== "everyone"){
-      param = {is_group: 0};
+    if (params.filter !== "everyone") {
+      param = { is_group: 0 };
       route = params.filter;
-    }else{
+    } else {
       route = this.modelFor("group").get("name");
     }
     return this.store.findFiltered("topicList", {
