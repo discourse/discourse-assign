@@ -1,0 +1,9 @@
+{{#if hasAssignments}}
+  <ul class ='nav-pills'>
+    <li>
+      {{#link-to 'group.assignments' group}}
+        {{d-icon "user-plus" class="glyph"}}{{i18n 'discourse_assign.group_assignments'}}
+      {{/link-to}}
+    </li>
+  </ul>
+{{/if}}
