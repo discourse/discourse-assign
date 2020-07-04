@@ -4,7 +4,7 @@ module DiscourseAssign
   class AssignController < ApplicationController
     include TopicListResponder
     requires_login
-    before_action :ensure_logged_in, :ensure_assign_allowed, :group_assignments
+    before_action :ensure_logged_in, :ensure_assign_allowed
 
     def suggestions
       users = [current_user]
@@ -115,52 +115,51 @@ module DiscourseAssign
       render json: { topics: serialize_data(topics, AssignedTopicSerializer) }
     end
 
+    def assignments_count
+      raise Discourse::NotFound.new if !SiteSetting.assign_enabled?
+
+      topics = Topic
+        .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", params[:group])
+
+      render json: { topic_list_count: topics.to_a.length }, status: :ok
+    end
+
     def group_assignments
-      if SiteSetting.assign_enabled?
-        offset = (params[:page].to_i * 30 || 0).to_i
-        is_group = (params[:is_group] || 1).to_i
+      raise Discourse::NotFound.new if !SiteSetting.assign_enabled?
 
-        if is_group == 1
-          topics = Topic
-            .includes(:tags)
-            .includes(:user)
-            .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-            .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", params[:group_name])
-            .order('tcf.value::integer, topics.bumped_at desc')
+      offset = (params[:page].to_i * 30 || 0).to_i
+      is_group = (params[:is_group] || 1).to_i
 
-          load_more = topics.to_a.length > 30 * (params[:page].to_i + 1)
+      topics = Topic
+        .includes(:tags)
+        .includes(:user)
+        .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+        .order('tcf.value::integer, topics.bumped_at desc')
 
-          topics = topics
-            .offset(offset)
-            .limit(30)
+      if is_group == 1
+        topics = topics
+          .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", params[:name])
 
-          users = User.where("users.id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", params[:group_name])
-        else
-          users = User.where("username = ?", params[:group_name])
-
-          topics = Topic
-            .includes(:tags)
-            .includes(:user)
-            .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-            .where("tcf.value::int = ?", users[0].id)
-            .order('tcf.value::integer, topics.bumped_at desc')
-
-          load_more = topics.to_a.length > 30 * (params[:page].to_i + 1)
-
-          topics = topics
-            .offset(offset)
-            .limit(30)
-
-        end
-
-        more_topics_url = "/assign/assigned/" + params[:group_name] + "?page=" + (params[:page].to_i + 1).to_s if load_more
-
-        more_topics_url += "&is_group=0" if load_more && is_group == 0
-
-        display_topic_list(topics, users, more_topics_url)
+        users = User.where("users.id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", params[:name])
       else
-        raise Discourse::InvalidAccess.new
+        users = User.where("username = ?", params[:name])
+
+        topics = topics
+          .where("tcf.value::int = ?", users[0].id)
       end
+
+      load_more = topics.to_a.length > 30 * (params[:page].to_i + 1)
+
+      topics = topics
+        .offset(offset)
+        .limit(30)
+
+      more_topics_url = "/assign/assigned/" + params[:name] + "?page=" + (params[:page].to_i + 1).to_s if load_more
+
+      more_topics_url += "&is_group=0" if load_more && is_group == 0
+
+      display_topic_list(topics, users, more_topics_url)
     end
 
     private

@@ -6,5 +6,6 @@ DiscourseAssign::Engine.routes.draw do
   put "/unassign" => "assign#unassign"
   get "/suggestions" => "assign#suggestions"
   get "/assigned" => "assign#assigned"
-  get "/assigned/:group_name" => "assign#group_assignments"
+  get "/count/:group" => "assign#assignments_count"
+  get "/assigned/:name" => "assign#group_assignments"
 end
