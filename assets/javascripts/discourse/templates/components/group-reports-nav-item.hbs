@@ -2,7 +2,7 @@
   <ul class ='nav-pills'>
     <li>
       {{#link-to 'group.assignments' group}}
-        {{d-icon "user-plus" class="glyph"}}{{i18n 'discourse_assign.group_assignments'}}{{concat ' (' assignmentsCount concat ')'}}
+        {{d-icon "user-plus" class="glyph"}}{{i18n 'discourse_assign.group_assignments'}}{{concat ' (' group.assignment_count concat ')'}}
       {{/link-to}}
     </li>
   </ul>

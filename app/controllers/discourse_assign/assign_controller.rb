@@ -115,16 +115,6 @@ module DiscourseAssign
       render json: { topics: serialize_data(topics, AssignedTopicSerializer) }
     end
 
-    def assignments_count
-      raise Discourse::NotFound.new if !SiteSetting.assign_enabled?
-
-      topics = Topic
-        .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", params[:group])
-
-      render json: { topic_list_count: topics.to_a.length }, status: :ok
-    end
-
     def group_assignments
       raise Discourse::NotFound.new if !SiteSetting.assign_enabled?
 
