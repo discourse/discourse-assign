@@ -60,7 +60,7 @@ class ::TopicAssigner
       return unless force || post.topic.custom_fields[ASSIGNED_TO_ID].nil?
 
       # remove quotes, oneboxes and code blocks
-      doc = Nokogiri::HTML.fragment(post.cooked)
+      doc = Nokogiri::HTML5.fragment(post.cooked)
       doc.css(".quote, .onebox, pre, code").remove
       text = doc.text.strip
 
@@ -223,6 +223,7 @@ class ::TopicAssigner
           user_id: assign_to.id,
           topic_id: @topic.id,
           post_number: 1,
+          high_priority: true,
           data: {
             message: 'discourse_assign.assign_notification',
             display_username: @assigned_by.username,

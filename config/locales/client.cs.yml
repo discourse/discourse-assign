@@ -14,7 +14,6 @@ cs:
       assigned: "Zadáno"
       unassign:
         title: "Odebrat zadání"
-        help: "Odstranit zadání tématu"
       assign:
         title: "Zadání"
         help: "Zadat téma uživateli"
@@ -24,8 +23,8 @@ cs:
       claim:
         help: "Zadat téme sobě"
       assign_mailer:
-        never: 'Nikdy'
-        always: 'Vždy'
+        never: "Nikdy"
+        always: "Vždy"
       reminders_frequency:
         never: "Nikdy"
         daily: "Denně"

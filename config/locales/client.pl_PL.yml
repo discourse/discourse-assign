@@ -20,10 +20,8 @@ pl_PL:
       cant_act_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na flagach."
       assigned: "Przypisany"
       assigned_to: "Przypisany do"
-      assign_notification: "<p><span>{{username}}</span>{{description}}</p>"
       unassign:
         title: "Cofnij przypisanie"
-        help: "Cofnij przypisanie tematu"
       assign:
         title: "Przypisz"
         help: "Przypisz temat do użytkownika"
@@ -38,9 +36,9 @@ pl_PL:
         title: "przejmij"
         help: "Przypisz temat sobie"
       assign_mailer:
-        never: 'Nigdy'
-        different_users: 'Tylko jeśli przypisujący lub przypisany są innymi użytkownikami'
-        always: 'Zawsze'
+        never: "Nigdy"
+        different_users: "Tylko jeśli przypisujący lub przypisany są innymi użytkownikami"
+        always: "Zawsze"
       reminders_frequency:
         description: "Częstotliwość otrzymwania przypomnień o przypisanych tematach"
         never: "Nigdy"

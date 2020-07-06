@@ -17,7 +17,7 @@ class AssignMailer < ActionMailer::Base
       topic_title: topic.title,
       assignee_name: assigned_by.username,
       topic_excerpt: topic.excerpt,
-      topic_link: "#{Discourse.base_url}/t/#{topic.slug}"
+      topic_link: topic.url
     }
     build_email(to_address, opts)
   end

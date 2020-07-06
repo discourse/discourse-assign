@@ -11,6 +11,7 @@ RSpec.describe DiscourseAssign::AssignController do
   let(:user) { Fabricate(:admin, groups: [default_allowed_group]) }
   let(:post) { Fabricate(:post) }
   let(:user2) { Fabricate(:active_user) }
+  let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
 
   describe 'only allow users from allowed groups' do
     before { sign_in(user2) }
@@ -56,9 +57,11 @@ RSpec.describe DiscourseAssign::AssignController do
       end
 
       it 'does include only visible assign_allowed_on_groups' do
-        visible_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:members])
-        visible_group.add(user)
-        invisible_group = Fabricate(:group, members_visibility_level: Group.visibility_levels[:members])
+        sign_in(nonadmin) # Need to use nonadmin to test. Admins can see all groups
+
+        visible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
+        visible_group.add(nonadmin)
+        invisible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
 
         SiteSetting.assign_allowed_on_groups = "#{visible_group.id}|#{invisible_group.id}"
 

@@ -7,18 +7,23 @@
 
 fr:
   js:
+    filters:
+      unassigned:
+        title: "Désaffecté"
+        help: "Sujets n'étant pas affectés"
     action_codes:
       assigned: "%{who} a été affecté %{when}"
       unassigned: "%{who} a été désaffecté %{when}"
     discourse_assign:
+      add_unassigned_filter: "Ajouter le filtre « désaffecté » à la catégorie"
       cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été affectés à d'autres utilisateurs"
       cant_act_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur les signalements."
       assigned: "Affecté"
       assigned_to: "Affecté à"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Désaffecter"
-        help: "Désaffecter le sujet"
+        help: "Désaffecter %{username} du sujet"
       assign:
         title: "Affecter"
         help: "Affecter le sujet à l'utilisateur"
@@ -27,14 +32,15 @@ fr:
         help: "Réattribuer le sujet à un autre utilisateur"
       assign_modal:
         title: "Affecter le sujet"
-        description: "Saisir le nom de l&#39;utilisateur auquel attribuer ce sujet"
+        description: "Saisir le nom de l'utilisateur auquel attribuer ce sujet"
         assign: "Affecter"
       claim:
         title: "revendiquer"
         help: "Affecter le sujet à vous-même"
       assign_mailer:
-        never: 'Jamais'
-        always: 'Toujours'
+        never: "Jamais"
+        different_users: "Uniquement si l'utilisateur qui affecte et l'utilisateur qui est affecté sont différents"
+        always: "Toujours"
       reminders_frequency:
         description: "Fréquence à laquelle recevoir des rappels de sujets assignés"
         never: "Jamais"
@@ -46,3 +52,8 @@ fr:
       messages:
         assigned_title: "Affecté(s) (%{count})"
         assigned: "Affecté"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Événement d'affectation"
+          details: "Lorsqu'un utilisateur affecte ou désaffecte un sujet."

@@ -9,4 +9,4 @@ te:
   js:
     discourse_assign:
       assign_mailer:
-        always: 'ఎల్లప్పుడూ'
+        always: "ఎల్లప్పుడూ"

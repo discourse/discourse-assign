@@ -16,7 +16,6 @@ zh_TW:
       assigned_to: "已指派給"
       unassign:
         title: "取消指派"
-        help: "取消指派主題"
       assign:
         title: "指派"
         help: "指派主題給使用者"
@@ -27,8 +26,8 @@ zh_TW:
         title: "認領"
         help: "指派主題給您自己"
       assign_mailer:
-        never: '永不'
-        always: '總是'
+        never: "永不"
+        always: "總是"
       reminders_frequency:
         never: "永不"
         daily: "日"

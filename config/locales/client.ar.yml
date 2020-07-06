@@ -9,8 +9,8 @@ ar:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'أبدا'
-        always: 'دوما'
+        never: "أبدا"
+        always: "دوما"
       reminders_frequency:
         never: "أبدا"
         daily: "يوم"

@@ -13,12 +13,11 @@ hu:
     discourse_assign:
       assigned: "Aláírt"
       assigned_to: "Kosztva"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       claim:
         title: "Lefoglal"
       assign_mailer:
-        never: 'Soha'
-        always: 'Mindig'
+        never: "Soha"
+        always: "Mindig"
       reminders_frequency:
         never: "Soha"
         daily: "Napi"

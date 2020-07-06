@@ -16,5 +16,15 @@ export default Ember.Service.extend({
         username: topic.get("assigned_to_user.username")
       }
     });
+  },
+
+  assignUserToTopic(user, topic) {
+    return ajax("/assign/assign", {
+      type: "PUT",
+      data: {
+        username: user.username,
+        topic_id: topic.id
+      }
+    });
   }
 });

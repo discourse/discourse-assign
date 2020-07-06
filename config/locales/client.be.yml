@@ -10,8 +10,8 @@ be:
     discourse_assign:
       assigned: "прызначаны"
       assign_mailer:
-        never: 'ніколі'
-        always: 'заўсёды'
+        never: "ніколі"
+        always: "заўсёды"
       reminders_frequency:
         never: "ніколі"
         daily: "штодня"

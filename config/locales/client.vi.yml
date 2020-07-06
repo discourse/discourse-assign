@@ -12,8 +12,8 @@ vi:
       assign:
         help: "Gán chủ đề cho Thành viên"
       assign_mailer:
-        never: 'Không'
-        always: 'Luôn luôn'
+        never: "Không"
+        always: "Luôn luôn"
       reminders_frequency:
         never: "Không"
         daily: "Hàng ngày"

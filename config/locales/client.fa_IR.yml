@@ -9,11 +9,11 @@ fa_IR:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'هیچ‌وقت'
-        always: 'همیشه'
+        never: "هیچ‌وقت"
+        always: "همیشه"
       reminders_frequency:
         never: "هیچ‌وقت"
         daily: "روزانه"
         weekly: "هفتگی"
-        monthly: "ماهیانه "
-        quarterly: "چهار‌ماهه"
+        monthly: "ماهانه"
+        quarterly: "فصلی"

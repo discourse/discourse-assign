@@ -7,18 +7,21 @@
 
 pt_BR:
   js:
+    filters:
+      unassigned:
+        title: "Não designado"
+        help: "Tópicos que não têm designação"
     action_codes:
       assigned: "designou à %{who} %{when}"
       unassigned: "removeu a designação à %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Adicionar o filtro 'não designado' à categoria"
       cant_act: "Você não pode atuar em sinalizações que foram atribuídas a outros usuários"
       cant_act_unclaimed: "Você precisa reivindicar este tópico antes de atuar em sinalizações."
       assigned: "Designado"
       assigned_to: "Designado à"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Remover Designação"
-        help: "Remover Designação do Tópico"
       assign:
         title: "Designar"
         help: "Designar Tópico ao Usuário"
@@ -32,8 +35,8 @@ pt_BR:
         title: "reivindicar"
         help: "Designar tópico à você mesmo"
       assign_mailer:
-        never: 'Nunca'
-        always: 'Sempre'
+        never: "Nunca"
+        always: "Sempre"
       reminders_frequency:
         description: "Freqüência para receber lembretes de tópicos designados"
         never: "Nunca"

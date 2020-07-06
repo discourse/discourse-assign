@@ -15,10 +15,9 @@ ru:
       cant_act_unclaimed: "Вы должны пожаловаться на эту тему, прежде чем ставить метки."
       assigned: "Назначенные темы"
       assigned_to: "Назначено на"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Снять отв."
-        help: "Снять ответственного с темы"
       assign:
         title: "Назначить отв."
         help: "Назначить ответственного за тему"
@@ -32,8 +31,8 @@ ru:
         title: "Пожаловаться"
         help: "Назначить на себя"
       assign_mailer:
-        never: 'Никогда'
-        always: 'Всегда'
+        never: "Никогда"
+        always: "Всегда"
       reminders_frequency:
         description: "Частота напоминаний на подписанные темы"
         never: "Никогда"

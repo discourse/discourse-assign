@@ -8,10 +8,9 @@
 bs_BA:
   js:
     discourse_assign:
-      assign_notification: "<p><span>{{username}}</span>{{description}}</p>"
       assign_mailer:
-        never: 'Nikad'
-        always: 'Uvijek'
+        never: "Nikad"
+        always: "Uvijek"
       reminders_frequency:
         never: "Nikad"
         daily: "Popularne Dnevno"

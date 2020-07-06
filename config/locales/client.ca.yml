@@ -19,10 +19,10 @@ ca:
       cant_act_unclaimed: "Cal reclamar el tema abans d'actuar sobre les banderes"
       assigned: "Assignat"
       assigned_to: "Assignat a"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Desassigna"
-        help: "Tema no assignat"
+        help: "Desassigna %{username} del tema"
       assign:
         title: "Assigna"
         help: "Assigna el tema a l'usuari"
@@ -37,8 +37,8 @@ ca:
         title: "reclama"
         help: "Assigneu-vos el tema"
       assign_mailer:
-        never: 'Mai'
-        always: 'Sempre'
+        never: "Mai"
+        always: "Sempre"
       reminders_frequency:
         description: "Freqüència per a rebre recordatoris de temes assignats"
         never: "Mai"

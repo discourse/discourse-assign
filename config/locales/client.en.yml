@@ -13,10 +13,10 @@ en:
       cant_act_unclaimed: "You must claim this topic before acting on flags."
       assigned: "Assigned"
       assigned_to: "Assigned to"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Unassign"
-        help: "Unassign Topic"
+        help: "Unassign %{username} from Topic"
       assign:
         title: "Assign"
         help: "Assign Topic to User"
@@ -31,9 +31,9 @@ en:
         title: "claim"
         help: "Assign topic to yourself"
       assign_mailer:
-        never: 'Never'
-        different_users: 'Only if assigner and assignee are different users'
-        always: 'Always'
+        never: "Never"
+        different_users: "Only if assigner and assignee are different users"
+        always: "Always"
       reminders_frequency:
         description: "Frequency for receiving assigned topics reminders"
         never: "Never"

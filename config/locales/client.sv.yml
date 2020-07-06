@@ -20,10 +20,10 @@ sv:
       cant_act_unclaimed: "Du måste ta kontroll över detta ämne innan du kan agera på flaggor."
       assigned: "Tilldelad"
       assigned_to: "Tilldelad till"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span>%{description}</p>"
       unassign:
         title: "Otilldela"
-        help: "Otilldela ämne"
+        help: "Otilldela %{username}för ämne"
       assign:
         title: "Tilldela"
         help: "Tilldela ämne till användare"
@@ -38,9 +38,9 @@ sv:
         title: "begär"
         help: "Tilldela ämne till dig själv"
       assign_mailer:
-        never: 'Aldrig'
-        different_users: 'Enbart om tilldelare och tilldelad är olika användare'
-        always: 'Alltid'
+        never: "Aldrig"
+        different_users: "Enbart om tilldelare och tilldelad är olika användare"
+        always: "Alltid"
       reminders_frequency:
         description: "Frekvens för att erhålla ämnespåminnelser"
         never: "Aldrig"
@@ -52,3 +52,8 @@ sv:
       messages:
         assigned_title: "Tilldelade (%{count})"
         assigned: "Tilldelad"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Tilldela händelse"
+          details: "När en användare tilldelar eller återtar tilldelning för ett ämne."

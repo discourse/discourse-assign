@@ -1,3 +1,4 @@
+import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { default as computed } from "discourse-common/utils/decorators";
 import { iconNode } from "discourse-common/lib/icon-library";
@@ -6,22 +7,62 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
+import { htmlSafe } from "@ember/template";
+
+function titleForState(user) {
+  if (user) {
+    return I18n.t("discourse_assign.unassign.help", {
+      username: user.username
+    });
+  } else {
+    return I18n.t("discourse_assign.assign.help");
+  }
+}
 
 function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "assign",
     icon() {
       const hasAssignement = this.get("topic.assigned_to_user");
-      return hasAssignement ? "user-times" : "user-plus";
+      return hasAssignement
+        ? this.site.mobileView
+          ? "user-times"
+          : null
+        : "user-plus";
     },
     priority: 250,
-    title() {
-      const hasAssignement = this.get("topic.assigned_to_user");
-      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.help`;
+    translatedTitle() {
+      return titleForState(this.get("topic.assigned_to_user"));
     },
-    label() {
-      const hasAssignement = this.get("topic.assigned_to_user");
-      return `discourse_assign.${hasAssignement ? "unassign" : "assign"}.title`;
+    translatedAriaLabel() {
+      return titleForState(this.get("topic.assigned_to_user"));
+    },
+    translatedLabel() {
+      const user = this.get("topic.assigned_to_user");
+
+      if (user) {
+        const label = I18n.t("discourse_assign.unassign.title");
+
+        if (this.site.mobileView) {
+          return htmlSafe(
+            `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
+              user.username
+            }</span></span>${renderAvatar(user, {
+              imageSize: "small",
+              ignoreTitle: true
+            })}`
+          );
+        } else {
+          return htmlSafe(
+            `${renderAvatar(user, {
+              imageSize: "tiny",
+              ignoreTitle: true
+            })}<span class="unassign-label">${label}</span>`
+          );
+        }
+      } else {
+        return I18n.t("discourse_assign.assign.title");
+      }
     },
     action() {
       if (!this.get("currentUser.can_assign")) {
@@ -40,11 +81,10 @@ function registerTopicFooterButtons(api) {
       }
     },
     dropdown() {
-      return this.site.mobileView && !this.get("topic.isPrivateMessage");
+      return this.site.mobileView;
     },
     classNames: ["assign"],
     dependentKeys: [
-      "topic.isPrivateMessage",
       "topic.assigned_to_user",
       "currentUser.can_assign",
       "topic.assigned_to_user.username"
@@ -268,6 +308,8 @@ function initialize(api) {
       }
     }
   });
+
+  api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
 
 export default {

@@ -9,8 +9,8 @@ da:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'Aldrig'
-        always: 'Altid'
+        never: "Aldrig"
+        always: "Altid"
       reminders_frequency:
         never: "Aldrig"
         daily: "Dagligt"

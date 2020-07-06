@@ -20,10 +20,8 @@ uk:
       cant_act_unclaimed: "Ви повинні претендувати на цю тему, перш ніж реагувати на прапори."
       assigned: "Призначено"
       assigned_to: "Призначено на"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Скасувати призначення"
-        help: "Скасувати призначення теми"
       assign:
         title: "Призначити"
         help: "Призначити тему користувачеві"
@@ -38,9 +36,9 @@ uk:
         title: "претензія"
         help: "Призначте тему собі"
       assign_mailer:
-        never: 'Ніколи'
-        different_users: 'Тільки якщо правонаступник і передавач є різними користувачами'
-        always: 'Завжди'
+        never: "Ніколи"
+        different_users: "Тільки якщо правонаступник і передавач є різними користувачами"
+        always: "Завжди"
       reminders_frequency:
         description: "Частота прийому нагадувань про призначені теми"
         never: "Ніколи"

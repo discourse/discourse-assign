@@ -15,10 +15,8 @@ ur:
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
       assigned: "اسائین کردہ"
       assigned_to: "جس کو اسائین کیا گیا"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "غیر اسائین کریں"
-        help: "ٹاپک غیر اسائین کریں"
       assign:
         title: "اسائین کریں"
         help: "صارف کو ٹاپک اسائین کریں"
@@ -32,8 +30,8 @@ ur:
         title: "کلیم کریں"
         help: "اپنے آپ کو ٹاپک اسائین کریں"
       assign_mailer:
-        never: 'کبھی نہیں '
-        always: 'ہمیشہ'
+        never: "کبھی نہیں "
+        always: "ہمیشہ"
       reminders_frequency:
         description: "اسائین کردہ ٹاپکس کے بارے میں یاد دہانیاں وصول کرنے کی فریکوئینسی"
         never: "کبھی نہیں "

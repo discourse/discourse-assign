@@ -20,10 +20,10 @@ zh_CN:
       cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
       assigned: "已指派"
       assigned_to: "指派给"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span>%{description}</p>"
       unassign:
         title: "未指派"
-        help: "未指派主题"
+        help: "取消指派主题给%{username}"
       assign:
         title: "指派"
         help: "指派主题给用户"
@@ -38,17 +38,22 @@ zh_CN:
         title: "认领"
         help: "指派这个主题给你自己"
       assign_mailer:
-        never: '从不'
-        different_users: '仅当转让人和受让人是不同的用户时'
-        always: '始终'
+        never: "从不"
+        different_users: "仅当转让人和受让人是不同的用户时"
+        always: "始终"
       reminders_frequency:
         description: "接受指派主题提醒的频率"
         never: "从不"
         daily: "每天"
         weekly: "每周"
         monthly: "月度"
-        quarterly: "季度的"
+        quarterly: "季度"
     user:
       messages:
         assigned_title: "已指派%{count}"
         assigned: "已指派"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "指派事件"
+          details: "当用户被分配或取消分配一个主题时。"

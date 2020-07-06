@@ -9,8 +9,8 @@ el:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'Ποτέ'
-        always: 'Πάντα'
+        never: "Ποτέ"
+        always: "Πάντα"
       reminders_frequency:
         never: "Ποτέ"
         daily: "Ημερήσια"

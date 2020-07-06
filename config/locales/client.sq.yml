@@ -9,8 +9,8 @@ sq:
   js:
     discourse_assign:
       assign_mailer:
-        never: 'Asnjëherë'
-        always: 'Gjithmonë'
+        never: "Asnjëherë"
+        always: "Gjithmonë"
       reminders_frequency:
         never: "Asnjëherë"
         daily: "Ditore"

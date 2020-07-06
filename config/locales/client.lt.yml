@@ -13,8 +13,8 @@ lt:
     discourse_assign:
       assigned: "Priskirta"
       assign_mailer:
-        never: 'Niekada'
-        always: 'Visada'
+        never: "Niekada"
+        always: "Visada"
       reminders_frequency:
         never: "Niekada"
         daily: "Kasdien"

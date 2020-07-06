@@ -17,7 +17,6 @@ sw:
       assigned_to: "Imekabidhiwa kwa"
       unassign:
         title: "Haijakabithiwa"
-        help: "Usikabidhi Mada"
       assign:
         title: "Kabidhi"
         help: "Pangia Mada kwa Mtumiaji"
@@ -28,8 +27,8 @@ sw:
         title: "Miliki"
         help: "Jipe Mada"
       assign_mailer:
-        never: 'Kamwe'
-        always: 'Mara kwa mara'
+        never: "Kamwe"
+        always: "Mara kwa mara"
       reminders_frequency:
         never: "Kamwe"
         daily: "Kila siku"
