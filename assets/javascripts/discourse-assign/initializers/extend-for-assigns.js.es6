@@ -102,10 +102,7 @@ function initialize(api) {
     },
     customHref: category => {
       if (category) {
-        return (
-          getURL(category.url) +
-          "/l/latest?status=open&assigned=nobody"
-        );
+        return getURL(category.url) + "/l/latest?status=open&assigned=nobody";
       }
     },
     forceActive: (category, args, router) => {
