@@ -6,6 +6,7 @@ import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
+import getURL from "discourse-common/lib/get-url";
 
 function titleForState(user) {
   if (user) {
@@ -102,7 +103,7 @@ function initialize(api) {
     customHref: category => {
       if (category) {
         return (
-          Discourse.getURL(category.url) +
+          getURL(category.url) +
           "/l/latest?status=open&assigned=nobody"
         );
       }
@@ -173,7 +174,7 @@ function initialize(api) {
     @computed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
       const siteSettings = api.container.lookup("site-settings:main");
-      return Discourse.getURL(
+      return getURL(
         siteSettings.assigns_user_url_path.replace(
           "{username}",
           assignedToUser.username
@@ -185,7 +186,7 @@ function initialize(api) {
   api.modifyClass("model:bookmark", {
     @computed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
-      return Discourse.getURL(
+      return getURL(
         this.siteSettings.assigns_user_url_path.replace(
           "{username}",
           assignedToUser.username
