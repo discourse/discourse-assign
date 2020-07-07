@@ -199,7 +199,7 @@ after_initialize do
   end
 
   add_to_class(:topic_query, :list_messages_assigned) do |user|
-    list = joined_topic_user.where("
+    list = default_results.where("
       topics.id IN (
         SELECT topic_id FROM topic_custom_fields
         WHERE name = 'assigned_to_id'
@@ -207,24 +207,25 @@ after_initialize do
     ", user.id.to_s)
       .order("topics.bumped_at DESC")
 
-    return create_list(:assigned, {}, list), list.to_a.length
+    return create_list(:assigned, {}, list)
   end
 
   add_to_class(:list_controller, :messages_assigned) do
-    offset = (params[:page].to_i * 30 || 0).to_i
     page = (params[:page].to_i || 0).to_i
 
     user = User.find_by("LOWER(username) = ?", params[:username])
     raise Discourse::NotFound unless user
+    raise Discourse::InvalidAccess unless current_user.can_assign?
 
     list_opts = build_topic_list_options
+    list_opts[:page] = page
     list = generate_list_for("messages_assigned", user, list_opts)
-    list[0].more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}" if list[1].to_i > offset + 30
-    respond_with_list(list[0])
+    list.more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}"
+    respond_with_list(list)
   end
 
   add_to_class(:topic_query, :list_group_messages_assigned) do |group|
-    list = joined_topic_user.where("
+    list = default_results.where("
       topics.id IN (
         SELECT topic_id FROM topic_custom_fields
         WHERE name = 'assigned_to_id'
@@ -232,21 +233,21 @@ after_initialize do
     ", group.id.to_s)
       .order("topics.bumped_at DESC")
 
-    return create_list(:assigned, {}, list), list.to_a.length
+    return create_list(:assigned, {}, list)
   end
 
   add_to_class(:list_controller, :group_messages_assigned) do
     page = (params[:page].to_i || 0).to_i
-    page = (params[:page].to_i || 0).to_i
 
     group = Group.find_by("LOWER(name) = ?", params[:groupname])
     raise Discourse::NotFound unless group
+    raise Discourse::InvalidAccess unless current_user.can_assign?
 
     list_opts = build_topic_list_options
     list_opts[:page] = page
     list = generate_list_for("group_messages_assigned", group, list_opts)
-    list[0].more_topics_url = "/topics/group-messages-assigned/#{params[:groupname]}.json?page=#{page + 1}" if (list[1].to_i > ((page * 30) + 30))
-    respond_with_list(list[0])
+    list.more_topics_url = "/topics/group-messages-assigned/#{params[:groupname]}.json?page=#{page + 1}"
+    respond_with_list(list)
   end
 
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|
