@@ -2,17 +2,16 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   model(params) {
-    let param = null;
-    let route = null;
+    let filter = null;
     if (params.filter !== "everyone") {
-      param = { is_group: 0 };
-      route = params.filter;
+      filter = `topics/messages-assigned/${params.filter}`;
     } else {
-      route = this.modelFor("group").get("name");
+      filter = `topics/group-messages-assigned/${this.modelFor("group").get(
+        "name"
+      )}`;
     }
     return this.store.findFiltered("topicList", {
-      filter: `assign/assigned/${route}`,
-      params: param
+      filter: filter
     });
   },
 
