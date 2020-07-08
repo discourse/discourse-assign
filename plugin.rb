@@ -20,9 +20,8 @@ load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
-  # get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: ::RouteFormat.username }
-  get "/topics/messages-assigned/:username" => "list#messages_assigned"
-  get "/topics/group-messages-assigned/:groupname" => "list#group_messages_assigned"
+  get "/topics/messages-assigned/:username" => "list#messages_assigned", constraints: { username: ::RouteFormat.username }
+  get "/topics/group-messages-assigned/:groupname" => "list#group_messages_assigned", constraints: { username: ::RouteFormat.username }
   get "/g/:id/assignments" => "groups#index"
   get "/g/:id/assignments/:route_type" => "groups#index"
 end
@@ -41,10 +40,10 @@ after_initialize do
     RemindAssignsFrequencySiteSettings.values
   end
 
-  add_to_serializer(:user, :assignments_count) do
+  add_to_serializer(:group_user, :assignments_count) do
     if scope.can_assign?
       Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .where("tcf.value = ?", scope.id.to_s).count
+        .where("tcf.value = ?", object.id.to_s).count
     end
   end
 
