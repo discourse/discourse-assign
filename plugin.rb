@@ -40,18 +40,13 @@ after_initialize do
     RemindAssignsFrequencySiteSettings.values
   end
 
-  add_to_serializer(:group_user, :assignments_count) do
-    if scope.can_assign?
-      Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .where("tcf.value = ?", object.id.to_s).count
-    end
+  add_to_serializer(:group_show, :assignment_count) do
+    Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+      .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name).count
   end
 
-  add_to_serializer(:group_show, :assignment_count) do
-    if scope.can_assign?
-      Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name).count
-    end
+  add_to_serializer(:group_show, 'include_assignment_count?') do
+    scope.can_assign?
   end
 
   add_model_callback(UserCustomField, :before_save) do
