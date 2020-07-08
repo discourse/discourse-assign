@@ -1,4 +1,4 @@
-import UserTopicsList from 'discourse/controllers/user-topics-list'
+import UserTopicsList from "discourse/controllers/user-topics-list";
 
 export default UserTopicsList.extend({
   user: Ember.inject.controller(),
@@ -7,12 +7,12 @@ export default UserTopicsList.extend({
   actions: {
     unassign(topic) {
       this.taskActions
-        .unassign(topic.get('id'))
-        .then(() => this.send('changeAssigned'))
+        .unassign(topic.get("id"))
+        .then(() => this.send("changeAssigned"));
     },
     reassign(topic) {
-      const controller = this.taskActions.assign(topic)
-      controller.set('model.onSuccess', () => this.send('changeAssigned'))
-    },
-  },
-})
+      const controller = this.taskActions.assign(topic);
+      controller.set("model.onSuccess", () => this.send("changeAssigned"));
+    }
+  }
+});

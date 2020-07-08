@@ -1,5 +1,5 @@
-import { ajax } from 'discourse/lib/ajax'
-import { popupAjaxError } from 'discourse/lib/ajax-error'
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default Ember.Controller.extend({
   assignSuggestions: null,
@@ -7,53 +7,53 @@ export default Ember.Controller.extend({
   taskActions: Ember.inject.service(),
 
   init() {
-    this._super(...arguments)
-    this.allowedGroups = []
+    this._super(...arguments);
+    this.allowedGroups = [];
 
-    ajax('/assign/suggestions').then(data => {
-      this.set('assignSuggestions', data.suggestions)
-      this.set('allowedGroups', data.assign_allowed_on_groups)
-    })
+    ajax("/assign/suggestions").then(data => {
+      this.set("assignSuggestions", data.suggestions);
+      this.set("allowedGroups", data.assign_allowed_on_groups);
+    });
   },
 
   onClose() {
-    if (this.get('model.onClose') && this.get('model.username')) {
-      this.get('model.onClose')(this.get('model.username'))
+    if (this.get("model.onClose") && this.get("model.username")) {
+      this.get("model.onClose")(this.get("model.username"));
     }
   },
 
   actions: {
     assignUser(user) {
       this.setProperties({
-        'model.username': user.username,
-        'model.allowedGroups': this.taskActions.allowedGroups,
-      })
-      this.send('assign')
+        "model.username": user.username,
+        "model.allowedGroups": this.taskActions.allowedGroups
+      });
+      this.send("assign");
     },
 
     assign() {
-      let path = '/assign/assign'
+      let path = "/assign/assign";
 
-      if (Ember.isEmpty(this.get('model.username'))) {
-        path = '/assign/unassign'
-        this.set('model.assigned_to_user', null)
+      if (Ember.isEmpty(this.get("model.username"))) {
+        path = "/assign/unassign";
+        this.set("model.assigned_to_user", null);
       }
 
-      this.send('closeModal')
+      this.send("closeModal");
 
       return ajax(path, {
-        type: 'PUT',
+        type: "PUT",
         data: {
-          username: this.get('model.username'),
-          topic_id: this.get('model.topic.id'),
-        },
+          username: this.get("model.username"),
+          topic_id: this.get("model.topic.id")
+        }
       })
         .then(() => {
-          if (this.get('model.onSuccess')) {
-            this.get('model.onSuccess')()
+          if (this.get("model.onSuccess")) {
+            this.get("model.onSuccess")();
           }
         })
-        .catch(popupAjaxError)
-    },
-  },
-})
+        .catch(popupAjaxError);
+    }
+  }
+});

@@ -41,6 +41,13 @@ after_initialize do
     RemindAssignsFrequencySiteSettings.values
   end
 
+  add_to_serializer(:user, :assignments_count) do
+    if scope.can_assign?
+      Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+        .where("tcf.value = ?", scope.id.to_s).count
+    end
+  end
+
   add_to_serializer(:group_show, :assignment_count) do
     if scope.can_assign?
       Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")

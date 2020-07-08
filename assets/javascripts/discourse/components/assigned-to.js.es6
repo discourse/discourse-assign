@@ -1,3 +1,3 @@
 export default Ember.Component.extend({
-  classNames: ['assigned-to-user'],
-})
+  classNames: ["assigned-to-user"]
+});

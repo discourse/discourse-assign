@@ -1,6 +1,6 @@
 export default {
-  resource: 'user.userPrivateMessages',
+  resource: "user.userPrivateMessages",
   map() {
-    this.route('assigned')
-  },
-}
+    this.route("assigned");
+  }
+};
