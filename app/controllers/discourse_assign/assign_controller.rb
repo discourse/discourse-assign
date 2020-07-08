@@ -2,7 +2,6 @@
 
 module DiscourseAssign
   class AssignController < ApplicationController
-    include TopicListResponder
     requires_login
     before_action :ensure_logged_in, :ensure_assign_allowed
 
@@ -116,25 +115,6 @@ module DiscourseAssign
     end
 
     private
-
-    def display_topic_list(topics, users, more_topics_url)
-      Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
-
-      User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
-
-      users = users.to_h { |u| [u.id, u] }
-
-      topics.each do |t|
-        if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-          t.preload_assigned_to_user(users[id.to_i])
-        end
-      end
-
-      topic_list = TopicQuery.new.create_list(:group_assigned, {}, topics)
-      topic_list.more_topics_url = more_topics_url
-
-      respond_with_list(topic_list)
-    end
 
     def translate_failure(reason, user)
       case reason

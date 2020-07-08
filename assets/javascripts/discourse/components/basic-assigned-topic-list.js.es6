@@ -1,3 +1,3 @@
-import BasicTopicList from "discourse/components/basic-topic-list";
+import BasicTopicList from 'discourse/components/basic-topic-list'
 
-export default BasicTopicList;
+export default BasicTopicList

@@ -1,52 +1,52 @@
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
+import { ajax } from 'discourse/lib/ajax'
+import { popupAjaxError } from 'discourse/lib/ajax-error'
 
 export default Ember.Component.extend({
-  tagName: "",
+  tagName: '',
   claiming: false,
   unassigning: false,
 
   actions: {
     unassign() {
-      this.set("unassigning", true);
-      return ajax("/assign/unassign", {
-        type: "PUT",
-        data: { topic_id: this.get("topic.id") }
+      this.set('unassigning', true)
+      return ajax('/assign/unassign', {
+        type: 'PUT',
+        data: { topic_id: this.get('topic.id') },
       })
         .then(() => {
-          this.set("topic.assigned_to_user", null);
+          this.set('topic.assigned_to_user', null)
         })
         .catch(popupAjaxError)
         .finally(() => {
-          this.set("unassigning", false);
-        });
+          this.set('unassigning', false)
+        })
     },
 
     claim() {
-      this.set("claiming", true);
+      this.set('claiming', true)
 
-      let topic = this.topic;
+      let topic = this.topic
       ajax(`/assign/claim/${topic.id}`, {
-        method: "PUT"
+        method: 'PUT',
       })
         .then(() => {
-          this.set("topic.assigned_to_user", this.currentUser);
+          this.set('topic.assigned_to_user', this.currentUser)
         })
         .catch(e => {
           if (e.jqXHR && e.jqXHR.responseJSON) {
-            let json = e.jqXHR.responseJSON;
+            let json = e.jqXHR.responseJSON
             if (json && json.extras) {
-              this.set("topic.assigned_to_user", json.extras.assigned_to);
+              this.set('topic.assigned_to_user', json.extras.assigned_to)
             }
           }
-          return popupAjaxError(e);
+          return popupAjaxError(e)
         })
         .finally(() => {
           if (this.isDestroying || this.isDestroyed) {
-            return;
+            return
           }
-          this.set("claiming", false);
-        });
-    }
-  }
-});
+          this.set('claiming', false)
+        })
+    },
+  },
+})

@@ -1,8 +1,8 @@
 export default {
-  resource: "group",
+  resource: 'group',
   map() {
-    this.route("assignments", function() {
-      this.route("show", { path: "/:filter" });
-    });
-  }
-};
+    this.route('assignments', function() {
+      this.route('show', { path: '/:filter' })
+    })
+  },
+}

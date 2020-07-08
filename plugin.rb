@@ -42,8 +42,10 @@ after_initialize do
   end
 
   add_to_serializer(:group_show, :assignment_count) do
-    Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-      .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name).count
+    if scope.can_assign?
+      Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name).count
+    end
   end
 
   add_model_callback(UserCustomField, :before_save) do
@@ -207,13 +209,13 @@ after_initialize do
     ", user.id.to_s)
       .order("topics.bumped_at DESC")
 
-    return create_list(:assigned, {}, list)
+    create_list(:assigned, {}, list)
   end
 
   add_to_class(:list_controller, :messages_assigned) do
     page = (params[:page].to_i || 0).to_i
 
-    user = User.find_by("LOWER(username) = ?", params[:username])
+    user = User.find_by_username(params[:username])
     raise Discourse::NotFound unless user
     raise Discourse::InvalidAccess unless current_user.can_assign?
 
@@ -233,7 +235,7 @@ after_initialize do
     ", group.id.to_s)
       .order("topics.bumped_at DESC")
 
-    return create_list(:assigned, {}, list)
+    create_list(:assigned, {}, list)
   end
 
   add_to_class(:list_controller, :group_messages_assigned) do
