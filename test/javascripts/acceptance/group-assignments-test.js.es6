@@ -5,12 +5,12 @@ acceptance("GroupAssignments", {
   loggedIn: true,
   settings: { assign_enabled: true, assigns_user_url_path: "/" },
   pretend(server, helper) {
-    const messagesPath = "/assign/assigned/discourse.json";
-    const assigns = AssignedTopics[messagesPath];
-    server.get(messagesPath, () => helper.response(assigns));
-    server.get("/assign/assigned/awesomerobot.json", () =>
-      helper.response(AssignedTopics["/assign/assigned/awesomerobot.json"])
-    );
+    const groupPath = "/topics/group-topics-assigned/discourse.json";
+    const memberPath = "/topics/messages-assigned/awesomerobot.json";
+    const groupAssigns = AssignedTopics[groupPath];
+    const memberAssigns = AssignedTopics[memberPath];
+    server.get(groupPath, () => helper.response(groupAssigns));
+    server.get(memberPath, () => helper.response(memberAssigns));
   }
 });
 QUnit.test("Group Assignments Everyone", async assert => {

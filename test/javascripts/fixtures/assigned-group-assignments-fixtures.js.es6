@@ -1,5 +1,5 @@
 export default {
-  "/assign/assigned/discourse.json": {
+  "/topics/group-topics-assigned/discourse.json": {
     users: [
       {
         id: -2,
@@ -83,7 +83,7 @@ export default {
       ]
     }
   },
-  "/assign/assigned/awesomerobot.json": {
+  "/topics/messages-assigned/awesomerobot.json": {
     users: [
       {
         id: -2,
