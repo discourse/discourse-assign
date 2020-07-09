@@ -28,13 +28,13 @@ describe TopicQuery do
     end
 
     it 'Includes topics and PMs assigned to user' do
-      assigned_messages = TopicQuery.new(user).list_messages_assigned(user).topics
+      assigned_messages = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
 
       expect(assigned_messages).to contain_exactly(@private_message, @topic)
     end
 
     it 'Excludes topics and PMs not assigned to user' do
-      assigned_messages = TopicQuery.new(user2).list_messages_assigned(user2).topics
+      assigned_messages = TopicQuery.new(user2, { page: 0 }).list_messages_assigned(user2).topics
 
       expect(assigned_messages).to be_empty
     end
@@ -42,7 +42,32 @@ describe TopicQuery do
     it 'Returns the results ordered by the bumped_at field' do
       @topic.update(bumped_at: 2.weeks.ago)
 
-      assigned_messages = TopicQuery.new(user).list_messages_assigned(user).topics
+      assigned_messages = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
+
+      expect(assigned_messages).to eq([@private_message, @topic])
+    end
+  end
+
+  describe '#list_group_topics_assigned' do
+
+    before do
+      @private_message = Fabricate(:private_message_topic, user: user)
+      @topic = Fabricate(:topic, user: user)
+
+      assign_to(@private_message, user)
+      assign_to(@topic, user2)
+    end
+
+    it 'Includes topics and PMs assigned to user' do
+      assigned_messages = TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
+
+      expect(assigned_messages).to contain_exactly(@private_message, @topic)
+    end
+
+    it 'Returns the results ordered by the bumped_at field' do
+      @topic.update(bumped_at: 2.weeks.ago)
+
+      assigned_messages = TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
 
       expect(assigned_messages).to eq([@private_message, @topic])
     end

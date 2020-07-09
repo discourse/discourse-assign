@@ -10,6 +10,6 @@ shared_context 'A group that is allowed to assign' do
   end
 
   def get_assigned_allowed_group()
-    assign_allowed_group.name
+    assign_allowed_group
   end
 end
