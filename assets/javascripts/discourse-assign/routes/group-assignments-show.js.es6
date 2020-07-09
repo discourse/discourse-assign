@@ -6,7 +6,7 @@ export default DiscourseRoute.extend({
     if (params.filter !== "everyone") {
       filter = `topics/messages-assigned/${params.filter}`;
     } else {
-      filter = `topics/group-messages-assigned/${this.modelFor("group").get(
+      filter = `topics/group-topics-assigned/${this.modelFor("group").get(
         "name"
       )}`;
     }
