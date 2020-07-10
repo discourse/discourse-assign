@@ -3,6 +3,6 @@ export default Ember.Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set("canAssign", this.currentUser.can_assign);
+    this.set("canAssign", this.currentUser && this.currentUser.can_assign);
   }
 });
