@@ -1,0 +1,15 @@
+{{log model}}
+<section class="user-secondary-navigation">
+    {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked" currentPath=router._router.currentPath}}
+      {{#load-more selector=".activity-nav li" action=(action "loadMore")}}
+        {{group-assignments-filter show-avatar=false filter="everyone" routeType=route_type}}
+        {{#each model.members as |member|}}
+          {{group-assignments-filter show-avatar=true filter=member routeType=route_type}}
+        {{/each}}
+        {{conditional-loading-spinner condition=loading}}
+      {{/load-more}}
+    {{/mobile-nav}}
+</section>
+<section class="user-content">
+  {{outlet}}
+</section>

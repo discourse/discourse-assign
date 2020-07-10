@@ -20,7 +20,10 @@ load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
-  get "topics/messages-assigned/:username" => "list#messages_assigned", as: "topics_messages_assigned", constraints: { username: ::RouteFormat.username }
+  get "/topics/messages-assigned/:username" => "list#messages_assigned", constraints: { username: ::RouteFormat.username }
+  get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned", constraints: { username: ::RouteFormat.username }
+  get "/g/:id/assignments" => "groups#index"
+  get "/g/:id/assignments/:route_type" => "groups#index"
 end
 
 after_initialize do
@@ -36,6 +39,16 @@ after_initialize do
   add_to_serializer(:user, :reminders_frequency) do
     RemindAssignsFrequencySiteSettings.values
   end
+
+  add_to_serializer(:group_show, :assignment_count) do
+    Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+      .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name).count
+  end
+
+  add_to_serializer(:group_show, 'include_assignment_count?') do
+    scope.can_assign?
+  end
+
   add_model_callback(UserCustomField, :before_save) do
     self.value = self.value.to_i if self.name == frequency_field
   end
@@ -186,19 +199,66 @@ after_initialize do
   require_dependency 'list_controller'
   class ::ListController
     generate_message_route(:private_messages_assigned)
-    generate_message_route(:messages_assigned)
   end
 
   add_to_class(:topic_query, :list_messages_assigned) do |user|
+    secure = Topic.listable_topics.secured(@guardian).or(Topic.private_messages_for_user(@user))
     list = joined_topic_user.where("
       topics.id IN (
         SELECT topic_id FROM topic_custom_fields
         WHERE name = 'assigned_to_id'
         AND value = ?)
     ", user.id.to_s)
+      .limit(per_page_setting)
+      .offset(per_page_setting * options[:page])
       .order("topics.bumped_at DESC")
+    list = list.merge(secure)
 
-    create_list(:assigned, {}, list)
+    create_list(:assigned, { unordered: true }, list)
+  end
+
+  add_to_class(:list_controller, :messages_assigned) do
+    page = (params[:page].to_i || 0).to_i
+
+    user = User.find_by_username(params[:username])
+    raise Discourse::NotFound unless user
+    raise Discourse::InvalidAccess unless current_user.can_assign?
+
+    list_opts = build_topic_list_options
+    list_opts[:page] = page
+    list = generate_list_for("messages_assigned", user, list_opts)
+    list.more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}"
+    respond_with_list(list)
+  end
+
+  add_to_class(:topic_query, :list_group_topics_assigned) do |group|
+    secure = Topic.listable_topics.secured(@guardian).or(Topic.private_messages_for_user(@user))
+    list = joined_topic_user.where("
+      topics.id IN (
+        SELECT topic_id FROM topic_custom_fields
+        WHERE name = 'assigned_to_id'
+        AND value IN (SELECT user_id::varchar(255) from group_users where group_id = ?))
+    ", group.id.to_s)
+      .limit(per_page_setting)
+      .offset(per_page_setting * options[:page])
+      .order("topics.bumped_at DESC")
+    list = list.merge(secure)
+
+    create_list(:assigned, { unordered: true }, list)
+  end
+
+  add_to_class(:list_controller, :group_topics_assigned) do
+    page = (params[:page].to_i || 0).to_i
+
+    group = Group.find_by("LOWER(name) = ?", params[:groupname])
+    raise Discourse::NotFound unless group
+    raise Discourse::InvalidAccess unless current_user.can_assign?
+
+    list_opts = build_topic_list_options
+    list_opts[:page] = page
+    list = generate_list_for("group_topics_assigned", group, list_opts)
+    list.more_topics_url = "/topics/group-topics-assigned/#{params[:groupname]}.json?page=#{page + 1}"
+    respond_with_list(list)
   end
 
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|
