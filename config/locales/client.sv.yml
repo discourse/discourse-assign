@@ -20,7 +20,7 @@ sv:
       cant_act_unclaimed: "Du måste ta kontroll över detta ämne innan du kan agera på flaggor."
       assigned: "Tilldelad"
       assigned_to: "Tilldelad till"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span>%{description}</p>"
       unassign:
         title: "Otilldela"
         help: "Otilldela %{username}för ämne"

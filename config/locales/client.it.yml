@@ -20,7 +20,7 @@ it:
       cant_act_unclaimed: "Devi prima rivendicare questo argomento per poter intervenire sulle segnalazioni. "
       assigned: "Assegnato"
       assigned_to: "Assegnato a"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p> <span>%{username}</span> %{description} </p>"
       unassign:
         title: "Annulla assegnazione"
         help: "Dissocia %{username} dall'Argomento"

@@ -15,7 +15,6 @@ hy:
       cant_act_unclaimed: "Դուք պետք է պահանջեք այս թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
       assigned: "Վերագրված"
       assigned_to: "Վերագրված է"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
       unassign:
         title: "Ետ կանչել վերագրումը"
       assign:

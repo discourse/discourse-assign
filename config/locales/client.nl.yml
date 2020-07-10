@@ -20,7 +20,7 @@ nl:
       cant_act_unclaimed: "U moet dit topic opeisen voordat u handelingen op markeringen kunt uitvoeren."
       assigned: "Toegewezen"
       assigned_to: "Toegewezen aan"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Toewijzing opheffen"
         help: "Toewijzing van topic aan %{username} opheffen"

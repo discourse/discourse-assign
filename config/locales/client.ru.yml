@@ -15,7 +15,7 @@ ru:
       cant_act_unclaimed: "Вы должны пожаловаться на эту тему, прежде чем ставить метки."
       assigned: "Назначенные темы"
       assigned_to: "Назначено на"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Снять отв."
       assign:

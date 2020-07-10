@@ -20,9 +20,10 @@ zh_CN:
       cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
       assigned: "已指派"
       assigned_to: "指派给"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span>%{description}</p>"
       unassign:
         title: "未指派"
+        help: "取消指派主题给%{username}"
       assign:
         title: "指派"
         help: "指派主题给用户"

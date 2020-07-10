@@ -20,7 +20,7 @@ he:
       cant_act_unclaimed: "עליך לדרוש את הנושא הזה לפני נקיטת פעולות על דגלים."
       assigned: "מוקצה"
       assigned_to: "מוקצה לטובת"
-      assign_notification: "<p><span>{{username}}</span> {{description}}</p>"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "ביטול הקצאה"
         help: "לבטל את הקצאת %{username} מהנושא"
