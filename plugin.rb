@@ -250,7 +250,7 @@ after_initialize do
   add_to_class(:list_controller, :group_topics_assigned) do
     page = (params[:page].to_i || 0).to_i
 
-    group = Group.find_by("LOWER(name) = ?", params[:groupname])
+    group = Group.find_by("name = ?", params[:groupname])
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless current_user.can_assign?
 
