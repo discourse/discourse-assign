@@ -13,7 +13,9 @@ export default DropdownSelectBoxComponent.extend({
         id: "unassign",
         icon: "user-times",
         name: I18n.t("discourse_assign.unassign.title"),
-        description: I18n.t("discourse_assign.unassign.help")
+        description: I18n.t("discourse_assign.unassign.help", {
+          username: this.topic.assigned_to_user.username
+        })
       },
       {
         id: "reassign",
