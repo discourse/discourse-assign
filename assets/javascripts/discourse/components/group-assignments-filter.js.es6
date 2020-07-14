@@ -1,15 +1,14 @@
+import discourseComputed from "discourse-common/utils/decorators";
 import Component from "@ember/component";
 
 export default Component.extend({
   tagName: "li",
-  displayName: "",
 
-  init(){
-    if(this.siteSettings.prioritize_username_in_ux){
-      this.set("displayName",this.filter.username);
-    }else{
-      this.set("displayName",this.filter.displayName);
+  @discourseComputed("siteSettings.prioritize_username_in_ux")
+  displayName(prioritize_username_in_ux){
+    if(prioritize_username_in_ux){
+      return this.filter.username;
     }
-    this._super(...arguments);
+    return this.filter.displayName;
   }
 });
