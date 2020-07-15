@@ -1,14 +1,12 @@
 import componentTest from "helpers/component-test";
-import { inject as service } from "@ember/service";
 
 moduleForComponent("group-assignments-filter", { integration: true });
 
 componentTest("display username", {
-  template: '{{group-assignments-filter show-avatar=true filter=member routeType=route_type}}',
+  template: '{{group-assignments-filter show-avatar=true filter=filter}}',
 
   beforeEach() {
     this.siteSettings.prioritize_username_in_ux = true;
-    this.set("routeType", service(),);
     this.set("filter", {
       id: 2,
       username: "Ahmed",
@@ -23,16 +21,15 @@ componentTest("display username", {
     });
   },
   async test(assert) {
-    assert.equal(this.displayName, 'Ahmed');
+    assert.ok(find("li")[0].innerText.trim(),'Ahmed');
   }
 });
 componentTest("display name", {
-  template: '{{group-assignments-filter show-avatar=true filter=member routeType=route_type}}',
+  template: '{{group-assignments-filter show-avatar=true filter=filter}}',
 
   beforeEach() {
     this.siteSettings.prioritize_username_in_ux = true;
-    this.set("router", service(),);
-    this.set("member", {
+    this.set("filter", {
       id: 2,
       username: "Ahmed",
       displayName:"Ahmed Gagan",
@@ -46,6 +43,6 @@ componentTest("display name", {
     });
   },
   async test(assert) {
-    assert.equal(this.displayName, 'Ahmed Gagan');
+    assert.ok(find("li")[0].innerText.trim(),'Ahmed Gagan');
   }
 });
