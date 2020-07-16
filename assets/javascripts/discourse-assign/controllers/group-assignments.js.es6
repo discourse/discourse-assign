@@ -5,27 +5,21 @@ export default Controller.extend({
   router: service(),
   application: controller(),
   loading: false,
+  queryParams: ["offset"],
+  offset: 0,
 
-  findMembers(refresh) {
+  findMembers() {
     if (this.loading || !this.model) {
       return;
     }
 
-    if (!refresh && this.model.members.length >= this.model.user_count) {
+    if(this.model.members.length >= this.offset + 50){
+      this.set("loading", true);
+      this.set("offset", this.offset + 50);
+      this.set("application.showFooter", false);
+    }else{
       this.set("application.showFooter", true);
-      return;
     }
-
-    this.set("loading", true);
-    this.model
-      .findMembers({ order: "", asc: true, filter: null }, refresh)
-      .finally(() => {
-        this.setProperties({
-          "application.showFooter":
-            this.model.members.length >= this.model.user_count,
-          loading: false
-        });
-      });
   },
 
   actions: {
