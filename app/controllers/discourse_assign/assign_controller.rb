@@ -138,7 +138,7 @@ module DiscourseAssign
         .offset(offset)
         .includes(:primary_group)
 
-      render json: { members: serialize_data(members, GroupUserSerializer) }
+      render json: { members: serialize_data(members, GroupUserAssignedSerializer) }
     end
 
     private
