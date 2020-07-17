@@ -130,14 +130,16 @@ after_initialize do
       can_assign = topic_list.current_user && topic_list.current_user.can_assign?
       allowed_access = SiteSetting.assigns_public || can_assign
 
+      # TODO Drop AvatarLookup after Discourse 2.6.0 release
+      lookup_columns = defined?(UserLookup) ? UserLookup.lookup_columns : AvatarLookup.lookup_columns
+
       if allowed_access && topics.length > 0
         users = User.where("users.id in (
               SELECT value::int
               FROM topic_custom_fields
               WHERE name = 'assigned_to_id' AND topic_id IN (?)
         )", topics.map(&:id))
-          .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
-          .select(AvatarLookup.lookup_columns)
+          .select(lookup_columns)
 
         map = {}
         users.each { |u| map[u.id] = u }
