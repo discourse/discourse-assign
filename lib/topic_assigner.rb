@@ -136,19 +136,7 @@ class ::TopicAssigner
 
   def can_be_assigned?(assign_to)
     return false unless allowed_user_ids.include?(assign_to.id)
-    return true if (!@topic.private_message? || assign_to.admin?)
-
-    results = DB.query_single(<<~SQL
-      SELECT 1
-      FROM topics
-      LEFT OUTER JOIN topic_allowed_users tau ON tau.topic_id = topics.id
-      LEFT OUTER JOIN topic_allowed_groups tag ON tag.topic_id = topics.id
-      LEFT OUTER JOIN group_users gu ON gu.group_id = tag.group_id
-      WHERE topics.id = #{@topic.id} AND (gu.user_id = #{assign_to.id} OR tau.user_id = #{assign_to.id})
-    SQL
-    )
-
-    results.present?
+    Guardian.new(assign_to).can_see_topic?(@topic)
   end
 
   def assign(assign_to, silent: false)

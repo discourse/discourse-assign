@@ -32,6 +32,8 @@ RSpec.describe TopicAssigner do
   context "assigning and unassigning" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
+    let(:secure_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+    let(:secure_topic) { Fabricate(:post).topic.tap { |t| t.update(category: secure_category) } }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
     let(:moderator2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
     let(:assigner) { TopicAssigner.new(topic, moderator2) }
@@ -189,8 +191,15 @@ RSpec.describe TopicAssigner do
 
     fab!(:admin) { Fabricate(:admin) }
 
-    it 'fails to assign when the assigned user cannot view the topic' do
+    it 'fails to assign when the assigned user cannot view the pm' do
       assign = TopicAssigner.new(pm, admin).assign(moderator)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_assign_to)
+    end
+
+    it 'fails to assign when the assigned user cannot view the topic' do
+      assign = TopicAssigner.new(secure_topic, admin).assign(moderator)
 
       expect(assign[:success]).to eq(false)
       expect(assign[:reason]).to eq(:forbidden_assign_to)

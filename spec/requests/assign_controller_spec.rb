@@ -175,6 +175,25 @@ RSpec.describe DiscourseAssign::AssignController do
       get '/assign/assigned.json', params: { offset: 2 }
       expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post1.topic_id])
     end
+
+    context "with custom allowed groups" do
+      let(:custom_allowed_group) { Fabricate(:group, name: 'mygroup') }
+      let(:other_user) { Fabricate(:user, groups: [custom_allowed_group]) }
+      before do
+        SiteSetting.assign_allowed_on_groups += "|#{custom_allowed_group.id}"
+      end
+
+      it 'works for admins' do
+        get '/assign/assigned.json'
+        expect(response.status).to eq(200)
+      end
+
+      it 'does not work for other groups' do
+        sign_in(other_user)
+        get '/assign/assigned.json'
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
 end

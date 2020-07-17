@@ -83,6 +83,8 @@ module DiscourseAssign
     end
 
     def assigned
+      raise Discourse::InvalidAccess unless current_user&.admin?
+
       offset = (params[:offset] || 0).to_i
       limit = (params[:limit] || 100).to_i
 
