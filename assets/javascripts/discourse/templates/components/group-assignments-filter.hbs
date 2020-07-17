@@ -1,6 +1,6 @@
 {{#if show-avatar}}
   {{#link-to "group.assignments.show" filter.username_lower}}
-    {{avatar filter avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}} {{filter.username}}
+    {{avatar filter avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}} {{filter.username}} {{concat '(' filter.assignments_count concat ')' }}
   {{/link-to}}
 {{else}}
   {{#link-to "group.assignments.show" filter}}
