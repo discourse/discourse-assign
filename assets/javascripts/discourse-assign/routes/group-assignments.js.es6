@@ -2,14 +2,15 @@ import Route from "@ember/routing/route";
 import { ajax } from "discourse/lib/ajax";
 
 export default Route.extend({
-  queryParams: {
-    offset: { refreshModel: true },
+  model() {
+    return ajax(`/assign/members/${this.modelFor("group").get("name")}`);
   },
 
-  model(params) {
-    return ajax(`/assign/members/${this.modelFor("group").get("name")}.json`,
-      { offset: params.offset }
-    );
+  setupController(controller, model) {
+    controller.setProperties({
+      model,
+      groupName: this.modelFor("group").get("name")
+    });
   },
 
   redirect(model, transition) {

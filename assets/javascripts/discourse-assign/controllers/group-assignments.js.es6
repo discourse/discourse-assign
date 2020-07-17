@@ -1,11 +1,11 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
+import { ajax } from "discourse/lib/ajax";
 
 export default Controller.extend({
   router: service(),
   application: controller(),
   loading: false,
-  queryParams: ["offset"],
   offset: 0,
 
   findMembers() {
@@ -13,12 +13,15 @@ export default Controller.extend({
       return;
     }
 
-    if(this.model.members.length >= this.offset + 50){
+    if (this.model.members.length >= this.offset + 50) {
       this.set("loading", true);
       this.set("offset", this.offset + 50);
-      this.set("application.showFooter", false);
-    }else{
-      this.set("application.showFooter", true);
+      ajax(`/assign/members/${this.groupName}?offset=${this.offset}`).then(
+        result => {
+          this.set("model.members", this.model.members.concat(result.members));
+          this.set("loading", false);
+        }
+      );
     }
   },
 
