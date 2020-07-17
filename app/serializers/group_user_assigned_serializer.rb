@@ -3,20 +3,11 @@
 class GroupUserAssignedSerializer < BasicUserSerializer
   include UserPrimaryGroupMixin
 
-  attributes :name,
-             :title,
-             :last_posted_at,
-             :last_seen_at,
-             :added_at,
-             :assignments_count,
-             :timezone
+  attributes :assignments_count,
+             :username_lower
 
   def include_assignments_count
     object.can_assign?
-  end
-
-  def include_added_at
-    object.respond_to? :added_at
   end
 
 end

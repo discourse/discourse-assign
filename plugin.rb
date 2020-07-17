@@ -253,6 +253,8 @@ after_initialize do
     page = (params[:page].to_i || 0).to_i
 
     group = Group.find_by("name = ?", params[:groupname])
+    guardian.ensure_can_see_group_members!(group)
+
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless current_user.can_assign?
 

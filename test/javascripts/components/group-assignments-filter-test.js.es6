@@ -10,7 +10,6 @@ componentTest("display username", {
     this.set("filter", {
       id: 2,
       username: "Ahmed",
-      displayName: "Ahmed Gagan",
       name: "Ahmed Gagan",
       avatar_template: "/letter_avatar_proxy/v4/letter/a/8c91f0/{size}.png",
       title: "trust_level_0",
@@ -32,7 +31,6 @@ componentTest("display name", {
     this.set("filter", {
       id: 2,
       username: "Ahmed",
-      displayName: "Ahmed Gagan",
       name: "Ahmed Gagan",
       avatar_template: "/letter_avatar_proxy/v4/letter/a/8c91f0/{size}.png",
       title: "trust_level_0",

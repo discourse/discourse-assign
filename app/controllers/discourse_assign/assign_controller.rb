@@ -131,15 +131,17 @@ module DiscourseAssign
       raise Discourse::NotFound.new if !params[:group_name].present?
 
       group = Group.find_by(name: params[:group_name])
+
+      guardian.ensure_can_see_group_members!(group)
+
       members = User
         .joins("LEFT OUTER JOIN group_users g on users.id=g.user_id LEFT OUTER JOIN user_options uo on uo.user_id=users.id LEFT OUTER JOIN topic_custom_fields tcf ON tcf.value::int = users.id")
         .where("tcf.name = 'assigned_to_id' AND g.group_id=? AND (users.id > 0)", group.id)
         .order('COUNT(users.id) DESC')
-        .group('users.id, added_at, uo.timezone')
-        .select('users.*, COUNT(users.id) as "assignments_count", g.created_at as "added_at", uo.timezone')
+        .group('users.id')
+        .select('users.*, COUNT(users.id) as "assignments_count"')
         .limit(limit)
         .offset(offset)
-        .includes(:primary_group)
 
       render json: { members: serialize_data(members, GroupUserAssignedSerializer) }
     end
