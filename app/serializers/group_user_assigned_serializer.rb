@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 class GroupUserAssignedSerializer < BasicUserSerializer
-  include UserPrimaryGroupMixin
 
   attributes :assignments_count,
              :username_lower
