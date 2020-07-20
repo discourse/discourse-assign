@@ -54,10 +54,7 @@ describe ListController do
     before do
       add_to_assign_allowed_group(user)
 
-      freeze_time 1.hour.from_now
       TopicAssigner.new(post1.topic, user).assign(user)
-
-      freeze_time 1.hour.from_now
       TopicAssigner.new(post1.topic, user).assign(user2)
 
       sign_in(user)
@@ -90,10 +87,7 @@ describe ListController do
     before do
       add_to_assign_allowed_group(user)
 
-      freeze_time 1.hour.from_now
       TopicAssigner.new(post1.topic, user).assign(user)
-
-      freeze_time 1.hour.from_now
       TopicAssigner.new(post1.topic, user).assign(user2)
 
       sign_in(user)
