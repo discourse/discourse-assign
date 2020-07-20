@@ -9,7 +9,7 @@ export default Controller.extend({
   offset: 0,
 
   findMembers(refresh) {
-    if(refresh){
+    if (refresh) {
       this.set("members", this.model.members);
       return;
     }
