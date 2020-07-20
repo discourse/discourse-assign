@@ -8,7 +8,12 @@ export default Controller.extend({
   loading: false,
   offset: 0,
 
-  findMembers() {
+  findMembers(refresh) {
+    if(refresh){
+      this.set("members", this.model.members);
+      return;
+    }
+
     if (this.loading || !this.model) {
       return;
     }
@@ -18,7 +23,7 @@ export default Controller.extend({
       this.set("offset", this.offset + 50);
       ajax(`/assign/members/${this.groupName}?offset=${this.offset}`).then(
         result => {
-          this.set("model.members", this.model.members.concat(result.members));
+          this.set("members", this.members.concat(result.members));
           this.set("loading", false);
         }
       );

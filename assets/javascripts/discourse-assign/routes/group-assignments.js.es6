@@ -9,8 +9,11 @@ export default Route.extend({
   setupController(controller, model) {
     controller.setProperties({
       model,
+      members: [],
       groupName: this.modelFor("group").get("name")
     });
+
+    controller.findMembers(true);
   },
 
   redirect(model, transition) {
