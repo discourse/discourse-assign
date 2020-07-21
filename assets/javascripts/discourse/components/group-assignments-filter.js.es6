@@ -7,12 +7,12 @@ export default Component.extend({
   @discourseComputed(
     "siteSettings.prioritize_username_in_ux",
     "filter.username",
-    "filter.displayName"
+    "filter.name"
   )
-  displayName(prioritize_username_in_ux, username, displayName) {
+  displayName(prioritize_username_in_ux, username, name) {
     if (prioritize_username_in_ux) {
-      return username;
+      return username.trim();
     }
-    return displayName;
+    return (name || username).trim();
   }
 });
