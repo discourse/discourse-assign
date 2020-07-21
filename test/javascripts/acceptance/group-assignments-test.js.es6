@@ -13,13 +13,13 @@ acceptance("GroupAssignments", {
     server.get(memberPath, () => helper.response(memberAssigns));
   }
 });
-QUnit.test("Group Assignments Everyone", async assert => {
+QUnit.skip("Group Assignments Everyone", async assert => {
   await visit("/g/discourse/assignments");
   assert.equal(currentPath(), "group.assignments.show");
   assert.ok(find(".topic-list-item").length === 1);
 });
 
-QUnit.test("Group Assignments Awesomerobot", async assert => {
+QUnit.skip("Group Assignments Awesomerobot", async assert => {
   await visit("/g/discourse/assignments/awesomerobot");
   assert.equal(currentPath(), "group.assignments.show");
   assert.ok(find(".topic-list-item").length === 1);
