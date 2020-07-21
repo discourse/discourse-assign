@@ -141,6 +141,10 @@ after_initialize do
         )", topics.map(&:id))
           .select(lookup_columns)
 
+        if !defined?(UserLookup) # Remove after Discourse 2.6.0
+          users = users.joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
+        end
+
         map = {}
         users.each { |u| map[u.id] = u }
 
