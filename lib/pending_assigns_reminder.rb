@@ -35,8 +35,11 @@ class PendingAssignsReminder
   end
 
   def assigned_topics(user, order:)
+    secure = Topic.listable_topics.secured(Guardian.new(user)).or(Topic.private_messages_for_user(user))
+
     Topic.joins(:_custom_fields).select(:slug, :id, :title, :fancy_title, 'topic_custom_fields.created_at AS assigned_at')
       .where('topic_custom_fields.name = ? AND topic_custom_fields.value = ?', TopicAssigner::ASSIGNED_TO_ID, user.id.to_s)
+      .merge(secure)
       .order("topic_custom_fields.created_at #{order}")
       .limit(3)
   end

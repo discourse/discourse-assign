@@ -12,6 +12,8 @@ RSpec.describe DiscourseAssign::AssignController do
   let(:post) { Fabricate(:post) }
   let(:user2) { Fabricate(:active_user) }
   let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
+  let(:normal_user) { Fabricate(:user) }
+  let(:normal_admin) { Fabricate(:admin) }
 
   describe 'only allow users from allowed groups' do
     before { sign_in(user2) }
@@ -175,6 +177,77 @@ RSpec.describe DiscourseAssign::AssignController do
       get '/assign/assigned.json', params: { offset: 2 }
       expect(JSON.parse(response.body)['topics'].map { |t| t['id'] }).to match_array([post1.topic_id])
     end
+
+    context "with custom allowed groups" do
+      let(:custom_allowed_group) { Fabricate(:group, name: 'mygroup') }
+      let(:other_user) { Fabricate(:user, groups: [custom_allowed_group]) }
+      before do
+        SiteSetting.assign_allowed_on_groups += "|#{custom_allowed_group.id}"
+      end
+
+      it 'works for admins' do
+        get '/assign/assigned.json'
+        expect(response.status).to eq(200)
+      end
+
+      it 'does not work for other groups' do
+        sign_in(other_user)
+        get '/assign/assigned.json'
+        expect(response.status).to eq(403)
+      end
+    end
   end
 
+  context '#group_members' do
+    include_context 'A group that is allowed to assign'
+
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
+    fab!(:post3) { Fabricate(:post) }
+
+    before do
+      add_to_assign_allowed_group(user2)
+      add_to_assign_allowed_group(user)
+
+      freeze_time 1.hour.from_now
+      TopicAssigner.new(post1.topic, user).assign(user)
+
+      freeze_time 1.hour.from_now
+      TopicAssigner.new(post2.topic, user).assign(user2)
+
+      freeze_time 1.hour.from_now
+      TopicAssigner.new(post3.topic, user).assign(user)
+    end
+
+    it 'list members order by assignments_count' do
+      sign_in(user)
+
+      get "/assign/members/#{get_assigned_allowed_group_name}.json"
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['members'].map { |m| m['id'] }).to match_array([user.id, user2.id])
+    end
+
+    it "doesn't include members with no assignments" do
+      sign_in(user)
+      add_to_assign_allowed_group(nonadmin)
+
+      get "/assign/members/#{get_assigned_allowed_group_name}.json"
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['members'].map { |m| m['id'] }).to match_array([user.id, user2.id])
+    end
+
+    it "404 error to non-group-members" do
+      sign_in(normal_user)
+
+      get "/assign/members/#{get_assigned_allowed_group_name}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "allows non-member-admin" do
+      sign_in(normal_admin)
+
+      get "/assign/members/#{get_assigned_allowed_group_name}.json"
+      expect(response.status).to eq(200)
+    end
+  end
 end

@@ -1,14 +1,16 @@
 import Route from "@ember/routing/route";
+import { ajax } from "discourse/lib/ajax";
 
 export default Route.extend({
   model() {
-    return this.modelFor("group");
+    return ajax(`/assign/members/${this.modelFor("group").get("name")}`);
   },
 
   setupController(controller, model) {
     controller.setProperties({
       model,
-      showing: "members"
+      members: [],
+      groupName: this.modelFor("group").get("name")
     });
 
     controller.findMembers(true);

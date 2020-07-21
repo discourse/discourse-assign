@@ -9,7 +9,9 @@
                               showInserted=(action "showInserted")
                               tagsForUser=tagsForUser
                               unassign=(action 'unassign')
-                              reassign=(action 'reassign')}}
+                              reassign=(action 'reassign')
+                              onScroll=saveScrollPosition
+                              scrollOnLoad=true}}
 
   {{conditional-loading-spinner condition=model.loadingMore}}
 {{/load-more}}
