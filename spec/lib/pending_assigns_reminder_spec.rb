@@ -31,14 +31,19 @@ RSpec.describe PendingAssignsReminder do
     before do
       add_to_assign_allowed_group(user)
 
+      secure_category = Fabricate(:private_category, group: Fabricate(:group))
+
       @post1 = Fabricate(:post)
       @post2 = Fabricate(:post)
       @post2.topic.update_column(:fancy_title, nil)
       @post3 = Fabricate(:post)
+      @post4 = Fabricate(:post)
       TopicAssigner.new(@post1.topic, user).assign(user)
       TopicAssigner.new(@post2.topic, user).assign(user)
       TopicAssigner.new(@post3.topic, user).assign(user)
+      TopicAssigner.new(@post4.topic, user).assign(user)
       @post3.topic.trash!
+      @post4.topic.update(category: secure_category)
     end
 
     it 'creates a reminder for a particular user and sets the timestamp of the last reminder' do
@@ -57,11 +62,13 @@ RSpec.describe PendingAssignsReminder do
 
       expect(topic.title).to eq(I18n.t(
         'pending_assigns_reminder.title',
-        pending_assignments: 2
+        pending_assignments: 3
       ))
 
       expect(post.raw).to include(@post1.topic.fancy_title)
       expect(post.raw).to include(@post2.topic.fancy_title)
+      expect(post.raw).to_not include(@post3.topic.fancy_title)
+      expect(post.raw).to_not include(@post4.topic.fancy_title)
 
       expect(
         user.reload.custom_fields[described_class::REMINDED_AT].to_datetime
