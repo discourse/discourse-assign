@@ -24,7 +24,7 @@ QUnit.test("Group Assignments Everyone", async assert => {
   assert.ok(find(".topic-list-item").length === 1);
 });
 
-QUnit.test("Group Assignments Awesomerobot", async assert => {
+QUnit.test("Group Assignments Ahmedgagan", async assert => {
   await visit("/g/discourse/assignments/ahmedgagan6");
   assert.equal(currentPath(), "group.assignments.show");
   assert.ok(find(".topic-list-item").length === 1);
