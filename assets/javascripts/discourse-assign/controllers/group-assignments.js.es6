@@ -21,7 +21,7 @@ export default Controller.extend({
     if (this.model.members.length >= this.offset + 50) {
       this.set("loading", true);
       this.set("offset", this.offset + 50);
-      ajax(`/assign/members/${this.groupName}?offset=${this.offset}`).then(
+      ajax(`/assign/members/${this.group.name}?offset=${this.offset}`).then(
         result => {
           this.members.pushObjects(result.members);
           this.set("loading", false);
