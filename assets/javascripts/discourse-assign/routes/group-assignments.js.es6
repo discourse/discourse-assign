@@ -1,7 +1,7 @@
-import Route from "@ember/routing/route";
+import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 
-export default Route.extend({
+export default DiscourseRoute.extend({
   model() {
     return ajax(`/assign/members/${this.modelFor("group").get("name")}`);
   },
@@ -10,7 +10,7 @@ export default Route.extend({
     controller.setProperties({
       model,
       members: [],
-      groupName: this.modelFor("group").get("name")
+      group: this.modelFor("group")
     });
 
     controller.findMembers(true);
