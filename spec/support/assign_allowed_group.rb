@@ -9,7 +9,11 @@ shared_context 'A group that is allowed to assign' do
     assign_allowed_group.add(user)
   end
 
-  def get_assigned_allowed_group()
+  def get_assigned_allowed_group
     assign_allowed_group
+  end
+
+  def get_assigned_allowed_group_name
+    assign_allowed_group.name
   end
 end
