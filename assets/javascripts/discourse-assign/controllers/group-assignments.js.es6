@@ -23,7 +23,7 @@ export default Controller.extend({
       this.set("offset", this.offset + 50);
       ajax(`/assign/members/${this.groupName}?offset=${this.offset}`).then(
         result => {
-          this.set("members", this.members.concat(result.members));
+          this.members.pushObjects(result.members);
           this.set("loading", false);
         }
       );
