@@ -137,8 +137,8 @@ module DiscourseAssign
       guardian.ensure_can_see_group_members!(group)
 
       members = User
-        .joins("LEFT OUTER JOIN group_users g on users.id=g.user_id LEFT OUTER JOIN user_options uo on uo.user_id=users.id LEFT OUTER JOIN topic_custom_fields tcf ON tcf.value::int = users.id")
-        .where("tcf.name = 'assigned_to_id' AND g.group_id=? AND (users.id > 0)", group.id)
+        .joins("LEFT OUTER JOIN group_users g on users.id=g.user_id LEFT OUTER JOIN user_options uo on uo.user_id=users.id LEFT OUTER JOIN topic_custom_fields tcf ON tcf.value::int = users.id LEFT OUTER JOIN topics t ON t.id = tcf.topic_id")
+        .where("tcf.name = 'assigned_to_id' AND g.group_id=? AND (users.id > 0) AND t.deleted_by_id IS NULL", group.id)
         .order('COUNT(users.id) DESC')
         .group('users.id')
         .select('users.*, COUNT(users.id) as "assignments_count"')
