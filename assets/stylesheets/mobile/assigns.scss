@@ -24,3 +24,24 @@
     }
   }
 }
+
+.group-assignments .mobile-nav .drop li a {
+  display: flex;
+}
+
+.group-assignments .mobile-nav a.expander > span {
+  display: flex;
+  width: 90%;
+  img {
+    width: 1em;
+    height: 1em;
+  }
+  .assign-count {
+    display: none;
+  }
+  .assign-name {
+    display: block;
+    padding: 0;
+    @include ellipsis;
+  }
+}

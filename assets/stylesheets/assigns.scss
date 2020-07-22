@@ -90,3 +90,41 @@
     }
   }
 }
+
+// Group assign nav sidebar
+
+.group-assignments {
+  // a little extra space for long names
+  min-width: 180px;
+  li {
+    width: 100%;
+    overflow: hidden;
+    a {
+      display: flex;
+      align-items: center;
+      img {
+        align-self: center;
+        margin-right: 0.25em;
+      }
+      .assign-name,
+      .assign-count {
+        padding-top: 0.15em;
+      }
+      .assign-name {
+        flex: 0 1 auto;
+        min-width: 0;
+        margin: 0 0.25em 0 0;
+        // Using both approaches because line-clamp works a little better for name + surname combos
+        &.full-name {
+          @include line-clamp(2);
+        }
+        &.username {
+          @include ellipsis;
+        }
+      }
+      .assign-count {
+        margin-left: auto;
+      }
+    }
+  }
+}
