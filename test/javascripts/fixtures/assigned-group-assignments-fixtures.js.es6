@@ -83,7 +83,7 @@ export default {
       ]
     }
   },
-  "/topics/messages-assigned/awesomerobot.json": {
+  "/topics/messages-assigned/ahmedgagan6.json": {
     users: [
       {
         id: -2,
