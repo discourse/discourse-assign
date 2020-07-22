@@ -209,13 +209,8 @@ RSpec.describe DiscourseAssign::AssignController do
       add_to_assign_allowed_group(user2)
       add_to_assign_allowed_group(user)
 
-      freeze_time 1.hour.from_now
       TopicAssigner.new(post1.topic, user).assign(user)
-
-      freeze_time 1.hour.from_now
       TopicAssigner.new(post2.topic, user).assign(user2)
-
-      freeze_time 1.hour.from_now
       TopicAssigner.new(post3.topic, user).assign(user)
     end
 
