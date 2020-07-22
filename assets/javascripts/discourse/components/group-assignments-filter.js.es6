@@ -14,21 +14,5 @@ export default Component.extend({
       return username.trim();
     }
     return (name || username).trim();
-  },
-  @discourseComputed(
-    "siteSettings.prioritize_username_in_ux",
-    "filter.username",
-    "filter.name"
-  )
-  nameType(prioritize_username_in_ux, username, name) {
-    if (prioritize_username_in_ux) {
-      return "username";
-    } else {
-      if (name) {
-        return "full-name";
-      } else {
-        return "username";
-      }
-    }
   }
 });

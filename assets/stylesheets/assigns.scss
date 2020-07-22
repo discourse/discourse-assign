@@ -100,30 +100,25 @@
     width: 100%;
     overflow: hidden;
     a {
-      display: flex;
+      display: grid;
+      grid-template-areas:
+        "avatar count"
+        "name name";
+      grid-template-columns: auto 1fr;
       align-items: center;
       img {
         align-self: center;
         margin-right: 0.25em;
-      }
-      .assign-name,
-      .assign-count {
-        padding-top: 0.15em;
+        grid-area: avatar;
       }
       .assign-name {
-        flex: 0 1 auto;
+        grid-area: name;
         min-width: 0;
-        margin: 0 0.25em 0 0;
-        // Using both approaches because line-clamp works a little better for name + surname combos
-        &.full-name {
-          @include line-clamp(2);
-        }
-        &.username {
-          @include ellipsis;
-        }
+        margin-top: 0.25em;
+        @include ellipsis;
       }
       .assign-count {
-        margin-left: auto;
+        grid-area: count;
       }
     }
   }

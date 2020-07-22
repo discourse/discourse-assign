@@ -26,22 +26,21 @@
 }
 
 .group-assignments .mobile-nav .drop li a {
-  display: flex;
+  display: grid;
 }
 
 .group-assignments .mobile-nav a.expander > span {
   display: flex;
-  width: 90%;
-  img {
-    width: 1em;
-    height: 1em;
-  }
+  @include ellipsis;
   .assign-count {
     display: none;
   }
   .assign-name {
-    display: block;
+    margin: 0;
     padding: 0;
-    @include ellipsis;
+  }
+  img {
+    width: 1em;
+    height: 1em;
   }
 }
