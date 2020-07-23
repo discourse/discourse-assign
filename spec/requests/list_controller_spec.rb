@@ -50,17 +50,18 @@ describe ListController do
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
     fab!(:post3) { Fabricate(:post) }
+    fab!(:topic) { post3.topic }
 
     before do
       add_to_assign_allowed_group(user)
 
       TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post1.topic, user).assign(user2)
+      TopicAssigner.new(post2.topic, user).assign(user2)
 
       sign_in(user)
     end
 
-    it 'returns user-assigned-topics-list of users in the assigned_allowed_group' do
+    it 'returns user-assigned-topics-list of users in the assigned_allowed_group and doesnt include deleted topic' do
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['assigned_to_user']['id'] }).to match_array([user.id])
     end
@@ -75,6 +76,27 @@ describe ListController do
       end
       expect(ids).to be_empty
     end
+
+    it 'doesnt returns deleted topics' do
+      sign_in(admin)
+
+      TopicAssigner.new(topic, user).assign(user)
+
+      delete "/t/#{topic.id}.json"
+
+      topic.reload
+
+      id = 0
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+
+      JSON.parse(response.body)['topic_list']['topics'].each do |t|
+        if t['id'] == topic.id
+          id = t.id
+        end
+      end
+
+      expect(id).to eq(0)
+    end
   end
 
   context '#messages_assigned' do
@@ -82,13 +104,12 @@ describe ListController do
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
-    fab!(:post3) { Fabricate(:post) }
 
     before do
       add_to_assign_allowed_group(user)
 
       TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post1.topic, user).assign(user2)
+      TopicAssigner.new(post2.topic, user).assign(user2)
 
       sign_in(user)
     end

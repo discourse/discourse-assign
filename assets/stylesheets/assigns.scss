@@ -90,3 +90,30 @@
     }
   }
 }
+
+// Group assigns sidebar nav
+
+.group-assignments {
+  // a little extra space for long names
+  min-width: 180px;
+  li a {
+    display: grid;
+    grid-template-areas:
+      "avatar count"
+      "name name";
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    img {
+      margin-right: 0.25em;
+      grid-area: avatar;
+    }
+    .assign-name {
+      grid-area: name;
+      margin-top: 0.25em;
+      @include ellipsis;
+    }
+    .assign-count {
+      grid-area: count;
+    }
+  }
+}

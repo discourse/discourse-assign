@@ -42,7 +42,9 @@ after_initialize do
 
   add_to_serializer(:group_show, :assignment_count) do
     Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-      .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name).count
+      .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name)
+      .where("topics.deleted_at IS NULL")
+      .count
   end
 
   add_to_serializer(:group_show, 'include_assignment_count?') do
