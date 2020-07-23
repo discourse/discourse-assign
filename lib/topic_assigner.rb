@@ -200,8 +200,8 @@ class ::TopicAssigner
         nil,
         bump: false,
         post_type: post_type,
-        action_code: "assigned",
-        custom_fields: { "action_code_who" => assign_to.username }
+        action_code: "reassigned",
+        custom_fields: { "action_code_who" => assign_to.username, "action_code_from" => assign_to.username }
       )
 
       if @assigned_by.id != assign_to.id

@@ -7,6 +7,7 @@ en:
     action_codes:
       assigned: "assigned %{who} %{when}"
       unassigned: "unassigned %{who} %{when}"
+      reassigned: "reassigned %{from} to %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"

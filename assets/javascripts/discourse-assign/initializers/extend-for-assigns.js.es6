@@ -194,11 +194,13 @@ function initialize(api) {
 
   api.addPostSmallActionIcon("assigned", "user-plus");
   api.addPostSmallActionIcon("unassigned", "user-times");
+  api.addPostSmallActionIcon("reassigned", "user-plus");
 
   api.addPostTransformCallback(transformed => {
     if (
       transformed.actionCode === "assigned" ||
-      transformed.actionCode === "unassigned"
+      transformed.actionCode === "unassigned" ||
+      transformed.actionCode === "reassigned"
     ) {
       transformed.isSmallAction = true;
       transformed.canEdit = false;
