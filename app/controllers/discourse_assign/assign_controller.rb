@@ -108,10 +108,10 @@ module DiscourseAssign
         .to_a
 
       # TODO Drop after Discourse 2.6.0 release
-      if User.respond_to?(:whitelisted_user_custom_fields)
-        User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
-      else
+      if User.respond_to?(:allowed_user_custom_fields)
         User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
+      else
+        User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
       end
 
       users = users.to_h { |u| [u.id, u] }
