@@ -12,7 +12,6 @@ en:
       cant_act: "You cannot act on flags that have been assigned to other users"
       cant_act_unclaimed: "You must claim this topic before acting on flags."
       assigned: "Assigned"
-      group_assignments: "Assignments"
       group_everyone: "Everyone"
       assigned_to: "Assigned to"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"

@@ -18,9 +18,9 @@ export default DiscourseRoute.extend({
 
   redirect(model, transition) {
     if (transition.to.params.hasOwnProperty("filter")) {
-      this.transitionTo("group.assignments.show", transition.to.params.filter);
+      this.transitionTo("group.assigned.show", transition.to.params.filter);
     } else {
-      this.transitionTo("group.assignments.show", "everyone");
+      this.transitionTo("group.assigned.show", "everyone");
     }
   }
 });
