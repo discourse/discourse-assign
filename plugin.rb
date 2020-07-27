@@ -22,8 +22,8 @@ Discourse::Application.routes.append do
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
   get "/topics/messages-assigned/:username" => "list#messages_assigned", constraints: { username: ::RouteFormat.username }
   get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned", constraints: { username: ::RouteFormat.username }
-  get "/g/:id/assignments" => "groups#index"
-  get "/g/:id/assignments/:route_type" => "groups#index"
+  get "/g/:id/assigned" => "groups#index"
+  get "/g/:id/assigned/:route_type" => "groups#index"
 end
 
 after_initialize do
