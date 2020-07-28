@@ -19,13 +19,13 @@ acceptance("GroupAssignments", {
 });
 
 QUnit.test("Group Assignments Everyone", async assert => {
-  await visit("/g/discourse/assignments");
-  assert.equal(currentPath(), "group.assignments.show");
+  await visit("/g/discourse/assigned");
+  assert.equal(currentPath(), "group.assigned.show");
   assert.ok(find(".topic-list-item").length === 1);
 });
 
 QUnit.test("Group Assignments Ahmedgagan", async assert => {
-  await visit("/g/discourse/assignments/ahmedgagan6");
-  assert.equal(currentPath(), "group.assignments.show");
+  await visit("/g/discourse/assigned/ahmedgagan6");
+  assert.equal(currentPath(), "group.assigned.show");
   assert.ok(find(".topic-list-item").length === 1);
 });

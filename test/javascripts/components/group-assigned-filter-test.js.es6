@@ -1,9 +1,9 @@
 import componentTest from "helpers/component-test";
 
-moduleForComponent("group-assignments-filter", { integration: true });
+moduleForComponent("group-assigned-filter", { integration: true });
 
 componentTest("display username", {
-  template: "{{group-assignments-filter show-avatar=true filter=filter}}",
+  template: "{{group-assigned-filter show-avatar=true filter=filter}}",
 
   beforeEach() {
     this.siteSettings.prioritize_username_in_ux = true;
@@ -24,7 +24,7 @@ componentTest("display username", {
   }
 });
 componentTest("display name", {
-  template: "{{group-assignments-filter show-avatar=true filter=filter}}",
+  template: "{{group-assigned-filter show-avatar=true filter=filter}}",
 
   beforeEach() {
     this.siteSettings.prioritize_username_in_ux = true;
