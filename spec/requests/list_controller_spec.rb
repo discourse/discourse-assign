@@ -157,7 +157,7 @@ describe ListController do
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id, topic1.id, topic3.id])
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=activity&ascending=true"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([ topic1.id,topic2.id,topic3.id])
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([ topic1.id, topic2.id, topic3.id])
     end
 
     it 'messages_assigned returns sorted topicsList' do
