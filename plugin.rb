@@ -217,6 +217,7 @@ after_initialize do
         WHERE name = 'assigned_to_id'
         AND value = ?)
     ", user.id.to_s)
+      .includes(:tags)
       .limit(per_page_setting)
       .offset(per_page_setting * options[:page])
       .order("topics.bumped_at DESC")
@@ -247,6 +248,7 @@ after_initialize do
         WHERE name = 'assigned_to_id'
         AND value IN (SELECT user_id::varchar(255) from group_users where group_id = ?))
     ", group.id.to_s)
+      .includes(:tags)
       .limit(per_page_setting)
       .offset(per_page_setting * options[:page])
       .order("topics.bumped_at DESC")
