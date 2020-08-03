@@ -14,7 +14,7 @@
   .d-icon,
   i.fa {
     margin-right: 0.25em;
-    color: $primary-medium;
+    color: var(--primary-medium, $primary-medium);
   }
   .assign-text {
     margin-right: 0.25em;
@@ -29,8 +29,8 @@
 
 .cant-act-flagged-post {
   padding: 0.5em;
-  border: 1px dashed $primary-medium;
-  color: $primary;
+  border: 1px dashed var(--primary-medium, $primary-medium);
+  color: var(--primary, $primary);
 
   display: flex;
   justify-content: space-between;
