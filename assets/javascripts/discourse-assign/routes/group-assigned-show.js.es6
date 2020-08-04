@@ -1,6 +1,11 @@
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
+  queryParams: {
+    order: { refreshModel: true },
+    ascending: { refreshModel: true }
+  },
+
   model(params) {
     let filter = null;
     if (params.filter !== "everyone") {
@@ -11,7 +16,11 @@ export default DiscourseRoute.extend({
       )}`;
     }
     return this.store.findFiltered("topicList", {
-      filter: filter
+      filter: filter,
+      params: {
+        order: params.order,
+        ascending: params.ascending
+      }
     });
   },
 
