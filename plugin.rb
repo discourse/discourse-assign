@@ -218,9 +218,12 @@ after_initialize do
         AND value = ?)
     ", user.id.to_s)
       .includes(:tags)
+
+    list = apply_ordering(list, options)
+
+    list = list.offset(per_page_setting * options[:page])
       .limit(per_page_setting)
-      .offset(per_page_setting * options[:page])
-      .order("topics.bumped_at DESC")
+
     list = list.merge(secure)
 
     create_list(:assigned, { unordered: true }, list)
@@ -235,8 +238,15 @@ after_initialize do
 
     list_opts = build_topic_list_options
     list_opts[:page] = page
+    list_opts[:ascending] = params[:ascending]
+    list_opts[:order] = params[:order]
+
     list = generate_list_for("messages_assigned", user, list_opts)
-    list.more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}"
+
+    more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}"
+    more_topics_url += "&ascending=#{params[:ascending]}&order=#{params[:order]}" if params[:order]
+
+    list.more_topics_url = more_topics_url
     respond_with_list(list)
   end
 
@@ -249,9 +259,12 @@ after_initialize do
         AND value IN (SELECT user_id::varchar(255) from group_users where group_id = ?))
     ", group.id.to_s)
       .includes(:tags)
+
+    list = apply_ordering(list, options)
+
+    list = list.offset(per_page_setting * options[:page])
       .limit(per_page_setting)
-      .offset(per_page_setting * options[:page])
-      .order("topics.bumped_at DESC")
+
     list = list.merge(secure)
 
     create_list(:assigned, { unordered: true }, list)
@@ -268,8 +281,15 @@ after_initialize do
 
     list_opts = build_topic_list_options
     list_opts[:page] = page
+    list_opts[:ascending] = params[:ascending]
+    list_opts[:order] = params[:order]
+
     list = generate_list_for("group_topics_assigned", group, list_opts)
-    list.more_topics_url = "/topics/group-topics-assigned/#{params[:groupname]}.json?page=#{page + 1}"
+
+    more_topics_url = "/topics/group-topics-assigned/#{params[:groupname]}.json?page=#{page + 1}"
+    more_topics_url += "&ascending=#{params[:ascending]}&order=#{params[:order]}" if params[:order]
+
+    list.more_topics_url = more_topics_url
     respond_with_list(list)
   end
 

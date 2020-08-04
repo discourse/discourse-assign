@@ -51,6 +51,8 @@ describe ListController do
     fab!(:post2) { Fabricate(:post) }
     fab!(:post3) { Fabricate(:post) }
     fab!(:topic) { post3.topic }
+    fab!(:topic1) { post1.topic }
+    fab!(:topic2) { post2.topic }
 
     before do
       add_to_assign_allowed_group(user)
@@ -96,6 +98,99 @@ describe ListController do
       end
 
       expect(id).to eq(0)
+    end
+
+  end
+
+  context '#sorting messages_assigned and group_topics_assigned' do
+    include_context 'A group that is allowed to assign'
+
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
+    fab!(:post3) { Fabricate(:post) }
+    fab!(:topic1) { post1.topic }
+    fab!(:topic2) { post2.topic }
+    fab!(:topic3) { post3.topic }
+
+    before do
+      add_to_assign_allowed_group(user)
+      add_to_assign_allowed_group(user2)
+
+      TopicAssigner.new(post1.topic, user).assign(user)
+      TopicAssigner.new(post2.topic, user).assign(user2)
+      TopicAssigner.new(post3.topic, user).assign(user)
+
+      sign_in(user)
+    end
+
+    it 'group_topics_assigned returns sorted topicsList' do
+
+      topic1.bumped_at = Time.now
+      topic2.bumped_at = 1.day.ago
+      topic3.bumped_at = 3.day.ago
+
+      topic1.views = 3
+      topic2.views = 5
+      topic3.views = 1
+
+      topic1.posts_count = 3
+      topic2.posts_count = 1
+      topic3.posts_count = 5
+
+      topic1.reload
+      topic2.reload
+      topic3.reload
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=posts"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id, topic1.id, topic3.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=views"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id, topic2.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=activity"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic2.id, topic1.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=posts&ascending=true"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id, topic2.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=views&ascending=true"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id, topic1.id, topic3.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=activity&ascending=true"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([ topic1.id, topic2.id, topic3.id])
+    end
+
+    it 'messages_assigned returns sorted topicsList' do
+
+      topic1.bumped_at = Time.now
+      topic3.bumped_at = 3.day.ago
+
+      topic1.views = 3
+      topic3.views = 1
+
+      topic1.posts_count = 3
+      topic3.posts_count = 5
+
+      topic1.reload
+      topic3.reload
+
+      get "/topics/messages-assigned/#{user.username}.json?order=posts"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+
+      get "/topics/messages-assigned/#{user.username}.json?order=views"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id])
+
+      get "/topics/messages-assigned/#{user.username}.json?order=activity"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id])
+
+      get "/topics/messages-assigned/#{user.username}.json?order=posts&ascending=true"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id])
+
+      get "/topics/messages-assigned/#{user.username}.json?order=views&ascending=true"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+
+      get "/topics/messages-assigned/#{user.username}.json?order=activity&ascending=true"
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
     end
   end
 
