@@ -6,6 +6,15 @@ export default DiscourseRoute.extend({
     ascending: { refreshModel: true }
   },
 
+  beforeModel(transition) {
+    if (!(transition.hasOwnProperty("from") && transition.from)) {
+      return;
+    }
+    if (transition.from.localName === "show") {
+      this.session.set("topicListScrollPosition", 1);
+    }
+  },
+
   model(params) {
     let filter = null;
     if (params.filter !== "everyone") {
