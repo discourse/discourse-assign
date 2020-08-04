@@ -19,7 +19,7 @@
 
       .username {
         font-size: $font-down-1;
-        color: $primary-medium;
+        color: var(--primary-medium, $primary-medium);
       }
     }
   }
