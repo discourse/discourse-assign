@@ -29,10 +29,6 @@ export default Controller.extend({
       );
     }
   },
-  refreshList() {
-    console.log("called");
-    this.send("changeAssigned");
-  },
 
   actions: {
     loadMore: function() {

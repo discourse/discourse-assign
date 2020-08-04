@@ -26,7 +26,6 @@ export default DiscourseRoute.extend({
 
   actions: {
     changeAssigned() {
-      console.log("route action");
       this.refresh();
     }
   }
