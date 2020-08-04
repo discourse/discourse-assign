@@ -2,10 +2,10 @@ import DiscourseRoute from "discourse/routes/discourse";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {
-    if (!(transition.hasOwnProperty('from') && transition.from) ){
-      return
+    if (!(transition.hasOwnProperty("from") && transition.from)) {
+      return;
     }
-    if(transition.from.localName === "show"){
+    if (transition.from.localName === "show") {
       this.session.set("topicListScrollPosition", 1);
     }
   },
