@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ur:
   js:
@@ -14,6 +13,7 @@ ur:
       cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
       assigned: "اسائین کردہ"
+      group_everyone: "ہر کوئی"
       assigned_to: "جس کو اسائین کیا گیا"
       unassign:
         title: "غیر اسائین کریں"

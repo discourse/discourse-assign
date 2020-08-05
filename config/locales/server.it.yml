@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 it:
   site_settings:
@@ -27,7 +26,6 @@ it:
     already_claimed: "Quell'argomento è stato già rivendicato."
     already_assigned: 'Questo argomento è già stato assegnato a @ %{username}'
     too_many_assigns: "@%{username} ha già raggiunto il numero massimo di argomenti assegnabili (%{max})."
-    forbidden_assign_to: "@%{username} non possono essere assegnati in quanto non hanno accesso a questo argomento."
     flag_assigned: "Spiacenti, l'argomento segnalato è già assegnato a un altro utente"
     flag_unclaimed: "Devi rivendicare l'argomento prima di lavorare sulla segnalazione"
     topic_assigned_excerpt: "ti ha assegnato l'argomento '%{title}'"

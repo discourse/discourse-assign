@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ca:
   js:
@@ -18,6 +17,7 @@ ca:
       cant_act: "No podeu actuar sobre banderes assignades a altres usuaris."
       cant_act_unclaimed: "Cal reclamar el tema abans d'actuar sobre les banderes"
       assigned: "Assignat"
+      group_everyone: "Tothom"
       assigned_to: "Assignat a"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:

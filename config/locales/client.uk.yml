@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 uk:
   js:
@@ -19,6 +18,7 @@ uk:
       cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"
       cant_act_unclaimed: "Ви повинні претендувати на цю тему, перш ніж реагувати на прапори."
       assigned: "Призначено"
+      group_everyone: "Усі"
       assigned_to: "Призначено на"
       unassign:
         title: "Скасувати призначення"

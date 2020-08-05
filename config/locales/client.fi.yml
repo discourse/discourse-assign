@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 fi:
   js:
@@ -19,6 +18,7 @@ fi:
       cant_act: "Et voi käsitellä lippua, joka on osoitettu toiselle käyttäjälle"
       cant_act_unclaimed: "Sinun täytyy omia ketju ennen kuin käsittelet lippuja."
       assigned: "Osoitettu"
+      group_everyone: "Kaikki"
       assigned_to: "Osoitettu käyttäjälle"
       unassign:
         title: "Peru osoitus"

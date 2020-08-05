@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 be:
   site_settings:
@@ -37,13 +36,13 @@ be:
   assign_mailer:
     title: "прызначаюць Mailer"
     subject_template: "[% {Email_prefix}] {% assignee_name} прысвойваецца вам '% {TOPIC_TITLE}'!"
-    text_body_template: |-
+    text_body_template: |
       Эй,% {assignee_name} ** ** Вы прызначаныя на абмеркаванне> **% {TOPIC_TITLE} **>>% {Topic_excerpt}Калі вы зацікаўлены, націсніце на спасылку ніжэй:[% {Topic_link}] (% {topic_link})
   pending_assigns_reminder:
     title: "У вас ёсць% {pending_assignments} адкладзеныя заданні"
-    body: |-
+    body: |
       У вас [% {} pending_assignments адкладзеных заданняў] (% {assignments_link}).% {Newest_assignments}% {Oldest_assignments}Гэта напамін будзе адпраўлена% {частоты}, калі ў вас ёсць больш чым адзін прызначаная тэма.
-    newest: |-
+    newest: |
       ### Новыя% {Topic_0}% {TOPIC_1}% {Topic_2}
-    oldest: |-
+    oldest: |
       ### Старыя% {Topic_0}% {TOPIC_1}% {Topic_2}

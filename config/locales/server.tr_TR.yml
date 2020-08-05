@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 tr_TR:
   site_settings:
@@ -27,7 +26,6 @@ tr_TR:
     already_claimed: "Bu konu zaten atandı."
     already_assigned: 'Konu zaten %{username}&#39;a atandı'
     too_many_assigns: "@ %{username} zaten atanmış maksimum konu sayısına ulaştı (%{max})."
-    forbidden_assign_to: "@%{username} kullanıcısının bu konuya erişim izni olmadığı için atanamıyor."
     flag_assigned: "Maalesef, raporun konusu başka bir kullanıcıya atandı"
     flag_unclaimed: "Raporlama yapmadan önce bu konuyu talep etmelisiniz"
     topic_assigned_excerpt: "size &#39;%{title}&#39; konusunu atadı"

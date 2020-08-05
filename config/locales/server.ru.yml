@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ru:
   site_settings:
@@ -16,14 +15,27 @@ ru:
     assign_other_regex: "Шаблон, по которому назначение будет происходить автоматически на сотрудника через @упоминание. Например, 'твой список'"
     unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
     unassign_on_close: "Снимать ответственного с темы, когда она закрывается"
+    assign_mailer: "Когда отправлять уведомления по электронной почте для назначений"
+    remind_assigns: "Напоминать пользователям об ожидающих назначениях."
+    remind_assigns_frequency: "Частота напоминания пользователям о назначенных темах."
+    max_assigned_topics: "Максимальное количество тем, которые могут быть назначены пользователю."
+    assign_allowed_on_groups: "Группы, которым разрешено назначать темы."
   discourse_assign:
     assigned_to: "Тема назначена на @%{username}"
     unassigned: "Ответственный снят"
     already_claimed: "На эту тему уже жаловались."
+    already_assigned: 'Тема уже назначена @ %{username}'
+    too_many_assigns: "@ %{username} уже достигло максимального количества назначенных тем (%{max})."
+    forbidden_assign_to: "@ %{username} нельзя назначить, поскольку они не принадлежат назначенным разрешенным группам."
+    flag_assigned: "Извините, тема этого флага назначена другому пользователю"
+    flag_unclaimed: "Вы должны заявить эту тему, прежде чем действовать на флаге"
+    topic_assigned_excerpt: "назначил вам тему &#39;%{title}&#39;"
     reminders_frequency:
       never: 'никогда'
       daily: 'ежедневно'
       weekly: 'еженедельно'
+      monthly: 'ежемесячно'
+      quarterly: 'ежеквартальный'
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} назначил(а) Вас ответственным в теме '%{topic_title}'!"
@@ -35,3 +47,21 @@ ru:
 
       Если Вам интересно, то перейдите по ссылке ниже:
       [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "У вас есть отложенные назначения %{pending_assignments}"
+    body: |
+      В настоящее время у вас есть [%{pending_assignments} отложенных назначений] (%{assignments_link}).
+
+      %{newest_assignments}
+
+      %{oldest_assignments} Это напоминание будет отправлено %{frequency}, если у вас более одной назначенной темы.
+    newest: |
+      ### Newest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Oldest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
