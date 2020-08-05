@@ -1,12 +1,22 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   router: service(),
   application: controller(),
   loading: false,
   offset: 0,
+
+  @observes("model.members.@each.assignments_count")
+  changeAssignmentsCount() {
+    let count = 0;
+    this.model.members.forEach(member => {
+      count += member.assignments_count;
+    });
+    this.set("group.assignment_count", count);
+  },
 
   findMembers(refresh) {
     if (refresh) {
