@@ -9,13 +9,9 @@ export default Controller.extend({
   loading: false,
   offset: 0,
 
-  @observes("model.members.@each.assignments_count")
-  changeAssignmentsCount() {
-    let count = 0;
-    this.model.members.forEach(member => {
-      count += member.assignments_count;
-    });
-    this.set("group.assignment_count", count);
+  @observes("model.assignment_count")
+  assignmentCountChanged() {
+    this.set("group.assignment_count", this.model.assignment_count);
   },
 
   findMembers(refresh) {
