@@ -1,6 +1,8 @@
 {{#if show-avatar}}
   {{#link-to "group.assigned.show" filter.username_lower}}
-    {{avatar filter avatarTemplatePath="avatar_template" usernamePath="username" imageSize="small"}}
+    <a href={{filter.userUrl}} data-user-card={{filter.username}} class="assign-image">
+      {{avatar filter imageSize="small"}}
+    </a>
     <span class="assign-count">({{filter.assignments_count}})</span>
     <span class="assign-name">{{displayName}}</span>
   {{/link-to}}
