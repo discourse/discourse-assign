@@ -1,4 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
+import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 
 export default DiscourseRoute.extend({
   queryParams: {
@@ -24,13 +25,16 @@ export default DiscourseRoute.extend({
         "name"
       )}`;
     }
-    return this.store.findFiltered("topicList", {
-      filter: filter,
-      params: {
-        order: params.order,
-        ascending: params.ascending
-      }
-    });
+    const lastTopicList = findOrResetCachedTopicList(this.session, filter);
+    return lastTopicList
+      ? lastTopicList
+      : this.store.findFiltered("topicList", {
+          filter: filter,
+          params: {
+            order: params.order,
+            ascending: params.ascending
+          }
+        });
   },
 
   renderTemplate() {
