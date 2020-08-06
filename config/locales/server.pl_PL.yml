@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pl_PL:
   site_settings:
@@ -27,7 +26,6 @@ pl_PL:
     already_claimed: "Ten temat został już przejęty."
     already_assigned: 'Temat jest już przypisany do @%{username}'
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
-    forbidden_assign_to: "@%{username} nie może zostać przypisany, bo nie ma dostępu do tego wątku. "
     flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
     flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
     topic_assigned_excerpt: "przypisano ci temat '%{title}'"

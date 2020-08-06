@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ca:
   site_settings:
@@ -26,7 +25,6 @@ ca:
     already_claimed: "El tema ja ha estat reclamat."
     already_assigned: 'El tema ja és assignat a @%{username}'
     too_many_assigns: "@%{username} ja ha assolit el nombre màxim de temes assignats (%{max})."
-    forbidden_assign_to: "No es pot assignar @%{username} perquè no té accés a aquest tema."
     flag_assigned: "Ho sentim, el tema d'aquesta bandera és assignat a un altre usuari."
     flag_unclaimed: "Cal reclamar el tema abans d'actuar sobre la bandera"
     topic_assigned_excerpt: "us ha assignat el tema '%{title}'"

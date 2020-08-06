@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sv:
   js:
@@ -19,6 +18,7 @@ sv:
       cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
       cant_act_unclaimed: "Du måste ta kontroll över detta ämne innan du kan agera på flaggor."
       assigned: "Tilldelad"
+      group_everyone: "Alla"
       assigned_to: "Tilldelad till"
       assign_notification: "<p><span>%{username}</span>%{description}</p>"
       unassign:

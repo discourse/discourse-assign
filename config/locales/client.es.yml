@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 es:
   js:
@@ -19,6 +18,7 @@ es:
       cant_act: "No puedes actuar sobre reportes que han sido asignados a otros usuarios"
       cant_act_unclaimed: "Debes reclamar este tema antes de actuar sobre los reportes."
       assigned: "Asignado"
+      group_everyone: "Todos"
       assigned_to: "Asignado a"
       unassign:
         title: "Desasignar"

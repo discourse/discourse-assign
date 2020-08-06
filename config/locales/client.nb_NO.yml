@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nb_NO:
   js:
@@ -14,6 +13,7 @@ nb_NO:
       cant_act: "Du kan ikke handle på flagg som har blitt tildelt andre brukere"
       cant_act_unclaimed: "Du overta ansvaret for dette emnet før du tar beslutninger om rapporteringer."
       assigned: "Tildelt"
+      group_everyone: "Alle"
       assigned_to: "Tildelt til"
       unassign:
         title: "Fjern tildelning"

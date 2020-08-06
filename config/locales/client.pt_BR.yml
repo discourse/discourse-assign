@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 pt_BR:
   js:
@@ -19,6 +18,7 @@ pt_BR:
       cant_act: "Você não pode atuar em sinalizações que foram atribuídas a outros usuários"
       cant_act_unclaimed: "Você precisa reivindicar este tópico antes de atuar em sinalizações."
       assigned: "Designado"
+      group_everyone: "Todos"
       assigned_to: "Designado à"
       unassign:
         title: "Remover Designação"

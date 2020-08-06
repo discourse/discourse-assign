@@ -1,23 +1,28 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ru:
   js:
+    filters:
+      unassigned:
+        help: "Темы, которые не назначены"
     action_codes:
       assigned: "назначил(а) ответственного %{who} %{when}"
       unassigned: "снял(а) ответственного %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Добавить «неназначенный» фильтр в категорию"
       cant_act: "Вы не можете управлять флагами в теме, которая назначена на другого сотрудника"
       cant_act_unclaimed: "Вы должны пожаловаться на эту тему, прежде чем ставить метки."
       assigned: "Назначенные темы"
+      group_everyone: "Все"
       assigned_to: "Назначено на"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Снять отв."
+        help: "Отменить назначение %{username} из темы"
       assign:
         title: "Назначить отв."
         help: "Назначить ответственного за тему"
@@ -26,12 +31,14 @@ ru:
         help: "Переподписать тему другому пользователю"
       assign_modal:
         title: "Назначьте ответственного в теме"
+        description: "Введите имя пользователя, которому вы хотите назначить эту тему"
         assign: "Назначить"
       claim:
         title: "Пожаловаться"
         help: "Назначить на себя"
       assign_mailer:
         never: "Никогда"
+        different_users: "Только если цедент и цессионарий разные пользователи"
         always: "Всегда"
       reminders_frequency:
         description: "Частота напоминаний на подписанные темы"
@@ -44,3 +51,8 @@ ru:
       messages:
         assigned_title: "Подписанные (%{count})"
         assigned: "Назначенные темы"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Назначить событие"
+          details: "Когда пользователь назначает или отменяет назначение темы."

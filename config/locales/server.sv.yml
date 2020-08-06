@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 sv:
   site_settings:
@@ -27,7 +26,7 @@ sv:
     already_claimed: "Det har redan gjorts anspråk på det ämnet."
     already_assigned: 'Ämnet har redan tilldelats till @%{username}'
     too_many_assigns: "@%{username} har redan nått maximalt antal tilldelade ämnen (%{max})."
-    forbidden_assign_to: "@%{username} kan inte tilldelas eftersom de inte har tillgång till det här ämnet."
+    forbidden_assign_to: "@%{username} kan inte tilldelas eftersom de inte tillhör någon tillåten grupp för tilldelning."
     flag_assigned: "Tyvärr har den flaggans ämne tilldelats en annan användare"
     flag_unclaimed: "Du måste göra anspråk på det ämnet innan du gör något åt flaggan"
     topic_assigned_excerpt: "tilldelade ämnet '%{title}' till dig"

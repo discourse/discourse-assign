@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 zh_CN:
   js:
@@ -12,13 +11,14 @@ zh_CN:
         title: "未指派的"
         help: "主题未指定"
     action_codes:
-      assigned: "已指派 %{who} %{when}"
-      unassigned: "未指派 %{who} %{when}"
+      assigned: "已于%{when}指派给%{who}"
+      unassigned: "于%{when}取消指派给%{who}"
     discourse_assign:
       add_unassigned_filter: "将“未指派的”过滤器添加到分类"
-      cant_act: "你不能动已经指派给别人的旗子"
+      cant_act: "你不能操作已经指派给其他用户的标记"
       cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
       assigned: "已指派"
+      group_everyone: "所有人"
       assigned_to: "指派给"
       assign_notification: "<p><span>%{username}</span>%{description}</p>"
       unassign:

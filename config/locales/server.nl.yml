@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nl:
   site_settings:
@@ -27,7 +26,7 @@ nl:
     already_claimed: "Dat topic is al opgeëist."
     already_assigned: 'Topic is al toegewezen aan @%{username}'
     too_many_assigns: "@%{username} heeft het maximale aantal toegewezen topics (%{max}) al bereikt."
-    forbidden_assign_to: "@%{username} kan niet worden toegewezen, omdat hij of zij geen toegang heeft tot dit topic."
+    forbidden_assign_to: "@%{username} kan niet worden toegewezen, omdat hij of zij niet tot toegewezen toegestane groepen behoort."
     flag_assigned: "Sorry, het topic van die markering is aan een andere gebruiker toegewezen"
     flag_unclaimed: "U moet dat topic opeisen voordat u een handeling op de markering kunt uitvoeren"
     topic_assigned_excerpt: "heeft het topic '%{title}' aan u toegewezen"

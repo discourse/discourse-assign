@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 hy:
   js:
@@ -14,6 +13,7 @@ hy:
       cant_act: "Դուք չեք կարող գործողություն կատարել դրոշակների հետ, որոնք վերագրված են այլ օգտատերերի"
       cant_act_unclaimed: "Դուք պետք է պահանջեք այս թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
       assigned: "Վերագրված"
+      group_everyone: "Բոլորը"
       assigned_to: "Վերագրված է"
       unassign:
         title: "Ետ կանչել վերագրումը"

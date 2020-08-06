@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 nl:
   js:
@@ -19,6 +18,7 @@ nl:
       cant_act: "U kunt geen handeling uitvoeren op markeringen die aan andere gebruikers zijn toegewezen"
       cant_act_unclaimed: "U moet dit topic opeisen voordat u handelingen op markeringen kunt uitvoeren."
       assigned: "Toegewezen"
+      group_everyone: "Iedereen"
       assigned_to: "Toegewezen aan"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:

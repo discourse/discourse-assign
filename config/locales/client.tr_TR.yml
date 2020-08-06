@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 tr_TR:
   js:
@@ -19,6 +18,7 @@ tr_TR:
       cant_act: "Diğer kullanıcılara atanan bildirimler üzerinde hareket edemezsiniz"
       cant_act_unclaimed: "Raporlara geçmeden önce bu konuyu talep etmelisiniz."
       assigned: "Atandı"
+      group_everyone: "Herkes"
       assigned_to: "Atandı"
       unassign:
         title: "Atamayı kaldır"

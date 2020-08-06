@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 zh_CN:
   site_settings:
@@ -27,7 +26,6 @@ zh_CN:
     already_claimed: "这个主题已经被分配"
     already_assigned: '主题已被指派给 @%{username}'
     too_many_assigns: "@%{username}已经到达指派主题的最大值（%{max}）。"
-    forbidden_assign_to: "不能指派给@%{username}，因为其没有访问过此主题。"
     flag_assigned: "抱歉，这个标记的主题已被指派给其他用户"
     flag_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
     topic_assigned_excerpt: "主题%{title}已分配给您"

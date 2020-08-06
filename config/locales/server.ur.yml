@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 ur:
   site_settings:
@@ -26,7 +25,6 @@ ur:
     already_claimed: "وہ ٹاپک پہلے سے ہی کََلیم کر لیا گیا ہے۔"
     already_assigned: 'ٹاپک پہلے سے ہی @%{username} کو اسائین کیا ہوا ہے'
     too_many_assigns: "@%{username} پہلے سے ہی اسائین کردہ ٹاپکس کی زیادہ سے زیادہ حد تک پہنچ چکا ہے (%{max})۔"
-    forbidden_assign_to: "@%{username} کو تفویض نہیں کیا جاسکتا کیونکہ اُنہیں اِس ٹاپک تک رسائی حاصل نہیں ہے۔"
     flag_assigned: "معذرت، اُس فلَیگ کا ٹاپک ایک دوسرے صارف کو آسائین ہواوا ہے"
     flag_unclaimed: "فلَیگ پر عمل کرنے سے پہلے آپ کا یہ ٹاپک کلَیم کرنا ضروری ہے"
     topic_assigned_excerpt: "نے ٹاپک '%{title}' اسائین کیا"

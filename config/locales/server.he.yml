@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 he:
   site_settings:
@@ -27,7 +26,7 @@ he:
     already_claimed: "נושא זה כבר נדרש."
     already_assigned: 'הנושא כבר מוקצה לטובת ‎@%{username}'
     too_many_assigns: "‎@%{username}‎ כבר הגיע לכמות הנושאים המרבית שניתן להקצות לטובתו (%{max})."
-    forbidden_assign_to: "אין אפשרות להקצות את ‎@%{username}‎ עקב העדר הרשאות גישה לנושא."
+    forbidden_assign_to: "אין אפשרות להקצות את ‎@%{username}‎ כיוון שאין להם שייכות לקבוצות מורשות מוקצות."
     flag_assigned: "הנושא של דגל זה מוקצה למשתמש אחר, עמך הסליחה"
     flag_unclaimed: "עליך לדרוש את הנושא הזה בטרם ביצוע פעילות על הדגל"
     topic_assigned_excerpt: "הקצאה של הנושא ‚%{title}’ אליך"

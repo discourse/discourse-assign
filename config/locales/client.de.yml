@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 de:
   js:
@@ -14,6 +13,7 @@ de:
       cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugewiesen wurden."
       cant_act_unclaimed: "Du musst das Thema übernehmen, bevor du Meldungen behandeln kannst."
       assigned: "Zugeordnet"
+      group_everyone: "Jeder"
       assigned_to: "Zugewiesen an"
       unassign:
         title: "Zuordnung aufheben"

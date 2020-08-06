@@ -1,9 +1,8 @@
-# encoding: utf-8
-#
-# Never edit this file. It will be overwritten when translations are pulled from Transifex.
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
 #
 # To work with us on translations, join this project:
-# https://www.transifex.com/projects/p/discourse-org/
+# https://translate.discourse.org/
 
 it:
   js:
@@ -19,6 +18,7 @@ it:
       cant_act: "Non puoi intervenire su segnalazioni assegnate ad altri utenti"
       cant_act_unclaimed: "Devi prima rivendicare questo argomento per poter intervenire sulle segnalazioni. "
       assigned: "Assegnato"
+      group_everyone: "Chiunque"
       assigned_to: "Assegnato a"
       assign_notification: "<p> <span>%{username}</span> %{description} </p>"
       unassign:
