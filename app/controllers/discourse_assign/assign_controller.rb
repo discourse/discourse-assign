@@ -147,6 +147,8 @@ module DiscourseAssign
         .limit(limit)
         .offset(offset)
 
+      members = members.where("users.name like :filter OR users.username like :filter", filter: "%#{params[:filter]}%") if params[:filter]
+
       render json: { members: serialize_data(members, GroupUserAssignedSerializer) }
     end
 

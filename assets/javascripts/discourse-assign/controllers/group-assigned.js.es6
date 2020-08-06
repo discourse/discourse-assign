@@ -1,12 +1,22 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
+import { observes } from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
   router: service(),
   application: controller(),
+  queryParams: ["filter"],
   loading: false,
   offset: 0,
+  filterName: "",
+  filter: "",
+
+  @observes("filterName")
+  _setFilter: discourseDebounce(function() {
+    this.set("filter", this.filterName);
+  }, 500),
 
   findMembers(refresh) {
     if (refresh) {
