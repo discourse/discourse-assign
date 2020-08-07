@@ -1,6 +1,6 @@
 <section class="user-secondary-navigation group-assignments">
   {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked" currentPath=router._router.currentPath}}
-    {{input type="text" placeholder="Name/Username" value=filterName}}
+    {{input type="text" placeholder="Name/Username" value=filterName class="search"}}
     {{#load-more selector=".activity-nav li" action=(action "loadMore")}}
       {{group-assigned-filter show-avatar=false filter="everyone" routeType=route_type assignment_count=group.assignment_count}}
       {{#each members as |member|}}
