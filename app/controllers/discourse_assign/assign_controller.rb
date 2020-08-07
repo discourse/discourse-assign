@@ -144,10 +144,12 @@ module DiscourseAssign
         .order('COUNT(users.id) DESC')
         .group('users.id')
         .select('users.*, COUNT(users.id) as "assignments_count"')
-        .limit(limit)
-        .offset(offset)
 
       members = members.where("users.name like :filter OR users.username like :filter", filter: "%#{params[:filter]}%") if params[:filter]
+
+      members = members
+        .limit(limit)
+        .offset(offset)
 
       render json: { members: serialize_data(members, GroupUserAssignedSerializer) }
     end

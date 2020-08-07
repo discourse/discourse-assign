@@ -2,12 +2,8 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 
 export default DiscourseRoute.extend({
-  queryParams: {
-    filter: { refreshModel: true }
-  },
-
-  model(params) {
-    return ajax(`/assign/members/${this.modelFor("group").get("name")}`, { type: "GET", data: { filter: params.filter } });
+  model() {
+    return ajax(`/assign/members/${this.modelFor("group").get("name")}`);
   },
 
   setupController(controller, model) {

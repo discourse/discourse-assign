@@ -7,7 +7,6 @@ import discourseDebounce from "discourse/lib/debounce";
 export default Controller.extend({
   router: service(),
   application: controller(),
-  queryParams: ["filter"],
   loading: false,
   offset: 0,
   filterName: "",
@@ -17,6 +16,22 @@ export default Controller.extend({
   _setFilter: discourseDebounce(function() {
     this.set("filter", this.filterName);
   }, 500),
+
+  @observes("filter")
+  _filterModel() {
+    this.set("loading", true);
+    this.set("offset", 0);
+    ajax(`/assign/members/${this.group.name}`, {
+      type: "GET",
+      data: { filter: this.filter, offset: this.offset }
+    }).then(result => {
+      if (this.router.currentRoute.params.filter != "everyone") {
+        this.transitionToRoute("group.assigned.show", "everyone");
+      }
+      this.set("members", result.members);
+      this.set("loading", false);
+    });
+  },
 
   findMembers(refresh) {
     if (refresh) {
@@ -31,12 +46,13 @@ export default Controller.extend({
     if (this.model.members.length >= this.offset + 50) {
       this.set("loading", true);
       this.set("offset", this.offset + 50);
-      ajax(`/assign/members/${this.group.name}?offset=${this.offset}`).then(
-        result => {
-          this.members.pushObjects(result.members);
-          this.set("loading", false);
-        }
-      );
+      ajax(`/assign/members/${this.group.name}`, {
+        type: "GET",
+        data: { filter: this.filter, offset: this.offset }
+      }).then(result => {
+        this.members.pushObjects(result.members);
+        this.set("loading", false);
+      });
     }
   },
 
