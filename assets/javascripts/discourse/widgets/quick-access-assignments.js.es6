@@ -10,12 +10,6 @@ if (QuickAccessPanel) {
     buildKey: () => "quick-access-assignments",
     emptyStatePlaceholderItemKey: "choose_topic.none_found",
 
-    hasMore() {
-      // Always show the button to the assignments page. Users cannot
-      // unassign or reassign from the quick access panel.
-      return true;
-    },
-
     showAllHref() {
       return `${this.attrs.path}/activity/assigned`;
     },
@@ -29,7 +23,7 @@ if (QuickAccessPanel) {
           }
         })
         .then(({ topic_list }) => {
-          return topic_list.topics.slice(0, this.estimateItemLimit());
+          return topic_list.topics;
         });
     },
 
