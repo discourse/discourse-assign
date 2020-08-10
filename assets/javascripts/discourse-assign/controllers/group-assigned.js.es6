@@ -1,7 +1,7 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
-import { observes } from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse/lib/debounce";
 
 export default Controller.extend({
@@ -11,6 +11,11 @@ export default Controller.extend({
   offset: 0,
   filterName: "",
   filter: "",
+
+  @discourseComputed("site.mobileView")
+  isDesktop(mobileView){
+    return !mobileView;
+  },
 
   @observes("filterName")
   _setFilter: discourseDebounce(function() {
