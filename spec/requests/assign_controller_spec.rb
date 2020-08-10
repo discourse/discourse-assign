@@ -8,9 +8,9 @@ RSpec.describe DiscourseAssign::AssignController do
   before { SiteSetting.assign_enabled = true }
 
   let(:default_allowed_group) { Group.find_by(name: 'staff') }
-  let(:user) { Fabricate(:admin, groups: [default_allowed_group]) }
+  let(:user) { Fabricate(:admin, groups: [default_allowed_group], name: 'Robin Ward', username: 'eviltrout') }
   let(:post) { Fabricate(:post) }
-  let(:user2) { Fabricate(:active_user) }
+  let(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david') }
   let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
   let(:normal_user) { Fabricate(:user) }
   let(:normal_admin) { Fabricate(:admin) }
@@ -229,6 +229,22 @@ RSpec.describe DiscourseAssign::AssignController do
       get "/assign/members/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body)['members'].map { |m| m['id'] }).to match_array([user.id, user2.id])
+    end
+
+    it "returns members as according to filter" do
+      sign_in(user)
+
+      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: 'a' }
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['members'].map { |m| m['id'] }).to match_array([user.id, user2.id])
+
+      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: 'david' }
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['members'].map { |m| m['id'] }).to match_array([user2.id])
+
+      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: 'Tylor' }
+      expect(response.status).to eq(200)
+      expect(JSON.parse(response.body)['members'].map { |m| m['id'] }).to match_array([user2.id])
     end
 
     it "404 error to non-group-members" do
