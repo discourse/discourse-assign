@@ -1,9 +1,9 @@
 <div class="form-horizontal bookmark-search-form">
   {{input type="text"
-          value=searchTerm
-          enter=(action "search")
-          placeholder=(i18n "bookmarks.search_placeholder")
-          id="bookmark-search" autocomplete="discourse"}}
+      value=searchTerm
+      enter=(action "search")
+      placeholder=(i18n "discourse_assign.topic_search_placeholder")
+      autocomplete="discourse"}}
   {{d-button
       class="btn-primary"
       enter=(action "search")
