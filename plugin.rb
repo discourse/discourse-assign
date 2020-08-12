@@ -225,12 +225,12 @@ after_initialize do
 
     if options[:q].present?
       term = options[:q]
-      bookmark_ts_query = Search.ts_query(term: term)
+      ts_query = Search.ts_query(term: term)
 
       list = list
         .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
         .where(
-          "#{bookmark_ts_query} @@ topic_search_data.search_data"
+          "#{ts_query} @@ topic_search_data.search_data"
         )
     end
 
@@ -278,12 +278,12 @@ after_initialize do
 
     if options[:q].present?
       term = options[:q]
-      bookmark_ts_query = Search.ts_query(term: term)
+      ts_query = Search.ts_query(term: term)
 
       list = list
         .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
         .where(
-          "#{bookmark_ts_query} @@ topic_search_data.search_data"
+          "#{ts_query} @@ topic_search_data.search_data"
         )
     end
 
