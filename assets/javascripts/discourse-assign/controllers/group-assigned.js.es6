@@ -30,7 +30,7 @@ export default Controller.extend({
       type: "GET",
       data: { filter: this.filter, offset: this.offset }
     }).then(result => {
-      if (this.router.currentRoute.params.filter != "everyone") {
+      if (this.router.currentRoute.params.filter !== "everyone") {
         this.transitionToRoute("group.assigned.show", "everyone");
       }
       this.set("members", result.members);
