@@ -5,10 +5,7 @@ require_relative '../support/assign_allowed_group'
 
 describe ListController do
 
-  before do
-    SiteSetting.assign_enabled = true
-    SearchIndexer.enable
-  end
+  before { SiteSetting.assign_enabled = true }
 
   let(:user) { Fabricate(:active_user) }
   let(:user2) { Fabricate(:user) }
@@ -208,6 +205,8 @@ describe ListController do
     fab!(:topic3) { post3.topic }
 
     before do
+      SearchIndexer.enable
+
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
 
@@ -217,6 +216,8 @@ describe ListController do
 
       sign_in(user)
     end
+
+    after { SearchIndexer.disable }
 
     it 'returns topics as per filter for #group_topics_assigned' do
       topic1.title = 'QUnit testing is love'
