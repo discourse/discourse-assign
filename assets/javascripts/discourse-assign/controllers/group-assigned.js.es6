@@ -13,7 +13,7 @@ export default Controller.extend({
   filter: "",
 
   @discourseComputed("site.mobileView")
-  isDesktop(mobileView){
+  isDesktop(mobileView) {
     return !mobileView;
   },
 
