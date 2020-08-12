@@ -5,7 +5,10 @@ require_relative '../support/assign_allowed_group'
 
 describe ListController do
 
-  before { SiteSetting.assign_enabled = true }
+  before do
+    SiteSetting.assign_enabled = true
+    SearchIndexer.enable
+  end
 
   let(:user) { Fabricate(:active_user) }
   let(:user2) { Fabricate(:user) }
@@ -215,7 +218,7 @@ describe ListController do
       sign_in(user)
     end
 
-    it 'returns topics as per filter' do
+    it 'returns topics as per filter for #group_topics_assigned' do
       topic1.title = 'QUnit testing is love'
       topic2.title = 'RSpec testing is too fun'
       topic3.title = 'Testing is main part of programming'
@@ -229,6 +232,22 @@ describe ListController do
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'RSpec' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'love' }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
+    end
+
+    it 'returns topics as per filter for #group_topics_assigned' do
+      topic1.title = 'QUnit testing is love'
+      topic2.title = 'RSpec testing is too fun'
+      topic3.title = 'Testing is main part of programming'
+
+      topic1.save!
+      topic2.save!
+      topic3.save!
+
+      get "/topics/messages-assigned/#{user.username}.json", params: { q: 'Testing' }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'love' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
