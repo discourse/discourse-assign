@@ -41,11 +41,5 @@ export default DiscourseRoute.extend({
 
   renderTemplate() {
     this.render("group-topics-list");
-  },
-
-  actions: {
-    changeAssigned() {
-      this.refresh();
-    }
   }
 });
