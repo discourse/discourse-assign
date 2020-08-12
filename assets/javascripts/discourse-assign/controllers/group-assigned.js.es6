@@ -38,6 +38,11 @@ export default Controller.extend({
     });
   },
 
+  @observes("model.assignment_count")
+  assignmentCountChanged() {
+    this.set("group.assignment_count", this.model.assignment_count);
+  },
+
   findMembers(refresh) {
     if (refresh) {
       this.set("members", this.model.members);

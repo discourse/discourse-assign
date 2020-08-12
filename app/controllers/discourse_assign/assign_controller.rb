@@ -151,7 +151,12 @@ module DiscourseAssign
         .limit(limit)
         .offset(offset)
 
-      render json: { members: serialize_data(members, GroupUserAssignedSerializer) }
+      assignment_count = Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
+        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", group.name)
+        .where("topics.deleted_at IS NULL")
+        .count
+
+      render json: { members: serialize_data(members, GroupUserAssignedSerializer), "assignment_count" => assignment_count }
     end
 
     private

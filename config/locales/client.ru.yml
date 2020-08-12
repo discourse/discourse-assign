@@ -8,48 +8,48 @@ ru:
   js:
     filters:
       unassigned:
-        help: "Темы, которые не назначены"
+        help: "Неназначенные темы"
     action_codes:
-      assigned: "назначил(а) ответственного %{who} %{when}"
+      assigned: "назначил(а) ответственным %{who} %{when}"
       unassigned: "снял(а) ответственного %{who} %{when}"
     discourse_assign:
-      add_unassigned_filter: "Добавить «неназначенный» фильтр в категорию"
+      add_unassigned_filter: "Добавить в раздел фильтр 'Неназначенные'"
       cant_act: "Вы не можете управлять флагами в теме, которая назначена на другого сотрудника"
       cant_act_unclaimed: "Вы должны пожаловаться на эту тему, прежде чем ставить метки."
       assigned: "Назначенные темы"
       group_everyone: "Все"
-      assigned_to: "Назначено на"
+      assigned_to: "Кому назначено"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Снять отв."
         help: "Отменить назначение %{username} из темы"
       assign:
         title: "Назначить отв."
-        help: "Назначить ответственного за тему"
+        help: "Назначить ответственного в тему"
       reassign:
-        title: "Переподписать"
-        help: "Переподписать тему другому пользователю"
+        title: "Переназначить"
+        help: "Переназначить тему другому пользователю"
       assign_modal:
-        title: "Назначьте ответственного в теме"
+        title: "Назначить ответственного в тему"
         description: "Введите имя пользователя, которому вы хотите назначить эту тему"
         assign: "Назначить"
       claim:
         title: "Пожаловаться"
-        help: "Назначить на себя"
+        help: "Назначить тему себе"
       assign_mailer:
         never: "Никогда"
-        different_users: "Только если цедент и цессионарий разные пользователи"
+        different_users: "Только если текущий ответственный и назначаемый ответственный являются разными пользователями"
         always: "Всегда"
       reminders_frequency:
-        description: "Частота напоминаний на подписанные темы"
+        description: "Частота напоминаний о назначенных темах"
         never: "Никогда"
-        daily: "За день"
-        weekly: "За неделю"
-        monthly: "За месяц"
-        quarterly: "За квартал"
+        daily: "Ежедневно"
+        weekly: "Еженедельно"
+        monthly: "Ежемесячно"
+        quarterly: "Ежеквартально"
     user:
       messages:
-        assigned_title: "Подписанные (%{count})"
+        assigned_title: "Назначенные (%{count})"
         assigned: "Назначенные темы"
     admin:
       web_hooks:
