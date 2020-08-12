@@ -57,8 +57,8 @@ describe ListController do
     before do
       add_to_assign_allowed_group(user)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
+      TopicAssigner.new(topic1, user).assign(user)
+      TopicAssigner.new(topic2, user).assign(user2)
 
       sign_in(user)
     end
@@ -137,9 +137,9 @@ describe ListController do
       topic2.posts_count = 1
       topic3.posts_count = 5
 
-      topic1.reload
-      topic2.reload
-      topic3.reload
+      topic1.save!
+      topic2.save!
+      topic3.save!
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=posts"
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id, topic1.id, topic3.id])
@@ -191,6 +191,67 @@ describe ListController do
 
       get "/topics/messages-assigned/#{user.username}.json?order=activity&ascending=true"
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+    end
+  end
+
+  context 'filtering of topics as per parameter' do
+    include_context 'A group that is allowed to assign'
+
+    fab!(:post1) { Fabricate(:post) }
+    fab!(:post2) { Fabricate(:post) }
+    fab!(:post3) { Fabricate(:post) }
+    fab!(:topic1) { post1.topic }
+    fab!(:topic2) { post2.topic }
+    fab!(:topic3) { post3.topic }
+
+    before do
+      SearchIndexer.enable
+
+      add_to_assign_allowed_group(user)
+      add_to_assign_allowed_group(user2)
+
+      TopicAssigner.new(post1.topic, user).assign(user)
+      TopicAssigner.new(post2.topic, user).assign(user2)
+      TopicAssigner.new(post3.topic, user).assign(user)
+
+      sign_in(user)
+    end
+
+    after { SearchIndexer.disable }
+
+    it 'returns topics as per filter for #group_topics_assigned' do
+      topic1.title = 'QUnit testing is love'
+      topic2.title = 'RSpec testing is too fun'
+      topic3.title = 'Testing is main part of programming'
+
+      topic1.save!
+      topic2.save!
+      topic3.save!
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'Testing' }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic2.id, topic3.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'RSpec' }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'love' }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
+    end
+
+    it 'returns topics as per filter for #group_topics_assigned' do
+      topic1.title = 'QUnit testing is love'
+      topic2.title = 'RSpec testing is too fun'
+      topic3.title = 'Testing is main part of programming'
+
+      topic1.save!
+      topic2.save!
+      topic3.save!
+
+      get "/topics/messages-assigned/#{user.username}.json", params: { q: 'Testing' }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'love' }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
     end
   end
 
