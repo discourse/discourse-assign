@@ -3,11 +3,12 @@ import UserTopicsList from "discourse/controllers/user-topics-list";
 export default UserTopicsList.extend({
   user: Ember.inject.controller(),
   taskActions: Ember.inject.service(),
-  queryParams: ["order", "ascending", "q"],
   order: null,
   ascending: false,
   searchTerm: null,
   q: "",
+
+  queryParams: ["order", "ascending", "q"],
 
   actions: {
     unassign(topic) {
