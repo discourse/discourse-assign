@@ -22,5 +22,11 @@ export default DiscourseRoute.extend({
     } else {
       this.transitionTo("group.assigned.show", "everyone");
     }
+  },
+
+  actions: {
+    changeAssigned() {
+      this.refresh();
+    }
   }
 });

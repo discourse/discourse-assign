@@ -1,12 +1,18 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { ajax } from "discourse/lib/ajax";
+import { observes } from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   router: service(),
   application: controller(),
   loading: false,
   offset: 0,
+
+  @observes("model.assignment_count")
+  assignmentCountChanged() {
+    this.set("group.assignment_count", this.model.assignment_count);
+  },
 
   findMembers(refresh) {
     if (refresh) {
