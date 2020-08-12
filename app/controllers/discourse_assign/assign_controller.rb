@@ -144,6 +144,10 @@ module DiscourseAssign
         .order('COUNT(users.id) DESC')
         .group('users.id')
         .select('users.*, COUNT(users.id) as "assignments_count"')
+
+        members = members.where("users.name ILIKE :pattern OR users.username_lower ILIKE :pattern", pattern: "%#{params[:filter]}%") if params[:filter]
+
+      members = members
         .limit(limit)
         .offset(offset)
 
