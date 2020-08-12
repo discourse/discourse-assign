@@ -1,3 +1,15 @@
+<div class="form-horizontal bookmark-search-form">
+  {{input type="text"
+      value=searchTerm
+      enter=(action "search")
+      placeholder=(i18n "discourse_assign.topic_search_placeholder")
+      autocomplete="discourse"}}
+  {{d-button
+      class="btn-primary"
+      enter=(action "search")
+      type="button"
+      icon="search"}}
+</div>
 {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
   {{basic-assigned-topic-list topicList=model
                               hideCategory=hideCategory

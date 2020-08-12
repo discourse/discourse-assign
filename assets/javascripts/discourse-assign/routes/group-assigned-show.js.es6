@@ -4,7 +4,8 @@ import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 export default DiscourseRoute.extend({
   queryParams: {
     order: { refreshModel: true },
-    ascending: { refreshModel: true }
+    ascending: { refreshModel: true },
+    q: { refreshModel: true }
   },
 
   beforeModel(transition) {
@@ -32,7 +33,8 @@ export default DiscourseRoute.extend({
           filter: filter,
           params: {
             order: params.order,
-            ascending: params.ascending
+            ascending: params.ascending,
+            q: params.q
           }
         });
   },

@@ -221,10 +221,21 @@ after_initialize do
 
     list = apply_ordering(list, options)
 
+    list = list.merge(secure)
+
+    if options[:q].present?
+      term = options[:q]
+      ts_query = Search.ts_query(term: term)
+
+      list = list
+        .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
+        .where(
+          "#{ts_query} @@ topic_search_data.search_data"
+        )
+    end
+
     list = list.offset(per_page_setting * options[:page])
       .limit(per_page_setting)
-
-    list = list.merge(secure)
 
     create_list(:assigned, { unordered: true }, list)
   end
@@ -240,6 +251,7 @@ after_initialize do
     list_opts[:page] = page
     list_opts[:ascending] = params[:ascending]
     list_opts[:order] = params[:order]
+    list_opts[:q] = params[:q] if params[:q]
 
     list = generate_list_for("messages_assigned", user, list_opts)
 
@@ -262,10 +274,21 @@ after_initialize do
 
     list = apply_ordering(list, options)
 
+    list = list.merge(secure)
+
+    if options[:q].present?
+      term = options[:q]
+      ts_query = Search.ts_query(term: term)
+
+      list = list
+        .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
+        .where(
+          "#{ts_query} @@ topic_search_data.search_data"
+        )
+    end
+
     list = list.offset(per_page_setting * options[:page])
       .limit(per_page_setting)
-
-    list = list.merge(secure)
 
     create_list(:assigned, { unordered: true }, list)
   end
@@ -283,6 +306,7 @@ after_initialize do
     list_opts[:page] = page
     list_opts[:ascending] = params[:ascending]
     list_opts[:order] = params[:order]
+    list_opts[:q] = params[:q] if params[:q]
 
     list = generate_list_for("group_topics_assigned", group, list_opts)
 
