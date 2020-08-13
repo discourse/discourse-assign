@@ -14,26 +14,17 @@ export default Controller.extend({
 
   @discourseComputed("router.currentRoute.queryParams.order")
   order(order) {
-    if (order) {
-      return order;
-    }
-    return "";
+    return order || "";
   },
 
   @discourseComputed("router.currentRoute.queryParams.ascending")
   ascending(ascending) {
-    if (ascending) {
-      return ascending;
-    }
-    return false;
+    return ascending || false;
   },
 
   @discourseComputed("router.currentRoute.queryParams.q")
   q(q) {
-    if (q) {
-      return q;
-    }
-    return "";
+    return q || "";
   },
 
   @discourseComputed("site.mobileView")
