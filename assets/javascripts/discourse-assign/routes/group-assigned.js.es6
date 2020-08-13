@@ -12,6 +12,7 @@ export default DiscourseRoute.extend({
       members: [],
       group: this.modelFor("group")
     });
+    controller.group.set("assignment_count", model.assignment_count);
 
     controller.findMembers(true);
   },
@@ -22,10 +23,6 @@ export default DiscourseRoute.extend({
     } else {
       this.transitionTo("group.assigned.show", "everyone");
     }
-  },
-
-  afterModel(model) {
-    this.send("assignedCountChanged", model.assignment_count);
   },
 
   actions: {
