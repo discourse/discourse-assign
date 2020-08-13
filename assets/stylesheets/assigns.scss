@@ -107,6 +107,7 @@
       font-size: $font-down-1;
       grid-area: names;
       overflow: hidden;
+      line-height: normal;
     }
     .assign-name {
       @include ellipsis;
