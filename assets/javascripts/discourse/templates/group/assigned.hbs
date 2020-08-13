@@ -6,9 +6,9 @@
       </div>
     {{/if}}
     {{#load-more selector=".activity-nav li" action=(action "loadMore")}}
-      {{group-assigned-filter show-avatar=false filter="everyone" routeType=route_type assignment_count=group.assignment_count}}
+      {{group-assigned-filter show-avatar=false filter="everyone" routeType=route_type assignment_count=group.assignment_count router=router}}
       {{#each members as |member|}}
-        {{group-assigned-filter show-avatar=true filter=member routeType=route_type}}
+        {{group-assigned-filter show-avatar=true filter=member routeType=route_type router=router}}
       {{/each}}
       {{conditional-loading-spinner condition=loading}}
     {{/load-more}}
