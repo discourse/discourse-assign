@@ -6,6 +6,7 @@ import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
+import { action } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 
 function titleForState(user) {
@@ -177,6 +178,13 @@ function initialize(api) {
           assignedToUser.username
         )
       );
+    }
+  });
+
+  api.modifyClass("route:group", {
+    @action
+    assignedCountChanged(count) {
+      this.set("context.assignment_count", count);
     }
   });
 

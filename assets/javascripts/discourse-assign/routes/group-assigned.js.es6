@@ -24,6 +24,10 @@ export default DiscourseRoute.extend({
     }
   },
 
+  afterModel(model) {
+    this.send("assignedCountChanged", model.assignment_count);
+  },
+
   actions: {
     changeAssigned() {
       this.refresh();
