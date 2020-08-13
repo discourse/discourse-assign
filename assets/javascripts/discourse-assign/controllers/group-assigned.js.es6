@@ -1,7 +1,6 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { readOnly } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -14,8 +13,6 @@ export default Controller.extend({
   offset: 0,
   filterName: "",
   filter: "",
-
-  groupAssignmentCount: readOnly("model.assignment_count"),
 
   @discourseComputed("site.mobileView")
   isDesktop(mobileView) {
