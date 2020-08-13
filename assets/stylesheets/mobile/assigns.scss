@@ -44,3 +44,20 @@
     height: 1em;
   }
 }
+
+.group-assignments {
+  min-width: unset;
+  li > a {
+    .assign-names,
+    .assign-count {
+      font-size: $font-0;
+    }
+    .assign-image,
+    .assign-name {
+      display: none;
+    }
+    .assign-username {
+      font-weight: normal;
+    }
+  }
+}
