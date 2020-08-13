@@ -1,13 +1,25 @@
 {{#if show-avatar}}
   {{#link-to "group.assigned.show" filter.username_lower (query-params order=order ascending=ascending q=q)}}
-    <a href={{filter.userUrl}} data-user-card={{filter.username}} class="assign-image">
-      {{avatar filter imageSize="small"}}
-    </a>
-    <span class="assign-count">({{filter.assignments_count}})</span>
-    <span class="assign-name">{{displayName}}</span>
+    <div class="assign-image">
+      <a href={{filter.userPath}} data-user-card={{filter.username}}>{{avatar filter imageSize="large"}}</a>      
+    </div>
+
+    <div class="assign-names">
+      <div class="assign-username">{{format-username filter.username}}</div>
+      <div class="assign-name">{{filter.name}}</div>
+    </div>
+
+    <div class="assign-count">
+      {{filter.assignments_count}}
+    </div>
   {{/link-to}}
 {{else}}
   {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending q=q)}}
-    {{i18n 'discourse_assign.group_everyone'}} ({{assignment_count}})
+    <div class="assign-everyone">
+      {{i18n 'discourse_assign.group_everyone'}}
+    </div>
+    <div class="assign-count">
+      {{assignment_count}}
+    </div>
   {{/link-to}}
 {{/if}}
