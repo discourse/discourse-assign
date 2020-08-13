@@ -95,26 +95,37 @@
 
 .group-assignments {
   // a little extra space for long names
-  min-width: 180px;
+  min-width: 250px;
   li a {
     display: grid;
-    grid-template-areas:
-      "avatar count"
-      "name name";
-    grid-template-columns: auto 1fr;
+    grid-template-areas: " avatar names count";
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    a {
-      padding: 0px;
-      margin-right: 0.25em;
-      grid-area: avatar;
+    padding: 0.5em 13px;
+
+    .assign-names {
+      font-size: $font-down-1;
+      grid-area: names;
+      overflow: hidden;
     }
     .assign-name {
-      grid-area: name;
-      margin-top: 0.25em;
+      @include ellipsis;
+      margin-top: 3px;
+    }
+    .assign-username {
+      font-weight: bold;
       @include ellipsis;
     }
     .assign-count {
+      font-size: $font-up-2;
       grid-area: count;
+    }
+    .assign-image {
+      grid-area: avatar;
+      a {
+        padding: 0;
+        padding-right: 0.5em;
+      }
     }
   }
   .search {
