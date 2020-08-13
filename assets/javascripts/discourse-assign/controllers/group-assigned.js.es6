@@ -1,9 +1,10 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
+import { readOnly } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
@@ -14,13 +15,7 @@ export default Controller.extend({
   filterName: "",
   filter: "",
 
-  // I don't know know the subject enough but we should try to remove this one too
-  // one way to do this would be to maybe pass group to group-assigned-filter
-  // and use didReceiveAttrs, I didn't try, but that might be a path forward
-  @observes("model.assignment_count")
-  assignmentCountChanged() {
-    this.set("group.assignment_count", this.model.assignment_count);
-  },
+  groupAssignmentCount: readOnly("model.assignment_count"),
 
   @discourseComputed("site.mobileView")
   isDesktop(mobileView) {
