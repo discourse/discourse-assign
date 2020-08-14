@@ -12,6 +12,7 @@ export default DiscourseRoute.extend({
       members: [],
       group: this.modelFor("group")
     });
+    controller.group.set("assignment_count", model.assignment_count);
 
     controller.findMembers(true);
   },
