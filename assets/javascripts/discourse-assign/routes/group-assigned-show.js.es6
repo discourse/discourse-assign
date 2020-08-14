@@ -33,6 +33,13 @@ export default DiscourseRoute.extend({
         });
   },
 
+  setupController(controller, model) {
+    controller.setProperties({
+      model,
+      searchTerm: this.currentModel.params.q
+    });
+  },
+
   renderTemplate() {
     this.render("group-topics-list");
   }

@@ -56,7 +56,6 @@ export default UserTopicsList.extend({
     },
     onChangeFilter(value) {
       debounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
-      // this.set("q", this.searchTerm);
     }
   }
 });
