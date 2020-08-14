@@ -2,11 +2,17 @@
   {{#mobile-nav class="activity-nav" desktopClass="action-list activity-list nav-stacked" currentPath=router._router.currentPath}}
     {{#if isDesktop}}
       <div class="search-div">
-        {{input type="text" placeholder=(i18n "discourse_assign.sidebar_name_filter_placeholder") value=filterName class="search"}}
+        {{input
+          type="text"
+          placeholder=(i18n "discourse_assign.sidebar_name_filter_placeholder")
+          value=filterName
+          class="search"
+          input=(action "onChangeFilterName" value="target.value")
+        }}
       </div>
     {{/if}}
     {{#load-more selector=".activity-nav li" action=(action "loadMore")}}
-      {{group-assigned-filter show-avatar=false filter="everyone" routeType=route_type assignment_count=group.assignment_count}}
+      {{group-assigned-filter show-avatar=false filter="everyone" routeType=route_type assignmentCount=group.assignment_count}}
       {{#each members as |member|}}
         {{group-assigned-filter show-avatar=true filter=member routeType=route_type}}
       {{/each}}

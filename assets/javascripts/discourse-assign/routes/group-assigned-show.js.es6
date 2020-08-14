@@ -2,12 +2,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 
 export default DiscourseRoute.extend({
-  queryParams: {
-    order: { refreshModel: true },
-    ascending: { refreshModel: true },
-    q: { refreshModel: true }
-  },
-
   beforeModel(transition) {
     if (!(transition.hasOwnProperty("from") && transition.from)) {
       return;
@@ -37,6 +31,13 @@ export default DiscourseRoute.extend({
             q: params.q
           }
         });
+  },
+
+  setupController(controller, model) {
+    controller.setProperties({
+      model,
+      searchTerm: this.currentModel.params.q
+    });
   },
 
   renderTemplate() {

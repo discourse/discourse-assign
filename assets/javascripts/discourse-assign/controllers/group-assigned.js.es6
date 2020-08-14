@@ -1,8 +1,10 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { debounce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed from "discourse-common/utils/decorators";
+import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
   router: service(),
@@ -17,30 +19,25 @@ export default Controller.extend({
     return !mobileView;
   },
 
-  @observes("filterName")
-  _setFilter: discourseDebounce(function() {
-    this.set("filter", this.filterName);
-  }, 500),
-
-  @observes("filter")
-  _filterModel() {
+  _setFilter(filter) {
     this.set("loading", true);
     this.set("offset", 0);
-    ajax(`/assign/members/${this.group.name}`, {
+    this.set("filter", filter);
+
+    const groupName = this.group.name;
+    ajax(`/assign/members/${groupName}`, {
       type: "GET",
       data: { filter: this.filter, offset: this.offset }
-    }).then(result => {
-      if (this.router.currentRoute.params.filter !== "everyone") {
-        this.transitionToRoute("group.assigned.show", "everyone");
-      }
-      this.set("members", result.members);
-      this.set("loading", false);
-    });
-  },
-
-  @observes("model.assignment_count")
-  assignmentCountChanged() {
-    this.set("group.assignment_count", this.model.assignment_count);
+    })
+      .then(result => {
+        if (this.router.currentRoute.params.filter !== "everyone") {
+          this.transitionToRoute("group.assigned.show", groupName, "everyone");
+        }
+        this.set("members", result.members);
+      })
+      .finally(() => {
+        this.set("loading", false);
+      });
   },
 
   findMembers(refresh) {
@@ -59,16 +56,21 @@ export default Controller.extend({
       ajax(`/assign/members/${this.group.name}`, {
         type: "GET",
         data: { filter: this.filter, offset: this.offset }
-      }).then(result => {
-        this.members.pushObjects(result.members);
-        this.set("loading", false);
-      });
+      })
+        .then(result => {
+          this.members.pushObjects(result.members);
+        })
+        .finally(() => this.set("loading", false));
     }
   },
 
-  actions: {
-    loadMore: function() {
-      this.findMembers();
-    }
+  @action
+  loadMore() {
+    this.findMembers();
+  },
+
+  @action
+  onChangeFilterName(value) {
+    debounce(this, this._setFilter, value, INPUT_DELAY * 2);
   }
 });
