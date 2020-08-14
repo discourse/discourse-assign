@@ -14,6 +14,21 @@ export default Controller.extend({
   filterName: "",
   filter: "",
 
+  @discourseComputed("router.currentRoute.queryParams.order")
+  order(order) {
+    return order || "";
+  },
+
+  @discourseComputed("router.currentRoute.queryParams.ascending")
+  ascending(ascending) {
+    return ascending || false;
+  },
+
+  @discourseComputed("router.currentRoute.queryParams.q")
+  q(q) {
+    return q || "";
+  },
+
   @discourseComputed("site.mobileView")
   isDesktop(mobileView) {
     return !mobileView;
