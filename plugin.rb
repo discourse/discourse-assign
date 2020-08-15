@@ -497,4 +497,29 @@ after_initialize do
     end
   end
 
+  require_dependency 'search'
+
+  #TODO Remove when plugin is 1.0
+  if Search.respond_to? :advanced_filter
+    Search.advanced_filter(/in:assigned/) do |posts|
+      posts.where("topics.id IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+
+    end
+
+    Search.advanced_filter(/in:not_assigned/) do |posts|
+      posts.where("topics.id NOT IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+
+    end
+  end
+
 end

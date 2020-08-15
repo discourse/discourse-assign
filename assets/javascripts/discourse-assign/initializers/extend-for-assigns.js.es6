@@ -7,6 +7,7 @@ import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
+import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 
 function titleForState(user) {
   if (user) {
@@ -318,6 +319,22 @@ export default {
     if (!siteSettings.assign_enabled) {
       return;
     }
+
+    SearchAdvancedOptions.reopen({
+      didInsertElement() {
+        this._super();
+        this.inOptionsForUsers.pushObjects([
+          {
+            name: I18n.t("search.advanced.in.assigned"),
+            value: "assigned"
+          },
+          {
+            name: I18n.t("search.advanced.in.not_assigned"),
+            value: "not_assigned"
+          }
+        ]);
+      }
+    });
 
     withPluginApi("0.8.11", api => initialize(api, container));
     withPluginApi("0.8.28", api => registerTopicFooterButtons(api, container));
