@@ -1,6 +1,7 @@
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import computed from "discourse-common/utils/decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
@@ -319,22 +320,58 @@ export default {
     if (!siteSettings.assign_enabled) {
       return;
     }
+    const currentUser = container.lookup("current-user:main");
+    if (currentUser.can_assign) {
+      const REGEXP_USERNAME_PREFIX = /^(user:|@)/gi;
+      SearchAdvancedOptions.reopen({
+        _init() {
+          this._super();
+          this.set("searchedTerms.assigned", "");
+          this.inOptions.pushObjects([
+            {
+              name: I18n.t("search.advanced.in.assigned"),
+              value: "assigned"
+            },
+            {
+              name: I18n.t("search.advanced.in.not_assigned"),
+              value: "not_assigned"
+            }
+          ]);
+        },
 
-    SearchAdvancedOptions.reopen({
-      didInsertElement() {
-        this._super();
-        this.inOptionsForUsers.pushObjects([
-          {
-            name: I18n.t("search.advanced.in.assigned"),
-            value: "assigned"
-          },
-          {
-            name: I18n.t("search.advanced.in.not_assigned"),
-            value: "not_assigned"
+        @observes("searchedTerms.assigned")
+        updateSearchTermForAssignedUsername() {
+          console.log("yaha");
+          const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
+          const userFilter = this.get("searchedTerms.assigned");
+          let searchTerm = this.searchTerm || "";
+          let keyword = "assigned";
+          if (userFilter && userFilter.length !== 0) {
+            if (match.length !== 0) {
+              searchTerm = searchTerm.replace(
+                match[0],
+                `${keyword}:${userFilter}`
+              );
+            } else {
+              searchTerm += ` ${keyword}:${userFilter}`;
+            }
+
+            this.set("searchTerm", searchTerm.trim());
+          } else if (match.length !== 0) {
+            searchTerm = searchTerm.replace(match[0], "");
+            this.set("searchTerm", searchTerm.trim());
           }
-        ]);
-      }
-    });
+        },
+
+        _update() {
+          this._super(...arguments);
+          this.setSearchedTermValue(
+            "searchedTerms.assigned",
+            REGEXP_USERNAME_PREFIX
+          );
+        }
+      });
+    }
 
     withPluginApi("0.8.11", api => initialize(api, container));
     withPluginApi("0.8.28", api => registerTopicFooterButtons(api, container));
