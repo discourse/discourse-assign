@@ -322,7 +322,7 @@ export default {
     }
     const currentUser = container.lookup("current-user:main");
     if (currentUser.can_assign) {
-      const REGEXP_USERNAME_PREFIX = /^(user:|@)/gi;
+      const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
       SearchAdvancedOptions.reopen({
         _init() {
           this._super();

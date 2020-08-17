@@ -498,39 +498,39 @@ after_initialize do
   end
 
   register_search_advanced_filter(/in:assigned/) do |posts|
-    raise Discourse::InvalidAccess unless @guardian.can_assign?
-
-    posts.where("topics.id IN (
-      SELECT tc.topic_id
-      FROM topic_custom_fields tc
-      WHERE tc.name = 'assigned_to_id' AND
-                      tc.value IS NOT NULL
-      )")
+    if @guardian.can_assign?
+      posts.where("topics.id IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
   end
 
   register_search_advanced_filter(/in:not_assigned/) do |posts|
-    raise Discourse::InvalidAccess unless @guardian.can_assign?
-
-    posts.where("topics.id NOT IN (
-      SELECT tc.topic_id
-      FROM topic_custom_fields tc
-      WHERE tc.name = 'assigned_to_id' AND
-                      tc.value IS NOT NULL
-      )")
+    if @guardian.can_assign?
+      posts.where("topics.id NOT IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
   end
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
-    raise Discourse::InvalidAccess unless @guardian.can_assign?
+    if @guardian.can_assign?
+      user = User.find_by_username(match)
 
-    user = User.find_by_username(match)
-
-    posts.where("topics.id IN (
-      SELECT tc.topic_id
-      FROM topic_custom_fields tc
-      WHERE tc.name = 'assigned_to_id' AND
-                      tc.value IS NOT NULL AND
-                      tc.value::int = #{user.id}
-      )")
+      posts.where("topics.id IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL AND
+                        tc.value::int = #{user.id}
+        )")
+    end
   end
 
 end
