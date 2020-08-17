@@ -341,7 +341,6 @@ export default {
 
         @observes("searchedTerms.assigned")
         updateSearchTermForAssignedUsername() {
-          console.log("yaha");
           const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
           const userFilter = this.get("searchedTerms.assigned");
           let searchTerm = this.searchTerm || "";

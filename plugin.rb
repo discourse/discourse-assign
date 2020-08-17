@@ -498,6 +498,8 @@ after_initialize do
   end
 
   register_search_advanced_filter(/in:assigned/) do |posts|
+    raise Discourse::InvalidAccess unless @guardian.can_assign?
+
     posts.where("topics.id IN (
       SELECT tc.topic_id
       FROM topic_custom_fields tc
@@ -507,6 +509,8 @@ after_initialize do
   end
 
   register_search_advanced_filter(/in:not_assigned/) do |posts|
+    raise Discourse::InvalidAccess unless @guardian.can_assign?
+
     posts.where("topics.id NOT IN (
       SELECT tc.topic_id
       FROM topic_custom_fields tc
@@ -516,6 +520,8 @@ after_initialize do
   end
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
+    raise Discourse::InvalidAccess unless @guardian.can_assign?
+
     user = User.find_by_username(match)
 
     posts.where("topics.id IN (
