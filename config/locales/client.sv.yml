@@ -17,6 +17,8 @@ sv:
       add_unassigned_filter: "Lägg till 'otilldelad' som en filterkategori"
       cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
       cant_act_unclaimed: "Du måste ta kontroll över detta ämne innan du kan agera på flaggor."
+      topic_search_placeholder: "Sök ämnen efter titel eller inläggsinnehåll"
+      sidebar_name_filter_placeholder: "Namn/Användarnamn"
       assigned: "Tilldelad"
       group_everyone: "Alla"
       assigned_to: "Tilldelad till"
