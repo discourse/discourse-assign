@@ -338,7 +338,7 @@ export default {
           ]);
         },
 
-        _init(){
+        _init() {
           this._super();
           this.set("searchedTerms.assigned", "");
         },

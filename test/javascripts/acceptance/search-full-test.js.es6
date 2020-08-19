@@ -3,7 +3,7 @@ import { acceptance, waitFor, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Search - Full Page", {
   settings: { assign_enabled: true },
-  loggedIn: true,
+  loggedIn: true
 });
 QUnit.test(
   "update in:assigned filter through advanced search ui",
@@ -59,7 +59,11 @@ QUnit.test("update assigned to through advanced search ui", async assert => {
   await fillIn(".search-query", "none");
   await fillIn(".search-advanced-options .user-selector-assigned", "admin");
   await click(".search-advanced-options .user-selector-assigned");
-  await keyEvent(".search-advanced-options .user-selector-assigned", "keydown", 8);
+  await keyEvent(
+    ".search-advanced-options .user-selector-assigned",
+    "keydown",
+    8
+  );
   waitFor(assert, async () => {
     assert.ok(
       visible(".search-advanced-options .autocomplete"),
