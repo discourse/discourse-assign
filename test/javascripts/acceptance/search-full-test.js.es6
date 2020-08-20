@@ -53,7 +53,7 @@ QUnit.test(
   }
 );
 
-QUnit.test("update assigned to through advanced search ui", async assert => {
+QUnit.skip("update assigned to through advanced search ui", async assert => {
   updateCurrentUser({ can_assign: true });
   await visit("/search");
   await fillIn(".search-query", "none");
