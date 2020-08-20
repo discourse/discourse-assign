@@ -51,6 +51,10 @@ after_initialize do
     scope.can_assign?
   end
 
+  add_to_serializer(:group_show, :can_show_assigned_tab?) do
+    object.can_show_assigned_tab?
+  end
+
   add_model_callback(UserCustomField, :before_save) do
     self.value = self.value.to_i if self.name == frequency_field
   end
@@ -69,6 +73,16 @@ after_initialize do
           :true : :false
       end
     @can_assign == :true
+  end
+
+  add_to_class(:group, :can_show_assigned_tab?) do
+    users = User.joins("JOIN group_users gu on users.id=gu.user_id").where("gu.group_id=?", self.id)
+
+    users.each do |u|
+      return false if !u.can_assign?
+    end
+
+    return true
   end
 
   add_to_class(:guardian, :can_assign?) { user && user.can_assign? }
@@ -301,6 +315,7 @@ after_initialize do
 
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless current_user.can_assign?
+    raise Discourse::InvalidAccess unless group.can_show_assigned_tab?
 
     list_opts = build_topic_list_options
     list_opts[:page] = page
