@@ -46,11 +46,9 @@ export default UserTopicsList.extend({
     changeSort(sortBy) {
       if (sortBy === this.order) {
         this.toggleProperty("ascending");
-        this.model.refreshSort(sortBy, this.ascending);
         this.refreshModel();
       } else {
         this.setProperties({ order: sortBy, ascending: false });
-        this.model.refreshSort(sortBy, false);
         this.refreshModel();
       }
     },
