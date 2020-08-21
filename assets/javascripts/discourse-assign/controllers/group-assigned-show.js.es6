@@ -1,5 +1,8 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import { debounce } from "@ember/runloop";
+import { inject as controller } from "@ember/controller";
+import discourseComputed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default UserTopicsList.extend({
@@ -8,6 +11,8 @@ export default UserTopicsList.extend({
   order: null,
   ascending: false,
   q: "",
+  navigationCategory: controller("navigation/category"),
+  noSubcategories: alias("navigationCategory.noSubcategories"),
 
   queryParams: ["order", "ascending", "q"],
 
@@ -31,6 +36,11 @@ export default UserTopicsList.extend({
       .finally(() => {
         this.set("loading", false);
       });
+  },
+
+  @discourseComputed()
+  categories() {
+    return this.site.get("categoriesList");
   },
 
   actions: {

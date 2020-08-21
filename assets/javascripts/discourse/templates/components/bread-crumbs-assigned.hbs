@@ -1,0 +1,19 @@
+{{log 'hello'}}
+{{#each categoryGroupAssigned as |groupAssigned|}}
+  {{#if groupAssigned.hasOptions}}
+    {{category-drop
+      category=groupAssigned.category
+      categories=groupAssigned.options
+      options=(hash
+        parentCategory=groupAssigned.parentCategory
+        subCategory=groupAssigned.isSubcategory
+        noSubcategories=groupAssigned.noSubcategories
+        autoFilterable=true
+      )
+    }}
+  {{/if}}
+{{/each}}
+
+{{#if siteSettings.tagging_enabled}}
+  {{tag-drop firstCategory=category tagId=tagId}}
+{{/if}}
