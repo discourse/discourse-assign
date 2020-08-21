@@ -80,7 +80,7 @@ after_initialize do
     users_can_assign = Group.includes(:users).where(id: allowed_groups).pluck(:user_id).to_set
     group_users = Group.includes(:users).where(id: self.id).pluck(:user_id).to_set
 
-    return false if group_users.subset?(users_can_assign)
+    return false if !group_users.subset?(users_can_assign)
 
     return true
   end
