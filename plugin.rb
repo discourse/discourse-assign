@@ -76,13 +76,22 @@ after_initialize do
   end
 
   add_to_class(:group, :can_show_assigned_tab?) do
-    allowed_groups = SiteSetting.assign_allowed_on_groups.gsub("|", ",")
-    users_can_assign = Group.includes(:users).where(id: allowed_groups).pluck(:user_id).to_set
-    group_users = Group.includes(:users).where(id: self.id).pluck(:user_id).to_set
+    allowed_group_ids = SiteSetting.assign_allowed_on_groups.gsub("|", ",")
 
-    return false if !group_users.subset?(users_can_assign)
+    group_has_disallowed_users = DB.query_single(<<~SQL, allowed_group_ids: allowed_group_ids, current_group_id: self.id)[0]
+      SELECT EXISTS(
+        SELECT 1 FROM users
+        JOIN group_users current_group_users
+          ON current_group_users.user_id=users.id
+          AND current_group_users.group_id = :current_group_id
+        LEFT JOIN group_users allowed_group_users
+          ON allowed_group_users.user_id=users.id
+          AND allowed_group_users.group_id IN (:allowed_group_ids)
+        WHERE allowed_group_users.user_id IS NULL
+      )
+    SQL
 
-    return true
+    !group_has_disallowed_users
   end
 
   add_to_class(:guardian, :can_assign?) { user && user.can_assign? }
