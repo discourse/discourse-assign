@@ -76,7 +76,7 @@ after_initialize do
   end
 
   add_to_class(:group, :can_show_assigned_tab?) do
-    allowed_group_ids = SiteSetting.assign_allowed_on_groups.gsub("|", ",")
+    allowed_group_ids = SiteSetting.assign_allowed_on_groups.split("|")
 
     group_has_disallowed_users = DB.query_single(<<~SQL, allowed_group_ids: allowed_group_ids, current_group_id: self.id)[0]
       SELECT EXISTS(
