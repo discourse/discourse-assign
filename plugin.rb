@@ -76,11 +76,11 @@ after_initialize do
   end
 
   add_to_class(:group, :can_show_assigned_tab?) do
-    users = User.joins("JOIN group_users gu on users.id=gu.user_id").where("gu.group_id=?", self.id)
+    allowed_groups = SiteSetting.assign_allowed_on_groups.gsub("|", ",")
+    users_can_assign = Group.includes(:users).where(id: allowed_groups).pluck(:user_id).to_set
+    group_users = Group.includes(:users).where(id: self.id).pluck(:user_id).to_set
 
-    users.each do |u|
-      return false if !u.can_assign?
-    end
+    return false if group_users.subset?(users_can_assign)
 
     return true
   end
