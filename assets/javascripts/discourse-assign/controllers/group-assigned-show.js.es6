@@ -11,10 +11,12 @@ export default UserTopicsList.extend({
   order: null,
   ascending: false,
   q: "",
+  tagId: null,
+  categoryId: null,
   navigationCategory: controller("navigation/category"),
   noSubcategories: alias("navigationCategory.noSubcategories"),
 
-  queryParams: ["order", "ascending", "q"],
+  queryParams: ["order", "ascending", "q", "categoryId", "tagId"],
 
   _setSearchTerm(searchTerm) {
     this.set("q", searchTerm);
@@ -29,7 +31,9 @@ export default UserTopicsList.extend({
         params: {
           order: this.order,
           ascending: this.ascending,
-          q: this.q
+          q: this.q,
+          category_id: this.categoryId,
+          tagId: this.tagId
         }
       })
       .then(result => this.set("model", result))

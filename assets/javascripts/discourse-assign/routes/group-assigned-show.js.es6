@@ -2,6 +2,11 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 
 export default DiscourseRoute.extend({
+  queryParams: {
+    categoryId: { refreshModel: true },
+    tagId: { refreshModel: true }
+  },
+
   beforeModel(transition) {
     if (!(transition.hasOwnProperty("from") && transition.from)) {
       return;
@@ -28,7 +33,9 @@ export default DiscourseRoute.extend({
           params: {
             order: params.order,
             ascending: params.ascending,
-            q: params.q
+            q: params.q,
+            category_id: params.categoryId,
+            tag_id: params.tagId
           }
         });
   },

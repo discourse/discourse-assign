@@ -1,13 +1,13 @@
-{{log 'hello'}}
-{{#each categoryGroupAssigned as |groupAssigned|}}
-  {{#if groupAssigned.hasOptions}}
-    {{category-drop
-      category=groupAssigned.category
-      categories=groupAssigned.options
+{{#each categoryBreadcrumbs as |breadcrumb|}}
+  {{#if breadcrumb.hasOptions}}
+    {{category-drop-assigned
+      categoryId=categoryId
+      category=breadcrumb.category
+      categories=breadcrumb.options
       options=(hash
-        parentCategory=groupAssigned.parentCategory
-        subCategory=groupAssigned.isSubcategory
-        noSubcategories=groupAssigned.noSubcategories
+        parentCategory=breadcrumb.parentCategory
+        subCategory=breadcrumb.isSubcategory
+        noSubcategories=breadcrumb.noSubcategories
         autoFilterable=true
       )
     }}
@@ -15,5 +15,5 @@
 {{/each}}
 
 {{#if siteSettings.tagging_enabled}}
-  {{tag-drop firstCategory=category tagId=tagId}}
+  {{tag-drop-assigned tagId=tagId firstCategory=category}}
 {{/if}}

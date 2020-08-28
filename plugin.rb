@@ -234,6 +234,8 @@ after_initialize do
         )
     end
 
+    list = list.where('topics.category_id = ?', options[:category].id) if options[:category]
+
     list = list.offset(per_page_setting * options[:page])
       .limit(per_page_setting)
 
@@ -252,6 +254,10 @@ after_initialize do
     list_opts[:ascending] = params[:ascending]
     list_opts[:order] = params[:order]
     list_opts[:q] = params[:q] if params[:q]
+
+    if params[:category_id] && params[:category_id].to_i > 0
+      list_opts[:category] = Category.find(params[:category_id])
+    end
 
     list = generate_list_for("messages_assigned", user, list_opts)
 
@@ -287,6 +293,8 @@ after_initialize do
         )
     end
 
+    list = list.where('topics.category_id = ?', options[:category].id) if options[:category]
+
     list = list.offset(per_page_setting * options[:page])
       .limit(per_page_setting)
 
@@ -307,6 +315,10 @@ after_initialize do
     list_opts[:ascending] = params[:ascending]
     list_opts[:order] = params[:order]
     list_opts[:q] = params[:q] if params[:q]
+
+    if params[:category_id] && params[:category_id].to_i > 0
+      list_opts[:category] = Category.find(params[:category_id])
+    end
 
     list = generate_list_for("group_topics_assigned", group, list_opts)
 
