@@ -324,8 +324,7 @@ export default {
     if (currentUser.can_assign) {
       const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
       SearchAdvancedOptions.reopen({
-        init() {
-          this._super();
+        _init() {
           this.inOptionsForUsers.pushObjects([
             {
               name: I18n.t("search.advanced.in.assigned"),
@@ -336,10 +335,9 @@ export default {
               value: "not_assigned"
             }
           ]);
-        },
 
-        _init() {
           this._super();
+
           this.set("searchedTerms.assigned", "");
         },
 
