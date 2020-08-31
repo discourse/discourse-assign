@@ -19,7 +19,9 @@
         assignmentCount=group.assignment_count
         q=q
         ascending=ascending
-        order=order}}
+        order=order
+        categoryId=categoryId
+        tagId=tagId}}
       {{#each members as |member|}}
         {{group-assigned-filter
           show-avatar=true
@@ -27,7 +29,9 @@
           routeType=route_type
           q=q
           ascending=ascending
-          order=order}}
+          order=order
+          categoryId=categoryId
+          tagId=tagId}}
       {{/each}}
       {{conditional-loading-spinner condition=loading}}
     {{/load-more}}

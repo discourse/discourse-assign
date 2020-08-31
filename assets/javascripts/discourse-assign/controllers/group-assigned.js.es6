@@ -29,6 +29,16 @@ export default Controller.extend({
     return q || "";
   },
 
+  @discourseComputed("router.currentRoute.queryParams.categoryId")
+  categoryId(categoryId) {
+    return categoryId || "";
+  },
+
+  @discourseComputed("router.currentRoute.queryParams.tagId")
+  tagId(tagId) {
+    return tagId || "";
+  },
+
   @discourseComputed("site.mobileView")
   isDesktop(mobileView) {
     return !mobileView;

@@ -9,14 +9,14 @@ export default TagDrop.extend({
     onChange(tagId, tag) {
       switch (tagId) {
         case ALL_TAGS_ID:
-          this.set("tagId", null);
+          this.set("tagId", ALL_TAGS_ID);
           break;
         case NO_TAG_ID:
-          this.set("tagId", 1);
+          this.set("tagId", NO_TAG_ID);
           break;
         default:
           this.set("tagId", tagId.toLowerCase());
       }
     }
   }
-})
+});

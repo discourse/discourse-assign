@@ -2,6 +2,7 @@ import UserTopicsList from "discourse/controllers/user-topics-list";
 import { debounce } from "@ember/runloop";
 import { inject as controller } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 import { alias } from "@ember/object/computed";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
@@ -21,6 +22,11 @@ export default UserTopicsList.extend({
   _setSearchTerm(searchTerm) {
     this.set("q", searchTerm);
     this.refreshModel();
+  },
+
+  @discourseComputed("categoryId")
+  category(categoryId) {
+    return Category.findById(parseInt(categoryId, 10)) || null;
   },
 
   refreshModel() {

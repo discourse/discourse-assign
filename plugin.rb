@@ -223,6 +223,50 @@ after_initialize do
 
     list = list.merge(secure)
 
+    if SiteSetting.tagging_enabled
+      list = list.preload(:tags)
+
+      tags_arg = options[:tags]
+
+      if tags_arg && tags_arg.size > 0
+        tags_arg = tags_arg.split if String === tags_arg
+
+        tags_arg = tags_arg.map do |t|
+          if String === t
+            t.downcase
+          else
+            t
+          end
+        end
+
+        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
+        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
+
+        if options[:match_all_tags]
+          # ALL of the given tags:
+          if tags_arg.length == tags.length
+            tags.each_with_index do |tag, index|
+              sql_alias = ['t', index].join
+              list = list.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
+            end
+          else
+            list = list.none # don't return any list unless all tags exist in the database
+          end
+        else
+          # ANY of the given tags:
+          list = list.joins(:tags).where("tags.id in (?)", tags)
+        end
+
+        # TODO: this is very side-effecty and should be changed
+        # It is done cause further up we expect normalized tags
+        options[:tags] = tags
+
+      elsif options[:no_tags]
+        # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+        list = list.where.not(id: TopicTag.distinct.pluck(:topic_id))
+      end
+    end
+
     if options[:q].present?
       term = options[:q]
       ts_query = Search.ts_query(term: term)
@@ -259,6 +303,12 @@ after_initialize do
       list_opts[:category] = Category.find(params[:category_id])
     end
 
+    if SiteSetting.tagging_enabled
+      list_opts[:match_all_tags] = true if params[:tag_id] && params[:tag_id] == "all-tags"
+      list_opts[:no_tags] = true if params[:tag_id] && params[:tag_id] == "no-tags"
+      list_opts[:tags] = params[:tag_id] if params[:tag_id] && params[:tag_id] != "all-tags" && params[:tag_id] != "no-tags"
+    end
+
     list = generate_list_for("messages_assigned", user, list_opts)
 
     more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}"
@@ -281,6 +331,50 @@ after_initialize do
     list = apply_ordering(list, options)
 
     list = list.merge(secure)
+
+    if SiteSetting.tagging_enabled
+      list = list.preload(:tags)
+
+      tags_arg = options[:tags]
+
+      if tags_arg && tags_arg.size > 0
+        tags_arg = tags_arg.split if String === tags_arg
+
+        tags_arg = tags_arg.map do |t|
+          if String === t
+            t.downcase
+          else
+            t
+          end
+        end
+
+        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
+        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
+
+        if options[:match_all_tags]
+          # ALL of the given tags:
+          if tags_arg.length == tags.length
+            tags.each_with_index do |tag, index|
+              sql_alias = ['t', index].join
+              list = list.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
+            end
+          else
+            list = list.none # don't return any list unless all tags exist in the database
+          end
+        else
+          # ANY of the given tags:
+          list = list.joins(:tags).where("tags.id in (?)", tags)
+        end
+
+        # TODO: this is very side-effecty and should be changed
+        # It is done cause further up we expect normalized tags
+        options[:tags] = tags
+
+      elsif options[:no_tags]
+        # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
+        list = list.where.not(id: TopicTag.distinct.pluck(:topic_id))
+      end
+    end
 
     if options[:q].present?
       term = options[:q]
@@ -318,6 +412,12 @@ after_initialize do
 
     if params[:category_id] && params[:category_id].to_i > 0
       list_opts[:category] = Category.find(params[:category_id])
+    end
+
+    if SiteSetting.tagging_enabled
+      list_opts[:match_all_tags] = true if params[:tag_id] && params[:tag_id] == "all-tags"
+      list_opts[:no_tags] = true if params[:tag_id] && params[:tag_id] == "no-tags"
+      list_opts[:tags] = params[:tag_id] if params[:tag_id] && params[:tag_id] != "all-tags" && params[:tag_id] != "no-tags"
     end
 
     list = generate_list_for("group_topics_assigned", group, list_opts)

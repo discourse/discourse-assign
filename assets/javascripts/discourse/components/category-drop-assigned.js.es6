@@ -1,5 +1,4 @@
 import CategoryDrop from "select-kit/components/category-drop";
-import Category from "discourse/models/category";
 
 export const NO_CATEGORIES_ID = "no-categories";
 export const ALL_CATEGORIES_ID = "all-categories";
@@ -15,5 +14,5 @@ export default CategoryDrop.extend({
         this.set("categoryId", categoryId);
       }
     }
-  },
+  }
 });
