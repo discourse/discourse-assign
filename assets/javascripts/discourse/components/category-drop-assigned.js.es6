@@ -1,7 +1,8 @@
 import CategoryDrop from "select-kit/components/category-drop";
-
-export const NO_CATEGORIES_ID = "no-categories";
-export const ALL_CATEGORIES_ID = "all-categories";
+import {
+  NO_CATEGORIES_ID,
+  ALL_CATEGORIES_ID
+} from "select-kit/components/category-drop";
 
 export default CategoryDrop.extend({
   actions: {

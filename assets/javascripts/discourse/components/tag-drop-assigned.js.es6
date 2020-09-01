@@ -1,8 +1,9 @@
 import TagDrop from "select-kit/components/tag-drop";
-
-export const NO_TAG_ID = "no-tags";
-export const ALL_TAGS_ID = "all-tags";
-export const NONE_TAG_ID = "none";
+import {
+  NO_TAG_ID,
+  ALL_TAGS_ID,
+  NONE_TAG_ID
+} from "select-kit/components/tag-drop";
 
 export default TagDrop.extend({
   actions: {
