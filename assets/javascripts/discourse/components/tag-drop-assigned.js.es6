@@ -7,15 +7,12 @@ export const NONE_TAG_ID = "none";
 export default TagDrop.extend({
   actions: {
     onChange(tagId) {
-      switch (tagId) {
-        case ALL_TAGS_ID:
-          this.set("tagId", ALL_TAGS_ID);
-          break;
-        case NO_TAG_ID:
-          this.set("tagId", NO_TAG_ID);
-          break;
-        default:
-          this.set("tagId", tagId.toLowerCase());
+      if (tagId === ALL_TAGS_ID) {
+        this.set("tagId", ALL_TAGS_ID);
+      } else if (tagId === NO_TAG_ID) {
+        this.set("tagId", NO_TAG_ID);
+      } else {
+        this.set("tagId", tagId.toLowerCase());
       }
     }
   }
