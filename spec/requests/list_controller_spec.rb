@@ -197,6 +197,10 @@ describe ListController do
   context 'filtering of topics as per parameter' do
     include_context 'A group that is allowed to assign'
 
+    fab!(:category) { Fabricate(:category_with_definition) }
+    fab!(:diff_category) { Fabricate(:category_with_definition, name: "Different Category") }
+    fab!(:tag) { Fabricate(:tag) }
+    fab!(:other_tag) { Fabricate(:tag) }
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
     fab!(:post3) { Fabricate(:post) }
@@ -206,6 +210,7 @@ describe ListController do
 
     before do
       SearchIndexer.enable
+      SiteSetting.tagging_enabled = true
 
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
@@ -238,7 +243,7 @@ describe ListController do
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
     end
 
-    it 'returns topics as per filter for #group_topics_assigned' do
+    it 'returns topics as per filter for #messages_assigned' do
       topic1.title = 'QUnit testing is love'
       topic2.title = 'RSpec testing is too fun'
       topic3.title = 'Testing is main part of programming'
@@ -250,8 +255,57 @@ describe ListController do
       get "/topics/messages-assigned/#{user.username}.json", params: { q: 'Testing' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'love' }
+      get "/topics/messages-assigned/#{user.username}.json", params: { q: 'love' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
+    end
+
+    it 'returns topics as per category or tag filter for #group_topics_assigned' do
+      topic1.category = category
+      topic2.category = diff_category
+      topic3.category = category
+
+      topic1.tags = [tag]
+      topic2.tags = [other_tag]
+      topic3.tags = [tag]
+
+      topic1.save!
+      topic2.save!
+      topic3.save!
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { category_id: category.id }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { category_id: diff_category.id }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { tag_id: tag.name }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { tag_id: other_tag.name }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id])
+    end
+
+    it 'returns topics as per category or tag filter for #messages_assigned' do
+      topic1.category = category
+      topic3.category = diff_category
+
+      topic1.tags = [tag]
+      topic3.tags = [other_tag]
+
+      topic1.save!
+      topic3.save!
+
+      get "/topics/messages-assigned/#{user.username_lower}.json", params: { category_id: category.id }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
+
+      get "/topics/messages-assigned/#{user.username_lower}.json", params: { category_id: diff_category.id }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id])
+
+      get "/topics/messages-assigned/#{user.username_lower}.json", params: { tag_id: tag.name }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
+
+      get "/topics/messages-assigned/#{user.username_lower}.json", params: { tag_id: other_tag.name }
+      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id])
     end
   end
 
