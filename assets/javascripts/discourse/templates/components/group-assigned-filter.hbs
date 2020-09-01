@@ -14,7 +14,7 @@
     </div>
   {{/link-to}}
 {{else}}
-  {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending q=q)}}
+  {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending q=q categoryId=categoryId tagId=tagId)}}
     <div class="assign-everyone">
       {{i18n 'discourse_assign.group_everyone'}}
     </div>

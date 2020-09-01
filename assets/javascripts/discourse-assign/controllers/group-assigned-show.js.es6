@@ -9,11 +9,11 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 export default UserTopicsList.extend({
   user: Ember.inject.controller(),
   taskActions: Ember.inject.service(),
-  order: null,
+  order: "",
   ascending: false,
   q: "",
-  tagId: null,
-  categoryId: null,
+  tagId: "",
+  categoryId: "",
   navigationCategory: controller("navigation/category"),
   noSubcategories: alias("navigationCategory.noSubcategories"),
 
