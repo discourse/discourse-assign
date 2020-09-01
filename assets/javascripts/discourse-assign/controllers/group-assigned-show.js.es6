@@ -1,6 +1,5 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import { debounce } from "@ember/runloop";
-import { inject as controller } from "@ember/controller";
 import discourseComputed from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { alias } from "@ember/object/computed";
@@ -14,7 +13,7 @@ export default UserTopicsList.extend({
   q: "",
   tagId: "",
   categoryId: "",
-  navigationCategory: controller("navigation/category"),
+  navigationCategory: Ember.inject.controller("navigation/category"),
   noSubcategories: alias("navigationCategory.noSubcategories"),
 
   queryParams: ["order", "ascending", "q", "categoryId", "tagId"],

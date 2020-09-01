@@ -6,7 +6,7 @@ export const NONE_TAG_ID = "none";
 
 export default TagDrop.extend({
   actions: {
-    onChange(tagId, tag) {
+    onChange(tagId) {
       switch (tagId) {
         case ALL_TAGS_ID:
           this.set("tagId", ALL_TAGS_ID);
