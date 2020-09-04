@@ -313,6 +313,8 @@ function initialize(api) {
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
 
+export const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
+
 export default {
   name: "extend-for-assign",
   initialize(container) {
@@ -322,7 +324,6 @@ export default {
     }
     const currentUser = container.lookup("current-user:main");
     if (currentUser.can_assign) {
-      const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
       SearchAdvancedOptions.reopen({
         _init() {
           this.inOptionsForUsers.pushObjects([
