@@ -447,6 +447,9 @@ ember-rfc176-data@^0.3.11:
   resolved "https://registry.yarnpkg.com/ember-rfc176-data/-/ember-rfc176-data-0.3.15.tgz#af3f1da5a0339b6feda380edc2f7190e0f416c2d"
   integrity sha512-GPKa7zRDBblRy0orxTXt5yrpp/Pf5CkuRFSIR8qMFDww0CqCKjCRwdZnWYzCM4kAEfZnXRIDDefe1tBaFw7v7w==
 
+ember-template-lint-plugin-discourse@../ember-template-lint-plugin-discourse:
+  version "1.0.0"
+
 ember-template-lint@^2.11.0:
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/ember-template-lint/-/ember-template-lint-2.11.0.tgz#90a074bd7ef86df07dca622c70debe7bce375ff2"
@@ -498,6 +501,7 @@ eslint-config-discourse@../eslint-config-discourse:
   dependencies:
     babel-eslint "^10.1.0"
     ember-template-lint "^2.11.0"
+    ember-template-lint-plugin-discourse "../ember-template-lint-plugin-discourse"
     eslint "^6.8.0"
     eslint-plugin-discourse-ember latest
     eslint-plugin-ember "^6.10.0"
