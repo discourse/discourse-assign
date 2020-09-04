@@ -24,10 +24,10 @@ export default UserTopicsList.extend({
         params: {
           order: this.order,
           ascending: this.ascending,
-          q: this.q
-        }
+          q: this.q,
+        },
       })
-      .then(result => this.set("model", result))
+      .then((result) => this.set("model", result))
       .finally(() => {
         this.set("loading", false);
       });
@@ -46,16 +46,14 @@ export default UserTopicsList.extend({
     changeSort(sortBy) {
       if (sortBy === this.order) {
         this.toggleProperty("ascending");
-        this.model.refreshSort(sortBy, this.ascending);
         this.refreshModel();
       } else {
         this.setProperties({ order: sortBy, ascending: false });
-        this.model.refreshSort(sortBy, false);
         this.refreshModel();
       }
     },
     onChangeFilter(value) {
       debounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
-    }
-  }
+    },
+  },
 });

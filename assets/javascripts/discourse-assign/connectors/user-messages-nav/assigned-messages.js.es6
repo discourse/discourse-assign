@@ -10,5 +10,5 @@ export function shouldShowAssigned(args, component) {
 export default {
   shouldRender(args, component) {
     return shouldShowAssigned(args, component);
-  }
+  },
 };

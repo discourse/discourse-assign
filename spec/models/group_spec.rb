@@ -1,14 +1,16 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
+require_relative '../support/assign_allowed_group'
 
 RSpec.describe Group do
-  describe 'Tracking changes that could affect the allow assign on groups site setting' do
-    let(:group) { Fabricate(:group) }
+  let(:group) { Fabricate(:group) }
 
-    before do
-      SiteSetting.assign_enabled = true
-    end
+  before do
+    SiteSetting.assign_enabled = true
+  end
+
+  context 'Tracking changes that could affect the allow assign on groups site setting' do
 
     let(:removed_group_setting) { '3|4' }
     let(:group_attribute) { group.id }
@@ -36,6 +38,36 @@ RSpec.describe Group do
       group.destroy!
 
       expect(SiteSetting.assign_allowed_on_groups).to eq removed_group_setting
+    end
+  end
+
+  context 'includes can_show_assigned_tab? method' do
+    let(:admin) { Fabricate(:admin) }
+    let(:user) { Fabricate(:user) }
+    let(:user1) { Fabricate(:user) }
+    let(:user2) { Fabricate(:user) }
+
+    include_context 'A group that is allowed to assign'
+
+    before do
+      add_to_assign_allowed_group(user)
+      add_to_assign_allowed_group(user1)
+      add_to_assign_allowed_group(admin)
+    end
+
+    it 'gives false in can_show_assigned_tab? when all users are not in assigned_allowed_group' do
+      group.add(user)
+      group.add(user1)
+      group.add(user2)
+
+      expect(group.can_show_assigned_tab?).to eq(false)
+    end
+
+    it 'gives true in can_show_assigned_tab? when all users are in assigned_allowed_group' do
+      group.add(user)
+      group.add(user1)
+
+      expect(group.can_show_assigned_tab?).to eq(true)
     end
   end
 end
