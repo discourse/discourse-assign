@@ -5,7 +5,7 @@ export default Ember.Service.extend({
   unassign(topicId) {
     return ajax("/assign/unassign", {
       type: "PUT",
-      data: { topic_id: topicId }
+      data: { topic_id: topicId },
     });
   },
 
@@ -13,8 +13,8 @@ export default Ember.Service.extend({
     return showModal("assign-user", {
       model: {
         topic,
-        username: topic.get("assigned_to_user.username")
-      }
+        username: topic.get("assigned_to_user.username"),
+      },
     });
   },
 
@@ -23,8 +23,8 @@ export default Ember.Service.extend({
       type: "PUT",
       data: {
         username: user.username,
-        topic_id: topic.id
-      }
+        topic_id: topic.id,
+      },
     });
-  }
+  },
 });

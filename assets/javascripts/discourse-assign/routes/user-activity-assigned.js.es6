@@ -1,9 +1,10 @@
+import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 
 export default UserTopicListRoute.extend({
   queryParams: {
     order: { refreshModel: true },
-    ascending: { refreshModel: true }
+    ascending: { refreshModel: true },
   },
   userActionType: 16,
   noContentHelpKey: "discourse_assigns.no_assigns",
@@ -17,8 +18,8 @@ export default UserTopicListRoute.extend({
         // core is a bit odd here and is not sending an array, should be fixed
         exclude_category_ids: [-1],
         order: params.order,
-        ascending: params.ascending
-      }
+        ascending: params.ascending,
+      },
     });
   },
 
@@ -39,6 +40,6 @@ export default UserTopicListRoute.extend({
   actions: {
     changeAssigned() {
       this.refresh();
-    }
-  }
+    },
+  },
 });
