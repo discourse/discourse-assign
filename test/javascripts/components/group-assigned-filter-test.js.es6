@@ -16,12 +16,12 @@ componentTest("display username", {
       last_posted_at: "2020-06-22T10:15:54.532Z",
       last_seen_at: "2020-07-07T11:55:59.437Z",
       added_at: "2020-06-22T09:55:31.692Z",
-      timezone: "Asia/Calcutta",
+      timezone: "Asia/Calcutta"
     });
   },
   async test(assert) {
     assert.ok(find("li")[0].innerText.trim(), "Ahmed");
-  },
+  }
 });
 componentTest("display name", {
   template: "{{group-assigned-filter show-avatar=true filter=filter}}",
@@ -37,10 +37,10 @@ componentTest("display name", {
       last_posted_at: "2020-06-22T10:15:54.532Z",
       last_seen_at: "2020-07-07T11:55:59.437Z",
       added_at: "2020-06-22T09:55:31.692Z",
-      timezone: "Asia/Calcutta",
+      timezone: "Asia/Calcutta"
     });
   },
   async test(assert) {
     assert.ok(find("li")[0].innerText.trim(), "Ahmed Gagan");
-  },
+  }
 });

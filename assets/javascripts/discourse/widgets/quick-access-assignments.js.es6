@@ -19,8 +19,8 @@ if (QuickAccessPanel) {
         .findFiltered("topicList", {
           filter: `topics/messages-assigned/${this.currentUser.username_lower}`,
           params: {
-            exclude_category_ids: [-1],
-          },
+            exclude_category_ids: [-1]
+          }
         })
         .then(({ topic_list }) => {
           return topic_list.topics;
@@ -35,8 +35,8 @@ if (QuickAccessPanel) {
           assignedTopic.id,
           assignedTopic.last_read_post_number + 1
         ),
-        escapedContent: assignedTopic.fancy_title,
+        escapedContent: assignedTopic.fancy_title
       });
-    },
+    }
   });
 }

@@ -28,19 +28,19 @@ export default DiscourseRoute.extend({
           params: {
             order: params.order,
             ascending: params.ascending,
-            q: params.q,
-          },
+            q: params.q
+          }
         });
   },
 
   setupController(controller, model) {
     controller.setProperties({
       model,
-      searchTerm: this.currentModel.params.q,
+      searchTerm: this.currentModel.params.q
     });
   },
 
   renderTemplate() {
     this.render("group-topics-list");
-  },
+  }
 });

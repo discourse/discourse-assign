@@ -8,16 +8,16 @@ acceptance("Quick access assignments panel", {
   loggedIn: true,
   settings: {
     assign_enabled: true,
-    assigns_user_url_path: "/",
+    assigns_user_url_path: "/"
   },
   pretend(server, helper) {
     const messagesPath = "/topics/messages-assigned/eviltrout.json";
     const assigns = AssignedTopics[messagesPath];
     server.get(messagesPath, () => helper.response(assigns));
-  },
+  }
 });
 
-QUnit.test("Quick access assignments panel", async (assert) => {
+QUnit.test("Quick access assignments panel", async assert => {
   updateCurrentUser({ can_assign: true });
 
   await visit("/");

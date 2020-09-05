@@ -25,6 +25,6 @@ export default UserTopicsList.extend({
         this.setProperties({ order: sortBy, ascending: false });
         this.model.refreshSort(sortBy, false);
       }
-    },
-  },
+    }
+  }
 });

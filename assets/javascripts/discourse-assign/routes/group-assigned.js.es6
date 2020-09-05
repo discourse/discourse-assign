@@ -10,7 +10,7 @@ export default DiscourseRoute.extend({
     controller.setProperties({
       model,
       members: [],
-      group: this.modelFor("group"),
+      group: this.modelFor("group")
     });
     controller.group.set("assignment_count", model.assignment_count);
 
@@ -28,6 +28,6 @@ export default DiscourseRoute.extend({
   actions: {
     changeAssigned() {
       this.refresh();
-    },
-  },
+    }
+  }
 });

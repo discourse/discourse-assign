@@ -7,7 +7,7 @@ export default {
         name: null,
         avatar_template: "/letter_avatar_proxy/v4/letter/a/838e76/{size}.png",
         assignments_count: 40,
-        username_lower: "ahmedgagan6",
+        username_lower: "ahmedgagan6"
       },
       {
         id: 4,
@@ -15,7 +15,7 @@ export default {
         name: "Gagan ",
         avatar_template: "/letter_avatar_proxy/v4/letter/g/8edcca/{size}.png",
         assignments_count: 17,
-        username_lower: "gaganahmed",
+        username_lower: "gaganahmed"
       },
       {
         id: 3,
@@ -23,7 +23,7 @@ export default {
         name: "",
         avatar_template: "/user_avatar/localhost/ahmedgagan/{size}/2_2.png",
         assignments_count: 16,
-        username_lower: "ahmedgagan",
+        username_lower: "ahmedgagan"
       },
       {
         id: 2,
@@ -31,8 +31,8 @@ export default {
         name: "Ahmed Gagan",
         avatar_template: "/letter_avatar_proxy/v4/letter/a/8c91f0/{size}.png",
         assignments_count: 15,
-        username_lower: "ahmed",
-      },
-    ],
-  },
+        username_lower: "ahmed"
+      }
+    ]
+  }
 };

@@ -15,9 +15,9 @@ export default {
               return this.custom_fields.enable_unassigned_filter === "true";
             }
             return false;
-          },
+          }
         }
-      ),
+      )
     });
-  },
+  }
 };

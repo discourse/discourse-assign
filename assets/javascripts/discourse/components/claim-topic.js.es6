@@ -11,7 +11,7 @@ export default Ember.Component.extend({
       this.set("unassigning", true);
       return ajax("/assign/unassign", {
         type: "PUT",
-        data: { topic_id: this.get("topic.id") },
+        data: { topic_id: this.get("topic.id") }
       })
         .then(() => {
           this.set("topic.assigned_to_user", null);
@@ -27,12 +27,12 @@ export default Ember.Component.extend({
 
       let topic = this.topic;
       ajax(`/assign/claim/${topic.id}`, {
-        method: "PUT",
+        method: "PUT"
       })
         .then(() => {
           this.set("topic.assigned_to_user", this.currentUser);
         })
-        .catch((e) => {
+        .catch(e => {
           if (e.jqXHR && e.jqXHR.responseJSON) {
             let json = e.jqXHR.responseJSON;
             if (json && json.extras) {
@@ -47,6 +47,6 @@ export default Ember.Component.extend({
           }
           this.set("claiming", false);
         });
-    },
-  },
+    }
+  }
 });
