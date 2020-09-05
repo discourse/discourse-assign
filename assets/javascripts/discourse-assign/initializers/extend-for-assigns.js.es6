@@ -1,12 +1,15 @@
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import computed from "discourse-common/utils/decorators";
+import { alias } from "@ember/object/computed";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
+import { addBulkButton } from "discourse/controllers/topic-bulk-actions";
+import TopicButtonAction from "discourse/controllers/topic-bulk-actions";
 
 function titleForState(user) {
   if (user) {
@@ -319,6 +322,30 @@ export default {
       return;
     }
 
+    const currentUser = container.lookup("current-user:main");
+    if (currentUser.can_assign) {
+      TopicButtonAction.reopen({
+        actions: {
+          showReAssign() {
+            this.send("changeBulkTemplate", "modal/assign-user");
+          },
+          unassignTopics() {
+            console.log("unassignTopics");
+          },
+          assign() {
+            console.log("hello");
+          }
+        }
+      });
+      addBulkButton("showReAssign", "reassign", {
+        icon: "pencil-alt",
+        class: "btn-default"
+      });
+      addBulkButton("unassignTopics", "unassign", {
+        icon: "pencil-alt",
+        class: "btn-default"
+      });
+    }
     withPluginApi("0.8.11", api => initialize(api, container));
     withPluginApi("0.8.28", api => registerTopicFooterButtons(api, container));
   }
