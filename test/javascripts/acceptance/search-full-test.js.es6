@@ -3,11 +3,11 @@ import { acceptance, waitFor, updateCurrentUser } from "helpers/qunit-helpers";
 
 acceptance("Search - Full Page", {
   settings: { assign_enabled: true },
-  loggedIn: true
+  loggedIn: true,
 });
 QUnit.test(
   "update in:assigned filter through advanced search ui",
-  async assert => {
+  async (assert) => {
     updateCurrentUser({ can_assign: true });
     const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
@@ -31,7 +31,7 @@ QUnit.test(
 
 QUnit.test(
   "update in:not_assigned filter through advanced search ui",
-  async assert => {
+  async (assert) => {
     updateCurrentUser({ can_assign: true });
     const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
@@ -53,7 +53,7 @@ QUnit.test(
   }
 );
 
-QUnit.skip("update assigned to through advanced search ui", async assert => {
+QUnit.skip("update assigned to through advanced search ui", async (assert) => {
   updateCurrentUser({ can_assign: true });
   await visit("/search");
   await fillIn(".search-query", "none");

@@ -6,11 +6,11 @@ export default Ember.Component.extend({
 
   @computed("user.reminders_frequency")
   availableFrequencies(userRemindersFrequency) {
-    return userRemindersFrequency.map(freq => {
+    return userRemindersFrequency.map((freq) => {
       return {
         name: I18n.t(freq.name),
         value: freq.value,
-        selected: false
+        selected: false,
       };
     });
   },
@@ -32,6 +32,6 @@ export default Ember.Component.extend({
   actions: {
     setFrequency(newFrequency) {
       this.set("user.custom_fields.remind_assigns_frequency", newFrequency);
-    }
-  }
+    },
+  },
 });
