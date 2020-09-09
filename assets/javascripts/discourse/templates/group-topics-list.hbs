@@ -8,26 +8,28 @@
   </div>
 </div>
 {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
-  {{bulk-select-button selected=selected action=(action "refresh")}}
-  {{basic-assigned-topic-list topicList=model
-                              hideCategory=hideCategory
-                              showPosters=showPosters
-                              bulkSelectEnabled=bulkSelectEnabled
-                              canBulkSelect=canBulkSelect
-                              selected=selected
-                              hasIncoming=hasIncoming
-                              incomingCount=incomingCount
-                              showInserted=(action "showInserted")
-                              tagsForUser=tagsForUser
-                              changeSort=(action 'changeSort')
-                              toggleBulkSelect=(action "toggleBulkSelect")
-                              unassign=(action 'unassign')
-                              reassign=(action 'reassign')
-                              onScroll=saveScrollPosition
-                              scrollOnLoad=true}}
+  {{bulk-select-button
+    selected=selected
+    action=(action "refresh")
+  }}
+  {{basic-assigned-topic-list
+    topicList=model
+    hideCategory=hideCategory
+    showPosters=showPosters
+    bulkSelectEnabled=bulkSelectEnabled
+    canBulkSelect=canBulkSelect
+    selected=selected
+    hasIncoming=hasIncoming
+    incomingCount=incomingCount
+    showInserted=(action "showInserted")
+    tagsForUser=tagsForUser
+    changeSort=(action "changeSort")
+    toggleBulkSelect=(action "toggleBulkSelect")
+    unassign=(action "unassign")
+    reassign=(action "reassign")
+    onScroll=saveScrollPosition
+    scrollOnLoad=true
+  }}
 
   {{conditional-loading-spinner condition=model.loadingMore}}
 {{/load-more}}
-
-
-

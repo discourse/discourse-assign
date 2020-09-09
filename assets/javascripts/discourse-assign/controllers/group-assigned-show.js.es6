@@ -28,10 +28,10 @@ export default UserTopicsList.extend({
         params: {
           order: this.order,
           ascending: this.ascending,
-          q: this.q
-        }
+          q: this.q,
+        },
       })
-      .then(result => this.set("model", result))
+      .then((result) => this.set("model", result))
       .finally(() => {
         this.set("loading", false);
       });
@@ -65,5 +65,5 @@ export default UserTopicsList.extend({
     refresh(){
       this.refreshModel();
     }
-  }
+  },
 });

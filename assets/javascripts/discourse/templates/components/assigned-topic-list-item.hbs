@@ -14,14 +14,14 @@
   <span class='link-top-line'>
     {{~raw "topic-status" topic=topic}}
     {{~#if isPrivateMessage}}
-    {{~d-icon "envelope" class="private-message-icon"}}
+      {{~d-icon "envelope" class="private-message-icon"}}
     {{~/if}}
     {{~topic-link topic class="raw-link raw-topic-link"}}
     {{~#if topic.featured_link}}
-    {{~topic-featured-link topic}}
+      {{~topic-featured-link topic}}
     {{~/if}}
     {{~#if showTopicPostBadges}}
-    {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+      {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}
   </span>
   <div class="link-bottom-line">

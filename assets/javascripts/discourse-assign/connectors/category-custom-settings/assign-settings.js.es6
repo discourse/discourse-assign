@@ -5,6 +5,6 @@ export default {
         "category.custom_fields.enable_unassigned_filter",
         value ? "true" : "false"
       );
-    }
-  }
+    },
+  },
 };

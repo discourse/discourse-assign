@@ -7,10 +7,10 @@ function assignIfEqual(topic, data) {
 export default Ember.Component.extend({
   didInsertElement() {
     this._super();
-    this.messageBus.subscribe("/staff/topic-assignment", data => {
+    this.messageBus.subscribe("/staff/topic-assignment", (data) => {
       let flaggedTopics = this.flaggedTopics;
       if (flaggedTopics) {
-        flaggedTopics.forEach(ft => assignIfEqual(ft.topic, data));
+        flaggedTopics.forEach((ft) => assignIfEqual(ft.topic, data));
       } else {
         assignIfEqual(this.topic, data);
       }
@@ -20,5 +20,5 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._super();
     this.messageBus.unsubscribe("/staff/topic-assignment");
-  }
+  },
 });
