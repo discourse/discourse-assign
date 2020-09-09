@@ -122,7 +122,8 @@ function initialize(api) {
   });
 
   api.addAdvancedSearchOptions({
-    inOptionsForUsers:[{
+    inOptionsForUsers: [
+      {
         name: I18n.t("search.advanced.in.assigned"),
         value: "assigned",
       },
@@ -130,7 +131,7 @@ function initialize(api) {
         name: I18n.t("search.advanced.in.unassigned"),
         value: "unassigned",
       },
-    ]
+    ],
   });
 
   // You can't act on flags claimed by another user
