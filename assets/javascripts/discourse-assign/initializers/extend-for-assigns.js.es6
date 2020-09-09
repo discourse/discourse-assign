@@ -335,19 +335,21 @@ export default {
           },
           unassignTopics() {
             this.performAndRefresh({ type: "unassign" });
-          }
-        }
+          },
+        },
       });
       addBulkButton("showReAssign", "reassign", {
         icon: "pencil-alt",
-        class: "btn-default"
+        class: "btn-default",
       });
       addBulkButton("unassignTopics", "unassign", {
         icon: "pencil-alt",
-        class: "btn-default"
+        class: "btn-default",
       });
     }
-    withPluginApi("0.8.11", api => initialize(api, container));
-    withPluginApi("0.8.28", api => registerTopicFooterButtons(api, container));
+    withPluginApi("0.8.11", (api) => initialize(api, container));
+    withPluginApi("0.8.28", (api) =>
+      registerTopicFooterButtons(api, container)
+    );
   },
 };

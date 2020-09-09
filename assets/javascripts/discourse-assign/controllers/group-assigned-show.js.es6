@@ -62,8 +62,8 @@ export default UserTopicsList.extend({
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
     },
-    refresh(){
+    refresh() {
       this.refreshModel();
-    }
+    },
   },
 });

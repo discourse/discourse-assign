@@ -27,7 +27,7 @@ export default Ember.Controller.extend({
   bulkAction(username) {
     this.topicBulkActions.performAndRefresh({
       type: "reassign",
-      username
+      username,
     });
   },
 
