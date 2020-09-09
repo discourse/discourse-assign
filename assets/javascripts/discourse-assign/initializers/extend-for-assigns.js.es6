@@ -127,8 +127,8 @@ function initialize(api) {
         value: "assigned",
       },
       {
-        name: I18n.t("search.advanced.in.not_assigned"),
-        value: "not_assigned",
+        name: I18n.t("search.advanced.in.unassigned"),
+        value: "unassigned",
       },
     ]
   });
@@ -339,17 +339,6 @@ export default {
     if (currentUser.can_assign) {
       SearchAdvancedOptions.reopen({
         _init() {
-          // this.inOptionsForUsers.pushObjects([
-          //   {
-          //     name: I18n.t("search.advanced.in.assigned"),
-          //     value: "assigned"
-          //   },
-          //   {
-          //     name: I18n.t("search.advanced.in.not_assigned"),
-          //     value: "not_assigned"
-          //   }
-          // ]);
-
           this._super();
 
           this.set("searchedTerms.assigned", "");
@@ -389,7 +378,7 @@ export default {
     }
 
     withPluginApi("0.11.0", (api) => initialize(api, container));
-    withPluginApi("0.11.0", (api) =>
+    withPluginApi("0.8.28", (api) =>
       registerTopicFooterButtons(api, container)
     );
   },

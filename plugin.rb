@@ -532,7 +532,7 @@ after_initialize do
     end
   end
 
-  register_search_advanced_filter(/in:not_assigned/) do |posts|
+  register_search_advanced_filter(/in:unassigned/) do |posts|
     if @guardian.can_assign?
       posts.where("topics.id NOT IN (
         SELECT tc.topic_id

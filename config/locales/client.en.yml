@@ -57,6 +57,6 @@ en:
       advanced:
         in:
           assigned: "are assigned"
-          not_assigned: "are not assigned"
+          unassigned: "are unassigned"
         assigned:
           label: "Assigned to"
