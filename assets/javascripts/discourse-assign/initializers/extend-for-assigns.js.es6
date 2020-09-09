@@ -10,6 +10,7 @@ import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
 import { addBulkButton } from "discourse/controllers/topic-bulk-actions";
 import TopicButtonAction from "discourse/controllers/topic-bulk-actions";
+import { inject } from "@ember/controller";
 
 function titleForState(user) {
   if (user) {
@@ -325,15 +326,15 @@ export default {
     const currentUser = container.lookup("current-user:main");
     if (currentUser.can_assign) {
       TopicButtonAction.reopen({
+        assignUser: inject("assign-user"),
         actions: {
           showReAssign() {
+            this.set("assignUser.isBulkAction", true);
+            this.set("assignUser.model", { username: "" });
             this.send("changeBulkTemplate", "modal/assign-user");
           },
           unassignTopics() {
-            console.log("unassignTopics");
-          },
-          assign() {
-            console.log("hello");
+            this.performAndRefresh({ type: "unassign" });
           }
         }
       });

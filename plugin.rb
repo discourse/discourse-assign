@@ -398,6 +398,25 @@ after_initialize do
     end
   end
 
+  TopicsBulkAction.register_operation("reassign") do
+    if @user.can_assign?
+      assign_user = User.find_by_username(@operation[:username])
+      topics.each do |t|
+        TopicAssigner.new(t, @user).assign(assign_user)
+      end
+    end
+  end
+
+  TopicsBulkAction.register_operation("unassign") do
+    if @user.can_assign?
+      topics.each do |t|
+        if guardian.can_assign?
+          TopicAssigner.new(t, @user).unassign
+        end
+      end
+    end
+  end
+
   if defined? UserBookmarkSerializer
     add_to_class(:user_bookmark_serializer, :assigned_to_user_id) do
       id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
