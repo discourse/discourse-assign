@@ -1,7 +1,6 @@
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import computed from "discourse-common/utils/decorators";
-import { alias } from "@ember/object/computed";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
