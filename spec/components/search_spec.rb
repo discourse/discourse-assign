@@ -34,7 +34,7 @@ describe Search do
 
       TopicAssigner.new(post3.topic, user).unassign
 
-      expect(Search.execute('in:not_assigned', guardian: Guardian.new(user)).posts.length).to eq(1)
+      expect(Search.execute('in:unassigned', guardian: Guardian.new(user)).posts.length).to eq(1)
       expect(Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length).to eq(1)
     end
 
