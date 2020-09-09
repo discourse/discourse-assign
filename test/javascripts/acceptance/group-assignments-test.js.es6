@@ -15,16 +15,16 @@ acceptance("GroupAssignments", {
     server.get(groupPath, () => helper.response(groupAssigns));
     server.get(memberPath, () => helper.response(memberAssigns));
     server.get(getMembersPath, () => helper.response(getMembers));
-  }
+  },
 });
 
-QUnit.test("Group Assignments Everyone", async assert => {
+QUnit.test("Group Assignments Everyone", async (assert) => {
   await visit("/g/discourse/assigned");
   assert.equal(currentPath(), "group.assigned.show");
   assert.ok(find(".topic-list-item").length === 1);
 });
 
-QUnit.test("Group Assignments Ahmedgagan", async assert => {
+QUnit.test("Group Assignments Ahmedgagan", async (assert) => {
   await visit("/g/discourse/assigned/ahmedgagan6");
   assert.equal(currentPath(), "group.assigned.show");
   assert.ok(find(".topic-list-item").length === 1);

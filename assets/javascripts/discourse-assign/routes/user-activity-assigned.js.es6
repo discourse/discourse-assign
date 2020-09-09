@@ -1,6 +1,8 @@
+import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 
 export default UserTopicListRoute.extend({
+
   userActionType: 16,
   noContentHelpKey: "discourse_assigns.no_assigns",
 
@@ -15,7 +17,7 @@ export default UserTopicListRoute.extend({
         order: params.order,
         ascending: params.ascending,
         q: params.q
-      }
+      },
     });
   },
 
@@ -36,6 +38,6 @@ export default UserTopicListRoute.extend({
   actions: {
     changeAssigned() {
       this.refresh();
-    }
-  }
+    },
+  },
 });

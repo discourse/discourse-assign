@@ -7,11 +7,12 @@ import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
+import I18n from "I18n";
 
 function titleForState(user) {
   if (user) {
     return I18n.t("discourse_assign.unassign.help", {
-      username: user.username
+      username: user.username,
     });
   } else {
     return I18n.t("discourse_assign.assign.help");
@@ -48,14 +49,14 @@ function registerTopicFooterButtons(api) {
               user.username
             }</span></span>${renderAvatar(user, {
               imageSize: "small",
-              ignoreTitle: true
+              ignoreTitle: true,
             })}`
           );
         } else {
           return htmlSafe(
             `${renderAvatar(user, {
               imageSize: "tiny",
-              ignoreTitle: true
+              ignoreTitle: true,
             })}<span class="unassign-label">${label}</span>`
           );
         }
@@ -86,21 +87,21 @@ function registerTopicFooterButtons(api) {
     dependentKeys: [
       "topic.assigned_to_user",
       "currentUser.can_assign",
-      "topic.assigned_to_user.username"
+      "topic.assigned_to_user.username",
     ],
     displayed() {
       return this.currentUser && this.currentUser.can_assign;
-    }
+    },
   });
 }
 
 function initialize(api) {
   api.addNavigationBarItem({
     name: "unassigned",
-    customFilter: category => {
+    customFilter: (category) => {
       return category && category.enable_unassigned_filter;
     },
-    customHref: category => {
+    customHref: (category) => {
       if (category) {
         return getURL(category.url) + "/l/latest?status=open&assigned=nobody";
       }
@@ -115,7 +116,7 @@ function initialize(api) {
         queryParams["status"] === "open"
       );
     },
-    before: "top"
+    before: "top",
   });
 
   // You can't act on flags claimed by another user
@@ -146,7 +147,7 @@ function initialize(api) {
       didInsertElement() {
         this._super(...arguments);
 
-        this.messageBus.subscribe("/staff/topic-assignment", data => {
+        this.messageBus.subscribe("/staff/topic-assignment", (data) => {
           let flaggedPost = this.flaggedPost;
           if (data.topic_id === flaggedPost.get("topic.id")) {
             flaggedPost.set(
@@ -162,7 +163,7 @@ function initialize(api) {
         this._super(...arguments);
 
         this.messageBus.unsubscribe("/staff/topic-assignment");
-      }
+      },
     },
     { ignoreMissing: true }
   );
@@ -177,7 +178,7 @@ function initialize(api) {
           assignedToUser.username
         )
       );
-    }
+    },
   });
 
   api.modifyClass("model:bookmark", {
@@ -189,13 +190,13 @@ function initialize(api) {
           assignedToUser.username
         )
       );
-    }
+    },
   });
 
   api.addPostSmallActionIcon("assigned", "user-plus");
   api.addPostSmallActionIcon("unassigned", "user-times");
 
-  api.addPostTransformCallback(transformed => {
+  api.addPostTransformCallback((transformed) => {
     if (
       transformed.actionCode === "assigned" ||
       transformed.actionCode === "unassigned"
@@ -207,7 +208,7 @@ function initialize(api) {
 
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
-  api.addTagsHtmlCallback(topic => {
+  api.addTagsHtmlCallback((topic) => {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.assignedToUserPath;
@@ -217,13 +218,13 @@ function initialize(api) {
     }
   });
 
-  api.addUserMenuGlyph(widget => {
+  api.addUserMenuGlyph((widget) => {
     if (widget.currentUser && widget.currentUser.can_assign) {
       const glyph = {
         label: "discourse_assign.assigned",
         className: "assigned",
         icon: "user-plus",
-        href: `${widget.currentUser.path}/activity/assigned`
+        href: `${widget.currentUser.path}/activity/assigned`,
       };
 
       if (queryRegistry("quick-access-panel")) {
@@ -246,16 +247,16 @@ function initialize(api) {
           "a",
           { attributes: { class: "assigned-to-username", href } },
           assignedToUser.username
-        )
+        ),
       ]);
-    }
+    },
   });
 
   api.modifyClass("controller:topic", {
     subscribe() {
       this._super(...arguments);
 
-      this.messageBus.subscribe("/staff/topic-assignment", data => {
+      this.messageBus.subscribe("/staff/topic-assignment", (data) => {
         const topic = this.model;
         const topicId = topic.id;
 
@@ -276,10 +277,10 @@ function initialize(api) {
       if (!this.get("model.id")) return;
 
       this.messageBus.unsubscribe("/staff/topic-assignment");
-    }
+    },
   });
 
-  api.decorateWidget("post-contents:after-cooked", dec => {
+  api.decorateWidget("post-contents:after-cooked", (dec) => {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
       if (postModel) {
@@ -287,7 +288,7 @@ function initialize(api) {
         if (assignedToUser) {
           return dec.widget.attach("assigned-to", {
             assignedToUser,
-            href: Ember.get(postModel, "topic.assignedToUserPath")
+            href: Ember.get(postModel, "topic.assignedToUserPath"),
           });
         }
       }
@@ -304,8 +305,8 @@ function initialize(api) {
       save() {
         this.saveAttrNames.push("custom_fields");
         this._super(...arguments);
-      }
-    }
+      },
+    },
   });
 
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
@@ -319,7 +320,9 @@ export default {
       return;
     }
 
-    withPluginApi("0.8.11", api => initialize(api, container));
-    withPluginApi("0.8.28", api => registerTopicFooterButtons(api, container));
-  }
+    withPluginApi("0.8.11", (api) => initialize(api, container));
+    withPluginApi("0.8.28", (api) =>
+      registerTopicFooterButtons(api, container)
+    );
+  },
 };
