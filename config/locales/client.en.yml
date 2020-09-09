@@ -55,5 +55,5 @@ en:
           details: "When a user assigns or unassigns a topic."
     topics:
       bulk:
-        unassign: "Un-Assign Topics"
-        reassign: "Re-Assign Topics"
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

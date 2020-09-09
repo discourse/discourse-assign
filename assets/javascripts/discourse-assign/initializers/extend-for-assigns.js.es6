@@ -338,12 +338,12 @@ export default {
           },
         },
       });
-      addBulkButton("showReAssign", "reassign", {
-        icon: "pencil-alt",
+      addBulkButton("showReAssign", "assign", {
+        icon: "user-plus",
         class: "btn-default",
       });
       addBulkButton("unassignTopics", "unassign", {
-        icon: "pencil-alt",
+        icon: "user-times",
         class: "btn-default",
       });
     }

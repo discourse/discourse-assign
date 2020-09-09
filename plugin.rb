@@ -398,7 +398,7 @@ after_initialize do
     end
   end
 
-  TopicsBulkAction.register_operation("reassign") do
+  TopicsBulkAction.register_operation("assign") do
     if @user.can_assign?
       assign_user = User.find_by_username(@operation[:username])
       topics.each do |t|
@@ -415,6 +415,10 @@ after_initialize do
         end
       end
     end
+  end
+
+  if defined? register_permitted_bulk_action_parameter
+    register_permitted_bulk_action_parameter :username
   end
 
   if defined? UserBookmarkSerializer
