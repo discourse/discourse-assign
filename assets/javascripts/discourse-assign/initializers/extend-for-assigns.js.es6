@@ -121,16 +121,17 @@ function initialize(api) {
     before: "top",
   });
 
-  api.addInOptionsForUsers([
-    {
-      name: I18n.t("search.advanced.in.assigned"),
-      value: "assigned",
-    },
-    {
-      name: I18n.t("search.advanced.in.not_assigned"),
-      value: "not_assigned",
-    },
-  ]);
+  api.addAdvancedSearchOptions({
+    inOptionsForUsers:[{
+        name: I18n.t("search.advanced.in.assigned"),
+        value: "assigned",
+      },
+      {
+        name: I18n.t("search.advanced.in.not_assigned"),
+        value: "not_assigned",
+      },
+    ]
+  });
 
   // You can't act on flags claimed by another user
   api.modifyClass(
@@ -387,8 +388,8 @@ export default {
       });
     }
 
-    withPluginApi("0.8.11", (api) => initialize(api, container));
-    withPluginApi("0.8.28", (api) =>
+    withPluginApi("0.11.0", (api) => initialize(api, container));
+    withPluginApi("0.11.0", (api) =>
       registerTopicFooterButtons(api, container)
     );
   },
