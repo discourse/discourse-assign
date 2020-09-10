@@ -5,14 +5,14 @@ export default {
         id: -2,
         username: "discobot",
         name: "discobot",
-        avatar_template: "/user_avatar/localhost/discobot/{size}/1_2.png"
+        avatar_template: "/user_avatar/localhost/discobot/{size}/1_2.png",
       },
       {
         id: -1,
         username: "system",
         name: "system",
-        avatar_template: "/user_avatar/localhost/system/{size}/2_2.png"
-      }
+        avatar_template: "/user_avatar/localhost/system/{size}/2_2.png",
+      },
     ],
     primary_groups: [],
     topic_list: {
@@ -61,27 +61,27 @@ export default {
               extras: "latest single",
               description: "Original Poster, Most Recent Poster",
               user_id: -2,
-              primary_group_id: null
-            }
+              primary_group_id: null,
+            },
           ],
           participants: [
             {
               extras: "latest",
               description: null,
               user_id: -2,
-              primary_group_id: null
-            }
+              primary_group_id: null,
+            },
           ],
           assigned_to_user: {
             id: 19,
             username: "eviltrout",
             name: null,
             avatar_template:
-              "/letter_avatar_proxy/v4/letter/r/ed8c4c/{size}.png"
-          }
-        }
-      ]
-    }
+              "/letter_avatar_proxy/v4/letter/r/ed8c4c/{size}.png",
+          },
+        },
+      ],
+    },
   },
   "/topics/messages-assigned/ahmedgagan6.json": {
     users: [
@@ -89,14 +89,14 @@ export default {
         id: -2,
         username: "discobot",
         name: "discobot",
-        avatar_template: "/user_avatar/localhost/discobot/{size}/1_2.png"
+        avatar_template: "/user_avatar/localhost/discobot/{size}/1_2.png",
       },
       {
         id: -1,
         username: "system",
         name: "system",
-        avatar_template: "/user_avatar/localhost/system/{size}/2_2.png"
-      }
+        avatar_template: "/user_avatar/localhost/system/{size}/2_2.png",
+      },
     ],
     primary_groups: [],
     topic_list: {
@@ -145,26 +145,26 @@ export default {
               extras: "latest single",
               description: "Original Poster, Most Recent Poster",
               user_id: -2,
-              primary_group_id: null
-            }
+              primary_group_id: null,
+            },
           ],
           participants: [
             {
               extras: "latest",
               description: null,
               user_id: -2,
-              primary_group_id: null
-            }
+              primary_group_id: null,
+            },
           ],
           assigned_to_user: {
             id: 2770,
             username: "awesomerobot",
             name: null,
             avatar_template:
-              "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png"
-          }
-        }
-      ]
-    }
-  }
+              "/user_avatar/meta.discourse.org/awesomerobot/{size}/33872.png",
+          },
+        },
+      ],
+    },
+  },
 };

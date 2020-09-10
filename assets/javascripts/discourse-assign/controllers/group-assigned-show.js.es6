@@ -1,5 +1,6 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import { debounce } from "@ember/runloop";
+import discourseComputed from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default UserTopicsList.extend({
@@ -10,6 +11,11 @@ export default UserTopicsList.extend({
   q: "",
 
   queryParams: ["order", "ascending", "q"],
+
+  @discourseComputed("q")
+  searchTerm(q) {
+    return q;
+  },
 
   _setSearchTerm(searchTerm) {
     this.set("q", searchTerm);
@@ -24,10 +30,10 @@ export default UserTopicsList.extend({
         params: {
           order: this.order,
           ascending: this.ascending,
-          q: this.q
-        }
+          q: this.q,
+        },
       })
-      .then(result => this.set("model", result))
+      .then((result) => this.set("model", result))
       .finally(() => {
         this.set("loading", false);
       });
@@ -54,6 +60,6 @@ export default UserTopicsList.extend({
     },
     onChangeFilter(value) {
       debounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
-    }
-  }
+    },
+  },
 });

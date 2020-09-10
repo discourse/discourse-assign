@@ -10,7 +10,7 @@ export default Ember.Controller.extend({
     this._super(...arguments);
     this.allowedGroups = [];
 
-    ajax("/assign/suggestions").then(data => {
+    ajax("/assign/suggestions").then((data) => {
       this.set("assignSuggestions", data.suggestions);
       this.set("allowedGroups", data.assign_allowed_on_groups);
     });
@@ -26,7 +26,7 @@ export default Ember.Controller.extend({
     assignUser(user) {
       this.setProperties({
         "model.username": user.username,
-        "model.allowedGroups": this.taskActions.allowedGroups
+        "model.allowedGroups": this.taskActions.allowedGroups,
       });
       this.send("assign");
     },
@@ -45,8 +45,8 @@ export default Ember.Controller.extend({
         type: "PUT",
         data: {
           username: this.get("model.username"),
-          topic_id: this.get("model.topic.id")
-        }
+          topic_id: this.get("model.topic.id"),
+        },
       })
         .then(() => {
           if (this.get("model.onSuccess")) {
@@ -54,6 +54,6 @@ export default Ember.Controller.extend({
           }
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

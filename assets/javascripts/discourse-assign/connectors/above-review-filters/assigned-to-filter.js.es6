@@ -8,8 +8,8 @@ export default {
       .split("|")
       .filter(Boolean);
     const groupNames = this.site.groups
-      .filter(group => groupIDs.includes(group.id.toString()))
+      .filter((group) => groupIDs.includes(group.id.toString()))
       .mapBy("name");
     component.set("allowedGroups", groupNames);
-  }
+  },
 };
