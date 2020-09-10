@@ -20,8 +20,8 @@ load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
-  get "/topics/messages-assigned/:username" => "list#messages_assigned", constraints: { username: ::RouteFormat.username }
-  get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned", constraints: { username: ::RouteFormat.username }
+  get "/topics/messages-assigned/:username" => "list#messages_assigned", constraints: { username: ::RouteFormat.username }, as: "messages_assigned"
+  get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned", constraints: { username: ::RouteFormat.username }, as: "group_topics_assigned"
   get "/g/:id/assigned" => "groups#index"
   get "/g/:id/assigned/:route_type" => "groups#index"
 end
@@ -233,92 +233,46 @@ after_initialize do
   end
 
   add_to_class(:topic_query, :list_messages_assigned) do |user|
-    secure = Topic.listable_topics.secured(@guardian).or(Topic.private_messages_for_user(@user))
-    list = joined_topic_user.where("
+    list = default_results(include_pms: true)
+
+    list = list.where("
       topics.id IN (
         SELECT topic_id FROM topic_custom_fields
         WHERE name = 'assigned_to_id'
         AND value = ?)
     ", user.id.to_s)
-      .includes(:tags)
-
-    list = apply_ordering(list, options)
-
-    list = list.merge(secure)
-
-    if options[:q].present?
-      term = options[:q]
-      ts_query = Search.ts_query(term: term)
-
-      list = list
-        .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
-        .where(
-          "#{ts_query} @@ topic_search_data.search_data"
-        )
-    end
-
-    list = list.offset(per_page_setting * options[:page])
-      .limit(per_page_setting)
 
     create_list(:assigned, { unordered: true }, list)
   end
 
   add_to_class(:list_controller, :messages_assigned) do
-    page = (params[:page].to_i || 0).to_i
-
     user = User.find_by_username(params[:username])
     raise Discourse::NotFound unless user
     raise Discourse::InvalidAccess unless current_user.can_assign?
 
     list_opts = build_topic_list_options
-    list_opts[:page] = page
-    list_opts[:ascending] = params[:ascending]
-    list_opts[:order] = params[:order]
-    list_opts[:q] = params[:q] if params[:q]
-
     list = generate_list_for("messages_assigned", user, list_opts)
 
-    more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}"
-    more_topics_url += "&ascending=#{params[:ascending]}&order=#{params[:order]}" if params[:order]
+    list.more_topics_url = construct_url_with(:next, list_opts)
+    list.prev_topics_url = construct_url_with(:prev, list_opts)
 
-    list.more_topics_url = more_topics_url
     respond_with_list(list)
   end
 
   add_to_class(:topic_query, :list_group_topics_assigned) do |group|
-    secure = Topic.listable_topics.secured(@guardian).or(Topic.private_messages_for_user(@user))
-    list = joined_topic_user.where("
+    list = default_results(include_pms: true)
+
+    list = list.where("
       topics.id IN (
         SELECT topic_id FROM topic_custom_fields
         WHERE name = 'assigned_to_id'
         AND value IN (SELECT user_id::varchar(255) from group_users where group_id = ?))
     ", group.id.to_s)
-      .includes(:tags)
-
-    list = apply_ordering(list, options)
-
-    list = list.merge(secure)
-
-    if options[:q].present?
-      term = options[:q]
-      ts_query = Search.ts_query(term: term)
-
-      list = list
-        .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
-        .where(
-          "#{ts_query} @@ topic_search_data.search_data"
-        )
-    end
-
-    list = list.offset(per_page_setting * options[:page])
-      .limit(per_page_setting)
 
     create_list(:assigned, { unordered: true }, list)
   end
 
   add_to_class(:list_controller, :group_topics_assigned) do
-    page = (params[:page].to_i || 0).to_i
-
     group = Group.find_by("name = ?", params[:groupname])
     guardian.ensure_can_see_group_members!(group)
 
@@ -327,17 +281,11 @@ after_initialize do
     raise Discourse::InvalidAccess unless group.can_show_assigned_tab?
 
     list_opts = build_topic_list_options
-    list_opts[:page] = page
-    list_opts[:ascending] = params[:ascending]
-    list_opts[:order] = params[:order]
-    list_opts[:q] = params[:q] if params[:q]
-
     list = generate_list_for("group_topics_assigned", group, list_opts)
 
-    more_topics_url = "/topics/group-topics-assigned/#{params[:groupname]}.json?page=#{page + 1}"
-    more_topics_url += "&ascending=#{params[:ascending]}&order=#{params[:order]}" if params[:order]
+    list.more_topics_url = construct_url_with(:next, list_opts)
+    list.prev_topics_url = construct_url_with(:prev, list_opts)
 
-    list.more_topics_url = more_topics_url
     respond_with_list(list)
   end
 
