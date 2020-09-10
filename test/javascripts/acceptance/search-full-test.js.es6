@@ -30,7 +30,7 @@ QUnit.test(
 );
 
 QUnit.test(
-  "update in:not_assigned filter through advanced search ui",
+  "update in:unassigned filter through advanced search ui",
   async (assert) => {
     updateCurrentUser({ can_assign: true });
     const inSelector = selectKit(".search-advanced-options .select-kit#in");
@@ -39,16 +39,16 @@ QUnit.test(
 
     await fillIn(".search-query", "none");
     await inSelector.expand();
-    await inSelector.selectRowByValue("not_assigned");
+    await inSelector.selectRowByValue("unassigned");
     assert.equal(
       inSelector.header().label(),
-      "are not assigned",
-      'has "are not assigned" populated'
+      "are unassigned",
+      'has "are unassigned" populated'
     );
     assert.equal(
       find(".search-query").val(),
-      "none in:not_assigned",
-      'has updated search term to "none in:not_assinged"'
+      "none in:unassigned",
+      'has updated search term to "none in:unassinged"'
     );
   }
 );
