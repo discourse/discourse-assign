@@ -121,7 +121,7 @@ function initialize(api) {
     before: "top",
   });
 
-  api.addAdvancedSearchOptions({
+  api.addAdvancedSearchOptions(api.container.lookup("current-user:main").can_assign ? {
     inOptionsForUsers: [
       {
         name: I18n.t("search.advanced.in.assigned"),
@@ -132,7 +132,7 @@ function initialize(api) {
         value: "unassigned",
       },
     ],
-  });
+  } : {});
 
   // You can't act on flags claimed by another user
   api.modifyClass(
