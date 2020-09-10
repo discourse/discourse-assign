@@ -121,18 +121,22 @@ function initialize(api) {
     before: "top",
   });
 
-  api.addAdvancedSearchOptions(api.container.lookup("current-user:main").can_assign ? {
-    inOptionsForUsers: [
-      {
-        name: I18n.t("search.advanced.in.assigned"),
-        value: "assigned",
-      },
-      {
-        name: I18n.t("search.advanced.in.unassigned"),
-        value: "unassigned",
-      },
-    ],
-  } : {});
+  api.addAdvancedSearchOptions(
+    api.container.lookup("current-user:main").can_assign
+      ? {
+          inOptionsForUsers: [
+            {
+              name: I18n.t("search.advanced.in.assigned"),
+              value: "assigned",
+            },
+            {
+              name: I18n.t("search.advanced.in.unassigned"),
+              value: "unassigned",
+            },
+          ],
+        }
+      : {}
+  );
 
   // You can't act on flags claimed by another user
   api.modifyClass(
