@@ -1,4 +1,5 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
+import { alias } from "@ember/object/computed";
 import { debounce } from "@ember/runloop";
 import discourseComputed from "discourse-common/utils/decorators";
 import { INPUT_DELAY } from "discourse-common/config/environment";
@@ -9,6 +10,9 @@ export default UserTopicsList.extend({
   order: null,
   ascending: false,
   q: "",
+  bulkSelectEnabled: false,
+  selected: [],
+  canBulkSelect: alias("currentUser.staff"),
 
   queryParams: ["order", "ascending", "q"],
 
@@ -60,6 +64,12 @@ export default UserTopicsList.extend({
     },
     onChangeFilter(value) {
       debounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
+    },
+    toggleBulkSelect() {
+      this.toggleProperty("bulkSelectEnabled");
+    },
+    refresh() {
+      this.refreshModel();
     },
   },
 });

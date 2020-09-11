@@ -398,6 +398,29 @@ after_initialize do
     end
   end
 
+  TopicsBulkAction.register_operation("assign") do
+    if @user.can_assign?
+      assign_user = User.find_by_username(@operation[:username])
+      topics.each do |t|
+        TopicAssigner.new(t, @user).assign(assign_user)
+      end
+    end
+  end
+
+  TopicsBulkAction.register_operation("unassign") do
+    if @user.can_assign?
+      topics.each do |t|
+        if guardian.can_assign?
+          TopicAssigner.new(t, @user).unassign
+        end
+      end
+    end
+  end
+
+  if defined? register_permitted_bulk_action_parameter
+    register_permitted_bulk_action_parameter :username
+  end
+
   if defined? UserBookmarkSerializer
     add_to_class(:user_bookmark_serializer, :assigned_to_user_id) do
       id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
@@ -517,6 +540,42 @@ after_initialize do
         WebHook.enqueue_hooks(:assign, event,
           payload: payload
         )
+      end
+    end
+  end
+
+  register_search_advanced_filter(/in:assigned/) do |posts|
+    if @guardian.can_assign?
+      posts.where("topics.id IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
+  end
+
+  register_search_advanced_filter(/in:unassigned/) do |posts|
+    if @guardian.can_assign?
+      posts.where("topics.id NOT IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
+  end
+
+  register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
+    if @guardian.can_assign?
+      if user_id = User.find_by_username(match)&.id
+        posts.where("topics.id IN (
+          SELECT tc.topic_id
+          FROM topic_custom_fields tc
+          WHERE tc.name = 'assigned_to_id' AND
+                          tc.value IS NOT NULL AND
+                          tc.value::int = #{user_id}
+          )")
       end
     end
   end

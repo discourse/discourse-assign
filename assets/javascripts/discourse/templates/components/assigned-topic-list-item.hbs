@@ -5,8 +5,13 @@
   This causes the topic-post-badge to be considered the same word as "text"
   at the end of the link, preventing it from line wrapping onto its own line.
 --}}
-<td class="main-link clearfix" colspan="1">
-  <span class="link-top-line">
+{{#if bulkSelectEnabled}}
+  <td class="bulk-select">
+    <input type="checkbox" class="bulk-select">
+  </td>
+{{/if}}
+<td class='main-link clearfix' colspan="1">
+  <span class='link-top-line'>
     {{~raw "topic-status" topic=topic}}
     {{~#if isPrivateMessage}}
       {{~d-icon "envelope" class="private-message-icon"}}
