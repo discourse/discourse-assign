@@ -122,7 +122,7 @@ function initialize(api) {
   });
 
   api.addAdvancedSearchOptions(
-    api.container.lookup("current-user:main").can_assign
+    api.getCurrentUser() && api.getCurrentUser().can_assign
       ? {
           inOptionsForUsers: [
             {
