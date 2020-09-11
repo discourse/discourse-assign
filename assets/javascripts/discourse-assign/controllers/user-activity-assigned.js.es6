@@ -7,7 +7,7 @@ export default UserTopicsList.extend({
   user: Ember.inject.controller(),
   taskActions: Ember.inject.service(),
   queryParams: ["order", "ascending", "q"],
-  order: null,
+  order: "",
   ascending: false,
   q: "",
 
