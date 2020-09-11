@@ -383,10 +383,7 @@ export default {
           );
         },
       });
-    }
 
-    const currentUser = container.lookup("current-user:main");
-    if (currentUser.can_assign) {
       TopicButtonAction.reopen({
         assignUser: inject("assign-user"),
         actions: {
@@ -409,6 +406,7 @@ export default {
         class: "btn-default",
       });
     }
+
     withPluginApi("0.11.0", (api) => initialize(api, container));
     withPluginApi("0.8.28", (api) =>
       registerTopicFooterButtons(api, container)
