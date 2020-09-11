@@ -9,6 +9,9 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import { addBulkButton } from "discourse/controllers/topic-bulk-actions";
+import TopicButtonAction from "discourse/controllers/topic-bulk-actions";
+import { inject } from "@ember/controller";
 import I18n from "I18n";
 
 function titleForState(user) {
@@ -382,6 +385,30 @@ export default {
       });
     }
 
+    const currentUser = container.lookup("current-user:main");
+    if (currentUser.can_assign) {
+      TopicButtonAction.reopen({
+        assignUser: inject("assign-user"),
+        actions: {
+          showReAssign() {
+            this.set("assignUser.isBulkAction", true);
+            this.set("assignUser.model", { username: "" });
+            this.send("changeBulkTemplate", "modal/assign-user");
+          },
+          unassignTopics() {
+            this.performAndRefresh({ type: "unassign" });
+          },
+        },
+      });
+      addBulkButton("showReAssign", "assign", {
+        icon: "user-plus",
+        class: "btn-default",
+      });
+      addBulkButton("unassignTopics", "unassign", {
+        icon: "user-times",
+        class: "btn-default",
+      });
+    }
     withPluginApi("0.11.0", (api) => initialize(api, container));
     withPluginApi("0.8.28", (api) =>
       registerTopicFooterButtons(api, container)

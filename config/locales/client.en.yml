@@ -60,3 +60,7 @@ en:
           unassigned: "are unassigned"
         assigned:
           label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"
