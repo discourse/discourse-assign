@@ -1,12 +1,14 @@
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import computed from "discourse-common/utils/decorators";
+import { observes } from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
+import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { addBulkButton } from "discourse/controllers/topic-bulk-actions";
 import TopicButtonAction from "discourse/controllers/topic-bulk-actions";
 import { inject } from "@ember/controller";
@@ -121,6 +123,23 @@ function initialize(api) {
     },
     before: "top",
   });
+
+  api.addAdvancedSearchOptions(
+    api.getCurrentUser() && api.getCurrentUser().can_assign
+      ? {
+          inOptionsForUsers: [
+            {
+              name: I18n.t("search.advanced.in.assigned"),
+              value: "assigned",
+            },
+            {
+              name: I18n.t("search.advanced.in.unassigned"),
+              value: "unassigned",
+            },
+          ],
+        }
+      : {}
+  );
 
   // You can't act on flags claimed by another user
   api.modifyClass(
@@ -315,6 +334,8 @@ function initialize(api) {
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
 
+const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
+
 export default {
   name: "extend-for-assign",
   initialize(container) {
@@ -322,9 +343,47 @@ export default {
     if (!siteSettings.assign_enabled) {
       return;
     }
-
     const currentUser = container.lookup("current-user:main");
-    if (currentUser.can_assign) {
+    if (currentUser && currentUser.can_assign) {
+      SearchAdvancedOptions.reopen({
+        _init() {
+          this._super();
+
+          this.set("searchedTerms.assigned", "");
+        },
+
+        @observes("searchedTerms.assigned")
+        updateSearchTermForAssignedUsername() {
+          const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
+          const userFilter = this.get("searchedTerms.assigned");
+          let searchTerm = this.searchTerm || "";
+          let keyword = "assigned";
+          if (userFilter && userFilter.length !== 0) {
+            if (match.length !== 0) {
+              searchTerm = searchTerm.replace(
+                match[0],
+                `${keyword}:${userFilter}`
+              );
+            } else {
+              searchTerm += ` ${keyword}:${userFilter}`;
+            }
+
+            this.set("searchTerm", searchTerm.trim());
+          } else if (match.length !== 0) {
+            searchTerm = searchTerm.replace(match[0], "");
+            this.set("searchTerm", searchTerm.trim());
+          }
+        },
+
+        _update() {
+          this._super(...arguments);
+          this.setSearchedTermValue(
+            "searchedTerms.assigned",
+            REGEXP_USERNAME_PREFIX
+          );
+        },
+      });
+
       TopicButtonAction.reopen({
         assignUser: inject("assign-user"),
         actions: {
@@ -347,7 +406,8 @@ export default {
         class: "btn-default",
       });
     }
-    withPluginApi("0.8.11", (api) => initialize(api, container));
+
+    withPluginApi("0.11.0", (api) => initialize(api, container));
     withPluginApi("0.8.28", (api) =>
       registerTopicFooterButtons(api, container)
     );

@@ -53,6 +53,13 @@ en:
         assign_event:
           name: "Assign Event"
           details: "When a user assigns or unassigns a topic."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
     topics:
       bulk:
         unassign: "Unassign Topics"

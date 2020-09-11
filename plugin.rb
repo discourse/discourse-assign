@@ -544,4 +544,40 @@ after_initialize do
     end
   end
 
+  register_search_advanced_filter(/in:assigned/) do |posts|
+    if @guardian.can_assign?
+      posts.where("topics.id IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
+  end
+
+  register_search_advanced_filter(/in:unassigned/) do |posts|
+    if @guardian.can_assign?
+      posts.where("topics.id NOT IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
+  end
+
+  register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
+    if @guardian.can_assign?
+      if user_id = User.find_by_username(match)&.id
+        posts.where("topics.id IN (
+          SELECT tc.topic_id
+          FROM topic_custom_fields tc
+          WHERE tc.name = 'assigned_to_id' AND
+                          tc.value IS NOT NULL AND
+                          tc.value::int = #{user_id}
+          )")
+      end
+    end
+  end
+
 end
