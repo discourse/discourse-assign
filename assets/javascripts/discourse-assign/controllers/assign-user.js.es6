@@ -18,6 +18,10 @@ export default Ember.Controller.extend({
     });
   },
 
+  onShow() {
+    document.activeElement.blur();
+  },
+
   onClose() {
     if (this.get("model.onClose") && this.get("model.username")) {
       this.get("model.onClose")(this.get("model.username"));
