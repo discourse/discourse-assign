@@ -7,7 +7,7 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 export default UserTopicsList.extend({
   user: Ember.inject.controller(),
   taskActions: Ember.inject.service(),
-  order: null,
+  order: "",
   ascending: false,
   q: "",
   bulkSelectEnabled: false,
