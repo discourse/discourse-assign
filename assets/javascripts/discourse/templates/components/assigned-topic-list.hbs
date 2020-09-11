@@ -1,6 +1,7 @@
 {{#unless skipHeader}}
   <thead>
     {{raw "topic-list-header"
+      canBulkSelect=canBulkSelect
       toggleInTitle=toggleInTitle
       hideCategory=hideCategory
       showPosters=showPosters
@@ -17,6 +18,7 @@
 <tbody>
   {{#each filteredTopics as |topic|}}
     {{assigned-topic-list-item topic=topic
+                               bulkSelectEnabled=bulkSelectEnabled
                                showTopicPostBadges=showTopicPostBadges
                                hideCategory=hideCategory
                                showPosters=showPosters

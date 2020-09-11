@@ -53,3 +53,7 @@ en:
         assign_event:
           name: "Assign Event"
           details: "When a user assigns or unassigns a topic."
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

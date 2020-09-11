@@ -1,7 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as controller } from "@ember/controller";
 
 export default Ember.Controller.extend({
+  topicBulkActions: controller(),
   assignSuggestions: null,
   allowedGroups: null,
   taskActions: Ember.inject.service(),
@@ -22,8 +24,19 @@ export default Ember.Controller.extend({
     }
   },
 
+  bulkAction(username) {
+    this.topicBulkActions.performAndRefresh({
+      type: "assign",
+      username,
+    });
+  },
+
   actions: {
     assignUser(user) {
+      if (this.isBulkAction) {
+        this.bulkAction(user.username);
+        return;
+      }
       this.setProperties({
         "model.username": user.username,
         "model.allowedGroups": this.taskActions.allowedGroups,
@@ -32,6 +45,10 @@ export default Ember.Controller.extend({
     },
 
     assign() {
+      if (this.isBulkAction) {
+        this.bulkAction(this.model.username);
+        return;
+      }
       let path = "/assign/assign";
 
       if (Ember.isEmpty(this.get("model.username"))) {
