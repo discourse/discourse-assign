@@ -1,6 +1,7 @@
 <div class="topic-search-div">
   <div class="form-horizontal bookmark-search-form">
-    {{input type="text"
+    {{input
+        class="no-blur"
         value=searchTerm
         placeholder=(i18n "discourse_assign.topic_search_placeholder")
         input=(action "onChangeFilter" value="target.value")
