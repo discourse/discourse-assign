@@ -8,23 +8,26 @@ ru:
   js:
     filters:
       unassigned:
+        title: "Неназначенные"
         help: "Неназначенные темы"
     action_codes:
       assigned: "назначил(а) ответственным %{who} %{when}"
       unassigned: "снял(а) ответственного %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Добавить в раздел фильтр 'Неназначенные'"
-      cant_act: "Вы не можете управлять флагами в теме, которая назначена на другого сотрудника"
-      cant_act_unclaimed: "Вы должны пожаловаться на эту тему, прежде чем ставить метки."
+      cant_act: "Вы не можете работать с жалобами, назначенными другому сотруднику"
+      cant_act_unclaimed: "Вы должны зарезервировать эту тему прежде чем рассматривать жалобу."
+      topic_search_placeholder: "Поиск тем по заголовку или содержанию сообщения"
+      sidebar_name_filter_placeholder: "Имя / псевдоним"
       assigned: "Назначенные темы"
       group_everyone: "Все"
       assigned_to: "Кому назначено"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
-        title: "Снять отв."
+        title: "Снять ответственного"
         help: "Отменить назначение %{username} из темы"
       assign:
-        title: "Назначить отв."
+        title: "Назначить ответственного"
         help: "Назначить ответственного в тему"
       reassign:
         title: "Переназначить"
@@ -56,3 +59,14 @@ ru:
         assign_event:
           name: "Назначить событие"
           details: "Когда пользователь назначает или отменяет назначение темы."
+    search:
+      advanced:
+        in:
+          assigned: "назначены"
+          unassigned: "не назначены"
+        assigned:
+          label: "Назначено"
+    topics:
+      bulk:
+        unassign: "Снять ответственного"
+        assign: "Назначить ответственного"
