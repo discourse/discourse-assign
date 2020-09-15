@@ -7,8 +7,7 @@ export default {
     onChangeAssigned(value) {
       if (this.onChangeSearchedTermField) {
         this.onChangeSearchedTermField("assigned", "_updateInRegex", value);
-      }
-      {
+      } else {
         this.set("searchedTerms.assigned", value);
       }
     },
