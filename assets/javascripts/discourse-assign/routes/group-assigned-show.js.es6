@@ -28,7 +28,7 @@ export default DiscourseRoute.extend({
           params: {
             order: params.order,
             ascending: params.ascending,
-            q: params.q,
+            search: params.search,
           },
         });
   },
@@ -36,7 +36,7 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     controller.setProperties({
       model,
-      searchTerm: this.currentModel.params.q,
+      searchTerm: this.currentModel.params.search,
     });
   },
 

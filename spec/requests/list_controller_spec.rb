@@ -228,13 +228,13 @@ describe ListController do
       topic2.save!
       topic3.save!
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'Testing' }
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'Testing' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic2.id, topic3.id])
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'RSpec' }
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'RSpec' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id])
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'love' }
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'love' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
     end
 
@@ -247,10 +247,10 @@ describe ListController do
       topic2.save!
       topic3.save!
 
-      get "/topics/messages-assigned/#{user.username}.json", params: { q: 'Testing' }
+      get "/topics/messages-assigned/#{user.username}.json", params: { search: 'Testing' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { q: 'love' }
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'love' }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
     end
   end

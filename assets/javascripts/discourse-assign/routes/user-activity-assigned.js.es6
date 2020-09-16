@@ -15,7 +15,7 @@ export default UserTopicListRoute.extend({
         exclude_category_ids: [-1],
         order: params.order,
         ascending: params.ascending,
-        q: params.q,
+        search: params.search,
       },
     });
   },

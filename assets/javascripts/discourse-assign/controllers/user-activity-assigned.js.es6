@@ -6,18 +6,18 @@ import { INPUT_DELAY } from "discourse-common/config/environment";
 export default UserTopicsList.extend({
   user: Ember.inject.controller(),
   taskActions: Ember.inject.service(),
-  queryParams: ["order", "ascending", "q"],
+  queryParams: ["order", "ascending", "search"],
   order: "",
   ascending: false,
-  q: "",
+  search: "",
 
-  @discourseComputed("q")
-  searchTerm(q) {
-    return q;
+  @discourseComputed("search")
+  searchTerm(search) {
+    return search;
   },
 
   _setSearchTerm(searchTerm) {
-    this.set("q", searchTerm);
+    this.set("search", searchTerm);
     this.refreshModel();
   },
 
@@ -29,7 +29,7 @@ export default UserTopicsList.extend({
         params: {
           order: this.order,
           ascending: this.ascending,
-          q: this.q,
+          search: this.search,
         },
       })
       .then((result) => this.set("model", result))
