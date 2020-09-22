@@ -6,10 +6,10 @@
 
 sv:
   site_settings:
-    assign_enabled: "Aktivera tilldela-tillägget"
-    assigns_public: "Tillåt allmänheten att se ämnestilldelningar"
-    assigns_user_url_path: "Sökväg till användares tilldelade ämnen (använd: {användarnamn} för att ersätta användarnamn)"
-    assigns_by_staff_mention: "Om en anställd nämner en annan anställd tilldelas ämnet automatiskt"
+    assign_enabled: "Aktivera Tilldela-tillägget"
+    assigns_public: "Tillåt att allmänheten ser ämnestilldelningar"
+    assigns_user_url_path: "Sökväg till användares tilldelade ämnen (använd: {username} för att ersätta användarnamn)"
+    assigns_by_staff_mention: "Om personal nämner någon annan ur personalen tilldelas ämnet automatiskt"
     unassign_creates_tracking_post: "Om du tar bort ett ämnes tilldelning skapas det en viskning eller liten åtgärd för att spåra ändringen"
     assign_self_regex: "Regex som måste godkännas för självtilldelning. T.ex. 'min lista'"
     assign_other_regex: "Regex som måste godkännas för att tilldela ämnen till andra via omnämnande. T.ex. 'din lista'."
@@ -26,7 +26,7 @@ sv:
     already_claimed: "Det har redan gjorts anspråk på det ämnet."
     already_assigned: 'Ämnet har redan tilldelats till @%{username}'
     too_many_assigns: "@%{username} har redan nått maximalt antal tilldelade ämnen (%{max})."
-    forbidden_assign_to: "@%{username} kan inte tilldelas eftersom de inte tillhör någon tillåten grupp för tilldelning."
+    forbidden_assign_to: "@%{username} kan inte tilldelas eftersom hen inte tillhör någon tillåten grupp för tilldelning."
     flag_assigned: "Tyvärr har den flaggans ämne tilldelats en annan användare"
     flag_unclaimed: "Du måste göra anspråk på det ämnet innan du gör något åt flaggan"
     topic_assigned_excerpt: "tilldelade ämnet '%{title}' till dig"
@@ -35,9 +35,9 @@ sv:
       daily: 'dagligen'
       weekly: 'veckovis'
       monthly: 'månadsvis'
-      quarterly: 'varje kvartal'
+      quarterly: 'kvartalsvis'
   assign_mailer:
-    title: "Tilldela mailskrivare"
+    title: "Tilldela e-postskrivare"
     subject_template: "[%{email_prefix}] %{assignee_name} tilldelade dig till '%{topic_title}'!"
     text_body_template: |
       Hallå där, %{assignee_name} **tilldelade** dig till en diskussion
