@@ -17,6 +17,8 @@ nl:
       add_unassigned_filter: "Filter 'niet toegewezen' toevoegen aan categorie"
       cant_act: "U kunt geen handeling uitvoeren op markeringen die aan andere gebruikers zijn toegewezen"
       cant_act_unclaimed: "U moet dit topic opeisen voordat u handelingen op markeringen kunt uitvoeren."
+      topic_search_placeholder: "Topics zoeken op titel of berichtinhoud"
+      sidebar_name_filter_placeholder: "Naam/Gebruikersnaam"
       assigned: "Toegewezen"
       group_everyone: "Iedereen"
       assigned_to: "Toegewezen aan"
@@ -57,3 +59,14 @@ nl:
         assign_event:
           name: "Toewijzingsgebeurtenis"
           details: "Wanneer een gebruiker een topic toewijst of toewijzing ervan opheft."
+    search:
+      advanced:
+        in:
+          assigned: "zijn toegewezen"
+          unassigned: "zijn niet toegewezen"
+        assigned:
+          label: "Toegewezen aan"
+    topics:
+      bulk:
+        unassign: "Toewijzing van topics opheffen"
+        assign: "Topics toewijzen"

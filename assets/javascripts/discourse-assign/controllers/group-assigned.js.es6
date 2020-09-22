@@ -24,9 +24,9 @@ export default Controller.extend({
     return ascending || false;
   },
 
-  @discourseComputed("router.currentRoute.queryParams.q")
-  q(q) {
-    return q || "";
+  @discourseComputed("router.currentRoute.queryParams.search")
+  search(search) {
+    return search || "";
   },
 
   @discourseComputed("site.mobileView")

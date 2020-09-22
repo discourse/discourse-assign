@@ -8,24 +8,24 @@ sv:
   js:
     filters:
       unassigned:
-        title: "Otilldelad"
+        title: "Otilldelat"
         help: "Ämnen som inte är tilldelade"
     action_codes:
-      assigned: "tilldelad %{who} %{when}"
-      unassigned: "otilldelad %{who} %{when}"
+      assigned: "tilldelat %{who} %{when}"
+      unassigned: "otilldelat %{who} %{when}"
     discourse_assign:
-      add_unassigned_filter: "Lägg till 'otilldelad' som en filterkategori"
+      add_unassigned_filter: "Lägg till 'otilldelat' som en filterkategori"
       cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
       cant_act_unclaimed: "Du måste ta kontroll över detta ämne innan du kan agera på flaggor."
       topic_search_placeholder: "Sök ämnen efter titel eller inläggsinnehåll"
-      sidebar_name_filter_placeholder: "Namn/Användarnamn"
-      assigned: "Tilldelad"
+      sidebar_name_filter_placeholder: "Namn/användarnamn"
+      assigned: "Tilldelat"
       group_everyone: "Alla"
-      assigned_to: "Tilldelad till"
+      assigned_to: "Tilldelat till"
       assign_notification: "<p><span>%{username}</span>%{description}</p>"
       unassign:
         title: "Otilldela"
-        help: "Otilldela %{username}för ämne"
+        help: "Otilldela %{username} för ämne"
       assign:
         title: "Tilldela"
         help: "Tilldela ämne till användare"
@@ -49,7 +49,7 @@ sv:
         daily: "Dagligen"
         weekly: "Veckovis"
         monthly: "Månadsvis"
-        quarterly: "En gång i kvartalet"
+        quarterly: "Kvartalsvis"
     user:
       messages:
         assigned_title: "Tilldelade (%{count})"
@@ -59,3 +59,14 @@ sv:
         assign_event:
           name: "Tilldela händelse"
           details: "När en användare tilldelar eller återtar tilldelning för ett ämne."
+    search:
+      advanced:
+        in:
+          assigned: "är tilldelade"
+          unassigned: "är otilldelade"
+        assigned:
+          label: "Tilldelad till"
+    topics:
+      bulk:
+        unassign: "Otilldela ämnen"
+        assign: "Tilldela ämnen"
