@@ -407,9 +407,7 @@ export default {
       });
     }
 
-    withPluginApi("0.11.0", (api) => initialize(api, container));
-    withPluginApi("0.8.28", (api) =>
-      registerTopicFooterButtons(api, container)
-    );
+    withPluginApi("0.11.0", (api) => initialize(api));
+    withPluginApi("0.8.28", (api) => registerTopicFooterButtons(api));
   },
 };
