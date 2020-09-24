@@ -63,7 +63,9 @@ export default UserTopicsList.extend({
   },
 
   refreshModel() {
-    if (!this.model) return;
+    if (!this.model) {
+      return;
+    }
 
     this.set("loading", true);
     this.store
