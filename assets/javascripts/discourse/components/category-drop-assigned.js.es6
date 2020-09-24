@@ -1,7 +1,7 @@
 import CategoryDrop from "select-kit/components/category-drop";
 import {
   NO_CATEGORIES_ID,
-  ALL_CATEGORIES_ID
+  ALL_CATEGORIES_ID,
 } from "select-kit/components/category-drop";
 
 export default CategoryDrop.extend({
@@ -14,6 +14,6 @@ export default CategoryDrop.extend({
       } else {
         this.set("categoryId", categoryId);
       }
-    }
-  }
+    },
+  },
 });
