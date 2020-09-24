@@ -346,14 +346,13 @@ export default {
     const currentUser = container.lookup("current-user:main");
     if (currentUser && currentUser.can_assign) {
       SearchAdvancedOptions.reopen({
-        _init() {
+        init() {
           this._super();
 
-          this.set("searchedTerms.assigned", "");
+          this.set("searchedTerms.assigned", null);
         },
 
-        @observes("searchedTerms.assigned")
-        updateSearchTermForAssignedUsername() {
+        _updateSearchTermForAssignedUsername() {
           const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
           const userFilter = this.get("searchedTerms.assigned");
           let searchTerm = this.searchTerm || "";
@@ -368,14 +367,14 @@ export default {
               searchTerm += ` ${keyword}:${userFilter}`;
             }
 
-            this.set("searchTerm", searchTerm.trim());
+            this._updateSearchTerm(searchTerm.trim());
           } else if (match.length !== 0) {
             searchTerm = searchTerm.replace(match[0], "");
-            this.set("searchTerm", searchTerm.trim());
+            this._updateSearchTerm(searchTerm.trim());
           }
         },
 
-        _update() {
+        didReceiveAttrs() {
           this._super(...arguments);
           this.setSearchedTermValue(
             "searchedTerms.assigned",
