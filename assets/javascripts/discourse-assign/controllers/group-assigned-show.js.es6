@@ -4,6 +4,7 @@ import { debounce } from "@ember/runloop";
 import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import Category from "discourse/models/category";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { NO_TAG_ID, ALL_TAGS_ID } from "select-kit/components/tag-drop";
 
 export default UserTopicsList.extend({
   user: Ember.inject.controller(),
@@ -41,10 +42,10 @@ export default UserTopicsList.extend({
 
   @observes("tagId")
   setQueryParams() {
-    if (this.tagId === "no-tags") {
+    if (this.tagId === NO_TAG_ID) {
       this.set("no_tags", true);
       this.set("tags", "");
-    } else if (this.tagId === "all-tags") {
+    } else if (this.tagId === ALL_TAGS_ID) {
       this.set("no_tags", null);
       this.set("tags", "");
     } else {

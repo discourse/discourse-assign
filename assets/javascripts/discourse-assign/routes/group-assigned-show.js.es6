@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import { NO_TAG_ID, ALL_TAGS_ID } from "select-kit/components/tag-drop";
 
 export default DiscourseRoute.extend({
   beforeModel(transition) {
@@ -41,7 +42,7 @@ export default DiscourseRoute.extend({
       model,
       tagId:
         this.currentModel.params.tags ||
-        (this.currentModel.params.no_tags ? "no-tags" : "all-tags"),
+        (this.currentModel.params.no_tags ? NO_TAG_ID : ALL_TAGS_ID),
     });
   },
 

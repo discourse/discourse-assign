@@ -281,7 +281,7 @@ describe ListController do
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { tags: tag.name }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { tag: other_tag.name }
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { tags: other_tag.name }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id])
     end
 
@@ -301,10 +301,10 @@ describe ListController do
       get "/topics/messages-assigned/#{user.username_lower}.json", params: { category: diff_category.id }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id])
 
-      get "/topics/messages-assigned/#{user.username_lower}.json", params: { tag: tag.name }
+      get "/topics/messages-assigned/#{user.username_lower}.json", params: { tags: tag.name }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
 
-      get "/topics/messages-assigned/#{user.username_lower}.json", params: { tag: other_tag.name }
+      get "/topics/messages-assigned/#{user.username_lower}.json", params: { tags: other_tag.name }
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id])
     end
   end
