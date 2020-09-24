@@ -296,7 +296,9 @@ function initialize(api) {
     unsubscribe() {
       this._super(...arguments);
 
-      if (!this.get("model.id")) return;
+      if (!this.get("model.id")) {
+        return;
+      }
 
       this.messageBus.unsubscribe("/staff/topic-assignment");
     },
