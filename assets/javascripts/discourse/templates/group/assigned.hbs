@@ -17,21 +17,23 @@
         filter="everyone"
         routeType=route_type
         assignmentCount=group.assignment_count
-        q=q
+        search=search
         ascending=ascending
         order=order
         categoryId=categoryId
-        tagId=tagId}}
+        tags=tags
+        no_tags=no_tags}}
       {{#each members as |member|}}
         {{group-assigned-filter
           show-avatar=true
           filter=member
           routeType=route_type
-          q=q
+          search=search
           ascending=ascending
           order=order
           categoryId=categoryId
-          tagId=tagId}}
+          tags=tags
+          no_tags=no_tags}}
       {{/each}}
       {{conditional-loading-spinner condition=loading}}
     {{/load-more}}

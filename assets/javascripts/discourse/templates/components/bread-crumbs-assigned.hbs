@@ -15,5 +15,8 @@
 {{/each}}
 
 {{#if siteSettings.tagging_enabled}}
-  {{tag-drop-assigned tagId=tagId firstCategory=category}}
+  {{tag-drop-assigned
+    tagId=tagId
+    firstCategory=category
+  }}
 {{/if}}

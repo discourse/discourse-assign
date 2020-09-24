@@ -1,8 +1,8 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
-import { debounce } from "@ember/runloop";
-import discourseComputed from "discourse-common/utils/decorators";
-import Category from "discourse/models/category";
 import { alias } from "@ember/object/computed";
+import { debounce } from "@ember/runloop";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import Category from "discourse/models/category";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default UserTopicsList.extend({
@@ -10,38 +10,74 @@ export default UserTopicsList.extend({
   taskActions: Ember.inject.service(),
   order: "",
   ascending: false,
-  q: "",
-  tagId: "",
+  no_tags: null,
+  tags: "",
   categoryId: "",
   navigationCategory: Ember.inject.controller("navigation/category"),
   noSubcategories: alias("navigationCategory.noSubcategories"),
+  search: "",
+  bulkSelectEnabled: false,
+  selected: [],
+  canBulkSelect: alias("currentUser.staff"),
 
-  queryParams: ["order", "ascending", "q", "categoryId", "tagId"],
+  queryParams: [
+    "order",
+    "ascending",
+    "search",
+    "categoryId",
+    "tags",
+    "no_tags",
+  ],
+
+  @discourseComputed("search")
+  searchTerm(search) {
+    return search;
+  },
 
   _setSearchTerm(searchTerm) {
-    this.set("q", searchTerm);
+    this.set("search", searchTerm);
+    this.refreshModel();
+  },
+
+  @observes("tagId")
+  setQueryParams() {
+    if (this.tagId === "no-tags") {
+      this.set("no_tags", true);
+      this.set("tags", "");
+    } else if (this.tagId === "all-tags") {
+      this.set("no_tags", null);
+      this.set("tags", "");
+    } else {
+      this.set("no_tags", null);
+      this.set("tags", this.tagId);
+    }
+
     this.refreshModel();
   },
 
   @discourseComputed("categoryId")
   category(categoryId) {
+    this.refreshModel();
     return Category.findById(parseInt(categoryId, 10)) || null;
   },
 
   refreshModel() {
+    if (!this.model) return;
+
     this.set("loading", true);
     this.store
       .findFiltered("topicList", {
-        filter: this.model.filter,
+        filter: this.get("model.filter"),
         params: {
           order: this.order,
           ascending: this.ascending,
-          q: this.q,
-          category_id: this.categoryId,
-          tagId: this.tagId
-        }
+          category: this.categoryId,
+          tags: this.tags,
+          no_tags: this.no_tags,
+          search: this.search,
+        },
       })
-      .then(result => this.set("model", result))
+      .then((result) => this.set("model", result))
       .finally(() => {
         this.set("loading", false);
       });
@@ -73,6 +109,12 @@ export default UserTopicsList.extend({
     },
     onChangeFilter(value) {
       debounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
-    }
-  }
+    },
+    toggleBulkSelect() {
+      this.toggleProperty("bulkSelectEnabled");
+    },
+    refresh() {
+      this.refreshModel();
+    },
+  },
 });

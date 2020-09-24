@@ -2,11 +2,6 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
 
 export default DiscourseRoute.extend({
-  queryParams: {
-    categoryId: { refreshModel: true },
-    tagId: { refreshModel: true }
-  },
-
   beforeModel(transition) {
     if (!(transition.hasOwnProperty("from") && transition.from)) {
       return;
@@ -33,21 +28,24 @@ export default DiscourseRoute.extend({
           params: {
             order: params.order,
             ascending: params.ascending,
-            q: params.q,
-            category_id: params.categoryId,
-            tag_id: params.tagId
-          }
+            category: params.categoryId,
+            tags: params.tags,
+            no_tags: params.no_tags,
+            search: params.search,
+          },
         });
   },
 
   setupController(controller, model) {
     controller.setProperties({
       model,
-      searchTerm: this.currentModel.params.q
+      tagId:
+        this.currentModel.params.tags ||
+        (this.currentModel.params.no_tags ? "no-tags" : "all-tags"),
     });
   },
 
   renderTemplate() {
     this.render("group-topics-list");
-  }
+  },
 });

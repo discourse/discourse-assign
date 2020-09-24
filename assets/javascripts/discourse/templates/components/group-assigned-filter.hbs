@@ -1,5 +1,5 @@
 {{#if show-avatar}}
-  {{#link-to "group.assigned.show" filter.username_lower (query-params order=order ascending=ascending q=q categoryId=categoryId tagId=tagId)}}
+  {{#link-to "group.assigned.show" filter.username_lower (query-params order=order ascending=ascending search=search categoryId=categoryId tags=tags no_tags=no_tags)}}
     <div class="assign-image">
       <a href={{filter.userPath}} data-user-card={{filter.username}}>{{avatar filter imageSize="large"}}</a>
     </div>
@@ -14,9 +14,9 @@
     </div>
   {{/link-to}}
 {{else}}
-  {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending q=q categoryId=categoryId tagId=tagId)}}
+  {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending search=search categoryId=categoryId tags=tags no_tags=no_tags)}}
     <div class="assign-everyone">
-      {{i18n 'discourse_assign.group_everyone'}}
+      {{i18n "discourse_assign.group_everyone"}}
     </div>
     <div class="assign-count">
       {{assignmentCount}}

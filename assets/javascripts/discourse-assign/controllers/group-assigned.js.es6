@@ -24,9 +24,9 @@ export default Controller.extend({
     return ascending || false;
   },
 
-  @discourseComputed("router.currentRoute.queryParams.q")
-  q(q) {
-    return q || "";
+  @discourseComputed("router.currentRoute.queryParams.search")
+  search(search) {
+    return search || "";
   },
 
   @discourseComputed("router.currentRoute.queryParams.categoryId")
@@ -34,9 +34,14 @@ export default Controller.extend({
     return categoryId || "";
   },
 
-  @discourseComputed("router.currentRoute.queryParams.tagId")
-  tagId(tagId) {
-    return tagId || "";
+  @discourseComputed("router.currentRoute.queryParams.tags")
+  tags(tags) {
+    return tags || "";
+  },
+
+  @discourseComputed("router.currentRoute.queryParams.no_tags")
+  no_tags(no_tags) {
+    return no_tags || null;
   },
 
   @discourseComputed("site.mobileView")
@@ -52,9 +57,9 @@ export default Controller.extend({
     const groupName = this.group.name;
     ajax(`/assign/members/${groupName}`, {
       type: "GET",
-      data: { filter: this.filter, offset: this.offset }
+      data: { filter: this.filter, offset: this.offset },
     })
-      .then(result => {
+      .then((result) => {
         if (this.router.currentRoute.params.filter !== "everyone") {
           this.transitionToRoute("group.assigned.show", groupName, "everyone");
         }
@@ -80,9 +85,9 @@ export default Controller.extend({
       this.set("offset", this.offset + 50);
       ajax(`/assign/members/${this.group.name}`, {
         type: "GET",
-        data: { filter: this.filter, offset: this.offset }
+        data: { filter: this.filter, offset: this.offset },
       })
-        .then(result => {
+        .then((result) => {
           this.members.pushObjects(result.members);
         })
         .finally(() => this.set("loading", false));
@@ -97,5 +102,5 @@ export default Controller.extend({
   @action
   onChangeFilterName(value) {
     debounce(this, this._setFilter, value, INPUT_DELAY * 2);
-  }
+  },
 });

@@ -17,6 +17,8 @@ he:
       add_unassigned_filter: "הוספת מסנן ‚ללא הקצאה’ לקטגוריה"
       cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
       cant_act_unclaimed: "עליך לדרוש את הנושא הזה לפני נקיטת פעולות על דגלים."
+      topic_search_placeholder: "חפש נושאים לפי כותרת או תוכן הפוסט"
+      sidebar_name_filter_placeholder: "שם/שם משתמש"
       assigned: "מוקצה"
       group_everyone: "כולם"
       assigned_to: "מוקצה לטובת"

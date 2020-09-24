@@ -8,10 +8,10 @@ acceptance("Assign mobile", {
   settings: { assign_enabled: true },
   beforeEach() {
     clearTopicFooterButtons();
-  }
+  },
 });
 
-QUnit.test("Footer dropdown contains button", async assert => {
+QUnit.test("Footer dropdown contains button", async (assert) => {
   updateCurrentUser({ can_assign: true });
   const menu = selectKit(".topic-footer-mobile-dropdown");
 

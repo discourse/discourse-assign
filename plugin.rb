@@ -20,8 +20,8 @@ load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned", as: "topics_private_messages_assigned", constraints: { username: ::RouteFormat.username }
-  get "/topics/messages-assigned/:username" => "list#messages_assigned", constraints: { username: ::RouteFormat.username }
-  get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned", constraints: { username: ::RouteFormat.username }
+  get "/topics/messages-assigned/:username" => "list#messages_assigned", constraints: { username: ::RouteFormat.username }, as: "messages_assigned"
+  get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned", constraints: { username: ::RouteFormat.username }, as: "group_topics_assigned"
   get "/g/:id/assigned" => "groups#index"
   get "/g/:id/assigned/:route_type" => "groups#index"
 end
@@ -233,194 +233,46 @@ after_initialize do
   end
 
   add_to_class(:topic_query, :list_messages_assigned) do |user|
-    secure = Topic.listable_topics.secured(@guardian).or(Topic.private_messages_for_user(@user))
-    list = joined_topic_user.where("
+    list = default_results(include_pms: true)
+
+    list = list.where("
       topics.id IN (
         SELECT topic_id FROM topic_custom_fields
         WHERE name = 'assigned_to_id'
         AND value = ?)
     ", user.id.to_s)
-      .includes(:tags)
-
-    list = apply_ordering(list, options)
-
-    list = list.merge(secure)
-
-    if SiteSetting.tagging_enabled
-      list = list.preload(:tags)
-
-      tags_arg = options[:tags]
-
-      if tags_arg && tags_arg.size > 0
-        tags_arg = tags_arg.split if String === tags_arg
-
-        tags_arg = tags_arg.map do |t|
-          if String === t
-            t.downcase
-          else
-            t
-          end
-        end
-
-        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
-        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
-
-        if options[:match_all_tags]
-          # ALL of the given tags:
-          if tags_arg.length == tags.length
-            tags.each_with_index do |tag, index|
-              sql_alias = ['t', index].join
-              list = list.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
-            end
-          else
-            list = list.none # don't return any list unless all tags exist in the database
-          end
-        else
-          # ANY of the given tags:
-          list = list.joins(:tags).where("tags.id in (?)", tags)
-        end
-
-        # TODO: this is very side-effecty and should be changed
-        # It is done cause further up we expect normalized tags
-        options[:tags] = tags
-
-      elsif options[:no_tags]
-        # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
-        list = list.where.not(id: TopicTag.distinct.pluck(:topic_id))
-      end
-    end
-
-    if options[:q].present?
-      term = options[:q]
-      ts_query = Search.ts_query(term: term)
-
-      list = list
-        .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
-        .where(
-          "#{ts_query} @@ topic_search_data.search_data"
-        )
-    end
-
-    list = list.where('topics.category_id = ?', options[:category].id) if options[:category]
-
-    list = list.offset(per_page_setting * options[:page])
-      .limit(per_page_setting)
 
     create_list(:assigned, { unordered: true }, list)
   end
 
   add_to_class(:list_controller, :messages_assigned) do
-    page = (params[:page].to_i || 0).to_i
-
     user = User.find_by_username(params[:username])
     raise Discourse::NotFound unless user
     raise Discourse::InvalidAccess unless current_user.can_assign?
 
     list_opts = build_topic_list_options
-    list_opts[:page] = page
-    list_opts[:ascending] = params[:ascending]
-    list_opts[:order] = params[:order]
-    list_opts[:q] = params[:q] if params[:q]
-
-    if params[:category_id] && params[:category_id].to_i > 0
-      list_opts[:category] = Category.find(params[:category_id])
-    end
-
-    if SiteSetting.tagging_enabled
-      list_opts[:match_all_tags] = true if params[:tag_id] && params[:tag_id] == "all-tags"
-      list_opts[:no_tags] = true if params[:tag_id] && params[:tag_id] == "no-tags"
-      list_opts[:tags] = params[:tag_id] if params[:tag_id] && params[:tag_id] != "all-tags" && params[:tag_id] != "no-tags"
-    end
-
     list = generate_list_for("messages_assigned", user, list_opts)
 
-    more_topics_url = "/topics/messages-assigned/#{params[:username]}.json?page=#{page + 1}"
-    more_topics_url += "&ascending=#{params[:ascending]}&order=#{params[:order]}" if params[:order]
+    list.more_topics_url = construct_url_with(:next, list_opts)
+    list.prev_topics_url = construct_url_with(:prev, list_opts)
 
-    list.more_topics_url = more_topics_url
     respond_with_list(list)
   end
 
   add_to_class(:topic_query, :list_group_topics_assigned) do |group|
-    secure = Topic.listable_topics.secured(@guardian).or(Topic.private_messages_for_user(@user))
-    list = joined_topic_user.where("
+    list = default_results(include_pms: true)
+
+    list = list.where("
       topics.id IN (
         SELECT topic_id FROM topic_custom_fields
         WHERE name = 'assigned_to_id'
         AND value IN (SELECT user_id::varchar(255) from group_users where group_id = ?))
     ", group.id.to_s)
-      .includes(:tags)
-
-    list = apply_ordering(list, options)
-
-    list = list.merge(secure)
-
-    if SiteSetting.tagging_enabled
-      list = list.preload(:tags)
-
-      tags_arg = options[:tags]
-
-      if tags_arg && tags_arg.size > 0
-        tags_arg = tags_arg.split if String === tags_arg
-
-        tags_arg = tags_arg.map do |t|
-          if String === t
-            t.downcase
-          else
-            t
-          end
-        end
-
-        tags_query = tags_arg[0].is_a?(String) ? Tag.where_name(tags_arg) : Tag.where(id: tags_arg)
-        tags = tags_query.select(:id, :target_tag_id).map { |t| t.target_tag_id || t.id }.uniq
-
-        if options[:match_all_tags]
-          # ALL of the given tags:
-          if tags_arg.length == tags.length
-            tags.each_with_index do |tag, index|
-              sql_alias = ['t', index].join
-              list = list.joins("INNER JOIN topic_tags #{sql_alias} ON #{sql_alias}.topic_id = topics.id AND #{sql_alias}.tag_id = #{tag}")
-            end
-          else
-            list = list.none # don't return any list unless all tags exist in the database
-          end
-        else
-          # ANY of the given tags:
-          list = list.joins(:tags).where("tags.id in (?)", tags)
-        end
-
-        # TODO: this is very side-effecty and should be changed
-        # It is done cause further up we expect normalized tags
-        options[:tags] = tags
-
-      elsif options[:no_tags]
-        # the following will do: ("topics"."id" NOT IN (SELECT DISTINCT "topic_tags"."topic_id" FROM "topic_tags"))
-        list = list.where.not(id: TopicTag.distinct.pluck(:topic_id))
-      end
-    end
-
-    if options[:q].present?
-      term = options[:q]
-      ts_query = Search.ts_query(term: term)
-
-      list = list
-        .joins("LEFT JOIN topic_search_data ON topic_search_data.topic_id=topics.id")
-        .where(
-          "#{ts_query} @@ topic_search_data.search_data"
-        )
-    end
-
-    list = list.where('topics.category_id = ?', options[:category].id) if options[:category]
-
-    list = list.offset(per_page_setting * options[:page])
-      .limit(per_page_setting)
 
     create_list(:assigned, { unordered: true }, list)
   end
 
   add_to_class(:list_controller, :group_topics_assigned) do
-    page = (params[:page].to_i || 0).to_i
-
     group = Group.find_by("name = ?", params[:groupname])
     guardian.ensure_can_see_group_members!(group)
 
@@ -429,27 +281,11 @@ after_initialize do
     raise Discourse::InvalidAccess unless group.can_show_assigned_tab?
 
     list_opts = build_topic_list_options
-    list_opts[:page] = page
-    list_opts[:ascending] = params[:ascending]
-    list_opts[:order] = params[:order]
-    list_opts[:q] = params[:q] if params[:q]
-
-    if params[:category_id] && params[:category_id].to_i > 0
-      list_opts[:category] = Category.find(params[:category_id])
-    end
-
-    if SiteSetting.tagging_enabled
-      list_opts[:match_all_tags] = true if params[:tag_id] && params[:tag_id] == "all-tags"
-      list_opts[:no_tags] = true if params[:tag_id] && params[:tag_id] == "no-tags"
-      list_opts[:tags] = params[:tag_id] if params[:tag_id] && params[:tag_id] != "all-tags" && params[:tag_id] != "no-tags"
-    end
-
     list = generate_list_for("group_topics_assigned", group, list_opts)
 
-    more_topics_url = "/topics/group-topics-assigned/#{params[:groupname]}.json?page=#{page + 1}"
-    more_topics_url += "&ascending=#{params[:ascending]}&order=#{params[:order]}" if params[:order]
+    list.more_topics_url = construct_url_with(:next, list_opts)
+    list.prev_topics_url = construct_url_with(:prev, list_opts)
 
-    list.more_topics_url = more_topics_url
     respond_with_list(list)
   end
 
@@ -508,6 +344,29 @@ after_initialize do
       # subtle but need to catch cases where stuff is not assigned
       object.topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
     end
+  end
+
+  TopicsBulkAction.register_operation("assign") do
+    if @user.can_assign?
+      assign_user = User.find_by_username(@operation[:username])
+      topics.each do |t|
+        TopicAssigner.new(t, @user).assign(assign_user)
+      end
+    end
+  end
+
+  TopicsBulkAction.register_operation("unassign") do
+    if @user.can_assign?
+      topics.each do |t|
+        if guardian.can_assign?
+          TopicAssigner.new(t, @user).unassign
+        end
+      end
+    end
+  end
+
+  if defined? register_permitted_bulk_action_parameter
+    register_permitted_bulk_action_parameter :username
   end
 
   if defined? UserBookmarkSerializer
@@ -629,6 +488,42 @@ after_initialize do
         WebHook.enqueue_hooks(:assign, event,
           payload: payload
         )
+      end
+    end
+  end
+
+  register_search_advanced_filter(/in:assigned/) do |posts|
+    if @guardian.can_assign?
+      posts.where("topics.id IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
+  end
+
+  register_search_advanced_filter(/in:unassigned/) do |posts|
+    if @guardian.can_assign?
+      posts.where("topics.id NOT IN (
+        SELECT tc.topic_id
+        FROM topic_custom_fields tc
+        WHERE tc.name = 'assigned_to_id' AND
+                        tc.value IS NOT NULL
+        )")
+    end
+  end
+
+  register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
+    if @guardian.can_assign?
+      if user_id = User.find_by_username(match)&.id
+        posts.where("topics.id IN (
+          SELECT tc.topic_id
+          FROM topic_custom_fields tc
+          WHERE tc.name = 'assigned_to_id' AND
+                          tc.value IS NOT NULL AND
+                          tc.value::int = #{user_id}
+          )")
       end
     end
   end

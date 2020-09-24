@@ -1,7 +1,9 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { inject as controller } from "@ember/controller";
 
 export default Ember.Controller.extend({
+  topicBulkActions: controller(),
   assignSuggestions: null,
   allowedGroups: null,
   taskActions: Ember.inject.service(),
@@ -10,7 +12,7 @@ export default Ember.Controller.extend({
     this._super(...arguments);
     this.allowedGroups = [];
 
-    ajax("/assign/suggestions").then(data => {
+    ajax("/assign/suggestions").then((data) => {
       this.set("assignSuggestions", data.suggestions);
       this.set("allowedGroups", data.assign_allowed_on_groups);
     });
@@ -22,16 +24,31 @@ export default Ember.Controller.extend({
     }
   },
 
+  bulkAction(username) {
+    this.topicBulkActions.performAndRefresh({
+      type: "assign",
+      username,
+    });
+  },
+
   actions: {
     assignUser(user) {
+      if (this.isBulkAction) {
+        this.bulkAction(user.username);
+        return;
+      }
       this.setProperties({
         "model.username": user.username,
-        "model.allowedGroups": this.taskActions.allowedGroups
+        "model.allowedGroups": this.taskActions.allowedGroups,
       });
       this.send("assign");
     },
 
     assign() {
+      if (this.isBulkAction) {
+        this.bulkAction(this.model.username);
+        return;
+      }
       let path = "/assign/assign";
 
       if (Ember.isEmpty(this.get("model.username"))) {
@@ -45,8 +62,8 @@ export default Ember.Controller.extend({
         type: "PUT",
         data: {
           username: this.get("model.username"),
-          topic_id: this.get("model.topic.id")
-        }
+          topic_id: this.get("model.topic.id"),
+        },
       })
         .then(() => {
           if (this.get("model.onSuccess")) {
@@ -54,6 +71,6 @@ export default Ember.Controller.extend({
           }
         })
         .catch(popupAjaxError);
-    }
-  }
+    },
+  },
 });

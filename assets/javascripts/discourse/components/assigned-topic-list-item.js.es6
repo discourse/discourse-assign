@@ -1,6 +1,6 @@
 import {
   ListItemDefaults,
-  default as TopicListItem
+  default as TopicListItem,
 } from "discourse/components/topic-list-item";
 
 // This is a backward compatible fix so that this change:
@@ -10,11 +10,17 @@ let assignedTopicListItem = null;
 
 if (ListItemDefaults) {
   assignedTopicListItem = Ember.Component.extend(ListItemDefaults, {
-    isPrivateMessage: Ember.computed.equal("topic.archetype", "private_message")
+    isPrivateMessage: Ember.computed.equal(
+      "topic.archetype",
+      "private_message"
+    ),
   });
 } else {
   assignedTopicListItem = TopicListItem.extend({
-    isPrivateMessage: Ember.computed.equal("topic.archetype", "private_message")
+    isPrivateMessage: Ember.computed.equal(
+      "topic.archetype",
+      "private_message"
+    ),
   });
 }
 
