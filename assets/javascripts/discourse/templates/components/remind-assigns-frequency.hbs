@@ -2,10 +2,10 @@
   <div class="controls controls-dropdown">
     <label>{{i18n "discourse_assign.reminders_frequency.description"}}</label>
     {{combo-box
-      valueAttribute="value"
+      valueProperty="value"
       content=availableFrequencies
       value=selectedFrequency
-      onSelect=(action "setFrequency")
+      onChange=(action (mut user.custom_fields.remind_assigns_frequency))
     }}
   </div>
 {{/if}}

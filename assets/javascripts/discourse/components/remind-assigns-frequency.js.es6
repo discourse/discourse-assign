@@ -1,10 +1,19 @@
 import I18n from "I18n";
-import computed from "discourse-common/utils/decorators";
+import { computed } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Ember.Component.extend({
-  selectedFrequency: null,
+  selectedFrequency: computed(
+    "user.custom_fields.remind_assigns_frequency",
+    function () {
+      return (
+        this.get("user.custom_fields.remind_assigns_frequency") ||
+        this.get("siteSettings.remind_assigns_frequency")
+      );
+    }
+  ),
 
-  @computed("user.reminders_frequency")
+  @discourseComputed("user.reminders_frequency")
   availableFrequencies(userRemindersFrequency) {
     return userRemindersFrequency.map((freq) => {
       return {
@@ -13,25 +22,5 @@ export default Ember.Component.extend({
         selected: false,
       };
     });
-  },
-
-  didInsertElement() {
-    this._super(...arguments);
-
-    let currentFrequency = this.get(
-      "user.custom_fields.remind_assigns_frequency"
-    );
-
-    if (currentFrequency === undefined) {
-      currentFrequency = this.get("siteSettings.remind_assigns_frequency");
-    }
-
-    this.set("selectedFrequency", currentFrequency);
-  },
-
-  actions: {
-    setFrequency(newFrequency) {
-      this.set("user.custom_fields.remind_assigns_frequency", newFrequency);
-    },
   },
 });
