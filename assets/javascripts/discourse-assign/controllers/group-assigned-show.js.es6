@@ -13,7 +13,7 @@ export default UserTopicsList.extend({
   ascending: false,
   no_tags: null,
   tags: "",
-  categoryId: "",
+  categoryId: null,
   navigationCategory: Ember.inject.controller("navigation/category"),
   noSubcategories: alias("navigationCategory.noSubcategories"),
   search: "",
