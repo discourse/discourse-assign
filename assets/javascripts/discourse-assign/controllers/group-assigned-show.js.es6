@@ -11,7 +11,7 @@ export default UserTopicsList.extend({
   taskActions: Ember.inject.service(),
   order: "",
   ascending: false,
-  no_tags: null,
+  no_tags: "",
   tags: "",
   categoryId: null,
   navigationCategory: Ember.inject.controller("navigation/category"),
@@ -46,10 +46,10 @@ export default UserTopicsList.extend({
       this.set("no_tags", true);
       this.set("tags", "");
     } else if (this.tagId === ALL_TAGS_ID) {
-      this.set("no_tags", null);
+      this.set("no_tags", false);
       this.set("tags", "");
     } else {
-      this.set("no_tags", null);
+      this.set("no_tags", false);
       this.set("tags", this.tagId);
     }
 
