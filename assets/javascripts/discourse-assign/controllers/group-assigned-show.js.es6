@@ -11,7 +11,7 @@ export default UserTopicsList.extend({
   taskActions: Ember.inject.service(),
   order: "",
   ascending: false,
-  no_tags: "",
+  no_tags: false,
   tags: "",
   categoryId: null,
   navigationCategory: Ember.inject.controller("navigation/category"),
