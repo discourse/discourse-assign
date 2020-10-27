@@ -31,7 +31,7 @@ export default Controller.extend({
 
   @discourseComputed("router.currentRoute.queryParams.categoryId")
   categoryId(categoryId) {
-    return categoryId || "";
+    return categoryId || null;
   },
 
   @discourseComputed("router.currentRoute.queryParams.tags")
@@ -41,7 +41,7 @@ export default Controller.extend({
 
   @discourseComputed("router.currentRoute.queryParams.no_tags")
   no_tags(no_tags) {
-    return no_tags || null;
+    return no_tags || false;
   },
 
   @discourseComputed("site.mobileView")
