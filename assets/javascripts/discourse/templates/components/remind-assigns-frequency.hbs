@@ -5,7 +5,7 @@
       valueProperty="value"
       content=availableFrequencies
       value=selectedFrequency
-      onChange=(mut user.custom_fields.remind_assigns_frequency)
+      onChange=(action (mut user.custom_fields.remind_assigns_frequency))
     }}
   </div>
 {{/if}}
