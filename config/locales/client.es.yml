@@ -17,11 +17,15 @@ es:
       add_unassigned_filter: "Agregar el filtro «sin asignar» a la categoría"
       cant_act: "No puedes actuar sobre reportes que han sido asignados a otros usuarios"
       cant_act_unclaimed: "Debes reclamar este tema antes de actuar sobre los reportes."
+      topic_search_placeholder: "Buscar temas por título o contenido"
+      sidebar_name_filter_placeholder: "Nombre/nombre de usuario"
       assigned: "Asignado"
       group_everyone: "Todos"
       assigned_to: "Asignado a"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Desasignar"
+        help: "Desasignar del tema a %{username}"
       assign:
         title: "Asignar"
         help: "Asignar tema al usuario"
@@ -55,3 +59,14 @@ es:
         assign_event:
           name: "Asignar evento"
           details: "Cuando un usuario asigna o desasigna un tema."
+    search:
+      advanced:
+        in:
+          assigned: "están asignados"
+          unassigned: "están sin asignar"
+        assigned:
+          label: "Asignado a"
+    topics:
+      bulk:
+        unassign: "Desasignar temas"
+        assign: "Asignar temas"
