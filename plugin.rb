@@ -346,20 +346,6 @@ after_initialize do
     end
   end
 
-  add_to_class(:search_topic_list_item_serializer, :assigned_to_user_id) do
-    id = object.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-    # a bit messy but race conditions can give us an array here, avoid
-    id && id.to_i rescue nil
-  end
-
-  add_to_serializer(:search_topic_list_item, :assigned_to_user, false) do
-    object.assigned_to_user
-  end
-
-  add_to_serializer(:search_topic_list_item, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to_user
-  end
-
   TopicsBulkAction.register_operation("assign") do
     if @user.can_assign?
       assign_user = User.find_by_username(@operation[:username])
