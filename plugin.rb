@@ -129,6 +129,7 @@ after_initialize do
 
   TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
   Site.preloaded_category_custom_fields << "enable_unassigned_filter" if Site.respond_to? :preloaded_category_custom_fields
+  Search.preloaded_topic_custom_fields << TopicAssigner::ASSIGNED_TO_ID if Search.respond_to? :preloaded_topic_custom_fields
 
   if defined? BookmarkQuery
     if BookmarkQuery.respond_to?(:preloaded_custom_fields) && BookmarkQuery.respond_to?(:on_preload)
@@ -176,6 +177,25 @@ after_initialize do
         topics.each do |t|
           if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
             t.preload_assigned_to_user(map[id.to_i])
+          end
+        end
+      end
+    end
+  end
+
+  if Search.respond_to?(:on_preload)
+    Search.on_preload do |results, search|
+      if SiteSetting.assign_enabled?
+        can_assign = search.guardian&.can_assign?
+        allowed_access = SiteSetting.assigns_public || can_assign
+
+        if allowed_access && results.posts.length > 0
+          assigned_user_ids = results.posts.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
+          assigned_users = User.where(id: assigned_user_ids).index_by(&:id)
+          results.posts.each do |post|
+            post.topic.preload_assigned_to_user(
+              assigned_users[post.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
+            )
           end
         end
       end
@@ -344,6 +364,14 @@ after_initialize do
       # subtle but need to catch cases where stuff is not assigned
       object.topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
     end
+  end
+
+  add_to_serializer(:search_topic_list_item, :assigned_to_user, false) do
+    object.assigned_to_user
+  end
+
+  add_to_serializer(:search_topic_list_item, 'include_assigned_to_user?') do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to_user
   end
 
   TopicsBulkAction.register_operation("assign") do
