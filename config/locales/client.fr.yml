@@ -17,6 +17,8 @@ fr:
       add_unassigned_filter: "Ajouter le filtre « désaffecté » à la catégorie"
       cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été affectés à d'autres utilisateurs"
       cant_act_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur les signalements."
+      topic_search_placeholder: "Rechercher des sujets par titre ou contenu"
+      sidebar_name_filter_placeholder: "Nom/Nom d'utilisateur"
       assigned: "Affecté"
       group_everyone: "Tout le monde"
       assigned_to: "Affecté à"
@@ -57,3 +59,14 @@ fr:
         assign_event:
           name: "Événement d'affectation"
           details: "Lorsqu'un utilisateur affecte ou désaffecte un sujet."
+    search:
+      advanced:
+        in:
+          assigned: "sont affectés"
+          unassigned: "ne sont pas affectés"
+        assigned:
+          label: "Affecté à"
+    topics:
+      bulk:
+        unassign: "Désaffecter les sujets"
+        assign: "Affecter les sujets"
