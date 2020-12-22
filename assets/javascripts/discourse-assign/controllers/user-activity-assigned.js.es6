@@ -1,6 +1,6 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
-import { debounce } from "@ember/runloop";
 import discourseComputed from "discourse-common/utils/decorators";
+import debounce from "discourse/plugins/discourse-assign/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default UserTopicsList.extend({
