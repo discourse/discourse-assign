@@ -1,9 +1,9 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { debounce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import debounce from "discourse/plugins/discourse-assign/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
