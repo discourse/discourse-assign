@@ -4,7 +4,7 @@ import { default as AssignedTopics } from "../fixtures/assigned-topics-fixtures"
 
 acceptance("UnAssign/Re-assign from the topics list", function (needs) {
   needs.user();
-  needs.settings({ assign_enabled: true, assigns_user_url_path: "/"});
+  needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
   needs.pretender((server, helper) => {
     const messagesPath = "/topics/messages-assigned/eviltrout.json";
     const assigns = AssignedTopics[messagesPath];
