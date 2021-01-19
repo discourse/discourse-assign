@@ -11,8 +11,8 @@ pl_PL:
         title: "Nieprzypisany"
         help: "Wątki, które nie są przypisane"
     action_codes:
-      assigned: "przypisany %{who}%{when}"
-      unassigned: "nieprzypisany%{who}%{when}"
+      assigned: "przypisany %{who} %{when}"
+      unassigned: "nieprzypisany%{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Dodaj filtr \"nieprzypisane\" do tej kategorii"
       cant_act: "Nie możesz działać na flagach, które nie zostały przydzielone innymi użytkownikom"
