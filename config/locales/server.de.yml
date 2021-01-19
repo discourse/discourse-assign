@@ -26,6 +26,7 @@ de:
     already_claimed: "Dieses Thema wurde bereits übernommen."
     already_assigned: 'Thema ist @%{username} zugewiesen'
     too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugwiesenen Themen (%{max}). "
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugewiesen"
     flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst."
     topic_assigned_excerpt: "hat dich dem Thema '%{title}' zugewiesen"

@@ -26,6 +26,7 @@ it:
     already_claimed: "Quell'argomento è stato già rivendicato."
     already_assigned: 'Questo argomento è già stato assegnato a @ %{username}'
     too_many_assigns: "@%{username} ha già raggiunto il numero massimo di argomenti assegnabili (%{max})."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "Spiacenti, l'argomento segnalato è già assegnato a un altro utente"
     flag_unclaimed: "Devi rivendicare l'argomento prima di lavorare sulla segnalazione"
     topic_assigned_excerpt: "ti ha assegnato l'argomento '%{title}'"

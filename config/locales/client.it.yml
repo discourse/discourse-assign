@@ -17,6 +17,8 @@ it:
       add_unassigned_filter: "Aggiungi il filtro 'non assegnato' alla categoria"
       cant_act: "Non puoi intervenire su segnalazioni assegnate ad altri utenti"
       cant_act_unclaimed: "Devi prima rivendicare questo argomento per poter intervenire sulle segnalazioni. "
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "Assegnato"
       group_everyone: "Chiunque"
       assigned_to: "Assegnato a"
@@ -57,3 +59,14 @@ it:
         assign_event:
           name: "Evento Assegna"
           details: "Quando un utente assegna o annulla l'assegnazione di un argomento."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

@@ -5,8 +5,64 @@
 # https://translate.discourse.org/
 
 sq:
+  site_settings:
+    assign_enabled: "Enable the assign plugin"
+    assigns_public: "Allow general public to see topic assignments"
+    assigns_user_url_path: "Path to users assigned topics (use: {username} to substitute username)"
+    assigns_by_staff_mention: "If a staff member mentions another staff member, topic is automatically assigned"
+    unassign_creates_tracking_post: "If you unassign a topic a whisper or small action will be created to track change"
+    assign_self_regex: "Regex that needs to pass for self assign. Example 'my list'"
+    assign_other_regex: "Regex that needs to pass for assigning topics to others via mention. Example 'your list'."
+    unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
+    unassign_on_close: "When a topic is closed unassign topic"
+    assign_mailer: "When to send notification email for assignments"
+    remind_assigns: "Remind users about pending assigns."
+    remind_assigns_frequency: "Frequency for reminding users about assigned topics."
+    max_assigned_topics: "Maximum number of topics that can be assigned to a user."
+    assign_allowed_on_groups: "Groups that are allowed to assign topics."
   discourse_assign:
+    assigned_to: "Topic assigned to @%{username}"
+    unassigned: "Topic was unassigned"
+    already_claimed: "That topic has already been claimed."
+    already_assigned: 'Topic is already assigned to @%{username}'
+    too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
+    flag_assigned: "Sorry, that flag's topic is assigned to another user"
+    flag_unclaimed: "You must claim that topic before acting on the flag"
+    topic_assigned_excerpt: "assigned you the topic '%{title}'"
     reminders_frequency:
       never: 'asnjëherë'
       daily: 'çdo ditë'
       weekly: 'çdo javë'
+      monthly: 'monthly'
+      quarterly: 'quarterly'
+  assign_mailer:
+    title: "Assign Mailer"
+    subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
+    text_body_template: |
+      Hey, %{assignee_name} **assigned** you to a discussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      If you're interested, click the link below:
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "You have %{pending_assignments} pending assignments"
+    body: |
+      You currently have [%{pending_assignments} pending assignments](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      This reminder will be sent %{frequency} if you have more than one assigned topic.
+    newest: |
+      ### Newest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Oldest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

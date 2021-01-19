@@ -6,17 +6,26 @@
 
 de:
   js:
+    filters:
+      unassigned:
+        title: "Unassigned"
+        help: "Topics that are not assigned"
     action_codes:
       assigned: "zugeordnet %{who} %{when}"
       unassigned: "Zuordnung aufgehoben %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugewiesen wurden."
       cant_act_unclaimed: "Du musst das Thema übernehmen, bevor du Meldungen behandeln kannst."
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "Zugeordnet"
       group_everyone: "Jeder"
       assigned_to: "Zugewiesen an"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Zuordnung aufheben"
+        help: "Unassign %{username} from Topic"
       assign:
         title: "Zuordnen"
         help: "Thema einer Person zuordnen"
@@ -25,12 +34,14 @@ de:
         help: "Thema an einen anderen Benutzer zuweisen"
       assign_modal:
         title: "Thema zuordnen"
+        description: "Enter the name of the user you'd like to assign this topic"
         assign: "Zuordnen"
       claim:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"
       assign_mailer:
         never: "nie"
+        different_users: "Only if assigner and assignee are different users"
         always: "immer"
       reminders_frequency:
         description: "Intervall für das Erhalten von Erinnerungen an zugewiesene Themen"
@@ -43,3 +54,19 @@ de:
       messages:
         assigned_title: "Zugeordnet (%{count})"
         assigned: "Zugeordnet"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Assign Event"
+          details: "When a user assigns or unassigns a topic."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

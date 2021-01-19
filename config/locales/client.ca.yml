@@ -14,8 +14,11 @@ ca:
       assigned: "assignat %{who} %{when}"
       unassigned: "desassignat %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "No podeu actuar sobre banderes assignades a altres usuaris."
       cant_act_unclaimed: "Cal reclamar el tema abans d'actuar sobre les banderes"
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "Assignat"
       group_everyone: "Tothom"
       assigned_to: "Assignat a"
@@ -38,6 +41,7 @@ ca:
         help: "Assigneu-vos el tema"
       assign_mailer:
         never: "Mai"
+        different_users: "Only if assigner and assignee are different users"
         always: "Sempre"
       reminders_frequency:
         description: "Freqüència per a rebre recordatoris de temes assignats"
@@ -50,3 +54,19 @@ ca:
       messages:
         assigned_title: "Assignats (%{count})"
         assigned: "Assignats"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Assign Event"
+          details: "When a user assigns or unassigns a topic."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

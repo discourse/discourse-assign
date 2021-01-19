@@ -26,6 +26,7 @@ ko:
     already_claimed: "그 주제는 이미 주장되었습니다."
     already_assigned: '주제가 이미 @ %{username}에 할당되었습니다.'
     too_many_assigns: "@ %{username}이 (가) 이미 지정된 최대 주제 수 (%{max})에 도달했습니다."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "해당 플래그의 주제가 다른 사용자에게 할당되었습니다."
     flag_unclaimed: "깃발에 행동하기 전에 그 주제를 주장해야합니다"
     topic_assigned_excerpt: "&#39;%{title}&#39;주제를 지정했습니다"
@@ -38,5 +39,30 @@ ko:
   assign_mailer:
     title: "메일러 할당"
     subject_template: "[%{email_prefix}] %{assignee_name}가 &#39;%{topic_title}&#39;에 당신을 할당했습니다!"
+    text_body_template: |
+      Hey, %{assignee_name} **assigned** you to a discussion
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      If you're interested, click the link below:
+      [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
     title: "보류중인 할당이 %{pending_assignments}입니다."
+    body: |
+      You currently have [%{pending_assignments} pending assignments](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      This reminder will be sent %{frequency} if you have more than one assigned topic.
+    newest: |
+      ### Newest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Oldest
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}

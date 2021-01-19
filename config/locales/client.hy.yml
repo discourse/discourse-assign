@@ -6,30 +6,45 @@
 
 hy:
   js:
+    filters:
+      unassigned:
+        title: "Unassigned"
+        help: "Topics that are not assigned"
     action_codes:
       assigned: "վերագրված է %{who}-ին %{when}"
       unassigned: "Ետկանչված է %{who} -ից%{when}"
     discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "Դուք չեք կարող գործողություն կատարել դրոշակների հետ, որոնք վերագրված են այլ օգտատերերի"
       cant_act_unclaimed: "Դուք պետք է պահանջեք այս թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "Վերագրված"
       group_everyone: "Բոլորը"
       assigned_to: "Վերագրված է"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Ետ կանչել վերագրումը"
+        help: "Unassign %{username} from Topic"
       assign:
         title: "Վերագրել"
         help: "Վերագրել Թեման Օգտատիրոջը"
+      reassign:
+        title: "Re-assign"
+        help: "Re-assign Topic to a different user"
       assign_modal:
         title: "Վերագրել Թեման"
+        description: "Enter the name of the user you'd like to assign this topic"
         assign: "Վերագրել"
       claim:
         title: "պահանջ"
         help: "Վերագրել թեման ինքներդ Ձեզ"
       assign_mailer:
         never: "Երբեք"
+        different_users: "Only if assigner and assignee are different users"
         always: "Միշտ"
       reminders_frequency:
+        description: "Frequency for receiving assigned topics reminders"
         never: "Երբեք"
         daily: "Օրվա Ընթացքում"
         weekly: "Շաբաթվա Ընթացքում"
@@ -39,3 +54,19 @@ hy:
       messages:
         assigned_title: "Վերագրված (%{count})"
         assigned: "Վերագրված"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Assign Event"
+          details: "When a user assigns or unassigns a topic."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

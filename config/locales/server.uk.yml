@@ -26,6 +26,7 @@ uk:
     already_claimed: "Цю тему вже заявлено."
     already_assigned: 'Тема вже призначена для @ %{username}'
     too_many_assigns: "@ %{username} вже досяг максимальної кількості призначених тем (%{max})."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "На жаль, тема з цим прапором призначена іншому користувачеві"
     flag_unclaimed: "Ви повинні претендувати на цю тему, перш ніж діяти за прапором"
     topic_assigned_excerpt: "призначив вам тему '%{title}'"

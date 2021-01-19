@@ -15,6 +15,7 @@ pt_BR:
     assign_other_regex: "Regex que precisa passar para designar tópicos a outros por meio de menção. Exemplo: 'sua lista'."
     unassign_on_group_archive: "Quando uma mensagem é arquivada por um grupo, remover a designação da mensagem (designar novamente se ela for movida de volta para a caixa de entrada)"
     unassign_on_close: "Quando um tópico for fechado, remover a designação do tópico"
+    assign_mailer: "When to send notification email for assignments"
     remind_assigns: "Lembrar usuários sobre designações pendentes."
     remind_assigns_frequency: "Frequência para lembrar usuários sobre tópicos designados."
     max_assigned_topics: "Número máximo de tópicos que podem ser designados a um usuário."
@@ -25,6 +26,7 @@ pt_BR:
     already_claimed: "Aquele tópico já foi reivindicado."
     already_assigned: 'Tópico já está designado à @%{username}'
     too_many_assigns: "@%{username} já atingiu o número máximo de tópicos designados (%{max})."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "Desculpe, aquele tópico da sinalização está designado à outro usuário"
     flag_unclaimed: "Você precisa reivindicar aquele tópico antes de atuar na sinalização"
     topic_assigned_excerpt: "te designou ao tópico '%{title}'"

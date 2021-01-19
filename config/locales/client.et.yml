@@ -6,23 +6,45 @@
 
 et:
   js:
+    filters:
+      unassigned:
+        title: "Unassigned"
+        help: "Topics that are not assigned"
+    action_codes:
+      assigned: "assigned %{who} %{when}"
+      unassigned: "unassigned %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
+      cant_act: "You cannot act on flags that have been assigned to other users"
+      cant_act_unclaimed: "You must claim this topic before acting on flags."
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "Määratud"
       group_everyone: "Kõik"
       assigned_to: "Määratud kasutajale"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Eemalda määramine"
+        help: "Unassign %{username} from Topic"
       assign:
         title: "Määra"
+        help: "Assign Topic to User"
+      reassign:
+        title: "Re-assign"
+        help: "Re-assign Topic to a different user"
       assign_modal:
         title: "Määra teema"
+        description: "Enter the name of the user you'd like to assign this topic"
         assign: "Määra"
       claim:
+        title: "claim"
         help: "Määra teema endale"
       assign_mailer:
         never: "Mitte kunagi"
+        different_users: "Only if assigner and assignee are different users"
         always: "Alati"
       reminders_frequency:
+        description: "Frequency for receiving assigned topics reminders"
         never: "Mitte kunagi"
         daily: "Igapäevaselt"
         weekly: "Iganädalaselt"
@@ -30,4 +52,21 @@ et:
         quarterly: "Kvartaalselt"
     user:
       messages:
+        assigned_title: "Assigned (%{count})"
         assigned: "Määratud"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Assign Event"
+          details: "When a user assigns or unassigns a topic."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

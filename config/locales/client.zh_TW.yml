@@ -6,29 +6,45 @@
 
 zh_TW:
   js:
+    filters:
+      unassigned:
+        title: "Unassigned"
+        help: "Topics that are not assigned"
     action_codes:
       assigned: "已指派 %{who} %{when}"
       unassigned: "取消指派 %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "您不能對已經指派給其他使用者的旗標做操作"
+      cant_act_unclaimed: "You must claim this topic before acting on flags."
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "已指派"
       group_everyone: "所有使用者"
       assigned_to: "已指派給"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "取消指派"
+        help: "Unassign %{username} from Topic"
       assign:
         title: "指派"
         help: "指派主題給使用者"
+      reassign:
+        title: "Re-assign"
+        help: "Re-assign Topic to a different user"
       assign_modal:
         title: "指派主題"
+        description: "Enter the name of the user you'd like to assign this topic"
         assign: "指派"
       claim:
         title: "認領"
         help: "指派主題給您自己"
       assign_mailer:
         never: "永不"
+        different_users: "Only if assigner and assignee are different users"
         always: "總是"
       reminders_frequency:
+        description: "Frequency for receiving assigned topics reminders"
         never: "永不"
         daily: "日"
         weekly: "周"
@@ -36,4 +52,21 @@ zh_TW:
         quarterly: "季度"
     user:
       messages:
+        assigned_title: "Assigned (%{count})"
         assigned: "已指派"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Assign Event"
+          details: "When a user assigns or unassigns a topic."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

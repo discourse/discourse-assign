@@ -6,30 +6,45 @@
 
 sw:
   js:
+    filters:
+      unassigned:
+        title: "Unassigned"
+        help: "Topics that are not assigned"
     action_codes:
       assigned: "%{who}amepewa %{when}"
       unassigned: "%{who}hajakabidhiwa %{when}"
     discourse_assign:
+      add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "Hauwezi kutumia bendera ambazo zimeshatumiwa na watu wengine"
       cant_act_unclaimed: "Lazima uimiliki mada kabla ya kuweka bendera."
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "Kukabidhi"
       group_everyone: "Kila Mtu"
       assigned_to: "Imekabidhiwa kwa"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Haijakabithiwa"
+        help: "Unassign %{username} from Topic"
       assign:
         title: "Kabidhi"
         help: "Pangia Mada kwa Mtumiaji"
+      reassign:
+        title: "Re-assign"
+        help: "Re-assign Topic to a different user"
       assign_modal:
         title: "Awadha Mada"
+        description: "Enter the name of the user you'd like to assign this topic"
         assign: "Kabidhi"
       claim:
         title: "Miliki"
         help: "Jipe Mada"
       assign_mailer:
         never: "Kamwe"
+        different_users: "Only if assigner and assignee are different users"
         always: "Mara kwa mara"
       reminders_frequency:
+        description: "Frequency for receiving assigned topics reminders"
         never: "Kamwe"
         daily: "Kila siku"
         weekly: "Kila wiki"
@@ -39,3 +54,19 @@ sw:
       messages:
         assigned_title: "Amekabidhiwa (%{count})"
         assigned: "Imekabidhiwa"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Assign Event"
+          details: "When a user assigns or unassigns a topic."
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"

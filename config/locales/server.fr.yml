@@ -26,6 +26,7 @@ fr:
     already_claimed: "Le sujet a déjà été revendiqué."
     already_assigned: 'Sujet déjà affecté à @%{username}'
     too_many_assigns: "@%{username} a atteint le nombre maximum de sujets assignés (%{max})."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "Désolé, le sujet de ce signalement est attribué à un autre utilisateur."
     flag_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur le signalement"
     topic_assigned_excerpt: "vous a attribué le sujet '%{title}'"

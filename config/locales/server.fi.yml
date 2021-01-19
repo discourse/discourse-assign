@@ -26,6 +26,7 @@ fi:
     already_claimed: "Ketju on jo omittu."
     already_assigned: 'Ketju on jo osoitettu käyttäjälle %{username}'
     too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen maksimi määrän (%{max}). "
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
     flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
     topic_assigned_excerpt: "osoitti sinulle ketjun '%{title}'"

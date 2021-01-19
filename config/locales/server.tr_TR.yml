@@ -26,6 +26,7 @@ tr_TR:
     already_claimed: "Bu konu zaten atandı."
     already_assigned: 'Konu zaten %{username}&#39;a atandı'
     too_many_assigns: "@ %{username} zaten atanmış maksimum konu sayısına ulaştı (%{max})."
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "Maalesef, raporun konusu başka bir kullanıcıya atandı"
     flag_unclaimed: "Raporlama yapmadan önce bu konuyu talep etmelisiniz"
     topic_assigned_excerpt: "size &#39;%{title}&#39; konusunu atadı"

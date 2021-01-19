@@ -26,6 +26,7 @@ zh_CN:
     already_claimed: "这个主题已经被分配"
     already_assigned: '主题已被指派给 @%{username}'
     too_many_assigns: "@%{username}已经到达指派主题的最大值（%{max}）。"
+    forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     flag_assigned: "抱歉，这个标记的主题已被指派给其他用户"
     flag_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
     topic_assigned_excerpt: "主题%{title}已分配给您"

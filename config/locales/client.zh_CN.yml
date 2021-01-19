@@ -17,6 +17,8 @@ zh_CN:
       add_unassigned_filter: "将“未指派的”过滤器添加到分类"
       cant_act: "你不能操作已经指派给其他用户的标记"
       cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
+      topic_search_placeholder: "Search topics by title or post content"
+      sidebar_name_filter_placeholder: "Name/Username"
       assigned: "已指派"
       group_everyone: "所有人"
       assigned_to: "指派给"
@@ -57,3 +59,14 @@ zh_CN:
         assign_event:
           name: "指派事件"
           details: "当用户被分配或取消分配一个主题时。"
+    search:
+      advanced:
+        in:
+          assigned: "are assigned"
+          unassigned: "are unassigned"
+        assigned:
+          label: "Assigned to"
+    topics:
+      bulk:
+        unassign: "Unassign Topics"
+        assign: "Assign Topics"
