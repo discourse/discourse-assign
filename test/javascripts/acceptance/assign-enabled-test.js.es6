@@ -1,5 +1,8 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance, updateCurrentUser } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 
 acceptance("Assign mobile", function (needs) {

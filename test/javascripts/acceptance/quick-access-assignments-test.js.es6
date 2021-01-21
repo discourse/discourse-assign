@@ -1,11 +1,15 @@
-import { acceptance, updateCurrentUser, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  updateCurrentUser,
+  queryAll,
+} from "discourse/tests/helpers/qunit-helpers";
 import { default as AssignedTopics } from "../fixtures/assigned-topics-fixtures";
 
 const USER_MENU = "#current-user.header-dropdown-toggle";
 
 acceptance("Quick access assignments panel", function (needs) {
   needs.user();
-  needs.settings({ assign_enabled: true, assigns_user_url_path: "/"});
+  needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
 
   needs.pretender((server, helper) => {
     const messagesPath = "/topics/messages-assigned/eviltrout.json";
