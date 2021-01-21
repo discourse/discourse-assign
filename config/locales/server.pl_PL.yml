@@ -37,25 +37,25 @@ pl_PL:
       quarterly: 'kwartalnie'
   assign_mailer:
     title: "Przypisz mailera"
-    subject_template: "[%{email_prefix}] %{assignee_name}przypisał cię do '%{topic_title}'!"
+    subject_template: "[%{email_prefix}] %{assignee_name} przypisał cię do '%{topic_title}'!"
     text_body_template: |
-      Hej, %{assignee_name}**przypisał** cię do dyskusji
-      >**%{topic_title}**
+      Hej, %{assignee_name} **przypisał** cię do dyskusji
+      > **%{topic_title}**
       >
-      >%{topic_excerpt}
+      > %{topic_excerpt}
 
       Jeśli jesteś zainteresowany, kliknij poniższy link:
 
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
-    title: "Masz %{pending_assignments}oczekujących przypisań"
+    title: "Masz %{pending_assignments} oczekujących przypisań"
     body: |
       Masz [%{pending_assignments} oczekujących przypisań](%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}
 
-      To przypomnienie będzie wysyłane z %{frequency} jeśli masz więcej niż jeden przypisany temat.
+      To przypomnienie będzie wysyłane %{frequency} jeśli masz więcej niż jeden przypisany temat.
     newest: |
       ### Najnowsze
       %{topic_0}
