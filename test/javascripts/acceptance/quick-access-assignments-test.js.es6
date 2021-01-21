@@ -22,7 +22,7 @@ acceptance("Quick access assignments panel", function (needs) {
     // TODO: Remove when 2.7 gets released
     let quickAccessAssignmentsTab = ".widget-button.assigned";
 
-    if (queryAll(quickAccessAssignmentsTab).length == 0) {
+    if (queryAll(quickAccessAssignmentsTab).length === 0) {
       quickAccessAssignmentsTab = ".widget-link.assigned";
     }
 
