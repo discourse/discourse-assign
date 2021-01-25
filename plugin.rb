@@ -556,4 +556,23 @@ after_initialize do
     end
   end
 
+  on(:user_removed_from_group) do |user, group|
+    assign_allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').map(&:to_i)
+
+    if assign_allowed_groups.include?(group.id)
+      groups = GroupUser.where(user: user).pluck(:group_id)
+
+      if (groups & assign_allowed_groups).empty?
+        topics = Topic.joins(:_custom_fields)
+          .where(
+            'topic_custom_fields.name = ? AND topic_custom_fields.value = ?',
+            TopicAssigner::ASSIGNED_TO_ID, user.id.to_s
+          )
+
+        topics.each do |topic|
+          TopicAssigner.new(topic, Discourse.system_user).unassign
+        end
+      end
+    end
+  end
 end
