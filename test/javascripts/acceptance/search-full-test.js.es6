@@ -1,8 +1,8 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
-  waitFor,
   updateCurrentUser,
+  waitFor,
 } from "discourse/tests/helpers/qunit-helpers";
 import { skip, test } from "qunit";
 
