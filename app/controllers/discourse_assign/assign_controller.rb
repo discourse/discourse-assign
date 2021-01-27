@@ -167,6 +167,10 @@ module DiscourseAssign
         { error: I18n.t('discourse_assign.already_assigned', username: user.username) }
       when :forbidden_assign_to
         { error: I18n.t('discourse_assign.forbidden_assign_to', username: user.username) }
+      when :forbidden_assignee_not_pm_participant
+        { error: I18n.t('discourse_assign.forbidden_assignee_not_pm_participant', username: user.username) }
+      when :forbidden_assignee_cant_see_topic
+        { error: I18n.t('discourse_assign.forbidden_assignee_cant_see_topic', username: user.username) }
       else
         max = SiteSetting.max_assigned_topics
         { error: I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max) }

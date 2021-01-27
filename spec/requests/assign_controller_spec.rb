@@ -143,6 +143,32 @@ RSpec.describe DiscourseAssign::AssignController do
         I18n.t('discourse_assign.too_many_assigns', username: another_user.username, max: max_assigns)
       )
     end
+
+    it 'fails with a specific error message if the topic is a PM and the assignee can not see it' do
+      pm = Fabricate(:private_message_post, user: user).topic
+      another_user = Fabricate(:user)
+      add_to_assign_allowed_group(another_user)
+      put '/assign/assign.json', params: {
+        topic_id: pm.id, username: another_user.username
+      }
+
+      expect(response.parsed_body['error']).to eq(
+        I18n.t('discourse_assign.forbidden_assignee_not_pm_participant', username: another_user.username)
+      )
+    end
+
+    it 'fails with a specific error message if the topic is not a PM and the assignee can not see it' do
+      topic = Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      another_user = Fabricate(:user)
+      add_to_assign_allowed_group(another_user)
+      put '/assign/assign.json', params: {
+        topic_id: topic.id, username: another_user.username
+      }
+
+      expect(response.parsed_body['error']).to eq(
+        I18n.t('discourse_assign.forbidden_assignee_cant_see_topic', username: another_user.username)
+      )
+    end
   end
 
   context '#assigned' do
