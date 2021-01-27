@@ -1,7 +1,6 @@
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import computed from "discourse-common/utils/decorators";
-import { observes } from "discourse-common/utils/decorators";
+import computed, { observes } from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
@@ -9,8 +8,9 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
-import { addBulkButton } from "discourse/controllers/topic-bulk-actions";
-import TopicButtonAction from "discourse/controllers/topic-bulk-actions";
+import TopicButtonAction, {
+  addBulkButton,
+} from "discourse/controllers/topic-bulk-actions";
 import { inject } from "@ember/controller";
 import I18n from "I18n";
 

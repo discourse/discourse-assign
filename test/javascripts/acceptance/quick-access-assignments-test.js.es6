@@ -1,7 +1,7 @@
 import {
   acceptance,
-  updateCurrentUser,
   queryAll,
+  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { default as AssignedTopics } from "../fixtures/assigned-topics-fixtures";
 
