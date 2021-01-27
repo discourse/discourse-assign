@@ -195,14 +195,14 @@ RSpec.describe TopicAssigner do
       assign = TopicAssigner.new(pm, admin).assign(moderator)
 
       expect(assign[:success]).to eq(false)
-      expect(assign[:reason]).to eq(:forbidden_assign_to)
+      expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
     end
 
     it 'fails to assign when the assigned user cannot view the topic' do
       assign = TopicAssigner.new(secure_topic, admin).assign(moderator)
 
       expect(assign[:success]).to eq(false)
-      expect(assign[:reason]).to eq(:forbidden_assign_to)
+      expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
     end
 
     it "assigns the PM to the moderator when it's included in the list of allowed users" do
