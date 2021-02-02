@@ -24,18 +24,18 @@ es:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "El tema fue desasignado"
     already_claimed: "Ese tema ya ha sido reclamado."
-    already_assigned: 'El tema ya está asignado a @%{username}'
+    already_assigned: "El tema ya está asignado a @%{username}"
     too_many_assigns: "@%{username} ya ha alcanzado el número máximo de temas asignados (%{max})."
     forbidden_assign_to: "No se puede asignar a @%{username} porque no pertenecen a los grupos permitidos para asignaciones."
     flag_assigned: "Lo sentimos, el tema de ese reporte está asignado a otro usuario."
     flag_unclaimed: "Debes reclamar este tema antes de actuar sobre el reporte."
     topic_assigned_excerpt: "te asignó el tema «%{title}»"
     reminders_frequency:
-      never: 'nunca'
-      daily: 'diariamente'
-      weekly: 'semanalmente'
-      monthly: 'mensualmente'
-      quarterly: 'trimestralmente'
+      never: "nunca"
+      daily: "diariamente"
+      weekly: "semanalmente"
+      monthly: "mensualmente"
+      quarterly: "trimestralmente"
   assign_mailer:
     title: "Asignar correo"
     subject_template: "¡[%{email_prefix}] %{assignee_name} te ha asignado a «%{topic_title}»!"

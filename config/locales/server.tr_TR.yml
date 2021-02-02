@@ -24,17 +24,17 @@ tr_TR:
     assigned_to: "@%{username} olarak atanan konu"
     unassigned: "Konu atanmadı"
     already_claimed: "Bu konu zaten atandı."
-    already_assigned: 'Konu zaten %{username}&#39;a atandı'
+    already_assigned: "Konu zaten %{username}&#39;a atandı"
     too_many_assigns: "@ %{username} zaten atanmış maksimum konu sayısına ulaştı (%{max})."
     flag_assigned: "Maalesef, raporun konusu başka bir kullanıcıya atandı"
     flag_unclaimed: "Raporlama yapmadan önce bu konuyu talep etmelisiniz"
     topic_assigned_excerpt: "size &#39;%{title}&#39; konusunu atadı"
     reminders_frequency:
-      never: 'asla'
-      daily: 'günlük'
-      weekly: 'haftalık'
-      monthly: 'aylık'
-      quarterly: 'üç aylık'
+      never: "asla"
+      daily: "günlük"
+      weekly: "haftalık"
+      monthly: "aylık"
+      quarterly: "üç aylık"
   assign_mailer:
     title: "E-posta Göndericisi Ata"
     subject_template: "[%{email_prefix}] %{assignee_name} sizi &#39;%{topic_title}&#39; a atadı!"

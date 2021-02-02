@@ -24,17 +24,17 @@ it:
     assigned_to: "Argomento assegnato a @%{username}"
     unassigned: "L'argomento non è stato assegnato"
     already_claimed: "Quell'argomento è stato già rivendicato."
-    already_assigned: 'Questo argomento è già stato assegnato a @ %{username}'
+    already_assigned: "Questo argomento è già stato assegnato a @ %{username}"
     too_many_assigns: "@%{username} ha già raggiunto il numero massimo di argomenti assegnabili (%{max})."
     flag_assigned: "Spiacenti, l'argomento segnalato è già assegnato a un altro utente"
     flag_unclaimed: "Devi rivendicare l'argomento prima di lavorare sulla segnalazione"
     topic_assigned_excerpt: "ti ha assegnato l'argomento '%{title}'"
     reminders_frequency:
-      never: 'mai'
-      daily: 'quotidiano'
-      weekly: 'ogni settimana'
-      monthly: 'mensilmente'
-      quarterly: 'trimestrale'
+      never: "mai"
+      daily: "quotidiano"
+      weekly: "ogni settimana"
+      monthly: "mensilmente"
+      quarterly: "trimestrale"
   assign_mailer:
     title: "Mailer Assegnazioni"
     subject_template: "[%{email_prefix}] %{assignee_name} ti ha assegnato '%{topic_title}'!"

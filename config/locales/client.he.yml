@@ -59,3 +59,14 @@ he:
         assign_event:
           name: "הקצאת אירוע"
           details: "כאשר משתמש מקצה או מבטל הקצאה של נושא."
+    search:
+      advanced:
+        in:
+          assigned: "מוקצים"
+          unassigned: "אינם מוקצים"
+        assigned:
+          label: "מוקצה לטובת"
+    topics:
+      bulk:
+        unassign: "ביטול הקצאת נושאים"
+        assign: "הקצאת נושאים"

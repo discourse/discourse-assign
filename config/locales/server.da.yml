@@ -9,7 +9,7 @@ da:
     assign_enabled: "Aktiver tildele plugin"
   discourse_assign:
     reminders_frequency:
-      never: 'aldrig'
-      daily: 'dagligt'
-      weekly: 'ugenligt'
-      monthly: 'Månedligt'
+      never: "aldrig"
+      daily: "dagligt"
+      weekly: "ugenligt"
+      monthly: "Månedligt"

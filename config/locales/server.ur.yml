@@ -23,17 +23,17 @@ ur:
     assigned_to: "ٹاپک @%{username} کو اسائین کر دیا گیا"
     unassigned: "ٹاپک اسائین شدہ نہیں تھا"
     already_claimed: "وہ ٹاپک پہلے سے ہی کََلیم کر لیا گیا ہے۔"
-    already_assigned: 'ٹاپک پہلے سے ہی @%{username} کو اسائین کیا ہوا ہے'
+    already_assigned: "ٹاپک پہلے سے ہی @%{username} کو اسائین کیا ہوا ہے"
     too_many_assigns: "@%{username} پہلے سے ہی اسائین کردہ ٹاپکس کی زیادہ سے زیادہ حد تک پہنچ چکا ہے (%{max})۔"
     flag_assigned: "معذرت، اُس فلَیگ کا ٹاپک ایک دوسرے صارف کو آسائین ہواوا ہے"
     flag_unclaimed: "فلَیگ پر عمل کرنے سے پہلے آپ کا یہ ٹاپک کلَیم کرنا ضروری ہے"
     topic_assigned_excerpt: "نے ٹاپک '%{title}' اسائین کیا"
     reminders_frequency:
-      never: 'کبھی نہیں '
-      daily: 'روزانہ '
-      weekly: 'ہفتہ وار'
-      monthly: 'ماہانہ'
-      quarterly: 'سہ ماہی'
+      never: "کبھی نہیں "
+      daily: "روزانہ "
+      weekly: "ہفتہ وار"
+      monthly: "ماہانہ"
+      quarterly: "سہ ماہی"
   assign_mailer:
     title: "مَیلر اسائین کریں"
     subject_template: "[%{email_prefix}] %{assignee_name} نے آپ کو '%{topic_title}' اسائین کیا! "

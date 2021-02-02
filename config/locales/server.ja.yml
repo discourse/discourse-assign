@@ -7,6 +7,6 @@
 ja:
   discourse_assign:
     reminders_frequency:
-      never: '追跡しない'
-      daily: '毎日'
-      weekly: '毎週'
+      never: "追跡しない"
+      daily: "毎日"
+      weekly: "毎週"

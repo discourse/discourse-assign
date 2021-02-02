@@ -23,17 +23,17 @@ ca:
     assigned_to: "Tema assignat a @%{username}"
     unassigned: "El tema no estava assignat"
     already_claimed: "El tema ja ha estat reclamat."
-    already_assigned: 'El tema ja és assignat a @%{username}'
+    already_assigned: "El tema ja és assignat a @%{username}"
     too_many_assigns: "@%{username} ja ha assolit el nombre màxim de temes assignats (%{max})."
     flag_assigned: "Ho sentim, el tema d'aquesta bandera és assignat a un altre usuari."
     flag_unclaimed: "Cal reclamar el tema abans d'actuar sobre la bandera"
     topic_assigned_excerpt: "us ha assignat el tema '%{title}'"
     reminders_frequency:
-      never: 'mai'
-      daily: 'diari'
-      weekly: 'setmanal'
-      monthly: 'mensual'
-      quarterly: 'trimestral'
+      never: "mai"
+      daily: "diari"
+      weekly: "setmanal"
+      monthly: "mensual"
+      quarterly: "trimestral"
   assign_mailer:
     title: "Assignació"
     subject_template: "[%{email_prefix}] %{assignee_name} us ha assignat a '%{topic_title}'."

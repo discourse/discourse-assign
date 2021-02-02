@@ -24,17 +24,17 @@ zh_CN:
     assigned_to: "主题被指派给 @%{username}"
     unassigned: "主题未被指派"
     already_claimed: "这个主题已经被分配"
-    already_assigned: '主题已被指派给 @%{username}'
+    already_assigned: "主题已被指派给 @%{username}"
     too_many_assigns: "@%{username}已经到达指派主题的最大值（%{max}）。"
     flag_assigned: "抱歉，这个标记的主题已被指派给其他用户"
     flag_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
     topic_assigned_excerpt: "主题%{title}已分配给您"
     reminders_frequency:
-      never: '从不'
-      daily: '每天'
-      weekly: '每周'
-      monthly: '月度'
-      quarterly: '季度'
+      never: "从不"
+      daily: "每天"
+      weekly: "每周"
+      monthly: "月度"
+      quarterly: "季度"
   assign_mailer:
     title: "指派邮件发送者"
     subject_template: "[%{email_prefix}]%{assignee_name}指派你到“%{topic_title}”！"

@@ -7,8 +7,8 @@
 ar:
   discourse_assign:
     reminders_frequency:
-      never: 'أبدا'
-      daily: 'يوميا'
-      weekly: 'أسبوعيا'
-      monthly: 'شهري'
-      quarterly: 'فصلي'
+      never: "أبدا"
+      daily: "يوميا"
+      weekly: "أسبوعيا"
+      monthly: "شهري"
+      quarterly: "فصلي"

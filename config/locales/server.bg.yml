@@ -7,6 +7,6 @@
 bg:
   discourse_assign:
     reminders_frequency:
-      never: 'никога'
-      daily: 'дневно'
-      weekly: 'седмично'
+      never: "никога"
+      daily: "дневно"
+      weekly: "седмично"

@@ -7,6 +7,6 @@
 te:
   discourse_assign:
     reminders_frequency:
-      never: 'ఎప్పటికీ వద్దు'
-      daily: 'ప్రతిరోజూ'
-      weekly: 'ప్రతీవారం'
+      never: "ఎప్పటికీ వద్దు"
+      daily: "ప్రతిరోజూ"
+      weekly: "ప్రతీవారం"

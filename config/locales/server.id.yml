@@ -7,6 +7,6 @@
 id:
   discourse_assign:
     reminders_frequency:
-      never: 'tidak pernah'
-      daily: 'harian'
-      weekly: 'mingguan'
+      never: "tidak pernah"
+      daily: "harian"
+      weekly: "mingguan"

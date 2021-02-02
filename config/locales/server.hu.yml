@@ -7,6 +7,6 @@
 hu:
   discourse_assign:
     reminders_frequency:
-      never: 'soha'
-      daily: 'naponta'
-      weekly: 'hetente'
+      never: "soha"
+      daily: "naponta"
+      weekly: "hetente"

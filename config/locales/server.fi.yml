@@ -24,17 +24,17 @@ fi:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
     already_claimed: "Ketju on jo omittu."
-    already_assigned: 'Ketju on jo osoitettu käyttäjälle %{username}'
+    already_assigned: "Ketju on jo osoitettu käyttäjälle %{username}"
     too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen maksimi määrän (%{max}). "
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
     flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
     topic_assigned_excerpt: "osoitti sinulle ketjun '%{title}'"
     reminders_frequency:
-      never: 'ei koskaan'
-      daily: 'päivittäin'
-      weekly: 'viikottain'
-      monthly: 'kuukausittain'
-      quarterly: 'vuosineljännettäin'
+      never: "ei koskaan"
+      daily: "päivittäin"
+      weekly: "viikottain"
+      monthly: "kuukausittain"
+      quarterly: "vuosineljännettäin"
   assign_mailer:
     title: "Osoitus"
     subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun '%{topic_title}'!"
