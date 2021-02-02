@@ -7,6 +7,6 @@
 sk:
   discourse_assign:
     reminders_frequency:
-      never: 'nikdy'
-      daily: 'denne'
-      weekly: 'týždenne'
+      never: "nikdy"
+      daily: "denne"
+      weekly: "týždenne"

@@ -24,18 +24,20 @@ he:
     assigned_to: "הנושא רשום ל@%{username}"
     unassigned: "הקצאת הנושא בוטלה"
     already_claimed: "נושא זה כבר נדרש."
-    already_assigned: 'הנושא כבר מוקצה לטובת ‎@%{username}'
+    already_assigned: "הנושא כבר מוקצה לטובת ‎@%{username}"
     too_many_assigns: "‎@%{username}‎ כבר הגיע לכמות הנושאים המרבית שניתן להקצות לטובתו (%{max})."
     forbidden_assign_to: "אין אפשרות להקצות את ‎@%{username}‎ כיוון שאין להם שייכות לקבוצות מורשות מוקצות."
+    forbidden_assignee_not_pm_participant: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה להודעה הפרטית הזאת. ניתן להעניק ל־‎@%{username} גישה על ידי שליחת הזמנה להודעה הפרטית הזאת."
+    forbidden_assignee_cant_see_topic: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה לנושא הזה."
     flag_assigned: "הנושא של דגל זה מוקצה למשתמש אחר, עמך הסליחה"
     flag_unclaimed: "עליך לדרוש את הנושא הזה בטרם ביצוע פעילות על הדגל"
     topic_assigned_excerpt: "הקצאה של הנושא ‚%{title}’ אליך"
     reminders_frequency:
-      never: 'אף פעם'
-      daily: 'יומית'
-      weekly: 'שבועית'
-      monthly: 'חודשית'
-      quarterly: 'רבעונית'
+      never: "אף פעם"
+      daily: "יומית"
+      weekly: "שבועית"
+      monthly: "חודשית"
+      quarterly: "רבעונית"
   assign_mailer:
     title: "הקצאת שולח דוא״ל"
     subject_template: "[%{email_prefix}] ‚%{topic_title}’ הוקצה אליך על ידי %{assignee_name} !"

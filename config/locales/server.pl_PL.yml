@@ -24,17 +24,17 @@ pl_PL:
     assigned_to: "Temat przypisany do @%{username}"
     unassigned: "Cofnięto przypisanie tematu"
     already_claimed: "Ten temat został już przejęty."
-    already_assigned: 'Temat jest już przypisany do @%{username}'
+    already_assigned: "Temat jest już przypisany do @%{username}"
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
     flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
     flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
     topic_assigned_excerpt: "przypisano ci temat '%{title}'"
     reminders_frequency:
-      never: 'nigdy'
-      daily: 'dziennie'
-      weekly: 'co tydzień'
-      monthly: 'miesięcznie'
-      quarterly: 'kwartalnie'
+      never: "nigdy"
+      daily: "dziennie"
+      weekly: "co tydzień"
+      monthly: "miesięcznie"
+      quarterly: "kwartalnie"
   assign_mailer:
     title: "Przypisz mailera"
     subject_template: "[%{email_prefix}] %{assignee_name} przypisał cię do '%{topic_title}'!"

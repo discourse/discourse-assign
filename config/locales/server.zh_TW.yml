@@ -7,6 +7,6 @@
 zh_TW:
   discourse_assign:
     reminders_frequency:
-      never: '永不'
-      daily: '每天'
-      weekly: '每週'
+      never: "永不"
+      daily: "每天"
+      weekly: "每週"

@@ -7,6 +7,6 @@
 ro:
   discourse_assign:
     reminders_frequency:
-      never: 'niciodată'
-      daily: 'Zilnic'
-      weekly: 'Săptămânal'
+      never: "niciodată"
+      daily: "Zilnic"
+      weekly: "Săptămânal"

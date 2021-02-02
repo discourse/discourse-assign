@@ -9,6 +9,6 @@ lt:
     assign_enabled: "Įgalinti priskirtą įskiepį"
   discourse_assign:
     reminders_frequency:
-      never: 'niekada'
-      daily: 'kas dieną'
-      weekly: 'kas savaitę'
+      never: "niekada"
+      daily: "kas dieną"
+      weekly: "kas savaitę"

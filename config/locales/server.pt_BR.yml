@@ -23,17 +23,17 @@ pt_BR:
     assigned_to: "Tópico designado à @%{username}"
     unassigned: "A designação do tópico foi removida"
     already_claimed: "Aquele tópico já foi reivindicado."
-    already_assigned: 'Tópico já está designado à @%{username}'
+    already_assigned: "Tópico já está designado à @%{username}"
     too_many_assigns: "@%{username} já atingiu o número máximo de tópicos designados (%{max})."
     flag_assigned: "Desculpe, aquele tópico da sinalização está designado à outro usuário"
     flag_unclaimed: "Você precisa reivindicar aquele tópico antes de atuar na sinalização"
     topic_assigned_excerpt: "te designou ao tópico '%{title}'"
     reminders_frequency:
-      never: 'nunca'
-      daily: 'diariamente'
-      weekly: 'semanalmente'
-      monthly: 'mensalmente'
-      quarterly: 'trimestralmente'
+      never: "nunca"
+      daily: "diariamente"
+      weekly: "semanalmente"
+      monthly: "mensalmente"
+      quarterly: "trimestralmente"
   assign_mailer:
     title: "Correio de Designação"
     subject_template: "[%{email_prefix}] %{assignee_name} te designou à '%{topic_title}'!"
