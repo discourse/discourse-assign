@@ -10,8 +10,8 @@
     <input type="checkbox" class="bulk-select">
   </td>
 {{/if}}
-<td class='main-link clearfix' colspan="1">
-  <span class='link-top-line'>
+<td class="main-link clearfix" colspan="1">
+  <span class="link-top-line">
     {{~raw "topic-status" topic=topic}}
     {{~#if isPrivateMessage}}
       {{~d-icon "envelope" class="private-message-icon"}}
@@ -48,8 +48,10 @@
 {{raw "list/activity-column" topic=topic class="num" tagName="td"}}
 
 <td>
-  {{assign-actions-dropdown topic=topic
-                            user=username
-                            unassign=unassign
-                            reassign=reassign}}
+  {{assign-actions-dropdown
+    topic=topic
+    user=username
+    unassign=unassign
+    reassign=reassign
+  }}
 </td>

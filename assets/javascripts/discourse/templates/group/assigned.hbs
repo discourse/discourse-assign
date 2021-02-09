@@ -19,7 +19,8 @@
         assignmentCount=group.assignment_count
         search=search
         ascending=ascending
-        order=order}}
+        order=order
+      }}
       {{#each members as |member|}}
         {{group-assigned-filter
           show-avatar=true
@@ -27,7 +28,8 @@
           routeType=route_type
           search=search
           ascending=ascending
-          order=order}}
+          order=order
+        }}
       {{/each}}
       {{conditional-loading-spinner condition=loading}}
     {{/load-more}}

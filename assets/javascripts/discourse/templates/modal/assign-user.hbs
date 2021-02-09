@@ -15,7 +15,7 @@
     }}
     <div class="assign-suggestions">
       {{#each assignSuggestions as |user|}}
-        <a {{action "assignUser" user}}>
+        <a href {{action "assignUser" user}}>
           {{avatar user imageSize="small"}}
         </a>
       {{/each}}
