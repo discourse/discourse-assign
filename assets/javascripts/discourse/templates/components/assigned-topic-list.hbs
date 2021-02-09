@@ -11,26 +11,29 @@
       ascending=ascending
       sortable=sortable
       listTitle=listTitle
-      bulkSelectEnabled=bulkSelectEnabled}}
+      bulkSelectEnabled=bulkSelectEnabled
+    }}
   </thead>
 {{/unless}}
 
 <tbody>
   {{#each filteredTopics as |topic|}}
-    {{assigned-topic-list-item topic=topic
-                               bulkSelectEnabled=bulkSelectEnabled
-                               showTopicPostBadges=showTopicPostBadges
-                               hideCategory=hideCategory
-                               showPosters=showPosters
-                               showLikes=showLikes
-                               showOpLikes=showOpLikes
-                               expandGloballyPinned=expandGloballyPinned
-                               expandAllPinned=expandAllPinned
-                               lastVisitedTopic=lastVisitedTopic
-                               selected=selected
-                               tagsForUser=tagsForUser
-                               unassign=unassign
-                               reassign=reassign}}
+    {{assigned-topic-list-item
+      topic=topic
+      bulkSelectEnabled=bulkSelectEnabled
+      showTopicPostBadges=showTopicPostBadges
+      hideCategory=hideCategory
+      showPosters=showPosters
+      showLikes=showLikes
+      showOpLikes=showOpLikes
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      lastVisitedTopic=lastVisitedTopic
+      selected=selected
+      tagsForUser=tagsForUser
+      unassign=unassign
+      reassign=reassign
+    }}
 
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}

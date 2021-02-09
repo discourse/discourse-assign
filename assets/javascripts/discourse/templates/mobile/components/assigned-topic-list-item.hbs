@@ -12,7 +12,7 @@
       <div class="topic-excerpt">
         {{html-safe topic.excerpt}}
         {{#if topic.excerptTruncated}}
-          {{#unless topic.canClearPin}}<a href={{unbound topic.url}}>{{i18n "read_more"}}</a>{{/unless}}
+          {{#unless topic.canClearPin}}<a href={{topic.url}}>{{i18n "read_more"}}</a>{{/unless}}
         {{/if}}
         {{#if topic.canClearPin}}
           <a href {{action "clearPin" topic}} title={{i18n "topic.clear_pin.help"}}>{{i18n "topic.clear_pin.title"}}</a>
@@ -33,7 +33,7 @@
     {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
     <div class="pull-right">
       {{raw "list/activity-column" topic=topic tagName="div" class="num activity last"}}
-      <a href={{topic.lastPostUrl}} title="{{i18n 'last_post'}}: {{html-safe raw-date topic.bumped_at}}">{{topic.last_poster_username}}</a>
+      <a href={{topic.lastPostUrl}} title="{{i18n "last_post"}}: {{html-safe raw-date topic.bumped_at}}">{{topic.last_poster_username}}</a>
     </div>
     {{#unless hideCategory}}
       <div class="category">
