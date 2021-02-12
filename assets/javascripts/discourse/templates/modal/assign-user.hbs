@@ -1,17 +1,17 @@
 {{#d-modal-body title="discourse_assign.assign_modal.title" class="assign"}}
   <div>
     {{i18n "discourse_assign.assign_modal.description"}}
-    {{user-selector
-      single=true
-      allowAny=false
-      groupMembersOf=allowedGroups
-      excludeCurrentUser=false
-      includeMentionableGroups=false
-      hasGroups=false
-      usernames=model.username
-      placeholderKey=placeholderKey
+    {{email-group-user-chooser
       autocomplete="off"
       autofocus="autofocus"
+      value=model.username
+      onChange=(action "updateUsername")
+      options=(hash
+        filterPlaceholder=placeholderKey
+        includeGroups=false
+        groupMembersOf=allowedGroups
+        maximum=1
+      )
     }}
     <div class="assign-suggestions">
       {{#each assignSuggestions as |user|}}
