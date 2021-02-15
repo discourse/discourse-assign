@@ -72,5 +72,9 @@ export default Ember.Controller.extend({
         })
         .catch(popupAjaxError);
     },
+
+    updateUsername(selected) {
+      this.set("model.username", selected.firstObject);
+    },
   },
 });

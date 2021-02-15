@@ -1,4 +1,11 @@
+import { action } from "@ember/object";
+
 export default {
+  @action
+  updateAssignedTo(selected) {
+    this.set("additionalFilters.assigned_to", selected.firstObject);
+  },
+
   shouldRender(args) {
     return args.additionalFilters;
   },
