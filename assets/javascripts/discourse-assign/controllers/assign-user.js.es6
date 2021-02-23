@@ -1,12 +1,14 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as controller } from "@ember/controller";
+import { not } from "@ember/object/computed";
 
 export default Ember.Controller.extend({
   topicBulkActions: controller(),
   assignSuggestions: null,
   allowedGroups: null,
   taskActions: Ember.inject.service(),
+  autofocus: not("capabilities.touch"),
 
   init() {
     this._super(...arguments);
