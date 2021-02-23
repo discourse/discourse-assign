@@ -1,13 +1,14 @@
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { inject as controller } from "@ember/controller";
-import discourseComputed from "discourse-common/utils/decorators";
+import { not } from "@ember/object/computed";
 
 export default Ember.Controller.extend({
   topicBulkActions: controller(),
   assignSuggestions: null,
   allowedGroups: null,
   taskActions: Ember.inject.service(),
+  autofocus: not("capabilities.touch"),
 
   init() {
     this._super(...arguments);
@@ -17,11 +18,6 @@ export default Ember.Controller.extend({
       this.set("assignSuggestions", data.suggestions);
       this.set("allowedGroups", data.assign_allowed_on_groups);
     });
-  },
-
-  @discourseComputed("capabilities.touch")
-  autofocus(touch) {
-    return !touch;
   },
 
   onClose() {
