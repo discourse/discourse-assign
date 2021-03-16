@@ -6,14 +6,67 @@
 
 da:
   js:
+    filters:
+      unassigned:
+        title: "Ikke tildelt"
+        help: "Emner, der ikke er tildelt"
+    action_codes:
+      assigned: "tildelt %{who} %{when}"
+      unassigned: "fradelt %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Føj 'ikke-tildelt' filter til kategori"
+      cant_act: "Du kan ikke handle på markeringsflag, der er tildelt andre brugere"
+      cant_act_unclaimed: "Du skal gøre krav på dette emne, før du handler på markeringsflag."
+      topic_search_placeholder: "Søg i emner efter titel eller indhold"
+      sidebar_name_filter_placeholder: "Navn/Brugernavn"
+      assigned: "Tildelt"
       group_everyone: "Alle"
+      assigned_to: "Tildelt til"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      unassign:
+        title: "Fjern tildeling"
+        help: "Fjern tildelingen til %{username} fra Emne"
+      assign:
+        title: "Tildel"
+        help: "Tildel Emne til Bruger"
+      reassign:
+        title: "Gentildel"
+        help: "Gentildel Emne til en anden bruger"
+      assign_modal:
+        title: "Tildel Emne"
+        description: "Angiv navnet på den bruger, du vil tildele dette emne"
+        assign: "Tildel"
+      claim:
+        title: "gør krav"
+        help: "Tildel emne til dig selv"
       assign_mailer:
         never: "Aldrig"
+        different_users: "Kun hvis tildeler og modtager er forskellige brugere"
         always: "Altid"
       reminders_frequency:
+        description: "Frekvens for modtagelse af påmindelser om tildelte emner"
         never: "Aldrig"
         daily: "Dagligt"
         weekly: "Ugentligt"
         monthly: "Månedligt"
         quarterly: "Kvartalvis"
+    user:
+      messages:
+        assigned_title: "Tildelt (%{count})"
+        assigned: "Tildelt"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Tildel Begivenhed"
+          details: "Når en bruger tildeler eller fradeler et emne."
+    search:
+      advanced:
+        in:
+          assigned: "er tildelt"
+          unassigned: "er ikke tildelt"
+        assigned:
+          label: "Tildelt til"
+    topics:
+      bulk:
+        unassign: "Fjern tildeling af emner"
+        assign: "Tildel emner"
