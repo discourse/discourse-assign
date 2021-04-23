@@ -1,14 +1,43 @@
-import { createWidgetFrom, queryRegistry } from "discourse/widgets/widget";
+import RawHtml from "discourse/widgets/raw-html";
+import { iconHTML } from "discourse-common/lib/icon-library";
+import {
+  createWidget,
+  createWidgetFrom,
+  queryRegistry,
+} from "discourse/widgets/widget";
+import getURL from "discourse-common/lib/get-url";
 import { postUrl } from "discourse/lib/utilities";
+import { h } from "virtual-dom";
+import I18n from "I18n";
 
 const ICON = "user-plus";
+
+createWidget("no-quick-access-assignments", {
+  html() {
+    return h("div.empty-state", [
+      h("span.empty-state-title", I18n.t("user.no_assignments_title")),
+      h(
+        "div.empty-state-body",
+        new RawHtml({
+          html:
+            "<p>" +
+            I18n.t("user.no_assignments_body", {
+              preferencesUrl: getURL("/my/preferences/notifications"),
+              icon: iconHTML(ICON),
+            }).htmlSafe() +
+            "</p>",
+        })
+      ),
+    ]);
+  },
+});
 
 const QuickAccessPanel = queryRegistry("quick-access-panel");
 
 if (QuickAccessPanel) {
   createWidgetFrom(QuickAccessPanel, "quick-access-assignments", {
     buildKey: () => "quick-access-assignments",
-    emptyStatePlaceholderItemKey: "choose_topic.none_found",
+    emptyStateWidget: "no-quick-access-assignments",
 
     showAllHref() {
       return `${this.attrs.path}/activity/assigned`;

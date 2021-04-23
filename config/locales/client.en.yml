@@ -48,6 +48,11 @@ en:
       messages:
         assigned_title: "Assigned (%{count})"
         assigned: "Assigned"
+      no_assignments_title: "You don’t have any assignments yet"
+      no_assignments_body: >
+        Your assigned topics and messages will be listed here. You will also receive a periodic reminder notification of your assignments, which you can adjust in your your <a href='%{preferencesUrl}'>user preferences</a>.
+        <br><br>
+        To assign a topic or message to yourself or to someone else, look for the %{icon} assign button at the bottom.
     admin:
       web_hooks:
         assign_event:
