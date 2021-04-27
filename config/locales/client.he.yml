@@ -54,6 +54,9 @@ he:
       messages:
         assigned_title: "מוקצים (%{count})"
         assigned: "מוקצה"
+      no_assignments_title: "אין לך מטלות עדיין"
+      no_assignments_body: >
+        הנושאים שמוקצים אליך יופיעו כאן. תישלחנה אליך הודעות תזכורת מדי פעם בפעם כדי להזכיר לך את המטלות שלך, ניתן להגדיר אותן <a href='%{preferencesUrl}'>בהעדפות המשתמש</a> שלך. <br><br> כדי להקצות נושא או הודעה לעצמך או למישהו אחר יש לחפש את הכפתור %{icon} הקצאה למטה.
     admin:
       web_hooks:
         assign_event:

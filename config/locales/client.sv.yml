@@ -54,6 +54,9 @@ sv:
       messages:
         assigned_title: "Tilldelade (%{count})"
         assigned: "Tilldelad"
+      no_assignments_title: "Du har inga tilldelningar än"
+      no_assignments_body: >
+        Dina tilldelade ämnen och meddelanden visas här i en lista. Du kommer också att få en periodisk påminnelse om dina tilldelningar, som du kan justera i dina <a href='%{preferencesUrl}'>användarinställningar</a>. <br><br> Om du vill tilldela ett ämne eller ett meddelande till dig själv eller till någon annan letar du efter tilldelningsknappen %{icon} längst ned.
     admin:
       web_hooks:
         assign_event:
