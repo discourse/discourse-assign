@@ -279,8 +279,8 @@ class ::TopicAssigner
       end
 
       # clean up in memory object
-      @topic.custom_fields[ASSIGNED_TO_ID] = nil
-      @topic.custom_fields[ASSIGNED_BY_ID] = nil
+      @topic.custom_fields.delete(ASSIGNED_TO_ID)
+      @topic.custom_fields.delete(ASSIGNED_BY_ID)
 
       # nothing to do here
       return if !assigned_to_id
