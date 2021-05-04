@@ -19,7 +19,6 @@ fi:
     remind_assigns: "Muistuta käyttäjiä odottavista tehtävistä"
     remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus"
     max_assigned_topics: "Käyttäjälle osoitettavien ketjujen maksimi määrä. "
-    assign_allowed_on_groups: "Ryhmät, jotka voivat osoittaa ketjuja. "
   discourse_assign:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"

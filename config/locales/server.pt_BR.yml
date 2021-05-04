@@ -18,7 +18,6 @@ pt_BR:
     remind_assigns: "Lembrar usuários sobre designações pendentes."
     remind_assigns_frequency: "Frequência para lembrar usuários sobre tópicos designados."
     max_assigned_topics: "Número máximo de tópicos que podem ser designados a um usuário."
-    assign_allowed_on_groups: "Grupos que podem designar tópicos."
   discourse_assign:
     assigned_to: "Tópico designado à @%{username}"
     unassigned: "A designação do tópico foi removida"
