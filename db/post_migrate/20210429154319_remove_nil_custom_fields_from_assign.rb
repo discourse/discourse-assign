@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class RemoveNilCustomFields < ActiveRecord::Migration[6.0]
+class RemoveNilCustomFieldsFromAssign < ActiveRecord::Migration[6.0]
   def up
     execute <<~SQL
       DELETE FROM topic_custom_fields
