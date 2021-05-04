@@ -19,7 +19,6 @@ zh_CN:
     remind_assigns: "提醒用户正在分配"
     remind_assigns_frequency: "指派主题的用户提醒频率"
     max_assigned_topics: "每个用户每天能分配的主题数量的最大值。"
-    assign_allowed_on_groups: "允许分配主题的组"
   discourse_assign:
     assigned_to: "主题被指派给 @%{username}"
     unassigned: "主题未被指派"

@@ -19,7 +19,6 @@ he:
     remind_assigns: "להזכיר למשתמשים בנוגע להקצאות מתאימות."
     remind_assigns_frequency: "תדירות לשליחת תזכורת למשתמשים בנוגע לנושאים מוקצים."
     max_assigned_topics: "מספר הנושאים המרבי שניתן להקצות למשתמש."
-    assign_allowed_on_groups: "קבוצות שרשאיות להקצות נושאים."
   discourse_assign:
     assigned_to: "הנושא רשום ל@%{username}"
     unassigned: "הקצאת הנושא בוטלה"

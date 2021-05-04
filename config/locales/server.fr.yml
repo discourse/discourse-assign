@@ -19,7 +19,6 @@ fr:
     remind_assigns: "Rappelez aux utilisateurs les assignations en attente."
     remind_assigns_frequency: "Fréquence à laquelle rappeler les assignations aux utilisateurs."
     max_assigned_topics: "Nombre maximum de sujets qui peuvent être assignés à un utilisateur."
-    assign_allowed_on_groups: "Groupes ayant la possibilité d'assigner des sujets."
   discourse_assign:
     assigned_to: "Sujet affecté à @%{username}"
     unassigned: "Le sujet a été désaffecté"

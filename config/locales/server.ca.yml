@@ -18,7 +18,6 @@ ca:
     remind_assigns: "Recorda als usuaris les assignacions pendents."
     remind_assigns_frequency: "Freqüència per a fer memòria als usuaris sobre temes assignats."
     max_assigned_topics: "Nombre màxim de temes que es poden assignar a un usuari."
-    assign_allowed_on_groups: "Grups que poden assignar temes."
   discourse_assign:
     assigned_to: "Tema assignat a @%{username}"
     unassigned: "El tema no estava assignat"

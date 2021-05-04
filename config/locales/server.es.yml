@@ -19,7 +19,6 @@ es:
     remind_assigns: "Recordar a los usuarios sobre asignaciones pendientes."
     remind_assigns_frequency: "Frecuencia para recordar a los usuarios sobre los temas asignados."
     max_assigned_topics: "Número máximo de temas que se pueden asignar a un usuario."
-    assign_allowed_on_groups: "Grupos que tienen permitido asignar temas."
   discourse_assign:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "El tema fue desasignado"

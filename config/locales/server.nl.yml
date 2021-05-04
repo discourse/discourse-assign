@@ -19,7 +19,6 @@ nl:
     remind_assigns: "Gebruikers aan wachtende toewijzingen herinneren"
     remind_assigns_frequency: "Frequentie voor het herinneren van gebruikers aan toegewezen topics."
     max_assigned_topics: "Maximale aantal topics dat aan een gebruiker kan worden toegewezen."
-    assign_allowed_on_groups: "Groepen die topics mogen toewijzen."
   discourse_assign:
     assigned_to: "Topic toegewezen aan @%{username}"
     unassigned: "Toewijzing van topic is opgeheven"

@@ -19,7 +19,6 @@ it:
     remind_assigns: "Ricorda agli utenti le assegnazioni in sospeso."
     remind_assigns_frequency: "Frequenza per ricordare agli utenti gli argomenti assegnati."
     max_assigned_topics: "Numero massimo di argomenti che possono essere assegnati a un utente."
-    assign_allowed_on_groups: "Gruppi a cui è consentito assegnare argomenti."
   discourse_assign:
     assigned_to: "Argomento assegnato a @%{username}"
     unassigned: "L'argomento non è stato assegnato"

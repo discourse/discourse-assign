@@ -19,7 +19,6 @@ ko:
     remind_assigns: "보류중인 할당에 대해 사용자에게 알립니다."
     remind_assigns_frequency: "할당 된 주제에 대해 사용자에게 알리는 빈도입니다."
     max_assigned_topics: "사용자에게 할당 할 수있는 최대 주제 수입니다."
-    assign_allowed_on_groups: "주제를 할당 할 수있는 그룹."
   discourse_assign:
     assigned_to: "@ %{username}에 할당 된 주제"
     unassigned: "주제가 할당되지 않았습니다"

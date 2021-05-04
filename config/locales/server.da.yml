@@ -13,7 +13,6 @@ da:
     unassign_creates_tracking_post: "Hvis du fjerner tildelingen af et emne, oprettes der en hvisken eller en lille handling for at spore ændringer"
     assign_self_regex: "Regex, der skal bestå for selvtildeling. Eksempel 'min liste'"
     assign_other_regex: "Regex, der skal bestå for at tildele emner til andre via omtale. Eksempel 'din liste'."
-    assign_allowed_on_groups: "Grupper, der har tilladelse til at tildele emner."
   discourse_assign:
     assigned_to: "Emne tildelt til @%{username}"
     unassigned: "Emne blev fradelt"

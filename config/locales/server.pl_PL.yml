@@ -19,7 +19,6 @@ pl_PL:
     remind_assigns: "Przypominaj użytkownikom o oczekujących przypisaniach."
     remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
     max_assigned_topics: "Maksymalna liczba tematów, które można przypisać użytkownikowi."
-    assign_allowed_on_groups: "Grupy, którym zezwala się na przypisywanie tematów."
   discourse_assign:
     assigned_to: "Temat przypisany do @%{username}"
     unassigned: "Cofnięto przypisanie tematu"
