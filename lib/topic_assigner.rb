@@ -148,7 +148,7 @@ class ::TopicAssigner
       return { success: false, reason: reason }
     end
     return { success: false, reason: :forbidden_assign_to } unless can_be_assigned?(assign_to)
-    return { success: false, reason: :already_assigned } if @topic.custom_fields && @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
+    return { success: false, reason: :already_assigned } if @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
     return { success: false, reason: :too_many_assigns } unless can_assign_to?(assign_to)
 
     @topic.custom_fields[ASSIGNED_TO_ID] = assign_to.id
@@ -279,8 +279,8 @@ class ::TopicAssigner
       end
 
       # clean up in memory object
-      @topic.custom_fields[ASSIGNED_TO_ID] = nil
-      @topic.custom_fields[ASSIGNED_BY_ID] = nil
+      @topic.custom_fields.delete(ASSIGNED_TO_ID)
+      @topic.custom_fields.delete(ASSIGNED_BY_ID)
 
       # nothing to do here
       return if !assigned_to_id
