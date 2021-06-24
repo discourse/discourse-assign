@@ -69,3 +69,11 @@ en:
       bulk:
         unassign: "Unassign Topics"
         assign: "Assign Topics"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Assignees Group
+            assigned_topic:
+              label: Assigned Topic ID
