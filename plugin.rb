@@ -586,11 +586,7 @@ after_initialize do
       triggerables %i[point_in_time recurring]
 
       script do |context, fields|
-        begin
-          next unless SiteSetting.assign_enabled
-        rescue NoMethodError
-          next
-        end
+        next unless SiteSetting.try(:assign_enabled)
 
         next unless group_id = fields.dig('assignees_group', 'group_id')
         next unless group = Group.find_by(id: group_id)
