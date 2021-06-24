@@ -575,4 +575,28 @@ after_initialize do
       end
     end
   end
+
+  if defined?(DiscourseAutomation)
+    add_automation_scriptable('random_assign') do
+      field :assignees_group, component: :group
+      field :assigned_topic, component: :text
+
+      version 1
+
+      triggerables %i[point_in_time recurring]
+
+      script do |context, fields|
+        next unless SiteSetting.assign_enabled?
+
+        next unless group_id = fields.dig('assignees_group', 'group_id')
+        next unless group = Group.find_by(id: group_id)
+        assign_to = group.group_users.order(Arel.sql('RANDOM()')).first.user
+
+        next unless topic_id = fields.dig('assigned_topic', 'text')
+        next unless topic = Topic.find_by(id: topic_id)
+
+        TopicAssigner.new(topic, Discourse.system_user).assign(assign_to)
+      end
+    end
+  end
 end
