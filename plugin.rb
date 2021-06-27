@@ -2,7 +2,7 @@
 
 # name: discourse-assign
 # about: Assign users to topics
-# version: 0.1
+# version: 1.0.0
 # authors: Sam Saffron
 # url: https://github.com/discourse/discourse-assign
 
