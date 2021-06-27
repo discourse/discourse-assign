@@ -13,6 +13,7 @@ import TopicButtonAction, {
 } from "discourse/controllers/topic-bulk-actions";
 import { inject } from "@ember/controller";
 import I18n from "I18n";
+import { get } from "@ember/object";
 
 function titleForState(user) {
   if (user) {
@@ -308,11 +309,11 @@ function initialize(api) {
     if (dec.attrs.post_number === 1) {
       const postModel = dec.getModel();
       if (postModel) {
-        const assignedToUser = Ember.get(postModel, "topic.assigned_to_user");
+        const assignedToUser = get(postModel, "topic.assigned_to_user");
         if (assignedToUser) {
           return dec.widget.attach("assigned-to", {
             assignedToUser,
-            href: Ember.get(postModel, "topic.assignedToUserPath"),
+            href: get(postModel, "topic.assignedToUserPath"),
           });
         }
       }

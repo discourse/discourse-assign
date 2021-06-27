@@ -1,13 +1,15 @@
+import Controller, { inject as controller } from "@ember/controller";
+import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { inject as controller } from "@ember/controller";
 import { not } from "@ember/object/computed";
+import { isEmpty } from "@ember/utils";
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   topicBulkActions: controller(),
   assignSuggestions: null,
   allowedGroups: null,
-  taskActions: Ember.inject.service(),
+  taskActions: service(),
   autofocus: not("capabilities.touch"),
 
   init() {
@@ -53,7 +55,7 @@ export default Ember.Controller.extend({
       }
       let path = "/assign/assign";
 
-      if (Ember.isEmpty(this.get("model.username"))) {
+      if (isEmpty(this.get("model.username"))) {
         path = "/assign/unassign";
         this.set("model.assigned_to_user", null);
       }

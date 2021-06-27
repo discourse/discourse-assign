@@ -1,5 +1,6 @@
 import TopicListItem from "discourse/components/topic-list-item";
+import { equal } from "@ember/object/computed";
 
 export default TopicListItem.extend({
-  isPrivateMessage: Ember.computed.equal("topic.archetype", "private_message"),
+  isPrivateMessage: equal("topic.archetype", "private_message"),
 });

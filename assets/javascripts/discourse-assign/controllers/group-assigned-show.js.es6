@@ -3,10 +3,12 @@ import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
 import debounce from "discourse/plugins/discourse-assign/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
+import { inject as controller } from "@ember/controller";
+import { inject as service } from "@ember/service";
 
 export default UserTopicsList.extend({
-  user: Ember.inject.controller(),
-  taskActions: Ember.inject.service(),
+  user: controller(),
+  taskActions: service(),
   order: "",
   ascending: false,
   search: "",
