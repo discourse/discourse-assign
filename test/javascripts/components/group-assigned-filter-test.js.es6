@@ -1,3 +1,4 @@
+import { query } from "discourse/tests/helpers/qunit-helpers";
 import componentTest from "discourse/tests/helpers/component-test";
 
 moduleForComponent("group-assigned-filter", { integration: true });
@@ -20,9 +21,10 @@ componentTest("display username", {
     });
   },
   async test(assert) {
-    assert.ok(find("li")[0].innerText.trim(), "Ahmed");
+    assert.equal(query("li").innerText.trim(), "Ahmed");
   },
 });
+
 componentTest("display name", {
   template: "{{group-assigned-filter show-avatar=true filter=filter}}",
 
@@ -41,6 +43,6 @@ componentTest("display name", {
     });
   },
   async test(assert) {
-    assert.ok(find("li")[0].innerText.trim(), "Ahmed Gagan");
+    assert.equal(query("li").innerText.trim(), "Ahmed Gagan");
   },
 });

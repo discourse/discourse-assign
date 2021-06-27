@@ -1,6 +1,6 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { default as AssignedTopics } from "../fixtures/assigned-group-assignments-fixtures";
-import { default as GroupMembers } from "../fixtures/group-members-fixtures";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import AssignedTopics from "../fixtures/assigned-group-assignments-fixtures";
+import GroupMembers from "../fixtures/group-members-fixtures";
 
 acceptance("GroupAssignments", function (needs) {
   needs.user();
@@ -20,12 +20,12 @@ acceptance("GroupAssignments", function (needs) {
   test("Group Assignments Everyone", async (assert) => {
     await visit("/g/discourse/assigned");
     assert.equal(currentPath(), "group.assigned.show");
-    assert.ok(find(".topic-list-item").length === 1);
+    assert.equal(count(".topic-list-item"), 1);
   });
 
   test("Group Assignments Ahmedgagan", async (assert) => {
     await visit("/g/discourse/assigned/ahmedgagan6");
     assert.equal(currentPath(), "group.assigned.show");
-    assert.ok(find(".topic-list-item").length === 1);
+    assert.equal(count(".topic-list-item"), 1);
   });
 });
