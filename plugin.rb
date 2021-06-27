@@ -137,10 +137,8 @@ after_initialize do
       BookmarkQuery.on_preload do |bookmarks, bookmark_query|
         if SiteSetting.assign_enabled?
           assigned_user_ids = bookmarks.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
-          assigned_users = {}
-          User.where(id: assigned_user_ids).each do |user|
-            assigned_users[user.id] = user
-          end
+          assigned_users = User.where(id: assigned_user_ids).index_by(&:id)
+
           bookmarks.each do |bookmark|
             bookmark.topic.preload_assigned_to_user(
               assigned_users[bookmark.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
@@ -171,12 +169,11 @@ after_initialize do
           users = users.joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
         end
 
-        map = {}
-        users.each { |u| map[u.id] = u }
+        users_map = users.index_by(&:id)
 
         topics.each do |t|
           if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-            t.preload_assigned_to_user(map[id.to_i])
+            t.preload_assigned_to_user(users_map[id.to_i])
           end
         end
       end
