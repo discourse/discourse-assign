@@ -1,6 +1,7 @@
 import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import cookie from "discourse/lib/cookie";
+import { action } from "@ember/object";
 
 export default UserTopicListRoute.extend({
   userActionType: 16,
@@ -42,9 +43,8 @@ export default UserTopicListRoute.extend({
     controller.set("model", model);
   },
 
-  actions: {
-    changeAssigned() {
-      this.refresh();
-    },
+  @action
+  changeAssigned() {
+    this.refresh();
   },
 });

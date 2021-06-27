@@ -4,6 +4,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
+import { action } from "@ember/object";
 
 export default Controller.extend({
   topicBulkActions: controller(),
@@ -35,50 +36,50 @@ export default Controller.extend({
     });
   },
 
-  actions: {
-    assignUser(user) {
-      if (this.isBulkAction) {
-        this.bulkAction(user.username);
-        return;
-      }
-      this.setProperties({
-        "model.username": user.username,
-        "model.allowedGroups": this.taskActions.allowedGroups,
-      });
-      this.send("assign");
-    },
+  @action
+  assignUser(user) {
+    if (this.isBulkAction) {
+      this.bulkAction(user.username);
+      return;
+    }
+    this.setProperties({
+      "model.username": user.username,
+      "model.allowedGroups": this.taskActions.allowedGroups,
+    });
+    this.send("assign");
+  },
 
-    assign() {
-      if (this.isBulkAction) {
-        this.bulkAction(this.model.username);
-        return;
-      }
-      let path = "/assign/assign";
+  @action
+  assign() {
+    if (this.isBulkAction) {
+      this.bulkAction(this.model.username);
+      return;
+    }
+    let path = "/assign/assign";
 
-      if (isEmpty(this.get("model.username"))) {
-        path = "/assign/unassign";
-        this.set("model.assigned_to_user", null);
-      }
+    if (isEmpty(this.get("model.username"))) {
+      path = "/assign/unassign";
+      this.set("model.assigned_to_user", null);
+    }
 
-      this.send("closeModal");
+    this.send("closeModal");
 
-      return ajax(path, {
-        type: "PUT",
-        data: {
-          username: this.get("model.username"),
-          topic_id: this.get("model.topic.id"),
-        },
+    return ajax(path, {
+      type: "PUT",
+      data: {
+        username: this.get("model.username"),
+        topic_id: this.get("model.topic.id"),
+      },
+    })
+      .then(() => {
+        if (this.get("model.onSuccess")) {
+          this.get("model.onSuccess")();
+        }
       })
-        .then(() => {
-          if (this.get("model.onSuccess")) {
-            this.get("model.onSuccess")();
-          }
-        })
-        .catch(popupAjaxError);
-    },
+      .catch(popupAjaxError);
+  },
 
-    updateUsername(selected) {
-      this.set("model.username", selected.firstObject);
-    },
+  updateUsername(selected) {
+    this.set("model.username", selected.firstObject);
   },
 });

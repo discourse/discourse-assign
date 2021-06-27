@@ -1,5 +1,6 @@
 import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { action } from "@ember/object";
 
 export default DropdownSelectBoxComponent.extend({
   classNames: ["assign-actions-dropdown"],
@@ -27,16 +28,15 @@ export default DropdownSelectBoxComponent.extend({
     ];
   },
 
-  actions: {
-    onSelect(id) {
-      switch (id) {
-        case "unassign":
-          this.unassign(this.topic, this.user);
-          break;
-        case "reassign":
-          this.reassign(this.topic, this.user);
-          break;
-      }
-    },
+  @action
+  onSelect(id) {
+    switch (id) {
+      case "unassign":
+        this.unassign(this.topic, this.user);
+        break;
+      case "reassign":
+        this.reassign(this.topic, this.user);
+        break;
+    }
   },
 });

@@ -4,6 +4,7 @@ import discourseDebounce from "discourse-common/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { inject as controller } from "@ember/controller";
 import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 export default UserTopicsList.extend({
   user: controller(),
@@ -40,27 +41,32 @@ export default UserTopicsList.extend({
       });
   },
 
-  actions: {
-    unassign(topic) {
-      this.taskActions
-        .unassign(topic.get("id"))
-        .then(() => this.send("changeAssigned"));
-    },
-    reassign(topic) {
-      const controller = this.taskActions.assign(topic);
-      controller.set("model.onSuccess", () => this.send("changeAssigned"));
-    },
-    changeSort(sortBy) {
-      if (sortBy === this.order) {
-        this.toggleProperty("ascending");
-        this.refreshModel();
-      } else {
-        this.setProperties({ order: sortBy, ascending: false });
-        this.refreshModel();
-      }
-    },
-    onChangeFilter(value) {
-      discourseDebounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
-    },
+  @action
+  unassign(topic) {
+    this.taskActions
+      .unassign(topic.get("id"))
+      .then(() => this.send("changeAssigned"));
+  },
+
+  @action
+  reassign(topic) {
+    const controller = this.taskActions.assign(topic);
+    controller.set("model.onSuccess", () => this.send("changeAssigned"));
+  },
+
+  @action
+  changeSort(sortBy) {
+    if (sortBy === this.order) {
+      this.toggleProperty("ascending");
+      this.refreshModel();
+    } else {
+      this.setProperties({ order: sortBy, ascending: false });
+      this.refreshModel();
+    }
+  },
+
+  @action
+  onChangeFilter(value) {
+    discourseDebounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
   },
 });
