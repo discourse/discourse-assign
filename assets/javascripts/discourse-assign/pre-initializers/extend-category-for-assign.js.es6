@@ -11,10 +11,7 @@ export default {
         "custom_fields.enable_unassigned_filter",
         {
           get() {
-            if (this && this.custom_fields) {
-              return this.custom_fields.enable_unassigned_filter === "true";
-            }
-            return false;
+            return this?.custom_fields?.enable_unassigned_filter === "true";
           },
         }
       ),
