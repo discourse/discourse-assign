@@ -55,8 +55,9 @@ export default UserTopicsList.extend({
 
   @action
   reassign(topic) {
-    const controller = this.taskActions.assign(topic);
-    controller.set("model.onSuccess", () => this.send("changeAssigned"));
+    this.taskActions
+      .assign(topic)
+      .set("model.onSuccess", () => this.send("changeAssigned"));
   },
 
   @action
