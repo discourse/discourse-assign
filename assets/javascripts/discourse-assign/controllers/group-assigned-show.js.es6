@@ -1,7 +1,7 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import { alias } from "@ember/object/computed";
 import discourseComputed from "discourse-common/utils/decorators";
-import debounce from "discourse/plugins/discourse-assign/lib/debounce";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { inject as controller } from "@ember/controller";
 import { inject as service } from "@ember/service";
@@ -65,7 +65,7 @@ export default UserTopicsList.extend({
       }
     },
     onChangeFilter(value) {
-      debounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
+      discourseDebounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
     },
     toggleBulkSelect() {
       this.toggleProperty("bulkSelectEnabled");
