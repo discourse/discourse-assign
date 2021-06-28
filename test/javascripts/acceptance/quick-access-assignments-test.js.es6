@@ -1,11 +1,9 @@
 import {
   acceptance,
-  queryAll,
+  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { default as AssignedTopics } from "../fixtures/assigned-topics-fixtures";
-
-const USER_MENU = "#current-user.header-dropdown-toggle";
+import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 
 acceptance("Quick access assignments panel", function (needs) {
   needs.user();
@@ -21,22 +19,15 @@ acceptance("Quick access assignments panel", function (needs) {
     updateCurrentUser({ can_assign: true });
 
     await visit("/");
-    await click(USER_MENU);
+    await click("#current-user.header-dropdown-toggle");
 
-    // TODO: Remove when 2.7 gets released
-    let quickAccessAssignmentsTab = ".widget-button.assigned";
-
-    if (queryAll(quickAccessAssignmentsTab).length === 0) {
-      quickAccessAssignmentsTab = ".widget-link.assigned";
-    }
-
-    await click(quickAccessAssignmentsTab);
-    const assignment = find(".quick-access-panel li a")[0];
+    await click(".widget-button.assigned");
+    const assignment = query(".quick-access-panel li a");
 
     assert.ok(assignment.innerText.includes("Greetings!"));
     assert.ok(assignment.href.includes("/t/greetings/10/5"));
 
-    await click(quickAccessAssignmentsTab);
+    await click(".widget-button.assigned");
     assert.equal(
       currentPath(),
       "user.userActivity.assigned",

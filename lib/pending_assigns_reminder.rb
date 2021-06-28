@@ -87,12 +87,6 @@ class PendingAssignsReminder
 
   def update_last_reminded(user)
     update_last_reminded = { REMINDED_AT => DateTime.now }
-    # New API in Discouse that's better under concurrency
-    if user.respond_to?(:upsert_custom_fields)
-      user.upsert_custom_fields(update_last_reminded)
-    else
-      user.custom_fields.merge!(update_last_reminded)
-      user.save_custom_fields
-    end
+    user.upsert_custom_fields(update_last_reminded)
   end
 end

@@ -98,21 +98,13 @@ module DiscourseAssign
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
-      # TODO Drop AvatarLookup after Discourse 2.6.0 release
-      lookup_columns = defined?(UserLookup) ? UserLookup.lookup_columns : AvatarLookup.lookup_columns
-
       users = User
         .where("users.id IN (SELECT value::int FROM topic_custom_fields WHERE name = 'assigned_to_id' AND topic_id IN (?))", topics.map(&:id))
         .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
-        .select(lookup_columns)
+        .select(UserLookup.lookup_columns)
         .to_a
 
-      # TODO Drop after Discourse 2.6.0 release
-      if User.respond_to?(:allowed_user_custom_fields)
-        User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
-      else
-        User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
-      end
+      User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
 
       users = users.to_h { |u| [u.id, u] }
       topics.each do |t|

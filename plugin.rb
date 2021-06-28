@@ -2,7 +2,7 @@
 
 # name: discourse-assign
 # about: Assign users to topics
-# version: 0.1
+# version: 1.0.0
 # authors: Sam Saffron
 # url: https://github.com/discourse/discourse-assign
 
@@ -11,8 +11,8 @@ enabled_site_setting :assign_enabled
 register_asset 'stylesheets/assigns.scss'
 register_asset 'stylesheets/mobile/assigns.scss', :mobile
 
-register_svg_icon "user-plus" if respond_to?(:register_svg_icon)
-register_svg_icon "user-times" if respond_to?(:register_svg_icon)
+register_svg_icon "user-plus"
+register_svg_icon "user-times"
 
 load File.expand_path('../lib/discourse_assign/engine.rb', __FILE__)
 load File.expand_path('../lib/discourse_assign/helpers.rb', __FILE__)
@@ -128,25 +128,19 @@ after_initialize do
   end
 
   TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
-  Site.preloaded_category_custom_fields << "enable_unassigned_filter" if Site.respond_to? :preloaded_category_custom_fields
-  Search.preloaded_topic_custom_fields << TopicAssigner::ASSIGNED_TO_ID if Search.respond_to? :preloaded_topic_custom_fields
+  Site.preloaded_category_custom_fields << "enable_unassigned_filter"
+  Search.preloaded_topic_custom_fields << TopicAssigner::ASSIGNED_TO_ID
 
-  if defined? BookmarkQuery
-    if BookmarkQuery.respond_to?(:preloaded_custom_fields) && BookmarkQuery.respond_to?(:on_preload)
-      BookmarkQuery.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
-      BookmarkQuery.on_preload do |bookmarks, bookmark_query|
-        if SiteSetting.assign_enabled?
-          assigned_user_ids = bookmarks.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
-          assigned_users = {}
-          User.where(id: assigned_user_ids).each do |user|
-            assigned_users[user.id] = user
-          end
-          bookmarks.each do |bookmark|
-            bookmark.topic.preload_assigned_to_user(
-              assigned_users[bookmark.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
-            )
-          end
-        end
+  BookmarkQuery.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
+  BookmarkQuery.on_preload do |bookmarks, bookmark_query|
+    if SiteSetting.assign_enabled?
+      assigned_user_ids = bookmarks.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
+      assigned_users = User.where(id: assigned_user_ids).index_by(&:id)
+
+      bookmarks.each do |bookmark|
+        bookmark.topic.preload_assigned_to_user(
+          assigned_users[bookmark.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
+        )
       end
     end
   end
@@ -156,47 +150,40 @@ after_initialize do
       can_assign = topic_list.current_user && topic_list.current_user.can_assign?
       allowed_access = SiteSetting.assigns_public || can_assign
 
-      # TODO Drop AvatarLookup after Discourse 2.6.0 release
-      lookup_columns = defined?(UserLookup) ? UserLookup.lookup_columns : AvatarLookup.lookup_columns
-
       if allowed_access && topics.length > 0
-        users = User.where("users.id in (
+        users = User
+          .where(<<~SQL, topic_ids: topics.map(&:id))
+            users.id in (
               SELECT value::int
               FROM topic_custom_fields
-              WHERE name = 'assigned_to_id' AND topic_id IN (?)
-        )", topics.map(&:id))
-          .select(lookup_columns)
+              WHERE name = 'assigned_to_id' AND topic_id IN (:topic_ids)
+            )
+          SQL
+          .select(UserLookup.lookup_columns)
 
-        if !defined?(UserLookup) # Remove after Discourse 2.6.0
-          users = users.joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
-        end
-
-        map = {}
-        users.each { |u| map[u.id] = u }
+        users_map = users.index_by(&:id)
 
         topics.each do |t|
           if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-            t.preload_assigned_to_user(map[id.to_i])
+            t.preload_assigned_to_user(users_map[id.to_i])
           end
         end
       end
     end
   end
 
-  if Search.respond_to?(:on_preload)
-    Search.on_preload do |results, search|
-      if SiteSetting.assign_enabled?
-        can_assign = search.guardian&.can_assign?
-        allowed_access = SiteSetting.assigns_public || can_assign
+  Search.on_preload do |results, search|
+    if SiteSetting.assign_enabled?
+      can_assign = search.guardian&.can_assign?
+      allowed_access = SiteSetting.assigns_public || can_assign
 
-        if allowed_access && results.posts.length > 0
-          assigned_user_ids = results.posts.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
-          assigned_users = User.where(id: assigned_user_ids).index_by(&:id)
-          results.posts.each do |post|
-            post.topic.preload_assigned_to_user(
-              assigned_users[post.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
-            )
-          end
+      if allowed_access && results.posts.length > 0
+        assigned_user_ids = results.posts.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
+        assigned_users = User.where(id: assigned_user_ids).index_by(&:id)
+        results.posts.each do |post|
+          post.topic.preload_assigned_to_user(
+            assigned_users[post.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
+          )
         end
       end
     end
@@ -206,9 +193,7 @@ after_initialize do
   TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
     if topic_query.guardian.can_assign? || SiteSetting.assigns_public
       username = topic_query.options[:assigned]
-
       user_id = topic_query.guardian.user.id if username == "me"
-
       special = ["*", "nobody"].include?(username)
 
       if username.present? && !special
@@ -216,14 +201,12 @@ after_initialize do
       end
 
       if user_id || special
-
         if username == "nobody"
           results = results.joins("LEFT JOIN topic_custom_fields tc_assign ON
                                     topics.id = tc_assign.topic_id AND
                                     tc_assign.name = 'assigned_to_id'")
             .where("tc_assign.name IS NULL")
         else
-
           if username == "*"
             filter = "AND tc_assign.value IS NOT NULL"
           else
@@ -393,24 +376,20 @@ after_initialize do
     end
   end
 
-  if defined? register_permitted_bulk_action_parameter
-    register_permitted_bulk_action_parameter :username
+  register_permitted_bulk_action_parameter :username
+
+  add_to_class(:user_bookmark_serializer, :assigned_to_user_id) do
+    id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
+    # a bit messy but race conditions can give us an array here, avoid
+    id && id.to_i rescue nil
   end
 
-  if defined? UserBookmarkSerializer
-    add_to_class(:user_bookmark_serializer, :assigned_to_user_id) do
-      id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-      # a bit messy but race conditions can give us an array here, avoid
-      id && id.to_i rescue nil
-    end
+  add_to_serializer(:user_bookmark, :assigned_to_user, false) do
+    topic.assigned_to_user
+  end
 
-    add_to_serializer(:user_bookmark, :assigned_to_user, false) do
-      topic.assigned_to_user
-    end
-
-    add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
-      (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to_user
-    end
+  add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
+    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to_user
   end
 
   add_to_serializer(:current_user, :can_assign) do

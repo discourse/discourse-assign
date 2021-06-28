@@ -1,7 +1,8 @@
+import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 
-export default Ember.Service.extend({
+export default Service.extend({
   unassign(topicId) {
     return ajax("/assign/unassign", {
       type: "PUT",

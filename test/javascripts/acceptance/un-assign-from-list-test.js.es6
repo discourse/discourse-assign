@@ -1,6 +1,6 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { default as AssignedTopics } from "../fixtures/assigned-topics-fixtures";
+import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 
 acceptance("UnAssign/Re-assign from the topics list", function (needs) {
   needs.user();
@@ -17,7 +17,7 @@ acceptance("UnAssign/Re-assign from the topics list", function (needs) {
     await visit("/u/eviltrout/activity/assigned");
     await options.expand();
 
-    assert.equal(find("li[data-value='unassign']").length, 1);
-    assert.equal(find("li[data-value='reassign']").length, 1);
+    assert.equal(count("li[data-value='unassign']"), 1);
+    assert.equal(count("li[data-value='reassign']"), 1);
   });
 });
