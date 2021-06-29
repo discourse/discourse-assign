@@ -73,3 +73,11 @@ sv:
       bulk:
         unassign: "Otilldela ämnen"
         assign: "Tilldela ämnen"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Tilldelade-grupp
+            assigned_topic:
+              label: Tilldelat ämnes-ID

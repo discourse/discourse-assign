@@ -73,3 +73,11 @@ he:
       bulk:
         unassign: "ביטול הקצאת נושאים"
         assign: "הקצאת נושאים"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: קבוצת מוקצים
+            assigned_topic:
+              label: מזהה נושא מוקצה
