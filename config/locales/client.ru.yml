@@ -73,3 +73,9 @@ ru:
       bulk:
         unassign: "Снять ответственного"
         assign: "Назначить ответственного"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assigned_topic:
+              label: ID назначенной темы

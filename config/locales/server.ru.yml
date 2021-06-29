@@ -19,6 +19,7 @@ ru:
     remind_assigns: "Напоминать пользователям об ожидающих назначениях."
     remind_assigns_frequency: "Частота напоминания пользователям о назначенных темах."
     max_assigned_topics: "Максимальное количество тем, которые могут быть назначены пользователю."
+    assign_allowed_on_groups: "Пользователи в указанных группах могут назначать ответственного в тему."
   discourse_assign:
     assigned_to: "Тема назначена пользователю @%{username}"
     unassigned: "Ответственный снят"
@@ -61,3 +62,7 @@ ru:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Случайное назначение

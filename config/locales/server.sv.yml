@@ -19,6 +19,7 @@ sv:
     remind_assigns: "Påminn användare om väntande tilldelningar."
     remind_assigns_frequency: "Hur ofta användare påminns om tilldelade ämnen."
     max_assigned_topics: "Maximalt antal ämnen som kan tilldelas en användare."
+    assign_allowed_on_groups: "Användare i dessa grupper får tilldela ämnen och kan tilldelas ämnen."
   discourse_assign:
     assigned_to: "Ämne tilldelat @%{username}"
     unassigned: "Ämnets tilldelning togs bort"
@@ -67,3 +68,7 @@ sv:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Tilldela slumpmässigt
