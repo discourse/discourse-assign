@@ -79,6 +79,7 @@ export default Controller.extend({
       .catch(popupAjaxError);
   },
 
+  @action
   updateUsername(selected) {
     this.set("model.username", selected.firstObject);
   },
