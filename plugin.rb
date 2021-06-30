@@ -584,12 +584,14 @@ after_initialize do
           next
         end
 
-        users_on_holiday = User
-          .where(id:
-            UserCustomField
-            .where(name: 'on_holiday', value: 't')
-            .pluck(:user_id)
-          )
+        users_on_holiday = Set.new(
+          User
+            .where(id:
+              UserCustomField
+              .where(name: 'on_holiday', value: 't')
+              .pluck(:user_id)
+            ).pluck(:id)
+        )
 
         group_users_ids = group
           .group_users
