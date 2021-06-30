@@ -556,9 +556,12 @@ after_initialize do
   end
 
   if defined?(DiscourseAutomation)
+    require 'random_assign_utils'
+
     add_automation_scriptable('random_assign') do
       field :assignees_group, component: :group
       field :assigned_topic, component: :text
+      field :minimum_time_between_assignments, component: :text
 
       version 1
 
@@ -567,14 +570,74 @@ after_initialize do
       script do |context, fields|
         next unless SiteSetting.assign_enabled?
 
-        next unless group_id = fields.dig('assignees_group', 'group_id')
-        next unless group = Group.find_by(id: group_id)
-        assign_to = group.group_users.order(Arel.sql('RANDOM()')).first.user
-
         next unless topic_id = fields.dig('assigned_topic', 'text')
         next unless topic = Topic.find_by(id: topic_id)
 
-        TopicAssigner.new(topic, Discourse.system_user).assign(assign_to)
+        next unless group_id = fields.dig('assignees_group', 'group_id')
+        next unless group = Group.find_by(id: group_id)
+
+        min_hours = (fields.dig('minimum_time_between_assignments', 'text') || 12).to_i
+        if TopicCustomField
+          .where(name: 'assigned_to_id', topic_id: topic_id)
+          .where('created_at < ?', min_hours.hours.ago)
+          .exists?
+          next
+        end
+
+        users_on_holiday = User
+          .where(id:
+            UserCustomField
+            .where(name: 'on_holiday', value: 't')
+            .pluck(:user_id)
+          )
+
+        group_users_ids = group
+          .group_users
+          .joins(:user)
+          .pluck('users.id')
+          .reject { |user_id| users_on_holiday.include?(user_id) }
+
+        if group_users_ids.empty?
+          RandomAssignUtils.no_one!(topic_id, group.name)
+          next
+        end
+
+        last_assignees_ids = UserAction
+          .joins(:user)
+          .where(action_type: UserAction::ASSIGNED, target_topic_id: topic_id)
+          .where('user_actions.created_at > ?', 6.months.ago)
+          .order(created_at: :desc)
+          .limit(group_users_ids.length)
+          .pluck('users.id')
+          .uniq
+
+        users_ids = group_users_ids - last_assignees_ids
+        if users_ids.blank?
+          recently_assigned_users_ids = UserAction
+            .joins(:user)
+            .where(action_type: UserAction::ASSIGNED, target_topic_id: topic_id)
+            .where('user_actions.created_at < ?', 2.weeks.ago)
+            .pluck('users.id')
+            .uniq
+          users_ids = group_users_ids - recently_assigned_users_ids
+        end
+
+        if users_ids.blank?
+          RandomAssignUtils.no_one!(topic_id, group.name)
+          next
+        end
+
+        assign_to_user_id = users_ids.shuffle.find do |user_id|
+          RandomAssignUtils.in_working_hours?(user_id)
+        end
+
+        if assign_to_user_id.blank?
+          RandomAssignUtils.no_one!(topic_id, group.name)
+          next
+        end
+
+        assign_to = User.find_by(id: assign_to_user_id)
+        assign_to && TopicAssigner.new(topic, Discourse.system_user).assign(assign_to)
       end
     end
   end
