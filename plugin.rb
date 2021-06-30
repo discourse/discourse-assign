@@ -578,9 +578,9 @@ after_initialize do
 
         min_hours = (fields.dig('minimum_time_between_assignments', 'text') || 12).to_i
         if TopicCustomField
-          .where(name: 'assigned_to_id', topic_id: topic_id)
-          .where('created_at < ?', min_hours.hours.ago)
-          .exists?
+            .where(name: 'assigned_to_id', topic_id: topic_id)
+            .where('created_at < ?', min_hours.hours.ago)
+            .exists?
           next
         end
 
