@@ -570,13 +570,13 @@ after_initialize do
       script do |context, fields|
         next unless SiteSetting.assign_enabled?
 
-        next unless topic_id = fields.dig('assigned_topic', 'text')
+        next unless topic_id = fields.dig('assigned_topic', 'value')
         next unless topic = Topic.find_by(id: topic_id)
 
-        next unless group_id = fields.dig('assignees_group', 'group_id')
+        next unless group_id = fields.dig('assignees_group', 'value')
         next unless group = Group.find_by(id: group_id)
 
-        min_hours = (fields.dig('minimum_time_between_assignments', 'text') || 12).to_i
+        min_hours = (fields.dig('minimum_time_between_assignments', 'value') || 12).to_i
         if TopicCustomField
             .where(name: 'assigned_to_id', topic_id: topic_id)
             .where('created_at < ?', min_hours.hours.ago)
