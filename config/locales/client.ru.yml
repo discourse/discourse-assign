@@ -21,7 +21,7 @@ ru:
       sidebar_name_filter_placeholder: "Имя / псевдоним"
       assigned: "Назначенные темы"
       group_everyone: "Все"
-      assigned_to: "Кому назначено"
+      assigned_to: "Назначено:"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Снять ответственного"
