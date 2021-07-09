@@ -3,6 +3,10 @@
 require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
+def assert_reminder_not_created
+  expect { subject.remind(user) }.to change { Post.count }.by(0)
+end
+
 RSpec.describe PendingAssignsReminder do
   before { SiteSetting.assign_enabled = true }
 
@@ -17,10 +21,6 @@ RSpec.describe PendingAssignsReminder do
     TopicAssigner.new(post.topic, user).assign(user)
 
     assert_reminder_not_created
-  end
-
-  def assert_reminder_not_created
-    expect { subject.remind(user) }.to change { Post.count }.by(0)
   end
 
   describe 'when the user has multiple tasks' do

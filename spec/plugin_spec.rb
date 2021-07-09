@@ -20,9 +20,7 @@ describe 'plugin' do
         TopicAssigner.new(@topic, Discourse.system_user).assign(@user)
         @group_a.remove(@user)
 
-        custom_fields = @topic.reload.custom_fields
-        expect(custom_fields[TopicAssigner::ASSIGNED_TO_ID]).to be_nil
-        expect(custom_fields[TopicAssigner::ASSIGNED_BY_ID]).to be_nil
+        expect(Assignment.count).to eq(0)
       end
 
       it "doesn't unassign the user if it still has access through another group" do
@@ -33,9 +31,9 @@ describe 'plugin' do
         TopicAssigner.new(@topic, Discourse.system_user).assign(@user)
         @group_a.remove(@user)
 
-        custom_fields = @topic.reload.custom_fields
-        expect(custom_fields[TopicAssigner::ASSIGNED_TO_ID]).to eq(@user.id.to_s)
-        expect(custom_fields[TopicAssigner::ASSIGNED_BY_ID]).to eq(Discourse::SYSTEM_USER_ID.to_s)
+        assignment = Assignment.first
+        expect(assignment.assigned_to_id).to eq(@user.id)
+        expect(assignment.assigned_by_user_id).to eq(Discourse::SYSTEM_USER_ID)
       end
     end
   end

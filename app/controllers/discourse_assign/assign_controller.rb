@@ -11,12 +11,11 @@ module DiscourseAssign
         .where('users.id <> ?', current_user.id)
         .joins(<<~SQL
           JOIN(
-                SELECT value::integer user_id, MAX(created_at) last_assigned
-                FROM topic_custom_fields
-                WHERE name = 'assigned_to_id'
-                GROUP BY value::integer
-                HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
-              ) as X ON X.user_id = users.id
+            SELECT assigned_to_id user_id, MAX(created_at) last_assigned
+            FROM assignments
+            GROUP BY assigned_to_id
+            HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
+          ) as X ON X.user_id = users.id
         SQL
         )
         .assign_allowed
@@ -33,18 +32,20 @@ module DiscourseAssign
       topic_id = params.require(:topic_id).to_i
       topic = Topic.find(topic_id)
 
-      assigned = TopicCustomField.where(
-        "topic_id = :topic_id AND name = 'assigned_to_id' AND value IS NOT NULL",
-        topic_id: topic_id
-      ).pluck(:value)
+      assigned = Assignment
+        .where(topic_id: topic_id)
+        .not(assigned_to_id: nil)
+        .pluck_first(:assigned_to_id)
 
-      if assigned && user_id = assigned[0]
+      if assigned && user_id = assigned
         extras = nil
+
         if user = User.where(id: user_id).first
           extras = {
             assigned_to: serialize_data(user, BasicUserSerializer, root: false)
           }
         end
+
         return render_json_error(I18n.t('discourse_assign.already_claimed'), extras: extras)
       end
 
@@ -91,26 +92,28 @@ module DiscourseAssign
       topics = Topic
         .includes(:tags)
         .includes(:user)
-        .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .order('tcf.value::integer, topics.bumped_at desc')
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL")
+        .order("a.assigned_to_id, topics.bumped_at desc")
         .offset(offset)
         .limit(limit)
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
+      assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
+
       users = User
-        .where("users.id IN (SELECT value::int FROM topic_custom_fields WHERE name = 'assigned_to_id' AND topic_id IN (?))", topics.map(&:id))
-        .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
+        .where("users.id IN (?)", assignments.values.uniq)
+        .joins("join user_emails on user_emails.user_id = users.id AND user_emails.primary")
         .select(UserLookup.lookup_columns)
         .to_a
 
       User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
 
-      users = users.to_h { |u| [u.id, u] }
-      topics.each do |t|
-        if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-          t.preload_assigned_to_user(users[id.to_i])
-        end
+      users_map = users.index_by(&:id)
+
+      topics.each do |topic|
+        user_id = assignments[topic.id]
+        topic.preload_assigned_to_user(users_map[user_id]) if user_id
       end
 
       render json: { topics: serialize_data(topics, AssignedTopicSerializer) }
@@ -129,26 +132,30 @@ module DiscourseAssign
       guardian.ensure_can_see_group_members!(group)
 
       members = User
-        .joins("LEFT OUTER JOIN group_users g on users.id=g.user_id")
-        .joins("LEFT OUTER JOIN topic_custom_fields tcf ON tcf.value::int = users.id")
-        .joins("LEFT OUTER JOIN topics t ON t.id = tcf.topic_id")
-        .where("tcf.name = 'assigned_to_id' AND g.group_id=? AND (users.id > 0) AND t.deleted_at IS NULL", group.id)
+        .joins("LEFT OUTER JOIN group_users g ON g.user_id = users.id")
+        .joins("LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id")
+        .joins("LEFT OUTER JOIN topics t ON t.id = a.topic_id")
+        .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
+        .where("a.assigned_to_id IS NOT NULL")
         .order('COUNT(users.id) DESC')
         .group('users.id')
         .select('users.*, COUNT(users.id) as "assignments_count"')
-
-        members = members.where("users.name ILIKE :pattern OR users.username_lower ILIKE :pattern", pattern: "%#{params[:filter]}%") if params[:filter]
-
-      members = members
         .limit(limit)
         .offset(offset)
 
-      assignment_count = Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", group.name)
+      if params[:filter]
+        members = members.where(<<~SQL, pattern: "%#{params[:filter]}%")
+          users.name ILIKE :pattern OR users.username_lower ILIKE :pattern
+        SQL
+      end
+
+      assignment_count = Topic
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL")
+        .where("a.assigned_to_id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", group.name)
         .where("topics.deleted_at IS NULL")
         .count
 
-      render json: { members: serialize_data(members, GroupUserAssignedSerializer), "assignment_count" => assignment_count }
+      render json: { members: serialize_data(members, GroupUserAssignedSerializer), assignment_count: assignment_count }
     end
 
     private

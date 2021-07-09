@@ -4,7 +4,6 @@ require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
 RSpec.describe DiscourseAssign::AssignController do
-
   before { SiteSetting.assign_enabled = true }
 
   let(:default_allowed_group) { Group.find_by(name: 'staff') }
@@ -93,7 +92,6 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   context '#assign' do
-
     include_context 'A group that is allowed to assign'
 
     before do
@@ -107,7 +105,7 @@ RSpec.describe DiscourseAssign::AssignController do
       }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.custom_fields['assigned_to_id']).to eq(user2.id.to_s)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
     end
 
     it 'fails to assign topic to the user if its already assigned to the same user' do
@@ -116,7 +114,7 @@ RSpec.describe DiscourseAssign::AssignController do
       }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.custom_fields['assigned_to_id']).to eq(user2.id.to_s)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
 
       put '/assign/assign.json', params: {
         topic_id: post.topic_id, username: user2.username
