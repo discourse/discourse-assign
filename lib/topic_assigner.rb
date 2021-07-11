@@ -146,6 +146,7 @@ class ::TopicAssigner
     return { success: false, reason: :already_assigned } if @topic.assignment&.assigned_to_id == assign_to.id
     return { success: false, reason: :too_many_assigns } unless can_assign_to?(assign_to)
 
+    @topic.assignment&.destroy!
     @topic.create_assignment!(assigned_to_id: assign_to.id, assigned_by_user_id: @assigned_by.id)
 
     first_post = @topic.posts.find_by(post_number: 1)
