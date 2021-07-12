@@ -32,15 +32,13 @@ module DiscourseAssign
       topic_id = params.require(:topic_id).to_i
       topic = Topic.find(topic_id)
 
-      assigned = Assignment
+      assigned_id = Assignment
         .where(topic_id: topic_id)
         .not(assigned_to_id: nil)
         .pluck_first(:assigned_to_id)
 
-      if assigned && user_id = assigned
-        extras = nil
-
-        if user = User.where(id: user_id).first
+      if assigned
+        if user = User.where(id: assigned_id).first
           extras = {
             assigned_to: serialize_data(user, BasicUserSerializer, root: false)
           }
