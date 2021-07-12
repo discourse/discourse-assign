@@ -567,11 +567,11 @@ after_initialize do
       script do |context, fields|
         next unless SiteSetting.assign_enabled?
 
-        next unless group_id = fields.dig('assignees_group', 'group_id')
+        next unless group_id = fields.dig('assignees_group', 'value')
         next unless group = Group.find_by(id: group_id)
         assign_to = group.group_users.order(Arel.sql('RANDOM()')).first.user
 
-        next unless topic_id = fields.dig('assigned_topic', 'text')
+        next unless topic_id = fields.dig('assigned_topic', 'value')
         next unless topic = Topic.find_by(id: topic_id)
 
         TopicAssigner.new(topic, Discourse.system_user).assign(assign_to)
