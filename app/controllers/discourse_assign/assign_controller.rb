@@ -34,10 +34,10 @@ module DiscourseAssign
 
       assigned_id = Assignment
         .where(topic_id: topic_id)
-        .not(assigned_to_id: nil)
+        .where.not(assigned_to_id: nil)
         .pluck_first(:assigned_to_id)
 
-      if assigned
+      if assigned_id
         if user = User.where(id: assigned_id).first
           extras = {
             assigned_to: serialize_data(user, BasicUserSerializer, root: false)
