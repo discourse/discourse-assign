@@ -2,6 +2,8 @@
 
 class CorrectlyMoveAssignmentsFromCustomFieldsToATable < ActiveRecord::Migration[6.1]
   def up
+    # An old version of 20210709101534 incorrectly imported `assignments` with
+    # the topic_id and assigned_to_id columns flipped. This query deletes those invalid records.
     execute <<~SQL
       DELETE FROM assignments USING topic_custom_fields
       WHERE
