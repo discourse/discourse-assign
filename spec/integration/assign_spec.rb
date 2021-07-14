@@ -17,19 +17,6 @@ describe 'integration tests' do
     # should not explode for now
   end
 
-  describe 'data consistency' do
-    it 'can deal with problem custom fields' do
-      post = Fabricate(:post)
-      post.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] = [nil, nil]
-      post.topic.save_custom_fields
-
-      TopicAssigner.new(Topic.find(post.topic_id), Discourse.system_user).unassign
-
-      post.topic.reload
-      expect(post.topic.custom_fields).to eq({})
-    end
-  end
-
   describe 'for a private message' do
     let(:post) { Fabricate(:private_message_post) }
     let(:pm) { post.topic }
@@ -85,13 +72,13 @@ describe 'integration tests' do
 
     it "assigns topic" do
       DiscourseEvent.trigger(:assign_topic, topic, user1, admin)
-      expect(topic.reload.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i).to eq(user1.id)
+      expect(topic.assignment.assigned_to_id).to eq(user1.id)
 
       DiscourseEvent.trigger(:assign_topic, topic, user2, admin)
-      expect(topic.reload.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i).to eq(user1.id)
+      expect(topic.assignment.assigned_to_id).to eq(user1.id)
 
       DiscourseEvent.trigger(:assign_topic, topic, user2, admin, true)
-      expect(topic.reload.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i).to eq(user2.id)
+      expect(topic.assignment.assigned_to_id).to eq(user2.id)
     end
 
     it "triggers a webhook for assigned and unassigned" do

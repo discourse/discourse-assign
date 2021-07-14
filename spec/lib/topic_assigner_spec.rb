@@ -120,16 +120,14 @@ RSpec.describe TopicAssigner do
       it "doesn't assign system user" do
         TopicAssigner.auto_assign(post)
 
-        expect(topic.custom_fields["assigned_to_id"])
-          .to eq(nil)
+        expect(topic.assignment).to eq(nil)
       end
 
       it "assigns first mentioned staff user after system user" do
         post.update(raw: "Don't assign @system. @modi, can you add this to your list?")
         TopicAssigner.auto_assign(post)
 
-        expect(topic.custom_fields["assigned_to_id"].to_i)
-          .to eq(moderator.id)
+        expect(topic.assignment.assigned_to_id).to eq(moderator.id)
       end
     end
 
@@ -234,7 +232,8 @@ RSpec.describe TopicAssigner do
 
     it "automatically assigns to myself" do
       expect(TopicAssigner.auto_assign(reply)).to eq(success: true)
-      expect(op.topic.custom_fields).to eq("assigned_to_id" => me.id.to_s, "assigned_by_id" => me.id.to_s)
+      expect(op.topic.assignment.assigned_to_id).to eq(me.id)
+      expect(op.topic.assignment.assigned_by_user_id).to eq(me.id)
     end
 
     it "does not automatically assign to myself" do
@@ -273,7 +272,8 @@ RSpec.describe TopicAssigner do
 
     it "automatically assigns to other" do
       expect(TopicAssigner.auto_assign(reply)).to eq(success: true)
-      expect(op.topic.custom_fields).to eq("assigned_to_id" => other.id.to_s, "assigned_by_id" => me.id.to_s)
+      expect(op.topic.assignment.assigned_to_id).to eq(other.id)
+      expect(op.topic.assignment.assigned_by_user_id).to eq(me.id)
     end
   end
 
