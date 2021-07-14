@@ -14,14 +14,17 @@ class CorrectlyMoveAssignmentsFromCustomFieldsToATable < ActiveRecord::Migration
 
     execute <<~SQL
       INSERT INTO assignments (assigned_to_id, assigned_by_user_id, topic_id, created_at, updated_at)
-      SELECT (
-        SELECT value::integer assigned_to_id
-        FROM topic_custom_fields tcf1
-        WHERE tcf1.name = 'assigned_to_id' AND tcf1.topic_id = tcf2.topic_id
-      ), value::integer assigned_by_id, topic_id, created_at, updated_at
-      FROM topic_custom_fields tcf2
-      WHERE name = 'assigned_by_id'
-      ORDER BY created_at DESC
+      SELECT
+        assigned_to.value::integer,
+        assigned_by.value::integer,
+        assigned_by.topic_id,
+        assigned_by.created_at,
+        assigned_by.updated_at
+      FROM topic_custom_fields assigned_by
+      INNER JOIN topic_custom_fields assigned_to ON assigned_to.topic_id = assigned_by.topic_id
+      WHERE assigned_by.name = 'assigned_by_id'
+        AND assigned_to.name = 'assigned_to_id'
+      ORDER BY assigned_by.created_at DESC
       ON CONFLICT DO NOTHING
     SQL
   end
