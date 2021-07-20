@@ -231,7 +231,7 @@ function initialize(api) {
 
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
-  api.addTagsHtmlCallback((topic, params) => {
+  api.addTagsHtmlCallback((topic, params = {}) => {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.assignedToUserPath;
