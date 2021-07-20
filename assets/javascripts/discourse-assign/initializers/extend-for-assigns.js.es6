@@ -231,13 +231,16 @@ function initialize(api) {
 
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
-  api.addTagsHtmlCallback((topic) => {
+  api.addTagsHtmlCallback((topic, params) => {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.assignedToUserPath;
-      return `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
-        "user-plus"
-      )}${assignedTo}</a>`;
+      const tagName = params.tagName || "a";
+      const icon = iconHTML("user-plus");
+      const href =
+        tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
+
+      return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}${assignedTo}</${tagName}>`;
     }
   });
 
