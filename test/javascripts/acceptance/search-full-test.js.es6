@@ -27,7 +27,7 @@ acceptance("Search - Full Page", function (needs) {
     assert.equal(
       find(".search-query").val(),
       "none in:assigned",
-      'has updated search term to "none in:assinged"'
+      'has updated search term to "none in:assigned"'
     );
   });
 
@@ -48,7 +48,7 @@ acceptance("Search - Full Page", function (needs) {
     assert.equal(
       find(".search-query").val(),
       "none in:unassigned",
-      'has updated search term to "none in:unassinged"'
+      'has updated search term to "none in:unassigned"'
     );
   });
 
