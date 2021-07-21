@@ -415,5 +415,10 @@ export default {
 
     withPluginApi("0.11.0", (api) => initialize(api));
     withPluginApi("0.8.28", (api) => registerTopicFooterButtons(api));
+
+    withPluginApi("0.11.7", (api) => {
+      api.addSearchSuggestion("in:assigned");
+      api.addSearchSuggestion("in:unassigned");
+    });
   },
 };
