@@ -1,6 +1,8 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
+import { test } from "qunit";
 
 acceptance("UnAssign/Re-assign from the topics list", function (needs) {
   needs.user();

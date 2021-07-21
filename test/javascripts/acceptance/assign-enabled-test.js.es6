@@ -1,9 +1,12 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import { test } from "qunit";
 
 acceptance("Assign mobile", function (needs) {
   needs.user();
