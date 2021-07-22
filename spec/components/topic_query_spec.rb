@@ -141,6 +141,19 @@ describe TopicQuery do
     end
   end
 
+  context 'assigned' do
+    it "filters assigned topics correctly" do
+      assigned_topic = Fabricate(:post).topic
+      unassigned_topic = Fabricate(:topic)
+
+      TopicAssigner.new(assigned_topic, user).assign(user)
+      query = TopicQuery.new(user, assigned: 'nobody').list_latest
+
+      expect(query.topics.length).to eq(1)
+      expect(query.topics.first).to eq(unassigned_topic)
+    end
+  end
+
   def assign_to(topic, user)
     topic.tap do |t|
       t.posts << Fabricate(:post)
