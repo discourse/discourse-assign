@@ -211,7 +211,8 @@ after_initialize do
 
       if user_id || special
         if username == "nobody"
-          results = results.joins("LEFT JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NULL")
+          results = results.joins("LEFT JOIN assignments a ON a.topic_id = topics.id")
+            .where("a.assigned_to_id IS NULL")
         else
           if username == "*"
             filter = "a.assigned_to_id IS NOT NULL"
