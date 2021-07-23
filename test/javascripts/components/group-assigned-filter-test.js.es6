@@ -2,6 +2,7 @@ import componentTest, {
   setupRenderingTest,
 } from "discourse/tests/helpers/component-test";
 import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
+import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
   "Integration | Component | group-assigned-filter",
@@ -9,7 +10,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("displays username and name", {
-      template: "{{group-assigned-filter show-avatar=true filter=filter}}",
+      template: hbs`{{group-assigned-filter show-avatar=true filter=filter}}`,
 
       beforeEach() {
         this.set("filter", {

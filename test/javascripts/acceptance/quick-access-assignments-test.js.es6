@@ -3,7 +3,9 @@ import {
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
+import { test } from "qunit";
 
 acceptance("Quick access assignments panel", function (needs) {
   needs.user();
@@ -29,8 +31,8 @@ acceptance("Quick access assignments panel", function (needs) {
 
     await click(".widget-button.assigned");
     assert.equal(
-      currentPath(),
-      "user.userActivity.assigned",
+      currentURL(),
+      "/u/eviltrout/activity/assigned",
       "a second click should redirect to the full assignments page"
     );
   });
