@@ -22,7 +22,6 @@ acceptance("Quick access assignments panel", function (needs) {
 
     await visit("/");
     await click("#current-user.header-dropdown-toggle");
-    await pauseTest();
 
     await click(".widget-button.assigned");
     const assignment = query(".quick-access-panel li a");
