@@ -10,6 +10,19 @@ import { test } from "qunit";
 acceptance("Search - Full Page", function (needs) {
   needs.settings({ assign_enabled: true });
   needs.user();
+  needs.pretender((server, helper) => {
+    server.get("/u/search/users", () => {
+      return helper.response({
+        users: [
+          {
+            username: "admin",
+            name: "admin",
+            avatar_template: "/images/avatar.png",
+          },
+        ],
+      });
+    });
+  });
 
   test("update in:assigned filter through advanced search ui", async (assert) => {
     updateCurrentUser({ can_assign: true });
