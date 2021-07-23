@@ -26,7 +26,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "are assigned" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      query(".search-query").value,
       "none in:assigned",
       'has updated search term to "none in:assigned"'
     );
@@ -47,7 +47,7 @@ acceptance("Search - Full Page", function (needs) {
       'has "are unassigned" populated'
     );
     assert.equal(
-      find(".search-query").val(),
+      query(".search-query").value,
       "none in:unassigned",
       'has updated search term to "none in:unassigned"'
     );
