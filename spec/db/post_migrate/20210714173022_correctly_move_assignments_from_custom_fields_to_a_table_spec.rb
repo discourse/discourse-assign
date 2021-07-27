@@ -5,7 +5,8 @@ require_relative "../../../db/post_migrate/20210714173022_correctly_move_assignm
 
 describe CorrectlyMoveAssignmentsFromCustomFieldsToATable do
   context "valid data" do
-    it "should migrate the data correctly" do
+    # TODO: remove all these specs since they're invalid with the updated schema?
+    skip "should migrate the data correctly" do
       TopicCustomField.create!(topic_id: 99, name: "assigned_to_id", value: "50")
       TopicCustomField.create!(topic_id: 99, name: "assigned_by_id", value: "60")
       silence_stdout { CorrectlyMoveAssignmentsFromCustomFieldsToATable.new.up }

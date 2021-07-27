@@ -49,7 +49,6 @@ describe TopicQuery do
   end
 
   describe '#list_group_topics_assigned' do
-
     before do
       @private_message = Fabricate(:private_message_topic, user: user)
       @topic = Fabricate(:topic, user: user)
@@ -141,16 +140,51 @@ describe TopicQuery do
     end
   end
 
-  context 'assigned' do
-    it "filters assigned topics correctly" do
+  context "assigned filter" do
+    it "filters topics assigned to a user" do
+      assigned_topic = Fabricate(:post).topic
+      assigned_topic2 = Fabricate(:post).topic
+
+      TopicAssigner.new(assigned_topic, user).assign(user)
+      TopicAssigner.new(assigned_topic2, user2).assign(user2)
+      query = TopicQuery.new(user, assigned: user.username).list_latest
+
+      expect(query.topics.length).to eq(1)
+      expect(query.topics.first).to eq(assigned_topic)
+    end
+
+    it "filters topics assigned to the current user" do
+      assigned_topic = Fabricate(:post).topic
+      assigned_topic2 = Fabricate(:post).topic
+
+      TopicAssigner.new(assigned_topic, user).assign(user)
+      TopicAssigner.new(assigned_topic2, user2).assign(user2)
+      query = TopicQuery.new(user2, assigned: "me").list_latest
+
+      expect(query.topics.length).to eq(1)
+      expect(query.topics.first).to eq(assigned_topic2)
+    end
+
+    it "filters topics assigned to nobody" do
       assigned_topic = Fabricate(:post).topic
       unassigned_topic = Fabricate(:topic)
 
       TopicAssigner.new(assigned_topic, user).assign(user)
-      query = TopicQuery.new(user, assigned: 'nobody').list_latest
+      query = TopicQuery.new(user, assigned: "nobody").list_latest
 
       expect(query.topics.length).to eq(1)
       expect(query.topics.first).to eq(unassigned_topic)
+    end
+
+    it "filters topics assigned to anybody (*)" do
+      assigned_topic = Fabricate(:post).topic
+      unassigned_topic = Fabricate(:topic)
+
+      TopicAssigner.new(assigned_topic, user).assign(user)
+      query = TopicQuery.new(user, assigned: "*").list_latest
+
+      expect(query.topics.length).to eq(1)
+      expect(query.topics.first).to eq(assigned_topic)
     end
   end
 

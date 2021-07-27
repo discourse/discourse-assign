@@ -111,7 +111,7 @@ module DiscourseAssign
 
       topics.each do |topic|
         user_id = assignments[topic.id]
-        topic.preload_assigned_to_user(users_map[user_id]) if user_id
+        topic.preload_assigned_to(users_map[user_id]) if user_id
       end
 
       render json: { topics: serialize_data(topics, AssignedTopicSerializer) }
