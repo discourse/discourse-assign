@@ -9,7 +9,7 @@ import { visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 
-acceptance("Assigned topic", function (needs) {
+acceptance("Discourse Assign | Assigned topic", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,

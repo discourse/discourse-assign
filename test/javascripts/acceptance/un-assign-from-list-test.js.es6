@@ -4,7 +4,7 @@ import { visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 import { test } from "qunit";
 
-acceptance("UnAssign/Re-assign from the topics list", function (needs) {
+acceptance("Discourse Assign | UnAssign/Re-assign from the topics list", function (needs) {
   needs.user();
   needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
   needs.pretender((server, helper) => {

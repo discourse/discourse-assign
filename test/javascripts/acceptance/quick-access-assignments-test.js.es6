@@ -7,7 +7,7 @@ import { click, currentURL, visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 import { test } from "qunit";
 
-acceptance("Quick access assignments panel", function (needs) {
+acceptance("Discourse Assign | Quick access assignments panel", function (needs) {
   needs.user();
   needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
 
