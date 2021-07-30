@@ -142,55 +142,6 @@ function initialize(api) {
       : {}
   );
 
-  // You can't act on flags claimed by another user
-  api.modifyClass(
-    "component:flagged-post",
-    {
-      @computed("flaggedPost.topic.assigned_to_user_id")
-      canAct(assignedToUserId) {
-        let { siteSettings } = this;
-
-        if (siteSettings.assign_locks_flags) {
-          let unassigned = this.currentUser.id !== assignedToUserId;
-
-          // Can never act on another user's flags
-          if (assignedToUserId && unassigned) {
-            return false;
-          }
-
-          // If flags require assignment
-          if (this.siteSettings.flags_require_assign && unassigned) {
-            return false;
-          }
-        }
-
-        return this.actableFilter;
-      },
-
-      didInsertElement() {
-        this._super(...arguments);
-
-        this.messageBus.subscribe("/staff/topic-assignment", (data) => {
-          let flaggedPost = this.flaggedPost;
-          if (data.topic_id === flaggedPost.get("topic.id")) {
-            flaggedPost.set(
-              "topic.assigned_to_user_id",
-              data.type === "assigned" ? data.assigned_to.id : null
-            );
-            flaggedPost.set("topic.assigned_to_user", data.assigned_to);
-          }
-        });
-      },
-
-      willDestroyElement() {
-        this._super(...arguments);
-
-        this.messageBus.unsubscribe("/staff/topic-assignment");
-      },
-    },
-    { ignoreMissing: true }
-  );
-
   api.modifyClass("model:topic", {
     @computed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
