@@ -102,28 +102,33 @@ function registerTopicFooterButtons(api) {
 }
 
 function initialize(api) {
-  api.addNavigationBarItem({
-    name: "unassigned",
-    customFilter: (category) => {
-      return category && category.enable_unassigned_filter;
-    },
-    customHref: (category) => {
-      if (category) {
-        return getURL(category.url) + "/l/latest?status=open&assigned=nobody";
-      }
-    },
-    forceActive: (category, args, router) => {
-      const queryParams = router.currentRoute.queryParams;
+  const siteSettings = api.container.lookup("site-settings:main");
+  const currentUser = api.getCurrentUser();
 
-      return (
-        queryParams &&
-        Object.keys(queryParams).length === 2 &&
-        queryParams["assigned"] === "nobody" &&
-        queryParams["status"] === "open"
-      );
-    },
-    before: "top",
-  });
+  if (siteSettings.assigns_public || currentUser?.can_assign) {
+    api.addNavigationBarItem({
+      name: "unassigned",
+      customFilter: (category) => {
+        return category?.custom_fields?.enable_unassigned_filter === "true";
+      },
+      customHref: (category) => {
+        if (category) {
+          return getURL(category.url) + "/l/latest?status=open&assigned=nobody";
+        }
+      },
+      forceActive: (category, args) => {
+        const queryParams = args.currentRouteQueryParams;
+
+        return (
+          queryParams &&
+          Object.keys(queryParams).length === 2 &&
+          queryParams["assigned"] === "nobody" &&
+          queryParams["status"] === "open"
+        );
+      },
+      before: "top",
+    });
+  }
 
   api.addAdvancedSearchOptions(
     api.getCurrentUser() && api.getCurrentUser().can_assign
@@ -145,7 +150,6 @@ function initialize(api) {
   api.modifyClass("model:topic", {
     @computed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
-      const siteSettings = api.container.lookup("site-settings:main");
       return getURL(
         siteSettings.assigns_user_url_path.replace(
           "{username}",
