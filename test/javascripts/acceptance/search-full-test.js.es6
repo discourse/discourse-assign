@@ -7,7 +7,7 @@ import {
 import { fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
-acceptance("Search - Full Page", function (needs) {
+acceptance("Discourse Assign | Search - Full Page", function (needs) {
   needs.settings({ assign_enabled: true });
   needs.user();
   needs.pretender((server, helper) => {

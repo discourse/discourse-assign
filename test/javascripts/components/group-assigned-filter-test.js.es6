@@ -5,7 +5,7 @@ import { discourseModule, query } from "discourse/tests/helpers/qunit-helpers";
 import hbs from "htmlbars-inline-precompile";
 
 discourseModule(
-  "Integration | Component | group-assigned-filter",
+  "Discourse Assign | Integration | Component | group-assigned-filter",
   function (hooks) {
     setupRenderingTest(hooks);
 
