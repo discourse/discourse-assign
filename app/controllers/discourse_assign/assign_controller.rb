@@ -28,30 +28,6 @@ module DiscourseAssign
       }
     end
 
-    def claim
-      topic_id = params.require(:topic_id).to_i
-      topic = Topic.find(topic_id)
-
-      assigned_id = Assignment
-        .where(topic_id: topic_id)
-        .where.not(assigned_to_id: nil)
-        .pluck_first(:assigned_to_id)
-
-      if assigned_id
-        if user = User.where(id: assigned_id).first
-          extras = {
-            assigned_to: serialize_data(user, BasicUserSerializer, root: false)
-          }
-        end
-
-        return render_json_error(I18n.t('discourse_assign.already_claimed'), extras: extras)
-      end
-
-      assigner = TopicAssigner.new(topic, current_user)
-      assigner.assign(current_user)
-      render json: success_json
-    end
-
     def unassign
       topic_id = params.require(:topic_id)
       topic = Topic.find(topic_id.to_i)

@@ -286,28 +286,4 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(200)
     end
   end
-
-  describe "#claim" do
-    it "assigns the topic to the current user" do
-      sign_in(user)
-
-      put "/assign/claim/#{post.topic_id}.json"
-
-      expect(response.status).to eq(200)
-      assignment = Assignment.first
-      expect(assignment.assigned_to_id).to eq(user.id)
-      expect(assignment.topic_id).to eq(post.topic_id)
-    end
-
-    it "returns an error if already claimed" do
-      TopicAssigner.new(post.topic, user).assign(user)
-      sign_in(user)
-
-      put "/assign/claim/#{post.topic_id}.json"
-
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"].first).to eq(I18n.t('discourse_assign.already_claimed'))
-      expect(response.parsed_body["extras"]["assigned_to"]["username"]).to eq(user.username)
-    end
-  end
 end
