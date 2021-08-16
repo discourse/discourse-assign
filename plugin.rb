@@ -44,24 +44,21 @@ after_initialize do
     RemindAssignsFrequencySiteSettings.values
   end
 
-  # TODO: needs a spec
   add_to_serializer(:group_show, :assignment_count) do
     Topic
       .joins(<<~SQL)
         JOIN assignments a
         ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
       SQL
-      .where(<<~SQL, name: object.name)
+      .where(<<~SQL, group_id: object.id)
         (
-          a.assigned_to_type = 'user' AND a.assigned_to_id IN (
+          a.assigned_to_type = 'User' AND a.assigned_to_id IN (
             SELECT group_users.user_id
             FROM group_users
-            WHERE group_id IN (SELECT id FROM groups WHERE name = :name)
+            WHERE group_id = :group_id
           )
         ) OR (
-          a.assigned_to_type = 'group' AND a.assigned_to_id IN (
-            SELECT id FROM groups WHERE name = :name
-          )
+          a.assigned_to_type = 'Group' AND a.assigned_to_id = :group_id
         )
       SQL
       .where("topics.deleted_at IS NULL")
