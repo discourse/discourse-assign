@@ -46,7 +46,8 @@ export default Controller.extend({
       "model.username": user.username,
       "model.allowedGroups": this.taskActions.allowedGroups,
     });
-    this.send("assign");
+
+    return this.assign();
   },
 
   @action
@@ -80,7 +81,7 @@ export default Controller.extend({
   },
 
   @action
-  updateUsername(selected) {
-    this.set("model.username", selected.firstObject);
+  assignUsername(selected) {
+    this.assignUser({ username: selected.firstObject });
   },
 });
