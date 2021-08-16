@@ -119,13 +119,14 @@ class ::TopicAssigner
     @allowed_group_ids ||= Group.assign_allowed_groups.pluck(:id)
   end
 
-  def can_assign_to?(user)
-    return true if @assigned_by.id == user.id
+  def can_assign_to?(assign_to)
+    return true if assign_to.is_a?(Group)
+    return true if @assigned_by.id == assign_to.id
 
     assigned_total = Assignment
       .joins(:topic)
       .where(topics: { deleted_at: nil })
-      .where(assigned_to_id: user.id)
+      .where(assigned_to_id: assign_to.id)
       .count
 
     assigned_total < SiteSetting.max_assigned_topics
@@ -144,13 +145,21 @@ class ::TopicAssigner
   end
 
   def assign(assign_to, silent: false)
-    if assign_to.is_a?(User) && !can_assignee_see_topic?(assign_to)
-      reason = @topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
-      return { success: false, reason: reason }
-    end
-    return { success: false, reason: :forbidden_assign_to } unless can_be_assigned?(assign_to)
-    return { success: false, reason: :already_assigned } if @topic.assignment&.assigned_to_id == assign_to.id
-    return { success: false, reason: :too_many_assigns } unless can_assign_to?(assign_to)
+    forbidden_reason =
+      case
+      when assign_to.is_a?(User) && !can_assignee_see_topic?(assign_to)
+        @topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
+      when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_topic?(user) }
+        @topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
+      when !can_be_assigned?(assign_to)
+        assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
+      when @topic.assignment&.assigned_to_id == assign_to.id
+        assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
+      when !can_assign_to?(assign_to)
+        :too_many_assigns
+      end
+
+    return { success: false, reason: forbidden_reason } if forbidden_reason
 
     @topic.assignment&.destroy!
 

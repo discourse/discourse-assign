@@ -134,19 +134,27 @@ module DiscourseAssign
 
     private
 
-    def translate_failure(reason, user)
+    def translate_failure(reason, assign_to)
       case reason
       when :already_assigned
-        { error: I18n.t('discourse_assign.already_assigned', username: user.username) }
+        { error: I18n.t('discourse_assign.already_assigned', username: assign_to.username) }
       when :forbidden_assign_to
-        { error: I18n.t('discourse_assign.forbidden_assign_to', username: user.username) }
+        { error: I18n.t('discourse_assign.forbidden_assign_to', username: assign_to.username) }
       when :forbidden_assignee_not_pm_participant
-        { error: I18n.t('discourse_assign.forbidden_assignee_not_pm_participant', username: user.username) }
+        { error: I18n.t('discourse_assign.forbidden_assignee_not_pm_participant', username: assign_to.username) }
       when :forbidden_assignee_cant_see_topic
-        { error: I18n.t('discourse_assign.forbidden_assignee_cant_see_topic', username: user.username) }
+        { error: I18n.t('discourse_assign.forbidden_assignee_cant_see_topic', username: assign_to.username) }
+      when :group_already_assigned
+        { error: I18n.t('discourse_assign.group_already_assigned', group: assign_to.name) }
+      when :forbidden_group_assign_to
+        { error: I18n.t('discourse_assign.forbidden_group_assign_to', group: assign_to.name) }
+      when :forbidden_group_assignee_not_pm_participant
+        { error: I18n.t('discourse_assign.forbidden_group_assignee_not_pm_participant', group: assign_to.name) }
+      when :forbidden_group_assignee_cant_see_topic
+        { error: I18n.t('discourse_assign.forbidden_group_assignee_cant_see_topic', group: assign_to.name) }
       else
         max = SiteSetting.max_assigned_topics
-        { error: I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max) }
+        { error: I18n.t('discourse_assign.too_many_assigns', username: assign_to.username, max: max) }
       end
     end
 

@@ -196,11 +196,25 @@ RSpec.describe TopicAssigner do
       expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
     end
 
+    it 'fails to assign when not all group members has access to pm' do
+      assign = TopicAssigner.new(pm, admin).assign(moderator.groups.first)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
+    end
+
     it 'fails to assign when the assigned user cannot view the topic' do
       assign = TopicAssigner.new(secure_topic, admin).assign(moderator)
 
       expect(assign[:success]).to eq(false)
       expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
+    end
+
+    it 'fails to assign when the not all group members can view the topic' do
+      assign = TopicAssigner.new(secure_topic, admin).assign(moderator.groups.first)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
     end
 
     it "assigns the PM to the moderator when it's included in the list of allowed users" do
