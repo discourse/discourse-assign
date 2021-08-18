@@ -41,7 +41,9 @@ RSpec.describe TopicAssigner do
       expect(TopicUser.find_by(user: moderator).notification_level)
         .to eq(TopicUser.notification_levels[:watching])
 
-      assigner.unassign
+      expect_enqueued_with(job: :unassign_notification) do
+        assigner.unassign
+      end
 
       expect(TopicQuery.new(
         moderator, assigned: moderator.username

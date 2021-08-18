@@ -36,15 +36,13 @@ RSpec.describe Jobs::AssignNotification do
         expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
       end
 
-      it 'should publish the right message when assigning and unassigning private message' do
+      it 'should publish the right message when private message' do
         user = pm.allowed_users.first
         assign_allowed_group.add(user)
 
         assert_publish_topic_state(pm, user) do
           described_class.new.execute({ topic_id: pm.id, assigned_to_id: pm.allowed_users.first.id, assigned_to_type: 'User', assigned_by_id: user1.id, silent: false })
         end
-        # TODO uncomment when unassign is finished
-        # assert_publish_topic_state(pm, user) { assigner.unassign }
       end
 
       it 'sends a high priority notification to the assignee' do

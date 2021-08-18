@@ -181,7 +181,12 @@ class ::TopicAssigner
 
     serializer = assign_to.is_a?(User) ? BasicUserSerializer : BasicGroupSerializer
 
-    Jobs.enqueue(:assign_notification, topic_id: @topic.id, assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_id: @assigned_by.id, silent: silent)
+    Jobs.enqueue(:assign_notification,
+                 topic_id: @topic.id,
+                 assigned_to_id: assign_to.id,
+                 assigned_to_type: type,
+                 assigned_by_id: @assigned_by.id,
+                 silent: silent)
 
     MessageBus.publish(
       "/staff/topic-assignment",
@@ -265,6 +270,11 @@ class ::TopicAssigner
 
       post.publish_change_to_clients!(:revised, reload_topic: true)
 
+      Jobs.enqueue(:unassign_notification,
+                   topic_id: @topic.id,
+                   assigned_to_id: assignment.assigned_to.id,
+                   assigned_to_type: assignment.assigned_to_type)
+
       if assignment.assigned_to_type == "User"
         if TopicUser.exists?(
           user_id: assignment.assigned_to_id,
@@ -280,43 +290,43 @@ class ::TopicAssigner
             notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
           )
         end
+      end
 
-        assigned_user = User.find_by(id: assignment.assigned_to_id)
-        TopicAssigner.publish_topic_tracking_state(@topic, assigned_user.id)
+      assigned_to = assignment.assigned_to
 
-        # yank notification
-        Notification.where(
-          notification_type: Notification.types[:custom],
-          user_id: assigned_user.id,
+      if SiteSetting.unassign_creates_tracking_post && !silent
+        post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+        @topic.add_moderator_post(
+          @assigned_by, nil,
+          bump: false,
+          post_type: post_type,
+          custom_fields: { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name },
+          action_code: "unassigned"
+        )
+      end
+
+      # Create a webhook event
+      if WebHook.active_web_hooks(:assign).exists?
+        type = :unassigned
+        payload = {
+          type: type,
           topic_id: @topic.id,
-          post_number: 1
-        ).where("data like '%discourse_assign.assign_notification%'").destroy_all
-
-        if SiteSetting.unassign_creates_tracking_post && !silent
-          post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
-          @topic.add_moderator_post(
-            @assigned_by, nil,
-            bump: false,
-            post_type: post_type,
-            custom_fields: { "action_code_who" => assigned_user.username },
-            action_code: "unassigned"
-          )
+          topic_title: @topic.title,
+          unassigned_by_id: @assigned_by.id,
+          unassigned_by_username: @assigned_by.username
+        }
+        if assigned_to.is_a?(User)
+          payload.merge!({
+            unassigned_to_id: assigned_to.id,
+            unassigned_to_username: assigned_to.username,
+          })
+        else
+          payload.merge!({
+            unassigned_to_group_id: assigned_to.id,
+            unassigned_to_group_name: assigned_to.name,
+          })
         end
-
-        # Create a webhook event
-        if WebHook.active_web_hooks(:assign).exists?
-          type = :unassigned
-          payload = {
-            type: type,
-            topic_id: @topic.id,
-            topic_title: @topic.title,
-            unassigned_to_id: assigned_user.id,
-            unassigned_to_username: assigned_user.username,
-            unassigned_by_id: @assigned_by.id,
-            unassigned_by_username: @assigned_by.username
-          }.to_json
-          WebHook.enqueue_assign_hooks(type, payload)
-        end
+        WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
 
       MessageBus.publish(
@@ -327,11 +337,6 @@ class ::TopicAssigner
         },
         user_ids: allowed_user_ids
       )
-
-      UserAction.where(
-        action_type: UserAction::ASSIGNED,
-        target_post_id: post.id
-      ).destroy_all
     end
   end
 end
