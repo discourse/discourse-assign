@@ -106,6 +106,16 @@ class ::TopicAssigner
     end
   end
 
+  def self.publish_topic_tracking_state(topic, user_id)
+    if topic.private_message?
+      MessageBus.publish(
+        "/private-messages/assigned",
+        { topic_id: topic.id },
+        user_ids: [user_id]
+      )
+    end
+  end
+
   def initialize(topic, user)
     @assigned_by = user
     @topic = topic
@@ -164,12 +174,14 @@ class ::TopicAssigner
     @topic.assignment&.destroy!
 
     type = assign_to.is_a?(User) ? "User" : "Group"
-    @topic.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id)
+    assignment = @topic.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id)
 
     first_post = @topic.posts.find_by(post_number: 1)
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
     serializer = assign_to.is_a?(User) ? BasicUserSerializer : BasicGroupSerializer
+
+    Jobs.enqueue(:assign_notification, topic_id: @topic.id, assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_id: @assigned_by.id, silent: silent)
 
     MessageBus.publish(
       "/staff/topic-assignment",
@@ -182,14 +194,7 @@ class ::TopicAssigner
       user_ids: allowed_user_ids
     )
 
-    # TODO: handle groups
-    # * add_moderator_post "action_code_who" and tap into post-small-action widget
-    # * notification "discourse_assign.assign_notification"
-    # * PostAlerter#create_notification_alert?
-    # * webhook
     if assign_to.is_a?(User)
-      publish_topic_tracking_state(@topic, assign_to.id)
-
       if !TopicUser.exists?(
         user_id: assign_to.id,
         topic_id: @topic.id,
@@ -209,71 +214,43 @@ class ::TopicAssigner
           Email::Sender.new(message, :assign_message).send
         end
       end
-
-      UserAction.log_action!(
-        action_type: UserAction::ASSIGNED,
-        user_id: assign_to.id,
-        acting_user_id: @assigned_by.id,
-        target_post_id: first_post.id,
-        target_topic_id: @topic.id
+    end
+    if !silent
+      @topic.add_moderator_post(
+        @assigned_by,
+        nil,
+        bump: false,
+        post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
+        action_code: "assigned",
+        custom_fields: { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
       )
 
-      if !silent
-        @topic.add_moderator_post(
-          @assigned_by,
-          nil,
-          bump: false,
-          post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
-          action_code: "assigned",
-          custom_fields: { "action_code_who" => assign_to.username }
-        )
+    end
 
-        if @assigned_by.id != assign_to.id
-          Notification.create!(
-            notification_type: Notification.types[:custom],
-            user_id: assign_to.id,
-            topic_id: @topic.id,
-            post_number: 1,
-            high_priority: true,
-            data: {
-              message: 'discourse_assign.assign_notification',
-              display_username: @assigned_by.username,
-              topic_title: @topic.title
-            }.to_json
-          )
-        end
-      end
-
-      # we got to send a push notification as well
-      # what we created here is a whisper and notification will not raise a push
-      if @assigned_by.id != assign_to.id
-        PostAlerter.new(first_post).create_notification_alert(
-          user: assign_to,
-          post: first_post,
-          username: @assigned_by.username,
-          notification_type: Notification.types[:custom],
-          excerpt: I18n.t(
-            "discourse_assign.topic_assigned_excerpt",
-            title: @topic.title,
-            locale: assign_to.effective_locale
-          )
-        )
-      end
-
-      # Create a webhook event
-      if WebHook.active_web_hooks(:assign).exists?
-        type = :assigned
-        payload = {
-          type: type,
-          topic_id: @topic.id,
-          topic_title: @topic.title,
+    # Create a webhook event
+    if WebHook.active_web_hooks(:assign).exists?
+      type = :assigned
+      payload = {
+        type: type,
+        topic_id: @topic.id,
+        topic_title: @topic.title,
+        assigned_to_id: assign_to.id,
+        assigned_to_username: assign_to.username,
+        assigned_by_id: @assigned_by.id,
+        assigned_by_username: @assigned_by.username
+      }
+      if assign_to.is_a?(User)
+        payload.merge!({
           assigned_to_id: assign_to.id,
           assigned_to_username: assign_to.username,
-          assigned_by_id: @assigned_by.id,
-          assigned_by_username: @assigned_by.username
-        }.to_json
-        WebHook.enqueue_assign_hooks(type, payload)
+        })
+      else
+        payload.merge!({
+          assigned_to_group_id: assign_to.id,
+          assigned_to_group_name: assign_to.name,
+        })
       end
+      WebHook.enqueue_assign_hooks(type, payload.to_json)
     end
 
     { success: true }
@@ -288,7 +265,6 @@ class ::TopicAssigner
 
       post.publish_change_to_clients!(:revised, reload_topic: true)
 
-      # TODO: handle groups
       if assignment.assigned_to_type == "User"
         if TopicUser.exists?(
           user_id: assignment.assigned_to_id,
@@ -306,7 +282,7 @@ class ::TopicAssigner
         end
 
         assigned_user = User.find_by(id: assignment.assigned_to_id)
-        publish_topic_tracking_state(@topic, assigned_user.id)
+        TopicAssigner.publish_topic_tracking_state(@topic, assigned_user.id)
 
         # yank notification
         Notification.where(
@@ -356,18 +332,6 @@ class ::TopicAssigner
         action_type: UserAction::ASSIGNED,
         target_post_id: post.id
       ).destroy_all
-    end
-  end
-
-  private
-
-  def publish_topic_tracking_state(topic, user_id)
-    if topic.private_message?
-      MessageBus.publish(
-        "/private-messages/assigned",
-        { topic_id: topic.id },
-        user_ids: [user_id]
-      )
     end
   end
 end
