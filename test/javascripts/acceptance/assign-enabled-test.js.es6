@@ -1,11 +1,14 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import {
   acceptance,
+  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
+import { click, visit } from "@ember/test-helpers";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
+import { test } from "qunit";
 
-acceptance("Assign mobile", function (needs) {
+acceptance("Discourse Assign | Assign mobile", function (needs) {
   needs.user();
   needs.mobileView();
   needs.settings({ assign_enabled: true });
@@ -47,7 +50,7 @@ acceptance("Assign mobile", function (needs) {
   });
 });
 
-acceptance("Assign desktop", function (needs) {
+acceptance("Discourse Assign | Assign desktop", function (needs) {
   needs.user();
   needs.settings({ assign_enabled: true });
   needs.hooks.beforeEach(() => clearTopicFooterButtons());

@@ -4,18 +4,17 @@ require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
 RSpec.describe DiscourseAssign::AssignController do
-
   before { SiteSetting.assign_enabled = true }
 
   let(:default_allowed_group) { Group.find_by(name: 'staff') }
   let(:user) { Fabricate(:admin, groups: [default_allowed_group], name: 'Robin Ward', username: 'eviltrout') }
-  let(:post) { Fabricate(:post) }
-  let(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david') }
+  fab!(:post) { Fabricate(:post) }
+  fab!(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david') }
   let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
-  let(:normal_user) { Fabricate(:user) }
-  let(:normal_admin) { Fabricate(:admin) }
+  fab!(:normal_user) { Fabricate(:user) }
+  fab!(:normal_admin) { Fabricate(:admin) }
 
-  describe 'only allow users from allowed groups' do
+  context 'only allow users from allowed groups' do
     before { sign_in(user2) }
 
     it 'filters requests where current_user is not member of an allowed group' do
@@ -28,7 +27,7 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(403)
     end
 
-    context '#suggestions' do
+    describe '#suggestions' do
       before { sign_in(user) }
 
       it 'includes users in allowed groups' do
@@ -75,7 +74,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
-  context "#suggestions" do
+  describe "#suggestions" do
     before do
       SiteSetting.max_assigned_topics = 1
       sign_in(user)
@@ -92,8 +91,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
-  context '#assign' do
-
+  describe '#assign' do
     include_context 'A group that is allowed to assign'
 
     before do
@@ -107,7 +105,7 @@ RSpec.describe DiscourseAssign::AssignController do
       }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.custom_fields['assigned_to_id']).to eq(user2.id.to_s)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
     end
 
     it 'fails to assign topic to the user if its already assigned to the same user' do
@@ -116,7 +114,7 @@ RSpec.describe DiscourseAssign::AssignController do
       }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.custom_fields['assigned_to_id']).to eq(user2.id.to_s)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
 
       put '/assign/assign.json', params: {
         topic_id: post.topic_id, username: user2.username
@@ -171,7 +169,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
-  context '#assigned' do
+  describe '#assigned' do
     include_context 'A group that is allowed to assign'
 
     fab!(:post1) { Fabricate(:post) }
@@ -207,6 +205,7 @@ RSpec.describe DiscourseAssign::AssignController do
     context "with custom allowed groups" do
       let(:custom_allowed_group) { Fabricate(:group, name: 'mygroup') }
       let(:other_user) { Fabricate(:user, groups: [custom_allowed_group]) }
+
       before do
         SiteSetting.assign_allowed_on_groups += "|#{custom_allowed_group.id}"
       end
@@ -224,7 +223,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
-  context '#group_members' do
+  describe '#group_members' do
     include_context 'A group that is allowed to assign'
 
     fab!(:post1) { Fabricate(:post) }
@@ -285,6 +284,30 @@ RSpec.describe DiscourseAssign::AssignController do
 
       get "/assign/members/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(200)
+    end
+  end
+
+  describe "#claim" do
+    it "assigns the topic to the current user" do
+      sign_in(user)
+
+      put "/assign/claim/#{post.topic_id}.json"
+
+      expect(response.status).to eq(200)
+      assignment = Assignment.first
+      expect(assignment.assigned_to_id).to eq(user.id)
+      expect(assignment.topic_id).to eq(post.topic_id)
+    end
+
+    it "returns an error if already claimed" do
+      TopicAssigner.new(post.topic, user).assign(user)
+      sign_in(user)
+
+      put "/assign/claim/#{post.topic_id}.json"
+
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"].first).to eq(I18n.t('discourse_assign.already_claimed'))
+      expect(response.parsed_body["extras"]["assigned_to"]["username"]).to eq(user.username)
     end
   end
 end

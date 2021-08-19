@@ -32,6 +32,10 @@ after_initialize do
   require 'topic_assigner'
   require 'pending_assigns_reminder'
 
+  class ::Topic
+    has_one :assignment, dependent: :destroy
+  end
+
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
   register_editable_user_custom_field frequency_field
   User.register_custom_field_type frequency_field, :integer
@@ -41,8 +45,18 @@ after_initialize do
   end
 
   add_to_serializer(:group_show, :assignment_count) do
-    Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-      .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", object.name)
+    Topic
+      .joins(<<~SQL)
+        JOIN assignments
+        ON topics.id = assignments.topic_id AND assignments.assigned_to_id IS NOT NULL
+      SQL
+      .where(<<~SQL, object.name)
+        assignments.assigned_to_id IN (
+          SELECT group_users.user_id
+          FROM group_users
+          WHERE group_id IN (SELECT id FROM groups WHERE name = ?)
+        )
+      SQL
       .where("topics.deleted_at IS NULL")
       .count
   end
@@ -118,7 +132,7 @@ after_initialize do
   end
 
   DiscourseEvent.on(:assign_topic) do |topic, user, assigning_user, force|
-    if force || !topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
+    if force || !Assignment.exists?(topic: topic)
       TopicAssigner.new(topic, assigning_user).assign(user)
     end
   end
@@ -127,20 +141,18 @@ after_initialize do
     TopicAssigner.new(topic, unassigning_user).unassign
   end
 
-  TopicList.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
   Site.preloaded_category_custom_fields << "enable_unassigned_filter"
-  Search.preloaded_topic_custom_fields << TopicAssigner::ASSIGNED_TO_ID
 
-  BookmarkQuery.preloaded_custom_fields << TopicAssigner::ASSIGNED_TO_ID
   BookmarkQuery.on_preload do |bookmarks, bookmark_query|
     if SiteSetting.assign_enabled?
-      assigned_user_ids = bookmarks.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
-      assigned_users = User.where(id: assigned_user_ids).index_by(&:id)
+      topics = bookmarks.map(&:topic)
+      assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
+      users_map = User.where(id: assignments.values.uniq).index_by(&:id)
 
-      bookmarks.each do |bookmark|
-        bookmark.topic.preload_assigned_to_user(
-          assigned_users[bookmark.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
-        )
+      topics.each do |topic|
+        user_id = assignments[topic.id]
+        user = users_map[user_id] if user_id
+        topic.preload_assigned_to_user(user)
       end
     end
   end
@@ -151,22 +163,17 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
-        users = User
-          .where(<<~SQL, topic_ids: topics.map(&:id))
-            users.id in (
-              SELECT value::int
-              FROM topic_custom_fields
-              WHERE name = 'assigned_to_id' AND topic_id IN (:topic_ids)
-            )
-          SQL
+        assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
+
+        users_map = User
+          .where(id: assignments.values.uniq)
           .select(UserLookup.lookup_columns)
+          .index_by(&:id)
 
-        users_map = users.index_by(&:id)
-
-        topics.each do |t|
-          if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-            t.preload_assigned_to_user(users_map[id.to_i])
-          end
+        topics.each do |topic|
+          user_id = assignments[topic.id]
+          user = users_map[user_id] if user_id
+          topic.preload_assigned_to_user(user)
         end
       end
     end
@@ -178,12 +185,14 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && results.posts.length > 0
-        assigned_user_ids = results.posts.map(&:topic).map { |topic| topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID] }.compact.uniq
-        assigned_users = User.where(id: assigned_user_ids).index_by(&:id)
+        topics = results.posts.map(&:topic)
+        assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
+        users_map = User.where(id: assignments.values.uniq).index_by(&:id)
+
         results.posts.each do |post|
-          post.topic.preload_assigned_to_user(
-            assigned_users[post.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]]
-          )
+          user_id = assignments[post.topic.id]
+          user = users_map[user_id] if user_id
+          post.topic.preload_assigned_to_user(user)
         end
       end
     end
@@ -202,22 +211,16 @@ after_initialize do
 
       if user_id || special
         if username == "nobody"
-          results = results.joins("LEFT JOIN topic_custom_fields tc_assign ON
-                                    topics.id = tc_assign.topic_id AND
-                                    tc_assign.name = 'assigned_to_id'")
-            .where("tc_assign.name IS NULL")
+          results = results.joins("LEFT JOIN assignments a ON a.topic_id = topics.id")
+            .where("a.assigned_to_id IS NULL")
         else
           if username == "*"
-            filter = "AND tc_assign.value IS NOT NULL"
+            filter = "a.assigned_to_id IS NOT NULL"
           else
-            filter = "AND tc_assign.value = '#{user_id.to_i.to_s}'"
+            filter = "a.assigned_to_id = #{user_id}"
           end
 
-          results = results.joins("JOIN topic_custom_fields tc_assign ON
-                                    topics.id = tc_assign.topic_id AND
-                                    tc_assign.name = 'assigned_to_id'
-                                    #{filter}
-                                  ")
+          results = results.joins("JOIN assignments a ON a.topic_id = topics.id AND #{filter}")
         end
       end
     end
@@ -240,10 +243,9 @@ after_initialize do
 
     list = list.where("
       topics.id IN (
-        SELECT topic_id FROM topic_custom_fields
-        WHERE name = 'assigned_to_id'
-        AND value = ?)
-    ", user.id.to_s)
+        SELECT topic_id FROM assignments WHERE assigned_to_id = ?
+      )
+    ", user.id)
 
     create_list(:assigned, { unordered: true }, list)
   end
@@ -265,12 +267,12 @@ after_initialize do
   add_to_class(:topic_query, :list_group_topics_assigned) do |group|
     list = default_results(include_pms: true)
 
-    list = list.where("
+    list = list.where(<<~SQL, group.id.to_s)
       topics.id IN (
-        SELECT topic_id FROM topic_custom_fields
-        WHERE name = 'assigned_to_id'
-        AND value IN (SELECT user_id::varchar(255) from group_users where group_id = ?))
-    ", group.id.to_s)
+        SELECT topic_id FROM assignments
+        WHERE assigned_to_id IN (SELECT user_id from group_users where group_id = ?)
+      )
+    SQL
 
     create_list(:assigned, { unordered: true }, list)
   end
@@ -302,17 +304,16 @@ after_initialize do
 
     list = list.where("
       topics.id IN (
-        SELECT topic_id FROM topic_custom_fields
-        WHERE name = 'assigned_to_id'
-        AND value = ?)
-    ", user.id.to_s)
+        SELECT topic_id FROM assignments WHERE assigned_to_id = ?
+      )
+    ", user.id)
   end
 
   add_to_class(:topic, :assigned_to_user) do
-    @assigned_to_user ||
-      if user_id = custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-        @assigned_to_user = User.find_by(id: user_id)
-      end
+    return @assigned_to_user if defined?(@assigned_to_user)
+
+    user_id = assignment&.assigned_to_id
+    @assigned_to_user = user_id ? User.find_by(id: user_id) : nil
   end
 
   add_to_class(:topic, :preload_assigned_to_user) do |assigned_to_user|
@@ -343,10 +344,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_view, 'include_assigned_to_user?') do
-    if SiteSetting.assigns_public || scope.can_assign?
-      # subtle but need to catch cases where stuff is not assigned
-      object.topic.custom_fields.keys.include?(TopicAssigner::ASSIGNED_TO_ID)
-    end
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to_user
   end
 
   add_to_serializer(:search_topic_list_item, :assigned_to_user, false) do
@@ -379,9 +377,7 @@ after_initialize do
   register_permitted_bulk_action_parameter :username
 
   add_to_class(:user_bookmark_serializer, :assigned_to_user_id) do
-    id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-    # a bit messy but race conditions can give us an array here, avoid
-    id && id.to_i rescue nil
+    topic.assignment&.assigned_to_id
   end
 
   add_to_serializer(:user_bookmark, :assigned_to_user, false) do
@@ -397,9 +393,7 @@ after_initialize do
   end
 
   add_to_class(:topic_view_serializer, :assigned_to_user_id) do
-    id = object.topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-    # a bit messy but race conditions can give us an array here, avoid
-    id && id.to_i rescue nil
+    object.topic.assignment&.assigned_to_id
   end
 
   add_to_serializer(:flagged_topic, :assigned_to_user) do
@@ -407,9 +401,7 @@ after_initialize do
   end
 
   add_to_serializer(:flagged_topic, :assigned_to_user_id) do
-    id = object.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-    # a bit messy but race conditions can give us an array here, avoid
-    id && id.to_i rescue nil
+    object.topic.assignment&.assigned_to_id
   end
 
   add_custom_reviewable_filter(
@@ -419,12 +411,11 @@ after_initialize do
         results.joins(<<~SQL
           INNER JOIN posts p ON p.id = target_id
           INNER JOIN topics t ON t.id = p.topic_id
-          INNER JOIN topic_custom_fields tcf ON tcf.topic_id = t.id
-          INNER JOIN users u ON u.id = tcf.value::integer
+          INNER JOIN assignments a ON a.topic_id = t.id
+          INNER JOIN users u ON u.id = a.assigned_to_id
         SQL
         )
         .where(target_type: Post.name)
-        .where('tcf.name = ?', TopicAssigner::ASSIGNED_TO_ID)
         .where('u.username = ?', value)
       end
     ]
@@ -458,7 +449,7 @@ after_initialize do
   on(:move_to_inbox) do |info|
     topic = info[:topic]
 
-    if (assigned_id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i) == info[:user]&.id
+    if (assigned_id = topic.assignment&.assigned_to_id) == info[:user]&.id
       TopicTrackingState.publish_assigned_private_message(topic, assigned_id)
     end
 
@@ -473,7 +464,7 @@ after_initialize do
 
   on(:archive_message) do |info|
     topic = info[:topic]
-    user_id = topic.custom_fields[TopicAssigner::ASSIGNED_TO_ID].to_i
+    user_id = topic.assignment&.assigned_to_id
 
     if user_id == info[:user]&.id
       TopicTrackingState.publish_assigned_private_message(topic, user_id)
@@ -501,36 +492,32 @@ after_initialize do
 
   register_search_advanced_filter(/in:assigned/) do |posts|
     if @guardian.can_assign?
-      posts.where("topics.id IN (
-        SELECT tc.topic_id
-        FROM topic_custom_fields tc
-        WHERE tc.name = 'assigned_to_id' AND
-                        tc.value IS NOT NULL
-        )")
+      posts.where(<<~SQL)
+        topics.id IN (
+          SELECT a.topic_id FROM assignments a
+        )
+      SQL
     end
   end
 
   register_search_advanced_filter(/in:unassigned/) do |posts|
     if @guardian.can_assign?
-      posts.where("topics.id NOT IN (
-        SELECT tc.topic_id
-        FROM topic_custom_fields tc
-        WHERE tc.name = 'assigned_to_id' AND
-                        tc.value IS NOT NULL
-        )")
+      posts.where(<<~SQL)
+        topics.id NOT IN (
+          SELECT a.topic_id FROM assignments a
+        )
+      SQL
     end
   end
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
     if @guardian.can_assign?
       if user_id = User.find_by_username(match)&.id
-        posts.where("topics.id IN (
-          SELECT tc.topic_id
-          FROM topic_custom_fields tc
-          WHERE tc.name = 'assigned_to_id' AND
-                          tc.value IS NOT NULL AND
-                          tc.value::int = #{user_id}
-          )")
+        posts.where(<<~SQL, user_id)
+          topics.id IN (
+            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ?
+          )
+        SQL
       end
     end
   end
@@ -542,11 +529,7 @@ after_initialize do
       groups = GroupUser.where(user: user).pluck(:group_id)
 
       if (groups & assign_allowed_groups).empty?
-        topics = Topic.joins(:_custom_fields)
-          .where(
-            'topic_custom_fields.name = ? AND topic_custom_fields.value = ?',
-            TopicAssigner::ASSIGNED_TO_ID, user.id.to_s
-          )
+        topics = Topic.joins(:assignment).where('assignments.assigned_to_id = ?', user.id)
 
         topics.each do |topic|
           TopicAssigner.new(topic, Discourse.system_user).unassign

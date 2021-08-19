@@ -102,28 +102,33 @@ function registerTopicFooterButtons(api) {
 }
 
 function initialize(api) {
-  api.addNavigationBarItem({
-    name: "unassigned",
-    customFilter: (category) => {
-      return category && category.enable_unassigned_filter;
-    },
-    customHref: (category) => {
-      if (category) {
-        return getURL(category.url) + "/l/latest?status=open&assigned=nobody";
-      }
-    },
-    forceActive: (category, args, router) => {
-      const queryParams = router.currentRoute.queryParams;
+  const siteSettings = api.container.lookup("site-settings:main");
+  const currentUser = api.getCurrentUser();
 
-      return (
-        queryParams &&
-        Object.keys(queryParams).length === 2 &&
-        queryParams["assigned"] === "nobody" &&
-        queryParams["status"] === "open"
-      );
-    },
-    before: "top",
-  });
+  if (siteSettings.assigns_public || currentUser?.can_assign) {
+    api.addNavigationBarItem({
+      name: "unassigned",
+      customFilter: (category) => {
+        return category?.custom_fields?.enable_unassigned_filter === "true";
+      },
+      customHref: (category) => {
+        if (category) {
+          return getURL(category.url) + "/l/latest?status=open&assigned=nobody";
+        }
+      },
+      forceActive: (category, args) => {
+        const queryParams = args.currentRouteQueryParams;
+
+        return (
+          queryParams &&
+          Object.keys(queryParams).length === 2 &&
+          queryParams["assigned"] === "nobody" &&
+          queryParams["status"] === "open"
+        );
+      },
+      before: "top",
+    });
+  }
 
   api.addAdvancedSearchOptions(
     api.getCurrentUser() && api.getCurrentUser().can_assign
@@ -142,59 +147,9 @@ function initialize(api) {
       : {}
   );
 
-  // You can't act on flags claimed by another user
-  api.modifyClass(
-    "component:flagged-post",
-    {
-      @computed("flaggedPost.topic.assigned_to_user_id")
-      canAct(assignedToUserId) {
-        let { siteSettings } = this;
-
-        if (siteSettings.assign_locks_flags) {
-          let unassigned = this.currentUser.id !== assignedToUserId;
-
-          // Can never act on another user's flags
-          if (assignedToUserId && unassigned) {
-            return false;
-          }
-
-          // If flags require assignment
-          if (this.siteSettings.flags_require_assign && unassigned) {
-            return false;
-          }
-        }
-
-        return this.actableFilter;
-      },
-
-      didInsertElement() {
-        this._super(...arguments);
-
-        this.messageBus.subscribe("/staff/topic-assignment", (data) => {
-          let flaggedPost = this.flaggedPost;
-          if (data.topic_id === flaggedPost.get("topic.id")) {
-            flaggedPost.set(
-              "topic.assigned_to_user_id",
-              data.type === "assigned" ? data.assigned_to.id : null
-            );
-            flaggedPost.set("topic.assigned_to_user", data.assigned_to);
-          }
-        });
-      },
-
-      willDestroyElement() {
-        this._super(...arguments);
-
-        this.messageBus.unsubscribe("/staff/topic-assignment");
-      },
-    },
-    { ignoreMissing: true }
-  );
-
   api.modifyClass("model:topic", {
     @computed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
-      const siteSettings = api.container.lookup("site-settings:main");
       return getURL(
         siteSettings.assigns_user_url_path.replace(
           "{username}",
@@ -231,13 +186,16 @@ function initialize(api) {
 
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
-  api.addTagsHtmlCallback((topic) => {
+  api.addTagsHtmlCallback((topic, params = {}) => {
     const assignedTo = topic.get("assigned_to_user.username");
     if (assignedTo) {
       const assignedPath = topic.assignedToUserPath;
-      return `<a data-auto-route='true' class='assigned-to discourse-tag simple' href='${assignedPath}'>${iconHTML(
-        "user-plus"
-      )}${assignedTo}</a>`;
+      const tagName = params.tagName || "a";
+      const icon = iconHTML("user-plus");
+      const href =
+        tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
+
+      return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}${assignedTo}</${tagName}>`;
     }
   });
 
@@ -412,5 +370,10 @@ export default {
 
     withPluginApi("0.11.0", (api) => initialize(api));
     withPluginApi("0.8.28", (api) => registerTopicFooterButtons(api));
+
+    withPluginApi("0.11.7", (api) => {
+      api.addSearchSuggestion("in:assigned");
+      api.addSearchSuggestion("in:unassigned");
+    });
   },
 };

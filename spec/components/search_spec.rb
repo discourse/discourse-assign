@@ -4,7 +4,6 @@ require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
 describe Search do
-
   fab!(:user) { Fabricate(:active_user) }
   fab!(:user2) { Fabricate(:user) }
 
@@ -37,6 +36,5 @@ describe Search do
       expect(Search.execute('in:unassigned', guardian: Guardian.new(user)).posts.length).to eq(1)
       expect(Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length).to eq(1)
     end
-
   end
 end

@@ -4,10 +4,6 @@ require 'email/sender'
 require 'nokogiri'
 
 class ::TopicAssigner
-
-  ASSIGNED_TO_ID ||= 'assigned_to_id'
-  ASSIGNED_BY_ID ||= 'assigned_by_id'
-
   def self.backfill_auto_assign
     staff_mention = User
       .assign_allowed
@@ -19,10 +15,10 @@ class ::TopicAssigner
       SELECT p.topic_id, MAX(post_number) post_number
         FROM posts p
         JOIN topics t ON t.id = p.topic_id
-        LEFT JOIN topic_custom_fields tc ON tc.name = '#{ASSIGNED_TO_ID}' AND tc.topic_id = p.topic_id
+        LEFT JOIN assignments a ON a.topic_id = p.topic_id
        WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin)
          AND (#{staff_mention})
-         AND tc.value IS NULL
+         AND a.assigned_to_id IS NULL
          AND NOT t.closed
          AND t.deleted_at IS NULL
        GROUP BY p.topic_id
@@ -57,7 +53,7 @@ class ::TopicAssigner
     return unless SiteSetting.assigns_by_staff_mention
 
     if post.user && post.topic && post.user.can_assign?
-      return unless force || post.topic.custom_fields[ASSIGNED_TO_ID].nil?
+      return if post.topic.assignment.present? && !force
 
       # remove quotes, oneboxes and code blocks
       doc = Nokogiri::HTML5.fragment(post.cooked)
@@ -124,11 +120,10 @@ class ::TopicAssigner
   def can_assign_to?(user)
     return true if @assigned_by.id == user.id
 
-    assigned_total = TopicCustomField
+    assigned_total = Assignment
       .joins(:topic)
       .where(topics: { deleted_at: nil })
-      .where(name: ASSIGNED_TO_ID)
-      .where(value: user.id)
+      .where(assigned_to_id: user.id)
       .count
 
     assigned_total < SiteSetting.max_assigned_topics
@@ -148,12 +143,11 @@ class ::TopicAssigner
       return { success: false, reason: reason }
     end
     return { success: false, reason: :forbidden_assign_to } unless can_be_assigned?(assign_to)
-    return { success: false, reason: :already_assigned } if @topic.custom_fields[ASSIGNED_TO_ID] == assign_to.id.to_s
+    return { success: false, reason: :already_assigned } if @topic.assignment&.assigned_to_id == assign_to.id
     return { success: false, reason: :too_many_assigns } unless can_assign_to?(assign_to)
 
-    @topic.custom_fields[ASSIGNED_TO_ID] = assign_to.id
-    @topic.custom_fields[ASSIGNED_BY_ID] = @assigned_by.id
-    @topic.save_custom_fields
+    @topic.assignment&.destroy!
+    @topic.create_assignment!(assigned_to_id: assign_to.id, assigned_by_user_id: @assigned_by.id)
 
     first_post = @topic.posts.find_by(post_number: 1)
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
@@ -260,45 +254,26 @@ class ::TopicAssigner
     end
 
     { success: true }
-
   end
 
   def unassign(silent: false)
-    if assigned_to_id = @topic.custom_fields[ASSIGNED_TO_ID]
-
-      # TODO core needs an API for this stuff badly
-      # currently there is no 100% surefire way of deleting a custom field
-      TopicCustomField
-        .where(topic_id: @topic.id)
-        .where('name in (?)', [ASSIGNED_BY_ID, ASSIGNED_TO_ID])
-        .destroy_all
-
-      if Array === assigned_to_id
-        # more custom field mess, try to recover
-        assigned_to_id = assigned_to_id.first
-      end
-
-      # clean up in memory object
-      @topic.custom_fields.delete(ASSIGNED_TO_ID)
-      @topic.custom_fields.delete(ASSIGNED_BY_ID)
-
-      # nothing to do here
-      return if !assigned_to_id
+    if assignment = @topic.assignment
+      assignment.destroy!
 
       post = @topic.posts.where(post_number: 1).first
-      return unless post.present?
+      return if post.blank?
 
       post.publish_change_to_clients!(:revised, reload_topic: true)
 
       if TopicUser.exists?(
-        user_id: assigned_to_id,
+        user_id: assignment.assigned_to_id,
         topic: @topic,
         notification_level: TopicUser.notification_levels[:watching],
         notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
       )
 
         TopicUser.change(
-          assigned_to_id,
+          assignment.assigned_to_id,
           @topic.id,
           notification_level: TopicUser.notification_levels[:tracking],
           notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
@@ -314,7 +289,7 @@ class ::TopicAssigner
         user_ids: allowed_user_ids
       )
 
-      assigned_user = User.find_by(id: assigned_to_id)
+      assigned_user = User.find_by(id: assignment.assigned_to_id)
       publish_topic_tracking_state(@topic, assigned_user.id)
 
       UserAction.where(
