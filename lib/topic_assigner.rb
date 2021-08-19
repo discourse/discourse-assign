@@ -126,7 +126,7 @@ class ::TopicAssigner
   end
 
   def allowed_group_ids
-    @allowed_group_ids ||= Group.assign_allowed_groups.pluck(:id)
+    @allowed_group_ids ||= Group.assign_allowed_for_groups.pluck(:id)
   end
 
   def can_assign_to?(assign_to)

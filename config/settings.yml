@@ -32,3 +32,10 @@ plugins:
     default: ""
     allow_any: false
     refresh: true
+  assign_allowed_for_groups:
+    client: true
+    type: group_list
+    list_type: compact
+    default: ""
+    allow_any: false
+    refresh: true

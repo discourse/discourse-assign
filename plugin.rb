@@ -84,6 +84,11 @@ after_initialize do
     where(id: allowed_groups)
   end
 
+  add_class_method(:group, :assign_allowed_for_groups) do
+    allowed_groups = SiteSetting.assign_allowed_for_groups.split('|')
+    where(id: allowed_groups)
+  end
+
   add_to_class(:user, :can_assign?) do
     @can_assign ||=
       begin
@@ -128,6 +133,7 @@ after_initialize do
   add_model_callback(Group, :before_update) do
     if name_changed?
       SiteSetting.assign_allowed_on_groups = SiteSetting.assign_allowed_on_groups.gsub(name_was, name)
+      SiteSetting.assign_allowed_for_groups = SiteSetting.assign_allowed_for_groups.gsub(name_was, name)
     end
   end
 
@@ -135,6 +141,10 @@ after_initialize do
     new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{id}[|]?/, '')
     new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
     SiteSetting.assign_allowed_on_groups = new_setting
+
+    new_setting = SiteSetting.assign_allowed_for_groups.gsub(/#{id}[|]?/, '')
+    new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
+    SiteSetting.assign_allowed_for_groups = new_setting
   end
 
   on(:assign_topic) do |topic, user, assigning_user, force|

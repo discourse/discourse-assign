@@ -39,10 +39,11 @@ module DiscourseAssign
 
     def assign
       topic_id = params.require(:topic_id)
-      username = params.require(:username)
+      username = params.permit(:username)['username']
+      group_name = params.permit(:group_name)['group_name']
 
       topic = Topic.find(topic_id.to_i)
-      assign_to = User.find_by(username_lower: username.downcase)
+      assign_to = username ? User.find_by(username_lower: username.downcase) : Group.find_by(name: group_name)
 
       raise Discourse::NotFound unless assign_to
 

@@ -16,6 +16,7 @@ RSpec.describe GroupShowSerializer do
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.assign_allowed_on_groups = group.id.to_s
+    SiteSetting.assign_allowed_for_groups = group.id.to_s
   end
 
   it "counts assigned users and groups" do

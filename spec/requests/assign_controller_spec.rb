@@ -27,6 +27,16 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(403)
     end
 
+    it 'filters requests where assigne group is not allowed' do
+      SiteSetting.assign_allowed_for_groups = ''
+
+      put '/assign/assign.json', params: {
+        topic_id: post.topic_id, group_name: default_allowed_group.name
+      }
+
+      expect(response.status).to eq(403)
+    end
+
     describe '#suggestions' do
       before { sign_in(user) }
 
@@ -106,6 +116,15 @@ RSpec.describe DiscourseAssign::AssignController do
 
       expect(response.status).to eq(200)
       expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
+    end
+
+    it 'assigns topic to a group' do
+      put '/assign/assign.json', params: {
+        topic_id: post.topic_id, group_name: assign_allowed_group.name
+      }
+
+      expect(response.status).to eq(200)
+      expect(post.topic.reload.assignment.assigned_to).to eq(assign_allowed_group)
     end
 
     it 'fails to assign topic to the user if its already assigned to the same user' do

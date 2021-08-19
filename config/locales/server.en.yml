@@ -14,6 +14,7 @@ en:
     remind_assigns_frequency: "Frequency for reminding users about assigned topics."
     max_assigned_topics: "Maximum number of topics that can be assigned to a user."
     assign_allowed_on_groups: "Users in these groups are allowed to assign topics and can be assigned topics."
+    assign_allowed_for_groups: "Topics can be assgined to those groups"
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
