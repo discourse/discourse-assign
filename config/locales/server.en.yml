@@ -66,3 +66,4 @@ en:
     scriptables:
       random_assign:
         title: Random assign
+        no_one: "Attempted randomly assign a member of @%{group}, but no one was available."

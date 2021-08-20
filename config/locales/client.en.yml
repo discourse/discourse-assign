@@ -75,5 +75,7 @@ en:
           fields:
             assignees_group:
               label: Assignees Group
+            minimum_time_between_assignments:
+              label: Hours between assignments
             assigned_topic:
               label: Assigned Topic ID
