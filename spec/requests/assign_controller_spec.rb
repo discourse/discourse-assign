@@ -6,10 +6,10 @@ require_relative '../support/assign_allowed_group'
 RSpec.describe DiscourseAssign::AssignController do
   before { SiteSetting.assign_enabled = true }
 
-  let(:default_allowed_group) { Group.find_by(name: 'staff') }
+  fab!(:default_allowed_group) { Group.find_by(name: 'staff') }
   let(:user) { Fabricate(:admin, groups: [default_allowed_group], name: 'Robin Ward', username: 'eviltrout') }
   fab!(:post) { Fabricate(:post) }
-  fab!(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david') }
+  fab!(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david', groups: [default_allowed_group]) }
   let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
   fab!(:normal_user) { Fabricate(:user) }
   fab!(:normal_admin) { Fabricate(:admin) }
@@ -28,13 +28,11 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     it 'filters requests where assigne group is not allowed' do
-      SiteSetting.assign_allowed_for_groups = ''
-
       put '/assign/assign.json', params: {
         topic_id: post.topic_id, group_name: default_allowed_group.name
       }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(400)
     end
 
     describe '#suggestions' do
@@ -62,9 +60,9 @@ RSpec.describe DiscourseAssign::AssignController do
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
-        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
+        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }.sort
 
-        expect(suggestions).to contain_exactly(user.username)
+        expect(suggestions).to eq(['david', 'eviltrout'])
       end
 
       it 'does include only visible assign_allowed_on_groups' do

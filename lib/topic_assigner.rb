@@ -126,7 +126,7 @@ class ::TopicAssigner
   end
 
   def allowed_group_ids
-    @allowed_group_ids ||= Group.assign_allowed_for_groups.pluck(:id)
+    @allowed_group_ids ||= Group.messageable(@assigned_by).pluck(:id)
   end
 
   def can_assign_to?(assign_to)
@@ -226,7 +226,7 @@ class ::TopicAssigner
         nil,
         bump: false,
         post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
-        action_code: "assigned",
+        action_code: assign_to.is_a?(User) ? "assigned" : "assigned_group",
         custom_fields: { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
       )
 
@@ -301,7 +301,7 @@ class ::TopicAssigner
           bump: false,
           post_type: post_type,
           custom_fields: { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name },
-          action_code: "unassigned"
+          action_code: assigned_to.is_a?(User) ? "unassigned" : "unassigned_group",
         )
       end
 

@@ -84,11 +84,6 @@ after_initialize do
     where(id: allowed_groups)
   end
 
-  add_class_method(:group, :assign_allowed_for_groups) do
-    allowed_groups = SiteSetting.assign_allowed_for_groups.split('|')
-    where(id: allowed_groups)
-  end
-
   add_to_class(:user, :can_assign?) do
     @can_assign ||=
       begin
@@ -133,7 +128,6 @@ after_initialize do
   add_model_callback(Group, :before_update) do
     if name_changed?
       SiteSetting.assign_allowed_on_groups = SiteSetting.assign_allowed_on_groups.gsub(name_was, name)
-      SiteSetting.assign_allowed_for_groups = SiteSetting.assign_allowed_for_groups.gsub(name_was, name)
     end
   end
 
@@ -141,10 +135,6 @@ after_initialize do
     new_setting = SiteSetting.assign_allowed_on_groups.gsub(/#{id}[|]?/, '')
     new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
     SiteSetting.assign_allowed_on_groups = new_setting
-
-    new_setting = SiteSetting.assign_allowed_for_groups.gsub(/#{id}[|]?/, '')
-    new_setting = new_setting.chomp('|') if new_setting.ends_with?('|')
-    SiteSetting.assign_allowed_for_groups = new_setting
   end
 
   on(:assign_topic) do |topic, user, assigning_user, force|
@@ -256,9 +246,14 @@ after_initialize do
   add_to_class(:topic_query, :list_messages_assigned) do |user|
     list = default_results(include_pms: true)
 
-    list = list.where(<<~SQL, user.id)
+    list = list.where(<<~SQL, user_id: user.id)
       topics.id IN (
-        SELECT topic_id FROM assignments WHERE assigned_to_id = ? AND assigned_to_type = 'User'
+        SELECT topic_id FROM assignments
+        LEFT JOIN group_users ON group_users.user_id = :user_id
+        WHERE
+          assigned_to_id = :user_id AND assigned_to_type = 'User'
+          OR
+          assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group'
       )
     SQL
 

@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe GroupShowSerializer do
   fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
   fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
@@ -16,7 +16,6 @@ RSpec.describe GroupShowSerializer do
   before do
     SiteSetting.assign_enabled = true
     SiteSetting.assign_allowed_on_groups = group.id.to_s
-    SiteSetting.assign_allowed_for_groups = group.id.to_s
   end
 
   it "counts assigned users and groups" do

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 shared_context 'A group that is allowed to assign' do
-  fab!(:assign_allowed_group) { Fabricate(:group) }
+  fab!(:assign_allowed_group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
   before do
     SiteSetting.assign_allowed_on_groups += "|#{assign_allowed_group.id}"
-    SiteSetting.assign_allowed_for_groups += "|#{assign_allowed_group.id}"
   end
 
   def add_to_assign_allowed_group(user)
