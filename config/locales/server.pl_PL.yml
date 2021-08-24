@@ -69,3 +69,4 @@ pl_PL:
     scriptables:
       random_assign:
         title: Przypisanie losowe
+        no_one: "Próbowano losowo przypisać członka @%{group}, ale nikt nie był dostępny."

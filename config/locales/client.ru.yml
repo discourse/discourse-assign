@@ -77,5 +77,9 @@ ru:
       scriptables:
         random_assign:
           fields:
+            assignees_group:
+              label: Группа назначенных
+            minimum_time_between_assignments:
+              label: Минимальное количество часов между назначениями
             assigned_topic:
               label: ID назначенной темы
