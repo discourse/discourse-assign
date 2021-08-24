@@ -6,7 +6,9 @@ en:
         help: "Topics that are not assigned"
     action_codes:
       assigned: "assigned %{who} %{when}"
+      assigned_group: "assigned %{who} %{when}"
       unassigned: "unassigned %{who} %{when}"
+      unassigned_group: "unassigned %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
@@ -17,6 +19,7 @@ en:
       group_everyone: "Everyone"
       assigned_to: "Assigned to"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Unassign"
         help: "Unassign %{username} from Topic"

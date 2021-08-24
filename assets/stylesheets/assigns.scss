@@ -70,11 +70,17 @@
 }
 
 .assign-suggestions {
-  height: 25px;
   margin-top: 15px;
   img {
     margin-right: 5px;
     cursor: pointer;
+  }
+
+  .groups {
+    margin-top: 5px;
+    a {
+      margin-right: 5px;
+    }
   }
 }
 
@@ -143,4 +149,8 @@
 
 .topic-search-div {
   margin-left: 1em;
+}
+
+.assigned-to.discourse-tag.simple {
+  color: var(--primary-medium);
 }

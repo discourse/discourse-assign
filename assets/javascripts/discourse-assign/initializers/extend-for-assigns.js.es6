@@ -15,10 +15,10 @@ import { inject } from "@ember/controller";
 import I18n from "I18n";
 import { get } from "@ember/object";
 
-function titleForState(user) {
-  if (user) {
+function titleForState(name) {
+  if (name) {
     return I18n.t("discourse_assign.unassign.help", {
-      username: user.username,
+      username: name,
     });
   } else {
     return I18n.t("discourse_assign.assign.help");
@@ -29,7 +29,9 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "assign",
     icon() {
-      const hasAssignement = this.get("topic.assigned_to_user");
+      const hasAssignement =
+        this.get("topic.assigned_to_user") ||
+        this.get("topic.assigned_to_group");
       return hasAssignement
         ? this.site.mobileView
           ? "user-times"
@@ -38,17 +40,23 @@ function registerTopicFooterButtons(api) {
     },
     priority: 250,
     translatedTitle() {
-      return titleForState(this.get("topic.assigned_to_user"));
+      return titleForState(
+        this.get("topic.assigned_to_user.username") ||
+          this.get("topic.assigned_to_group.name")
+      );
     },
     translatedAriaLabel() {
-      return titleForState(this.get("topic.assigned_to_user"));
+      return titleForState(
+        this.get("topic.assigned_to_user.username") ||
+          this.get("topic.assigned_to_group.name")
+      );
     },
     translatedLabel() {
       const user = this.get("topic.assigned_to_user");
+      const group = this.get("topic.assigned_to_group");
+      const label = I18n.t("discourse_assign.unassign.title");
 
       if (user) {
-        const label = I18n.t("discourse_assign.unassign.title");
-
         if (this.site.mobileView) {
           return htmlSafe(
             `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
@@ -66,6 +74,10 @@ function registerTopicFooterButtons(api) {
             })}<span class="unassign-label">${label}</span>`
           );
         }
+      } else if (group) {
+        return htmlSafe(
+          `<span class="unassign-label">${label}</span> @${group.name}`
+        );
       } else {
         return I18n.t("discourse_assign.assign.title");
       }
@@ -78,9 +90,13 @@ function registerTopicFooterButtons(api) {
       const taskActions = getOwner(this).lookup("service:task-actions");
       const topic = this.topic;
       const assignedUser = topic.get("assigned_to_user.username");
+      const assignedGroup = topic.get("assigned_to_group");
 
       if (assignedUser) {
         this.set("topic.assigned_to_user", null);
+        taskActions.unassign(topic.id);
+      } else if (assignedGroup) {
+        this.set("topic.assigned_to_group", null);
         taskActions.unassign(topic.id);
       } else {
         taskActions.assign(topic);
@@ -92,6 +108,7 @@ function registerTopicFooterButtons(api) {
     classNames: ["assign"],
     dependentKeys: [
       "topic.assigned_to_user",
+      "topic.assigned_to_group",
       "currentUser.can_assign",
       "topic.assigned_to_user.username",
     ],
@@ -157,6 +174,10 @@ function initialize(api) {
         )
       );
     },
+    @computed("assigned_to_group")
+    assignedToGroupPath(assignedToGroup) {
+      return getURL(`/g/${assignedToGroup.name}/assigned/everyone`);
+    },
   });
 
   api.modifyClass("model:bookmark", {
@@ -169,10 +190,16 @@ function initialize(api) {
         )
       );
     },
+    @computed("assigned_to_group")
+    assignedToGroupPath(assignedToGroup) {
+      return getURL(`/g/${assignedToGroup.name}/assigned/everyone`);
+    },
   });
 
   api.addPostSmallActionIcon("assigned", "user-plus");
+  api.addPostSmallActionIcon("assigned_group", "user-plus");
   api.addPostSmallActionIcon("unassigned", "user-times");
+  api.addPostSmallActionIcon("unassigned_group", "user-times");
 
   api.addPostTransformCallback((transformed) => {
     if (
@@ -187,15 +214,19 @@ function initialize(api) {
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
   api.addTagsHtmlCallback((topic, params = {}) => {
-    const assignedTo = topic.get("assigned_to_user.username");
-    if (assignedTo) {
-      const assignedPath = topic.assignedToUserPath;
+    const assignedToUser = topic.get("assigned_to_user.username");
+    const assignedToGroup = topic.get("assigned_to_group.name");
+    if (assignedToUser || assignedToGroup) {
+      const assignedPath = assignedToUser
+        ? topic.assignedToUserPath
+        : topic.assignedToGroupPath;
       const tagName = params.tagName || "a";
-      const icon = iconHTML("user-plus");
+      const icon = assignedToUser ? iconHTML("user-plus") : iconHTML("users");
       const href =
         tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
-
-      return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}${assignedTo}</${tagName}>`;
+      return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}${
+        assignedToUser || assignedToGroup
+      }</${tagName}>`;
     }
   });
 
@@ -219,15 +250,15 @@ function initialize(api) {
 
   api.createWidget("assigned-to", {
     html(attrs) {
-      let { assignedToUser, href } = attrs;
+      let { assignedToUser, assignedToGroup, href } = attrs;
 
       return h("p.assigned-to", [
-        iconNode("user-plus"),
+        assignedToUser ? iconNode("user-plus") : iconNode("users"),
         h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
         h(
           "a",
           { attributes: { class: "assigned-to-username", href } },
-          assignedToUser.username
+          assignedToUser ? assignedToUser.username : assignedToGroup.name
         ),
       ]);
     },
@@ -242,11 +273,20 @@ function initialize(api) {
         const topicId = topic.id;
 
         if (data.topic_id === topicId) {
-          topic.set(
-            "assigned_to_user_id",
-            data.type === "assigned" ? data.assigned_to.id : null
-          );
-          topic.set("assigned_to_user", data.assigned_to);
+          if (data.assigned_type === "User") {
+            topic.set(
+              "assigned_to_user_id",
+              data.type === "assigned" ? data.assigned_to.id : null
+            );
+            topic.set("assigned_to_user", data.assigned_to);
+          }
+          if (data.assigned_type === "Group") {
+            topic.set(
+              "assigned_to_group_id",
+              data.type === "assigned" ? data.assigned_to.id : null
+            );
+            topic.set("assigned_to_group", data.assigned_to);
+          }
         }
         this.appEvents.trigger("header:update-topic", topic);
       });
@@ -268,10 +308,14 @@ function initialize(api) {
       const postModel = dec.getModel();
       if (postModel) {
         const assignedToUser = get(postModel, "topic.assigned_to_user");
-        if (assignedToUser) {
+        const assignedToGroup = get(postModel, "topic.assigned_to_group");
+        if (assignedToUser || assignedToGroup) {
           return dec.widget.attach("assigned-to", {
             assignedToUser,
-            href: get(postModel, "topic.assignedToUserPath"),
+            assignedToGroup,
+            href: assignedToUser
+              ? get(postModel, "topic.assignedToUserPath")
+              : get(postModel, "topic.assignedToGroupPath"),
           });
         }
       }
@@ -281,6 +325,11 @@ function initialize(api) {
   api.replaceIcon(
     "notification.discourse_assign.assign_notification",
     "user-plus"
+  );
+
+  api.replaceIcon(
+    "notification.discourse_assign.assign_group_notification",
+    "users"
   );
 
   api.modifyClass("controller:preferences/notifications", {
@@ -374,6 +423,11 @@ export default {
     withPluginApi("0.11.7", (api) => {
       api.addSearchSuggestion("in:assigned");
       api.addSearchSuggestion("in:unassigned");
+    });
+
+    withPluginApi("0.12.2", (api) => {
+      api.addGroupPostSmallActionCode("assigned_group");
+      api.addGroupPostSmallActionCode("unassigned_group");
     });
   },
 };

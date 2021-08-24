@@ -3,6 +3,7 @@ import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not } from "@ember/object/computed";
+import discourseComputed from "discourse-common/utils/decorators";
 import { isEmpty } from "@ember/utils";
 import { action } from "@ember/object";
 
@@ -20,6 +21,7 @@ export default Controller.extend({
     ajax("/assign/suggestions").then((data) => {
       this.set("assignSuggestions", data.suggestions);
       this.set("allowedGroups", data.assign_allowed_on_groups);
+      this.set("allowedGroupsForAssignment", data.assign_allowed_for_groups);
     });
   },
 
@@ -36,18 +38,35 @@ export default Controller.extend({
     });
   },
 
+  @discourseComputed("model.username", "model.group_name")
+  assigneName(username, group_name) {
+    return username || group_name;
+  },
+
   @action
-  assignUser(user) {
+  assignUser(assignee) {
     if (this.isBulkAction) {
-      this.bulkAction(user.username);
+      this.bulkAction(assignee.name);
       return;
     }
-    this.setProperties({
-      "model.username": user.username,
-      "model.allowedGroups": this.taskActions.allowedGroups,
-    });
 
-    return this.assign();
+    if (this.allowedGroupsForAssignment.includes(assignee.name)) {
+      this.setProperties({
+        "model.username": null,
+        "model.group_name": assignee.name,
+        "model.allowedGroups": this.taskActions.allowedGroups,
+      });
+    } else {
+      this.setProperties({
+        "model.username": assignee.name,
+        "model.group_name": null,
+        "model.allowedGroups": this.taskActions.allowedGroups,
+      });
+    }
+
+    if (assignee.name) {
+      return this.assign();
+    }
   },
 
   @action
@@ -59,8 +78,18 @@ export default Controller.extend({
     let path = "/assign/assign";
 
     if (isEmpty(this.get("model.username"))) {
+      this.model.topic.set("assigned_to_user", null);
+    }
+
+    if (isEmpty(this.get("model.group_name"))) {
+      this.model.topic.set("assigned_to_group", null);
+    }
+
+    if (
+      isEmpty(this.get("model.username")) &&
+      isEmpty(this.get("model.group_name"))
+    ) {
       path = "/assign/unassign";
-      this.set("model.assigned_to_user", null);
     }
 
     this.send("closeModal");
@@ -69,6 +98,7 @@ export default Controller.extend({
       type: "PUT",
       data: {
         username: this.get("model.username"),
+        group_name: this.get("model.group_name"),
         topic_id: this.get("model.topic.id"),
       },
     })
@@ -82,6 +112,6 @@ export default Controller.extend({
 
   @action
   assignUsername(selected) {
-    this.assignUser({ username: selected.firstObject });
+    this.assignUser({ name: selected.firstObject });
   },
 });

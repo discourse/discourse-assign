@@ -44,7 +44,7 @@ module DiscourseAssign
       group_name = params.permit(:group_name)['group_name']
 
       topic = Topic.find(topic_id.to_i)
-      assign_to = username ? User.find_by(username_lower: username.downcase) : Group.find_by(name: group_name)
+      assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
 
       raise Discourse::NotFound unless assign_to
 
@@ -126,8 +126,12 @@ module DiscourseAssign
       end
 
       assignment_count = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL")
-        .where("a.assigned_to_id IN (SELECT group_users.user_id FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", group.name)
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL ")
+        .where(<<~SQL, group_id: group.id)
+          (a.assigned_to_id IN (SELECT group_users.user_id FROM group_users WHERE group_id = :group_id) AND a.assigned_to_type = 'User')
+          OR
+          (a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group')
+        SQL
         .where("topics.deleted_at IS NULL")
         .count
 

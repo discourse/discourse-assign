@@ -39,7 +39,7 @@ module Jobs
           post_number: 1,
           high_priority: true,
           data: {
-            message: 'discourse_assign.assign_notification',
+            message: args[:assigned_to_type] == "User" ? 'discourse_assign.assign_notification' : 'discourse_assign.assign_group_notification',
             display_username: assigned_by.username,
             topic_title: topic.title
           }.to_json

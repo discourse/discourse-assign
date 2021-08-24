@@ -3,12 +3,14 @@
     {{i18n "discourse_assign.assign_modal.description"}}
     {{email-group-user-chooser
       autocomplete="off"
-      value=model.username
+      value=assigneName
       onChange=(action "assignUsername")
+      autofocus="autofocus"
       options=(hash
         placementStrategy="absolute"
         filterPlaceholder=placeholderKey
         includeGroups=false
+        includeMessageableGroups=true
         groupMembersOf=allowedGroups
         maximum=1
         autofocus=autofocus

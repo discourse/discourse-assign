@@ -21,12 +21,21 @@
     {{/if}}
   </div>
   <div class="pull-right">
-    {{assign-actions-dropdown
-      topic=topic
-      user=username
-      unassign=unassign
-      reassign=reassign
-    }}
+    {{#if topic.assigned_to_user}}
+      {{assign-actions-dropdown
+        topic=topic
+        assignee=topic.assigned_to_user.username
+        unassign=unassign
+        reassign=reassign
+      }}
+    {{else}}
+      {{assign-actions-dropdown
+        topic=topic
+        assignee=topic.assigned_to_group.name
+        unassign=unassign
+        reassign=reassign
+      }}
+    {{/if}}
   </div>
   <div class="clearfix"></div>
   <div class="topic-item-stats clearfix">

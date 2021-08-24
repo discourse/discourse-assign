@@ -29,9 +29,18 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       };
       return helper.response(topic);
     });
+
+    server.get("/t/45.json", () => {
+      let topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
+      topic["assigned_to_group"] = {
+        name: "Developers",
+        assigned_at: "2021-06-13T16:33:14.189Z",
+      };
+      return helper.response(topic);
+    });
   });
 
-  test("Shows assignment info", async (assert) => {
+  test("Shows user assignment info", async (assert) => {
     updateCurrentUser({ can_assign: true });
     await visit("/t/assignment-topic/44");
 
@@ -45,6 +54,28 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "eviltrout",
       "shows assignment in the first post"
     );
+    assert.ok(exists("#post_1 .assigned-to svg.d-icon-user-plus"));
+    assert.ok(
+      exists("#topic-footer-button-assign .unassign-label"),
+      "shows unassign button at the bottom of the topic"
+    );
+  });
+
+  test("Shows group assignment info", async (assert) => {
+    updateCurrentUser({ can_assign: true });
+    await visit("/t/assignment-topic/45");
+
+    assert.equal(
+      query("#topic-title .assigned-to").innerText,
+      "Developers",
+      "shows assignment in the header"
+    );
+    assert.equal(
+      query("#post_1 .assigned-to-username").innerText,
+      "Developers",
+      "shows assignment in the first post"
+    );
+    assert.ok(exists("#post_1 .assigned-to svg.d-icon-users"));
     assert.ok(
       exists("#topic-footer-button-assign .unassign-label"),
       "shows unassign button at the bottom of the topic"
