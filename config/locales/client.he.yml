@@ -79,5 +79,7 @@ he:
           fields:
             assignees_group:
               label: קבוצת מוקצים
+            minimum_time_between_assignments:
+              label: שעות בין הקצאות
             assigned_topic:
               label: מזהה נושא מוקצה

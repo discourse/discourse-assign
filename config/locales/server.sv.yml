@@ -72,3 +72,4 @@ sv:
     scriptables:
       random_assign:
         title: Tilldela slumpmässigt
+        no_one: "Försökte slumpmässigt tilldela en medlem av @%{group}, men ingen var tillgänglig."

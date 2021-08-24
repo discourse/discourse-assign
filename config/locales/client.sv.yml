@@ -79,5 +79,7 @@ sv:
           fields:
             assignees_group:
               label: Tilldelade-grupp
+            minimum_time_between_assignments:
+              label: Timmar mellan uppdrag
             assigned_topic:
               label: Tilldelat ämnes-ID
