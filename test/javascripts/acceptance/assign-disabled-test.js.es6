@@ -7,7 +7,7 @@ import { visit } from "@ember/test-helpers";
 import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { test } from "qunit";
 
-acceptance("Assign disabled mobile", function (needs) {
+acceptance("Discourse Assign | Assign disabled mobile", function (needs) {
   needs.user();
   needs.mobileView();
   needs.settings({ assign_enabled: false });
