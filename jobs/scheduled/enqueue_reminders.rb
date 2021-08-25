@@ -45,6 +45,7 @@ module Jobs
           last_reminder.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})
         )
         AND assignments.updated_at::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})
+        AND assignments.assigned_to_type = 'User'
 
         GROUP BY assignments.assigned_to_id
         HAVING COUNT(assignments.assigned_to_id) > 1

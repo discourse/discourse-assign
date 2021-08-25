@@ -285,9 +285,13 @@ after_initialize do
   add_to_class(:topic_query, :private_messages_assigned_query) do |user|
     list = private_messages_for(user, :all)
 
-    list = list.where(<<~SQL, user.id)
+    group_ids = user.groups.map(&:id)
+
+    list = list.where(<<~SQL, user_id: user.id, group_ids: group_ids)
       topics.id IN (
-        SELECT topic_id FROM assignments WHERE assigned_to_id = ? AND assigned_to_type = 'User'
+        SELECT topic_id FROM assignments WHERE
+        (assigned_to_id = :user_id AND assigned_to_type = 'User') OR
+        (assigned_to_id IN (:group_ids) AND assigned_to_type = 'Group')
       )
     SQL
   end

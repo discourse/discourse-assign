@@ -13,6 +13,7 @@ module DiscourseAssign
           JOIN(
             SELECT assigned_to_id user_id, MAX(created_at) last_assigned
             FROM assignments
+            WHERE assignments.assigned_to_type = 'User'
             GROUP BY assigned_to_id
             HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
           ) as X ON X.user_id = users.id
@@ -109,7 +110,7 @@ module DiscourseAssign
 
       members = User
         .joins("LEFT OUTER JOIN group_users g ON g.user_id = users.id")
-        .joins("LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id")
+        .joins("LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id AND a.assigned_to_type = 'User'")
         .joins("LEFT OUTER JOIN topics t ON t.id = a.topic_id")
         .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
         .where("a.assigned_to_id IS NOT NULL")
