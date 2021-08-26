@@ -45,12 +45,12 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     await visit("/t/assignment-topic/44");
 
     assert.equal(
-      query("#topic-title .assigned-to").innerText,
+      query("#topic-title .assigned-to").innerText.trim(),
       "eviltrout",
       "shows assignment in the header"
     );
     assert.equal(
-      query("#post_1 .assigned-to-username").innerText,
+      query("#post_1 .assigned-to-username").innerText.trim(),
       "eviltrout",
       "shows assignment in the first post"
     );
@@ -66,12 +66,12 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     await visit("/t/assignment-topic/45");
 
     assert.equal(
-      query("#topic-title .assigned-to").innerText,
+      query("#topic-title .assigned-to").innerText.trim(),
       "Developers",
       "shows assignment in the header"
     );
     assert.equal(
-      query("#post_1 .assigned-to-username").innerText,
+      query("#post_1 .assigned-to-username").innerText.trim(),
       "Developers",
       "shows assignment in the first post"
     );

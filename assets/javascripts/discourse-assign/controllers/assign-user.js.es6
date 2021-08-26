@@ -2,8 +2,7 @@ import Controller, { inject as controller } from "@ember/controller";
 import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { not } from "@ember/object/computed";
-import discourseComputed from "discourse-common/utils/decorators";
+import { not, or } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { action } from "@ember/object";
 
@@ -13,6 +12,7 @@ export default Controller.extend({
   allowedGroups: null,
   taskActions: service(),
   autofocus: not("capabilities.touch"),
+  assigneeName: or("model.username", "model.group_name"),
 
   init() {
     this._super(...arguments);
@@ -36,11 +36,6 @@ export default Controller.extend({
       type: "assign",
       username,
     });
-  },
-
-  @discourseComputed("model.username", "model.group_name")
-  assigneName(username, group_name) {
-    return username || group_name;
   },
 
   @action

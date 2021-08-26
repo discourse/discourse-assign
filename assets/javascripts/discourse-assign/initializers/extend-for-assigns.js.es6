@@ -1,6 +1,6 @@
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import computed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed, { observes } from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
@@ -165,7 +165,7 @@ function initialize(api) {
   );
 
   api.modifyClass("model:topic", {
-    @computed("assigned_to_user")
+    @discourseComputed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
       return getURL(
         siteSettings.assigns_user_url_path.replace(
@@ -174,14 +174,14 @@ function initialize(api) {
         )
       );
     },
-    @computed("assigned_to_group")
+    @discourseComputed("assigned_to_group")
     assignedToGroupPath(assignedToGroup) {
       return getURL(`/g/${assignedToGroup.name}/assigned/everyone`);
     },
   });
 
   api.modifyClass("model:bookmark", {
-    @computed("assigned_to_user")
+    @discourseComputed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
       return getURL(
         this.siteSettings.assigns_user_url_path.replace(
@@ -190,7 +190,7 @@ function initialize(api) {
         )
       );
     },
-    @computed("assigned_to_group")
+    @discourseComputed("assigned_to_group")
     assignedToGroupPath(assignedToGroup) {
       return getURL(`/g/${assignedToGroup.name}/assigned/everyone`);
     },
@@ -224,9 +224,10 @@ function initialize(api) {
       const icon = assignedToUser ? iconHTML("user-plus") : iconHTML("users");
       const href =
         tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
-      return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}${
-        assignedToUser || assignedToGroup
-      }</${tagName}>`;
+      return `<${tagName} class="assigned-to discourse-tag simple" ${href}>
+        ${icon}
+        <span>${assignedToUser || assignedToGroup}</span>
+      </${tagName}>`;
     }
   });
 

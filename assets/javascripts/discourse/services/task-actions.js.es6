@@ -15,7 +15,7 @@ export default Service.extend({
       model: {
         username: topic.get("assigned_to_user.username"),
         group_name: topic.get("assigned_to_group.name"),
-        topic: topic,
+        topic,
       },
     });
   },
