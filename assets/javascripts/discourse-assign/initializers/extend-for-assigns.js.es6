@@ -90,12 +90,11 @@ function registerTopicFooterButtons(api) {
       const taskActions = getOwner(this).lookup("service:task-actions");
       const topic = this.topic;
       const assignedUser = topic.get("assigned_to_user.username");
-      const assignedGroup = topic.get("assigned_to_group");
 
       if (assignedUser) {
         this.set("topic.assigned_to_user", null);
         taskActions.unassign(topic.id);
-      } else if (assignedGroup) {
+      } else if (topic.assigned_to_group) {
         this.set("topic.assigned_to_group", null);
         taskActions.unassign(topic.id);
       } else {
