@@ -9,6 +9,7 @@ RSpec.describe TopicAssigner do
   let(:pm_post) { Fabricate(:private_message_post) }
   let(:pm) { pm_post.topic }
 
+  # TODO later remove that stuff
   def assert_publish_topic_state(topic, user)
     message = MessageBus.track_publish("/private-messages/assigned") do
       yield
@@ -16,17 +17,6 @@ RSpec.describe TopicAssigner do
 
     expect(message.data[:topic_id]).to eq(topic.id)
     expect(message.user_ids).to eq([user.id])
-  end
-
-  describe 'assigning and unassigning private message' do
-    it 'should publish the right message' do
-      user = pm.allowed_users.first
-      assign_allowed_group.add(user)
-      assigner = described_class.new(pm, user)
-
-      assert_publish_topic_state(pm, user) { assigner.assign(user) }
-      assert_publish_topic_state(pm, user) { assigner.unassign }
-    end
   end
 
   context "assigning and unassigning" do
@@ -40,12 +30,9 @@ RSpec.describe TopicAssigner do
     let(:assigner_self) { TopicAssigner.new(topic, moderator) }
 
     it "can assign and unassign correctly" do
-      messages = MessageBus.track_publish("/notification-alert/#{moderator.id}") do
+      expect_enqueued_with(job: :assign_notification) do
         assigner.assign(moderator)
       end
-
-      expect(messages.length).to eq(1)
-      expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
 
       expect(TopicQuery.new(
         moderator, assigned: moderator.username
@@ -54,7 +41,9 @@ RSpec.describe TopicAssigner do
       expect(TopicUser.find_by(user: moderator).notification_level)
         .to eq(TopicUser.notification_levels[:watching])
 
-      assigner.unassign
+      expect_enqueued_with(job: :unassign_notification) do
+        assigner.unassign
+      end
 
       expect(TopicQuery.new(
         moderator, assigned: moderator.username
@@ -88,22 +77,6 @@ RSpec.describe TopicAssigner do
 
       expect(TopicUser.find_by(user: moderator, topic: topic).notification_level)
         .to eq(TopicUser.notification_levels[:muted])
-    end
-
-    it "sends a high priority notification to the assignee" do
-      Notification.expects(:create!).with(
-        notification_type: Notification.types[:custom],
-        user_id: moderator.id,
-        topic_id: topic.id,
-        post_number: 1,
-        high_priority: true,
-        data: {
-          message: 'discourse_assign.assign_notification',
-          display_username: moderator2.username,
-          topic_title: topic.title
-        }.to_json
-      )
-      assigner.assign(moderator)
     end
 
     context "when assigns_by_staff_mention is set to true" do
@@ -196,11 +169,25 @@ RSpec.describe TopicAssigner do
       expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
     end
 
+    it 'fails to assign when not all group members has access to pm' do
+      assign = TopicAssigner.new(pm, admin).assign(moderator.groups.first)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
+    end
+
     it 'fails to assign when the assigned user cannot view the topic' do
       assign = TopicAssigner.new(secure_topic, admin).assign(moderator)
 
       expect(assign[:success]).to eq(false)
       expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
+    end
+
+    it 'fails to assign when the not all group members can view the topic' do
+      assign = TopicAssigner.new(secure_topic, admin).assign(moderator.groups.first)
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
     end
 
     it "assigns the PM to the moderator when it's included in the list of allowed users" do
@@ -321,6 +308,13 @@ RSpec.describe TopicAssigner do
 
       expect { TopicAssigner.new(topic, moderator).assign(moderator) }
         .to change { ActionMailer::Base.deliveries.size }.by(1)
+    end
+
+    it "doesn't send an email if assignee is a group" do
+      SiteSetting.assign_mailer = AssignMailer.levels[:always]
+
+      expect { TopicAssigner.new(topic, moderator).assign(assign_allowed_group) }
+        .to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "doesn't send an email if the assigner and assignee are not different" do

@@ -16,7 +16,7 @@ export default DropdownSelectBoxComponent.extend({
         icon: "user-times",
         name: I18n.t("discourse_assign.unassign.title"),
         description: I18n.t("discourse_assign.unassign.help", {
-          username: this.topic.assigned_to_user.username,
+          username: this.assignee,
         }),
       },
       {
@@ -32,10 +32,10 @@ export default DropdownSelectBoxComponent.extend({
   onSelect(id) {
     switch (id) {
       case "unassign":
-        this.unassign(this.topic, this.user);
+        this.unassign(this.topic, this.assignee);
         break;
       case "reassign":
-        this.reassign(this.topic, this.user);
+        this.reassign(this.topic, this.assignee);
         break;
     }
   },

@@ -6,10 +6,10 @@ require_relative '../support/assign_allowed_group'
 RSpec.describe DiscourseAssign::AssignController do
   before { SiteSetting.assign_enabled = true }
 
-  let(:default_allowed_group) { Group.find_by(name: 'staff') }
+  fab!(:default_allowed_group) { Group.find_by(name: 'staff') }
   let(:user) { Fabricate(:admin, groups: [default_allowed_group], name: 'Robin Ward', username: 'eviltrout') }
   fab!(:post) { Fabricate(:post) }
-  fab!(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david') }
+  fab!(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david', groups: [default_allowed_group]) }
   let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
   fab!(:normal_user) { Fabricate(:user) }
   fab!(:normal_admin) { Fabricate(:admin) }
@@ -25,6 +25,14 @@ RSpec.describe DiscourseAssign::AssignController do
       }
 
       expect(response.status).to eq(403)
+    end
+
+    it 'filters requests where assigne group is not allowed' do
+      put '/assign/assign.json', params: {
+        topic_id: post.topic_id, group_name: default_allowed_group.name
+      }
+
+      expect(response.status).to eq(400)
     end
 
     describe '#suggestions' do
@@ -52,9 +60,9 @@ RSpec.describe DiscourseAssign::AssignController do
         TopicAssigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
-        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
+        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }.sort
 
-        expect(suggestions).to contain_exactly(user.username)
+        expect(suggestions).to eq(['david', 'eviltrout'])
       end
 
       it 'does include only visible assign_allowed_on_groups' do
@@ -106,6 +114,15 @@ RSpec.describe DiscourseAssign::AssignController do
 
       expect(response.status).to eq(200)
       expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
+    end
+
+    it 'assigns topic to a group' do
+      put '/assign/assign.json', params: {
+        topic_id: post.topic_id, group_name: assign_allowed_group.name
+      }
+
+      expect(response.status).to eq(200)
+      expect(post.topic.reload.assignment.assigned_to).to eq(assign_allowed_group)
     end
 
     it 'fails to assign topic to the user if its already assigned to the same user' do
@@ -284,30 +301,6 @@ RSpec.describe DiscourseAssign::AssignController do
 
       get "/assign/members/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(200)
-    end
-  end
-
-  describe "#claim" do
-    it "assigns the topic to the current user" do
-      sign_in(user)
-
-      put "/assign/claim/#{post.topic_id}.json"
-
-      expect(response.status).to eq(200)
-      assignment = Assignment.first
-      expect(assignment.assigned_to_id).to eq(user.id)
-      expect(assignment.topic_id).to eq(post.topic_id)
-    end
-
-    it "returns an error if already claimed" do
-      TopicAssigner.new(post.topic, user).assign(user)
-      sign_in(user)
-
-      put "/assign/claim/#{post.topic_id}.json"
-
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"].first).to eq(I18n.t('discourse_assign.already_claimed'))
-      expect(response.parsed_body["extras"]["assigned_to"]["username"]).to eq(user.username)
     end
   end
 end

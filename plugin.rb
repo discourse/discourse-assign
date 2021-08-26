@@ -29,6 +29,8 @@ end
 after_initialize do
   require File.expand_path('../jobs/scheduled/enqueue_reminders.rb', __FILE__)
   require File.expand_path('../jobs/regular/remind_user.rb', __FILE__)
+  require File.expand_path('../jobs/regular/assign_notification.rb', __FILE__)
+  require File.expand_path('../jobs/regular/unassign_notification.rb', __FILE__)
   require 'topic_assigner'
   require 'pending_assigns_reminder'
 
@@ -47,14 +49,18 @@ after_initialize do
   add_to_serializer(:group_show, :assignment_count) do
     Topic
       .joins(<<~SQL)
-        JOIN assignments
-        ON topics.id = assignments.topic_id AND assignments.assigned_to_id IS NOT NULL
+        JOIN assignments a
+        ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
       SQL
-      .where(<<~SQL, object.name)
-        assignments.assigned_to_id IN (
-          SELECT group_users.user_id
-          FROM group_users
-          WHERE group_id IN (SELECT id FROM groups WHERE name = ?)
+      .where(<<~SQL, group_id: object.id)
+        (
+          a.assigned_to_type = 'User' AND a.assigned_to_id IN (
+            SELECT group_users.user_id
+            FROM group_users
+            WHERE group_id = :group_id
+          )
+        ) OR (
+          a.assigned_to_type = 'Group' AND a.assigned_to_id = :group_id
         )
       SQL
       .where("topics.deleted_at IS NULL")
@@ -131,13 +137,13 @@ after_initialize do
     SiteSetting.assign_allowed_on_groups = new_setting
   end
 
-  DiscourseEvent.on(:assign_topic) do |topic, user, assigning_user, force|
+  on(:assign_topic) do |topic, user, assigning_user, force|
     if force || !Assignment.exists?(topic: topic)
       TopicAssigner.new(topic, assigning_user).assign(user)
     end
   end
 
-  DiscourseEvent.on(:unassign_topic) do |topic, unassigning_user|
+  on(:unassign_topic) do |topic, unassigning_user|
     TopicAssigner.new(topic, unassigning_user).unassign
   end
 
@@ -146,13 +152,11 @@ after_initialize do
   BookmarkQuery.on_preload do |bookmarks, bookmark_query|
     if SiteSetting.assign_enabled?
       topics = bookmarks.map(&:topic)
-      assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
-      users_map = User.where(id: assignments.values.uniq).index_by(&:id)
+      assignments = Assignment.strict_loading.where(topic: topics).includes(:assigned_to).index_by(&:topic_id)
 
       topics.each do |topic|
-        user_id = assignments[topic.id]
-        user = users_map[user_id] if user_id
-        topic.preload_assigned_to_user(user)
+        assigned_to = assignments[topic.id]&.assigned_to
+        topic.preload_assigned_to(assigned_to)
       end
     end
   end
@@ -163,17 +167,20 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
-        assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
+        assignments = Assignment.strict_loading.where(topic: topics)
+        assignments_map = assignments.index_by(&:topic_id)
 
-        users_map = User
-          .where(id: assignments.values.uniq)
-          .select(UserLookup.lookup_columns)
-          .index_by(&:id)
+        user_ids = assignments.filter { |assignment| assignment.assigned_to_type == "User" }.map(&:assigned_to_id)
+        users_map = User.where(id: user_ids).select(UserLookup.lookup_columns).index_by(&:id)
+
+        group_ids = assignments.filter { |assignment| assignment.assigned_to_type == "Group" }.map(&:assigned_to_id)
+        groups_map = Group.where(id: group_ids).index_by(&:id)
 
         topics.each do |topic|
-          user_id = assignments[topic.id]
-          user = users_map[user_id] if user_id
-          topic.preload_assigned_to_user(user)
+          assignment = assignments_map[topic.id]
+          assigned_to = users_map[assignment.assigned_to_id] if assignment&.assigned_to_type == "User"
+          assigned_to = groups_map[assignment.assigned_to_id] if assignment&.assigned_to_type == "Group"
+          topic.preload_assigned_to(assigned_to)
         end
       end
     end
@@ -186,68 +193,113 @@ after_initialize do
 
       if allowed_access && results.posts.length > 0
         topics = results.posts.map(&:topic)
-        assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
-        users_map = User.where(id: assignments.values.uniq).index_by(&:id)
+        assignments = Assignment.strict_loading.where(topic: topics).includes(:assigned_to).index_by(&:topic_id)
 
         results.posts.each do |post|
-          user_id = assignments[post.topic.id]
-          user = users_map[user_id] if user_id
-          post.topic.preload_assigned_to_user(user)
+          assigned_to = assignments[post.topic.id]&.assigned_to
+          post.topic.preload_assigned_to(assigned_to)
         end
       end
     end
   end
 
+  # TopicQuery
   require_dependency 'topic_query'
   TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
-    if topic_query.guardian.can_assign? || SiteSetting.assigns_public
-      username = topic_query.options[:assigned]
-      user_id = topic_query.guardian.user.id if username == "me"
-      special = ["*", "nobody"].include?(username)
+    name = topic_query.options[:assigned]
+    next results if name.blank?
 
-      if username.present? && !special
-        user_id ||= User.where(username_lower: username.downcase).pluck(:id).first
-      end
+    next results if !topic_query.guardian.can_assign? && !SiteSetting.assigns_public
 
-      if user_id || special
-        if username == "nobody"
-          results = results.joins("LEFT JOIN assignments a ON a.topic_id = topics.id")
-            .where("a.assigned_to_id IS NULL")
-        else
-          if username == "*"
-            filter = "a.assigned_to_id IS NOT NULL"
-          else
-            filter = "a.assigned_to_id = #{user_id}"
-          end
-
-          results = results.joins("JOIN assignments a ON a.topic_id = topics.id AND #{filter}")
-        end
-      end
+    if name == "nobody"
+      next results
+        .joins("LEFT JOIN assignments a ON a.topic_id = topics.id")
+        .where("a.assigned_to_id IS NULL")
     end
 
-    results
-  end
+    if name == "*"
+      next results
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .where("a.assigned_to_id IS NOT NULL")
+    end
 
-  require_dependency 'topic_list_item_serializer'
-  class ::TopicListItemSerializer
-    has_one :assigned_to_user, serializer: BasicUserSerializer, embed: :objects
-  end
+    user_id = topic_query.guardian.user.id if name == "me"
+    user_id ||= User.where(username_lower: name.downcase).pluck_first(:id)
 
-  require_dependency 'list_controller'
-  class ::ListController
-    generate_message_route(:private_messages_assigned)
+    if user_id
+      next results
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .where("a.assigned_to_id = ? AND a.assigned_to_type = 'User'", user_id)
+    end
+
+    group_id = Group.where(name: name.downcase).pluck_first(:id)
+
+    if group_id
+      next results
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .where("a.assigned_to_id = ? AND a.assigned_to_type = 'Group'", group_id)
+    end
+
+    next results
   end
 
   add_to_class(:topic_query, :list_messages_assigned) do |user|
     list = default_results(include_pms: true)
 
-    list = list.where("
+    list = list.where(<<~SQL, user_id: user.id)
       topics.id IN (
-        SELECT topic_id FROM assignments WHERE assigned_to_id = ?
+        SELECT topic_id FROM assignments
+        LEFT JOIN group_users ON group_users.user_id = :user_id
+        WHERE
+          assigned_to_id = :user_id AND assigned_to_type = 'User'
+          OR
+          assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group'
       )
-    ", user.id)
+    SQL
 
     create_list(:assigned, { unordered: true }, list)
+  end
+
+  add_to_class(:topic_query, :list_group_topics_assigned) do |group|
+    list = default_results(include_pms: true)
+
+    list = list.where(<<~SQL, group_id: group.id)
+      topics.id IN (
+        SELECT topic_id FROM assignments
+        WHERE (
+          assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND assigned_to_type = 'User'
+        ) OR (
+          assigned_to_id = :group_id AND assigned_to_type = 'Group'
+        )
+      )
+    SQL
+
+    create_list(:assigned, { unordered: true }, list)
+  end
+
+  add_to_class(:topic_query, :list_private_messages_assigned) do |user|
+    list = private_messages_assigned_query(user)
+    create_list(:private_messages, {}, list)
+  end
+
+  add_to_class(:topic_query, :private_messages_assigned_query) do |user|
+    list = private_messages_for(user, :all)
+
+    group_ids = user.groups.map(&:id)
+
+    list = list.where(<<~SQL, user_id: user.id, group_ids: group_ids)
+      topics.id IN (
+        SELECT topic_id FROM assignments WHERE
+        (assigned_to_id = :user_id AND assigned_to_type = 'User') OR
+        (assigned_to_id IN (:group_ids) AND assigned_to_type = 'Group')
+      )
+    SQL
+  end
+
+  # ListController
+  require_dependency 'list_controller'
+  class ::ListController
+    generate_message_route(:private_messages_assigned)
   end
 
   add_to_class(:list_controller, :messages_assigned) do
@@ -262,19 +314,6 @@ after_initialize do
     list.prev_topics_url = construct_url_with(:prev, list_opts)
 
     respond_with_list(list)
-  end
-
-  add_to_class(:topic_query, :list_group_topics_assigned) do |group|
-    list = default_results(include_pms: true)
-
-    list = list.where(<<~SQL, group.id.to_s)
-      topics.id IN (
-        SELECT topic_id FROM assignments
-        WHERE assigned_to_id IN (SELECT user_id from group_users where group_id = ?)
-      )
-    SQL
-
-    create_list(:assigned, { unordered: true }, list)
   end
 
   add_to_class(:list_controller, :group_topics_assigned) do
@@ -294,32 +333,17 @@ after_initialize do
     respond_with_list(list)
   end
 
-  add_to_class(:topic_query, :list_private_messages_assigned) do |user|
-    list = private_messages_assigned_query(user)
-    create_list(:private_messages, {}, list)
+  # Topic
+  add_to_class(:topic, :assigned_to) do
+    return @assigned_to if defined?(@assigned_to)
+    @assigned_to = assignment&.assigned_to
   end
 
-  add_to_class(:topic_query, :private_messages_assigned_query) do |user|
-    list = private_messages_for(user, :all)
-
-    list = list.where("
-      topics.id IN (
-        SELECT topic_id FROM assignments WHERE assigned_to_id = ?
-      )
-    ", user.id)
+  add_to_class(:topic, :preload_assigned_to) do |assigned_to|
+    @assigned_to = assigned_to
   end
 
-  add_to_class(:topic, :assigned_to_user) do
-    return @assigned_to_user if defined?(@assigned_to_user)
-
-    user_id = assignment&.assigned_to_id
-    @assigned_to_user = user_id ? User.find_by(id: user_id) : nil
-  end
-
-  add_to_class(:topic, :preload_assigned_to_user) do |assigned_to_user|
-    @assigned_to_user = assigned_to_user
-  end
-
+  # TopicList serializer
   add_to_serializer(:topic_list, :assigned_messages_count) do
     TopicQuery.new(object.current_user, guardian: scope, limit: false)
       .private_messages_assigned_query(object.current_user)
@@ -335,26 +359,58 @@ after_initialize do
     end
   end
 
+  # TopicView serializer
   add_to_serializer(:topic_view, :assigned_to_user, false) do
-    DiscourseAssign::Helpers.build_assigned_to_user(assigned_to_user_id, object.topic)
+    DiscourseAssign::Helpers.build_assigned_to_user(object.topic.assigned_to, object.topic)
   end
 
-  add_to_serializer(:topic_list_item, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to_user
+  add_to_serializer(:topic_view, :include_assigned_to_user?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User)
   end
 
-  add_to_serializer(:topic_view, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to_user
+  add_to_serializer(:topic_view, :assigned_to_group, false) do
+    DiscourseAssign::Helpers.build_assigned_to_group(object.topic.assigned_to, object.topic)
   end
 
+  add_to_serializer(:topic_view, :include_assigned_to_group?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
+  end
+
+  # TopicListItem serializer
+  add_to_serializer(:topic_list_item, :assigned_to_user) do
+    BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json
+  end
+
+  add_to_serializer(:topic_list_item, :include_assigned_to_user?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+  end
+
+  add_to_serializer(:topic_list_item, :assigned_to_group) do
+    BasicGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
+  end
+
+  add_to_serializer(:topic_list_item, :include_assigned_to_group?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+  end
+
+  # SearchTopicListItem serializer
   add_to_serializer(:search_topic_list_item, :assigned_to_user, false) do
-    object.assigned_to_user
+    object.assigned_to
   end
 
   add_to_serializer(:search_topic_list_item, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to_user
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
   end
 
+  add_to_serializer(:search_topic_list_item, :assigned_to_group, false) do
+    object.assigned_to
+  end
+
+  add_to_serializer(:search_topic_list_item, 'include_assigned_to_group?') do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+  end
+
+  # TopicsBulkAction
   TopicsBulkAction.register_operation("assign") do
     if @user.can_assign?
       assign_user = User.find_by_username(@operation[:username])
@@ -376,34 +432,46 @@ after_initialize do
 
   register_permitted_bulk_action_parameter :username
 
-  add_to_class(:user_bookmark_serializer, :assigned_to_user_id) do
-    topic.assignment&.assigned_to_id
-  end
-
+  # UserBookmarkSerializer
   add_to_serializer(:user_bookmark, :assigned_to_user, false) do
-    topic.assigned_to_user
+    topic.assigned_to
   end
 
   add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to_user
+    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(User)
   end
 
+  add_to_serializer(:user_bookmark, :assigned_to_group, false) do
+    topic.assigned_to
+  end
+
+  add_to_serializer(:user_bookmark, 'include_assigned_to_group?') do
+    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(Group)
+  end
+
+  # CurrentUser serializer
   add_to_serializer(:current_user, :can_assign) do
     object.can_assign?
   end
 
-  add_to_class(:topic_view_serializer, :assigned_to_user_id) do
-    object.topic.assignment&.assigned_to_id
-  end
-
+  # FlaggedTopic serializer
   add_to_serializer(:flagged_topic, :assigned_to_user) do
-    DiscourseAssign::Helpers.build_assigned_to_user(assigned_to_user_id, object)
+    DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
   end
 
-  add_to_serializer(:flagged_topic, :assigned_to_user_id) do
-    object.topic.assignment&.assigned_to_id
+  add_to_serializer(:flagged_topic, :include_assigned_to_user?) do
+    object.assigned_to&.is_a?(User)
   end
 
+  add_to_serializer(:flagged_topic, :assigned_to_group) do
+    DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object)
+  end
+
+  add_to_serializer(:flagged_topic, :include_assigned_to_group?) do
+    object.assigned_to&.is_a?(Group)
+  end
+
+  # Reviewable
   add_custom_reviewable_filter(
     [
       :assigned_to,
@@ -411,7 +479,7 @@ after_initialize do
         results.joins(<<~SQL
           INNER JOIN posts p ON p.id = target_id
           INNER JOIN topics t ON t.id = p.topic_id
-          INNER JOIN assignments a ON a.topic_id = t.id
+          INNER JOIN assignments a ON a.topic_id = t.id AND a.assigned_to_type == 'User'
           INNER JOIN users u ON u.id = a.assigned_to_id
         SQL
         )
@@ -421,6 +489,18 @@ after_initialize do
     ]
   )
 
+  # TopicTrackingState
+  add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, user_id|
+    return unless topic.private_message?
+
+    MessageBus.publish(
+      "/private-messages/assigned",
+      { topic_id: topic.id },
+      user_ids: [user_id]
+    )
+  end
+
+  # Event listeners
   on(:post_created) do |post|
     ::TopicAssigner.auto_assign(post, force: true)
   end
@@ -436,47 +516,68 @@ after_initialize do
     end
   end
 
-  add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, user_id|
-    return unless topic.private_message?
-
-    MessageBus.publish(
-      "/private-messages/assigned",
-      { topic_id: topic.id },
-      user_ids: [user_id]
-    )
-  end
-
   on(:move_to_inbox) do |info|
     topic = info[:topic]
+    assigned_to_id = topic.assignment.assigned_to_id
+    assigned_to_type = topic.assignment.assigned_to_type
 
-    if (assigned_id = topic.assignment&.assigned_to_id) == info[:user]&.id
-      TopicTrackingState.publish_assigned_private_message(topic, assigned_id)
+    if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
+      TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
     end
 
-    if SiteSetting.unassign_on_group_archive && info[:group] &&
-       user_id = topic.custom_fields["prev_assigned_to_id"].to_i &&
-       previous_user = User.find_by(id: user_id)
+    next if !SiteSetting.unassign_on_group_archive
+    next if !info[:group]
 
+    previous_assigned_to_id = topic.custom_fields["prev_assigned_to_id"]&.to_i
+    next if !previous_assigned_to_id
+
+    assigned_type = topic.custom_fields["prev_assigned_to_type"]
+    assigned_class = assigned_type == "Group" ? Group : User
+    previous_assigned_to = assigned_class.find_by(id: previous_assigned_to_id)
+
+    if previous_assigned_to
       assigner = TopicAssigner.new(topic, Discourse.system_user)
-      assigner.assign(previous_user, silent: true)
+      assigner.assign(previous_assigned_to, silent: true)
     end
   end
 
   on(:archive_message) do |info|
     topic = info[:topic]
-    user_id = topic.assignment&.assigned_to_id
+    next if !topic.assignment
 
-    if user_id == info[:user]&.id
-      TopicTrackingState.publish_assigned_private_message(topic, user_id)
+    assigned_to_id = topic.assignment.assigned_to_id
+    assigned_to_type = topic.assignment.assigned_to_type
+
+    if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
+      TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
     end
 
-    if SiteSetting.unassign_on_group_archive && info[:group] &&
-       user_id && assigned_user = User.find_by(id: user_id)
+    next if !SiteSetting.unassign_on_group_archive
+    next if !info[:group]
 
-      topic.custom_fields["prev_assigned_to_id"] = assigned_user.id
+    if assigned_to = topic.assignment
+      topic.custom_fields["prev_assigned_to_id"] = assigned_to.id
+      topic.custom_fields["prev_assigned_to_type"] = assigned_to.class
       topic.save!
+
       assigner = TopicAssigner.new(topic, Discourse.system_user)
       assigner.unassign(silent: true)
+    end
+  end
+
+  on(:user_removed_from_group) do |user, group|
+    assign_allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').map(&:to_i)
+
+    if assign_allowed_groups.include?(group.id)
+      groups = GroupUser.where(user: user).pluck(:group_id)
+
+      if (groups & assign_allowed_groups).empty?
+        topics = Topic.joins(:assignment).where('assignments.assigned_to_id = ?', user.id)
+
+        topics.each do |topic|
+          TopicAssigner.new(topic, Discourse.system_user).unassign
+        end
+      end
     end
   end
 
@@ -515,25 +616,15 @@ after_initialize do
       if user_id = User.find_by_username(match)&.id
         posts.where(<<~SQL, user_id)
           topics.id IN (
-            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ?
+            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User'
           )
         SQL
-      end
-    end
-  end
-
-  on(:user_removed_from_group) do |user, group|
-    assign_allowed_groups = SiteSetting.assign_allowed_on_groups.split('|').map(&:to_i)
-
-    if assign_allowed_groups.include?(group.id)
-      groups = GroupUser.where(user: user).pluck(:group_id)
-
-      if (groups & assign_allowed_groups).empty?
-        topics = Topic.joins(:assignment).where('assignments.assigned_to_id = ?', user.id)
-
-        topics.each do |topic|
-          TopicAssigner.new(topic, Discourse.system_user).unassign
-        end
+      elsif group_id = Group.find_by_name(match)&.id
+        posts.where(<<~SQL, group_id)
+          topics.id IN (
+            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group'
+          )
+        SQL
       end
     end
   end

@@ -4,7 +4,6 @@ require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
 describe ListController do
-
   before { SiteSetting.assign_enabled = true }
 
   let(:user) { Fabricate(:active_user) }
@@ -99,7 +98,6 @@ describe ListController do
 
       expect(id).to eq(0)
     end
-
   end
 
   context '#sorting messages_assigned and group_topics_assigned' do
@@ -124,7 +122,6 @@ describe ListController do
     end
 
     it 'group_topics_assigned returns sorted topicsList' do
-
       topic1.bumped_at = Time.now
       topic2.bumped_at = 1.day.ago
       topic3.bumped_at = 3.day.ago
@@ -161,7 +158,6 @@ describe ListController do
     end
 
     it 'messages_assigned returns sorted topicsList' do
-
       topic1.bumped_at = Time.now
       topic3.bumped_at = 3.day.ago
 

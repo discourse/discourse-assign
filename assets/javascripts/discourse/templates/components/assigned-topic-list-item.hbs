@@ -46,12 +46,20 @@
 
 <td class="num views {{topic.viewsHeat}}">{{number topic.views numberKey="views_long"}}</td>
 {{raw "list/activity-column" topic=topic class="num" tagName="td"}}
-
 <td>
-  {{assign-actions-dropdown
-    topic=topic
-    user=username
-    unassign=unassign
-    reassign=reassign
-  }}
+  {{#if topic.assigned_to_user}}
+    {{assign-actions-dropdown
+      topic=topic
+      assignee=topic.assigned_to_user.username
+      unassign=unassign
+      reassign=reassign
+    }}
+  {{else}}
+    {{assign-actions-dropdown
+      topic=topic
+      assignee=topic.assigned_to_group.name
+      unassign=unassign
+      reassign=reassign
+    }}
+  {{/if}}
 </td>

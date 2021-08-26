@@ -11,6 +11,7 @@ import { h } from "virtual-dom";
 import I18n from "I18n";
 
 const ICON = "user-plus";
+const GROUP_ICON = "users";
 
 createWidget("no-quick-access-assignments", {
   html() {
@@ -58,7 +59,7 @@ if (QuickAccessPanel) {
 
     itemHtml(assignedTopic) {
       return this.attach("quick-access-item", {
-        icon: ICON,
+        icon: assignedTopic.assigned_to_group ? GROUP_ICON : ICON,
         href: postUrl(
           assignedTopic.slug,
           assignedTopic.id,
