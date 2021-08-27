@@ -518,8 +518,8 @@ after_initialize do
 
   on(:move_to_inbox) do |info|
     topic = info[:topic]
-    assigned_to_id = topic.assignment.assigned_to_id
-    assigned_to_type = topic.assignment.assigned_to_type
+    assigned_to_id = topic.assignment&.assigned_to_id
+    assigned_to_type = topic.assignment&.assigned_to_type
 
     if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
       TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
