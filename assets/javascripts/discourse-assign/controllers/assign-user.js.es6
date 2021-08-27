@@ -39,27 +39,27 @@ export default Controller.extend({
   },
 
   @action
-  assignUser(assignee) {
+  assignUser(name) {
     if (this.isBulkAction) {
-      this.bulkAction(assignee.name);
+      this.bulkAction(name);
       return;
     }
 
-    if (this.allowedGroupsForAssignment.includes(assignee.name)) {
+    if (this.allowedGroupsForAssignment.includes(name)) {
       this.setProperties({
         "model.username": null,
-        "model.group_name": assignee.name,
+        "model.group_name": name,
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
     } else {
       this.setProperties({
-        "model.username": assignee.name,
+        "model.username": name,
         "model.group_name": null,
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
     }
 
-    if (assignee.name) {
+    if (name) {
       return this.assign();
     }
   },
@@ -107,6 +107,6 @@ export default Controller.extend({
 
   @action
   assignUsername(selected) {
-    this.assignUser({ name: selected.firstObject });
+    this.assignUser(selected.firstObject);
   },
 });
