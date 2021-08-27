@@ -202,8 +202,9 @@ function initialize(api) {
 
   api.addPostTransformCallback((transformed) => {
     if (
-      transformed.actionCode === "assigned" ||
-      transformed.actionCode === "unassigned"
+      ["assigned", "unassigned", "assigned_group", "unassigned_group"].includes(
+        transformed.actionCode
+      )
     ) {
       transformed.isSmallAction = true;
       transformed.canEdit = false;
