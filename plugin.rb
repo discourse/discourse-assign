@@ -545,8 +545,8 @@ after_initialize do
     topic = info[:topic]
     next if !topic.assignment
 
-    assigned_to_id = topic.assignment.assigned_to_id
-    assigned_to_type = topic.assignment.assigned_to_type
+    assigned_to_id = topic.assignment&.assigned_to_id
+    assigned_to_type = topic.assignment&.assigned_to_type
 
     if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
       TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
