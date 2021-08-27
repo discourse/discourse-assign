@@ -53,7 +53,7 @@ export default Controller.extend({
       });
     } else {
       this.setProperties({
-        "model.username": assignee.username,
+        "model.username": assignee.name,
         "model.group_name": null,
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
