@@ -566,8 +566,15 @@ after_initialize do
     assigned_to_id = topic.assignment&.assigned_to_id
     assigned_to_type = topic.assignment&.assigned_to_type
 
-    if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
-      TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
+    assigned_to_ids =
+      if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
+        [assigned_to_id]
+      elsif info[:group]&.id == assigned_to_id && assigned_to_type == "Group"
+        Group.find(assigned_to_id).users.pluck(:id)
+      end
+
+    assigned_to_ids && assigned_to_ids.each do |user_id|
+      TopicTrackingState.publish_assigned_private_message(topic, user_id)
     end
 
     next if !SiteSetting.unassign_on_group_archive
@@ -593,21 +600,26 @@ after_initialize do
     assigned_to_id = topic.assignment.assigned_to_id
     assigned_to_type = topic.assignment.assigned_to_type
 
-    if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
-      TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
+    assigned_to_ids =
+      if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
+        [assigned_to_id]
+      elsif info[:group]&.id == assigned_to_id && assigned_to_type == "Group"
+        Group.find(assigned_to_id).users.pluck(:id)
+      end
+
+    assigned_to_ids && assigned_to_ids.each do |user_id|
+      TopicTrackingState.publish_assigned_private_message(topic, user_id)
     end
 
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
 
-    if assigned_to = topic.assignment
-      topic.custom_fields["prev_assigned_to_id"] = assigned_to.id
-      topic.custom_fields["prev_assigned_to_type"] = assigned_to.class
-      topic.save!
+    topic.custom_fields["prev_assigned_to_id"] = assigned_to_id
+    topic.custom_fields["prev_assigned_to_type"] = assigned_to_type
+    topic.save!
 
-      assigner = TopicAssigner.new(topic, Discourse.system_user)
-      assigner.unassign(silent: true)
-    end
+    assigner = TopicAssigner.new(topic, Discourse.system_user)
+    assigner.unassign(silent: true)
   end
 
   on(:user_removed_from_group) do |user, group|

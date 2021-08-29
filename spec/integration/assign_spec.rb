@@ -23,12 +23,15 @@ describe 'integration tests' do
     let(:user) { pm.allowed_users.first }
     let(:user2) { pm.allowed_users.last }
     let(:channel) { "/private-messages/assigned" }
+    fab!(:group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
 
     include_context 'A group that is allowed to assign'
 
     before do
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
+      group.add(user)
+      group.add(user2)
     end
 
     def assert_publish_topic_state(topic, user)
@@ -53,6 +56,47 @@ describe 'integration tests' do
       assert_publish_topic_state(pm, user) do
         UserArchivedMessage.move_to_inbox!(user.id, pm.reload)
       end
+    end
+
+    it 'publishes the right message on archive and move to inbox for groups' do
+      assigner = TopicAssigner.new(pm, user)
+      assigner.assign(group)
+
+      assert_publish_topic_state(pm, user) do
+        GroupArchivedMessage.archive!(group.id, pm.reload)
+      end
+
+      assert_publish_topic_state(pm, user) do
+        GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
+      end
+    end
+
+    it "unassign and assign user if unassign_on_group_archive" do
+      SiteSetting.unassign_on_group_archive = true
+      assigner = TopicAssigner.new(pm, user)
+      assigner.assign(user)
+
+      GroupArchivedMessage.archive!(group.id, pm.reload)
+      expect(pm.assignment).to eq(nil)
+      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(user.id.to_s)
+      expect(pm.custom_fields["prev_assigned_to_type"]).to eq("User")
+
+      GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
+      expect(pm.assignment.assigned_to).to eq(user)
+    end
+
+    it "unassign and assign group if unassign_on_group_archive" do
+      SiteSetting.unassign_on_group_archive = true
+      assigner = TopicAssigner.new(pm, user)
+      assigner.assign(group)
+
+      GroupArchivedMessage.archive!(group.id, pm.reload)
+      expect(pm.assignment).to eq(nil)
+      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(group.id.to_s)
+      expect(pm.custom_fields["prev_assigned_to_type"]).to eq("Group")
+
+      GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
+      expect(pm.assignment.assigned_to).to eq(group)
     end
   end
 
