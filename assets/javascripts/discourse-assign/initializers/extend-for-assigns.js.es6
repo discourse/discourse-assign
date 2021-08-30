@@ -196,9 +196,9 @@ function initialize(api) {
   });
 
   api.addPostSmallActionIcon("assigned", "user-plus");
-  api.addPostSmallActionIcon("assigned_group", "user-plus");
+  api.addPostSmallActionIcon("assigned_group", "group-plus");
   api.addPostSmallActionIcon("unassigned", "user-times");
-  api.addPostSmallActionIcon("unassigned_group", "user-times");
+  api.addPostSmallActionIcon("unassigned_group", "group-times");
 
   api.addPostTransformCallback((transformed) => {
     if (
@@ -221,7 +221,9 @@ function initialize(api) {
         ? topic.assignedToUserPath
         : topic.assignedToGroupPath;
       const tagName = params.tagName || "a";
-      const icon = assignedToUser ? iconHTML("user-plus") : iconHTML("users");
+      const icon = assignedToUser
+        ? iconHTML("user-plus")
+        : iconHTML("group-plus");
       const href =
         tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
       return `<${tagName} class="assigned-to discourse-tag simple" ${href}>
@@ -254,7 +256,7 @@ function initialize(api) {
       let { assignedToUser, assignedToGroup, href } = attrs;
 
       return h("p.assigned-to", [
-        assignedToUser ? iconNode("user-plus") : iconNode("users"),
+        assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
         h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
         h(
           "a",
@@ -330,7 +332,7 @@ function initialize(api) {
 
   api.replaceIcon(
     "notification.discourse_assign.assign_group_notification",
-    "users"
+    "group-plus"
   );
 
   api.modifyClass("controller:preferences/notifications", {

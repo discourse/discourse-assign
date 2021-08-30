@@ -11,7 +11,7 @@ import { h } from "virtual-dom";
 import I18n from "I18n";
 
 const ICON = "user-plus";
-const GROUP_ICON = "users";
+const GROUP_ICON = "group-plus";
 
 createWidget("no-quick-access-assignments", {
   html() {

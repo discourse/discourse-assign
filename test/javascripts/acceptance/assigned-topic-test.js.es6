@@ -75,7 +75,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "Developers",
       "shows assignment in the first post"
     );
-    assert.ok(exists("#post_1 .assigned-to svg.d-icon-users"));
+    assert.ok(exists("#post_1 .assigned-to svg.d-icon-group-plus"));
     assert.ok(
       exists("#topic-footer-button-assign .unassign-label"),
       "shows unassign button at the bottom of the topic"

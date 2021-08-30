@@ -13,7 +13,7 @@ export default DropdownSelectBoxComponent.extend({
     return [
       {
         id: "unassign",
-        icon: "user-times",
+        icon: this.group ? "group-times" : "user-times",
         name: I18n.t("discourse_assign.unassign.title"),
         description: I18n.t("discourse_assign.unassign.help", {
           username: this.assignee,
