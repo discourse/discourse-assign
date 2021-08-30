@@ -273,6 +273,14 @@ function initialize(api) {
     },
   });
 
+  api.modifyClass("model:group", {
+    asJSON() {
+      return Object.assign({}, this._super(...arguments), {
+        assignable_level: this.assignable_level,
+      });
+    },
+  });
+
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
 

@@ -25,7 +25,7 @@ module DiscourseAssign
 
       render json: {
         assign_allowed_on_groups: Group.visible_groups(current_user).assign_allowed_groups.pluck(:name),
-        assign_allowed_for_groups: Group.visible_groups(current_user).messageable(current_user).pluck(:name),
+        assign_allowed_for_groups: Group.visible_groups(current_user).assignable(current_user).pluck(:name),
         suggestions: ActiveModel::ArraySerializer.new(users, scope: guardian, each_serializer: BasicUserSerializer),
       }
     end
