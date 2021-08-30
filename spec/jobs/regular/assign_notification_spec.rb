@@ -95,7 +95,7 @@ RSpec.describe Jobs::AssignNotification do
           high_priority: true,
           data: {
             message: 'discourse_assign.assign_group_notification',
-            display_username: user1.username,
+            display_username: group.name,
             topic_title: topic.title
           }.to_json
         )
@@ -107,7 +107,7 @@ RSpec.describe Jobs::AssignNotification do
           high_priority: true,
           data: {
             message: 'discourse_assign.assign_group_notification',
-            display_username: user1.username,
+            display_username: group.name,
             topic_title: topic.title
           }.to_json
         )

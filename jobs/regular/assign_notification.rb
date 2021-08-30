@@ -12,7 +12,8 @@ module Jobs
       topic = Topic.find(args[:topic_id])
       assigned_by = User.find(args[:assigned_by_id])
       first_post = topic.posts.find_by(post_number: 1)
-      assigned_to_users = args[:assigned_to_type] == "User" ? [User.find(args[:assigned_to_id])] : Group.find(args[:assigned_to_id]).users
+      assigned_to = args[:assigned_to_type] == "User" ? User.find(args[:assigned_to_id]) : Group.find(args[:assigned_to_id])
+      assigned_to_users = args[:assigned_to_type] == "User" ? [assigned_to] : assigned_to.users
 
       assigned_to_users.each do |user|
         TopicAssigner.publish_topic_tracking_state(topic, user.id)
@@ -40,7 +41,7 @@ module Jobs
           high_priority: true,
           data: {
             message: args[:assigned_to_type] == "User" ? 'discourse_assign.assign_notification' : 'discourse_assign.assign_group_notification',
-            display_username: assigned_by.username,
+            display_username: args[:assigned_to_type] == "User" ? assigned_by.username : assigned_to.name,
             topic_title: topic.title
           }.to_json
         )
