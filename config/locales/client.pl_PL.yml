@@ -12,7 +12,9 @@ pl_PL:
         help: "Wątki, które nie są przypisane"
     action_codes:
       assigned: "przypisany %{who} %{when}"
+      assigned_group: "przypisano %{who} %{when}"
       unassigned: "nieprzypisany%{who} %{when}"
+      unassigned_group: "nieprzypisany %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Dodaj filtr \"nieprzypisane\" do tej kategorii"
       cant_act: "Nie możesz działać na flagach, które nie zostały przydzielone innymi użytkownikom"
@@ -23,6 +25,7 @@ pl_PL:
       group_everyone: "Wszyscy"
       assigned_to: "Przypisany do"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Cofnij przypisanie"
         help: "Anuluj przypisanie %{username} do tematu"

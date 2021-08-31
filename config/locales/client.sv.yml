@@ -12,7 +12,9 @@ sv:
         help: "Ämnen som inte är tilldelade"
     action_codes:
       assigned: "tilldelat %{who} %{when}"
+      assigned_group: "tilldelat %{who} %{when}"
       unassigned: "otilldelat %{who} %{when}"
+      unassigned_group: "otilldelat %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Lägg till 'otilldelat' som en filterkategori"
       cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
@@ -23,6 +25,7 @@ sv:
       group_everyone: "Alla"
       assigned_to: "Tilldelat till"
       assign_notification: "<p><span>%{username}</span>%{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Otilldela"
         help: "Otilldela %{username} för ämne"

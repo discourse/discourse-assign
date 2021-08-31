@@ -25,6 +25,7 @@ pl_PL:
     already_claimed: "Ten temat został już przejęty."
     already_assigned: "Temat jest już przypisany do @%{username}"
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
+    group_already_assigned: "Temat jest już przypisany do @%{group}"
     flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
     flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
     topic_assigned_excerpt: "przypisano ci temat '%{title}'"
