@@ -15,6 +15,8 @@ import { inject } from "@ember/controller";
 import I18n from "I18n";
 import { get } from "@ember/object";
 
+const PLUGIN_ID = "discourse-assign";
+
 function titleForState(name) {
   if (name) {
     return I18n.t("discourse_assign.unassign.help", {
@@ -164,6 +166,8 @@ function initialize(api) {
   );
 
   api.modifyClass("model:topic", {
+    pluginId: PLUGIN_ID,
+
     @discourseComputed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
       return getURL(
@@ -180,6 +184,8 @@ function initialize(api) {
   });
 
   api.modifyClass("model:bookmark", {
+    pluginId: PLUGIN_ID,
+
     @discourseComputed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
       return getURL(
@@ -268,6 +274,8 @@ function initialize(api) {
   });
 
   api.modifyClass("controller:topic", {
+    pluginId: PLUGIN_ID,
+
     subscribe() {
       this._super(...arguments);
 
@@ -336,6 +344,8 @@ function initialize(api) {
   );
 
   api.modifyClass("controller:preferences/notifications", {
+    pluginId: PLUGIN_ID,
+
     actions: {
       save() {
         this.saveAttrNames.push("custom_fields");
