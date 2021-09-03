@@ -21,6 +21,16 @@
         ascending=ascending
         order=order
       }}
+      {{group-assigned-filter
+        show-avatar=false
+        group-name=group.name
+        filter=group.name
+        routeType=route_type
+        assignmentCount=group.group_assignment_count
+        search=search
+        ascending=ascending
+        order=order
+      }}
       {{#each members as |member|}}
         {{group-assigned-filter
           show-avatar=true

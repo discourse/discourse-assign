@@ -13,6 +13,19 @@
       {{filter.assignments_count}}
     </div>
   {{/link-to}}
+{{else if group-name}}
+  {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending search=search)}}
+    <div class="assign-image">
+      {{d-icon "group-plus"}}
+    </div>
+    <div class="assign-names">
+      <div class="assign-username">{{group-name}}</div>
+    </div>
+
+    <div class="assign-count">
+      {{assignmentCount}}
+    </div>
+  {{/link-to}}
 {{else}}
   {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending search=search)}}
     <div class="assign-everyone">

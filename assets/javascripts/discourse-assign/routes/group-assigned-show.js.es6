@@ -13,12 +13,16 @@ export default DiscourseRoute.extend({
 
   model(params) {
     let filter = null;
-    if (params.filter !== "everyone") {
-      filter = `topics/messages-assigned/${params.filter}`;
-    } else {
+    if (params.filter === "everyone") {
       filter = `topics/group-topics-assigned/${this.modelFor("group").get(
         "name"
       )}`;
+    } else if (params.filter === this.modelFor("group").get("name")) {
+      filter = `topics/group-topics-assigned/${this.modelFor("group").get(
+        "name"
+      )}?direct=true`;
+    } else {
+      filter = `topics/messages-assigned/${params.filter}?direct=true`;
     }
     const lastTopicList = findOrResetCachedTopicList(this.session, filter);
     return lastTopicList
