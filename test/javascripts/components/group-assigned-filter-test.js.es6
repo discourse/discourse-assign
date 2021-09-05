@@ -10,7 +10,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("displays username and name", {
-      template: hbs`{{group-assigned-filter show-avatar=true filter=filter}}`,
+      template: hbs`{{group-assigned-filter showAvatar=true filter=filter}}`,
 
       beforeEach() {
         this.set("filter", {

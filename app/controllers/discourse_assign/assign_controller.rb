@@ -127,7 +127,7 @@ module DiscourseAssign
       end
 
       group_assignment_count = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL ")
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where(<<~SQL, group_id: group.id)
           a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group'
         SQL
@@ -135,7 +135,7 @@ module DiscourseAssign
         .count
 
       assignment_count = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL ")
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where(<<~SQL, group_id: group.id)
           a.assigned_to_id IN (SELECT group_users.user_id FROM group_users WHERE group_id = :group_id) AND a.assigned_to_type = 'User'
         SQL

@@ -13,7 +13,7 @@
     {{/if}}
     {{#load-more selector=".activity-nav li" action=(action "loadMore")}}
       {{group-assigned-filter
-        show-avatar=false
+        showAvatar=false
         filter="everyone"
         routeType=route_type
         assignmentCount=group.assignment_count
@@ -22,8 +22,8 @@
         order=order
       }}
       {{group-assigned-filter
-        show-avatar=false
-        group-name=group.name
+        showAvatar=false
+        groupName=group.name
         filter=group.name
         routeType=route_type
         assignmentCount=group.group_assignment_count
@@ -33,7 +33,7 @@
       }}
       {{#each members as |member|}}
         {{group-assigned-filter
-          show-avatar=true
+          showAvatar=true
           filter=member
           routeType=route_type
           search=search
