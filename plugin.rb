@@ -36,8 +36,13 @@ after_initialize do
   require 'topic_assigner'
   require 'pending_assigns_reminder'
 
-  register_group_param(:assignable_level)
-  register_group_scope_for_search(:assignable)
+  # TODO: Drop when Discourse stable 2.8.0 is released
+  if respond_to?(:register_group_param)
+    register_group_param(:assignable_level)
+  end
+  if respond_to?(:register_group_scope_for_search)
+    register_group_scope_for_search(:assignable)
+  end
 
   class ::Topic
     has_one :assignment, dependent: :destroy
