@@ -10,7 +10,6 @@ export default Controller.extend({
   topicBulkActions: controller(),
   assignSuggestions: null,
   allowedGroups: null,
-  customGroupsScope: "assignable",
   taskActions: service(),
   autofocus: not("capabilities.touch"),
   assigneeName: or("model.username", "model.group_name"),

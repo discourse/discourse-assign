@@ -40,8 +40,10 @@ after_initialize do
   if respond_to?(:register_group_param)
     register_group_param(:assignable_level)
   end
-  if respond_to?(:register_group_scope_for_search)
-    register_group_scope_for_search(:assignable)
+  if respond_to?(:register_groups_callback_for_users_search_controller_action)
+    register_groups_callback_for_users_search_controller_action(:assignable_groups) do |groups, user|
+      groups.assignable(user)
+    end
   end
 
   class ::Topic

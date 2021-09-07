@@ -450,5 +450,8 @@ export default {
       api.addGroupPostSmallActionCode("assigned_group");
       api.addGroupPostSmallActionCode("unassigned_group");
     });
+    withPluginApi("0.12.3", (api) => {
+      api.addUserSearchOption("assignableGroups");
+    });
   },
 };
