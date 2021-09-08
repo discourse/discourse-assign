@@ -351,7 +351,7 @@ after_initialize do
     raise Discourse::InvalidAccess unless current_user.can_assign?
 
     list_opts = build_topic_list_options
-    list_opts.merge!({ filter: :direct }) if params[:direct]
+    list_opts.merge!({ filter: :direct }) if params[:direct] == "true"
     list = generate_list_for("messages_assigned", user, list_opts)
 
     list.more_topics_url = construct_url_with(:next, list_opts)
@@ -369,7 +369,7 @@ after_initialize do
     raise Discourse::InvalidAccess unless group.can_show_assigned_tab?
 
     list_opts = build_topic_list_options
-    list_opts.merge!({ filter: :direct }) if params[:direct]
+    list_opts.merge!({ filter: :direct }) if params[:direct] == "true"
     list = generate_list_for("group_topics_assigned", group, list_opts)
 
     list.more_topics_url = construct_url_with(:next, list_opts)
