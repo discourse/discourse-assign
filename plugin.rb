@@ -665,6 +665,7 @@ after_initialize do
       field :assignees_group, component: :group
       field :assigned_topic, component: :text
       field :minimum_time_between_assignments, component: :text
+      field :in_working_hours, component: :boolean
 
       version 1
 
@@ -732,10 +733,13 @@ after_initialize do
           next
         end
 
-        assign_to_user_id = users_ids.shuffle.find do |user_id|
-          RandomAssignUtils.in_working_hours?(user_id)
+        if fields.dig('in_working_hours', 'value')
+          assign_to_user_id = users_ids.shuffle.find do |user_id|
+            RandomAssignUtils.in_working_hours?(user_id)
+          end
         end
 
+        assign_to_user_id ||= users_ids.sample
         if assign_to_user_id.blank?
           RandomAssignUtils.no_one!(topic_id, group.name)
           next
