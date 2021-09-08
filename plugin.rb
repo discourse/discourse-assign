@@ -423,6 +423,23 @@ after_initialize do
     (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
   end
 
+  # SuggestedTopic serializer
+  add_to_serializer(:suggested_topic, :assigned_to_user, false) do
+    DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
+  end
+
+  add_to_serializer(:suggested_topic, :include_assigned_to_user?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+  end
+
+  add_to_serializer(:suggested_topic, :assigned_to_group, false) do
+    DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object)
+  end
+
+  add_to_serializer(:suggested_topic, :include_assigned_to_group?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+  end
+
   # TopicListItem serializer
   add_to_serializer(:topic_list_item, :assigned_to_user) do
     BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json
