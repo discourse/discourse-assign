@@ -671,8 +671,11 @@ after_initialize do
 
       triggerables %i[point_in_time recurring]
 
-      script do |context, fields|
-        next unless SiteSetting.assign_enabled?
+      script do |context, fields, automation|
+        unless SiteSetting.assign_enabled?
+          Rails.logger.warn("[discourse-automation id=#{automation.id}] discourse-assign is not enabled.")
+          next
+        end
 
         next unless topic_id = fields.dig('assigned_topic', 'value')
         next unless topic = Topic.find_by(id: topic_id)
