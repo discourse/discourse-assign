@@ -89,3 +89,5 @@ en:
               label: Hours between assignments
             assigned_topic:
               label: Assigned Topic ID
+            in_working_hours:
+              label: Users in working hours
