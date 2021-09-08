@@ -679,10 +679,10 @@ after_initialize do
         next unless group_id = fields.dig('assignees_group', 'value')
         next unless group = Group.find_by(id: group_id)
 
-        min_hours = (fields.dig('minimum_time_between_assignments', 'value') || 12).to_i
-        if TopicCustomField
+        min_hours = fields.dig('minimum_time_between_assignments', 'value')
+        if min_hours && TopicCustomField
             .where(name: 'assigned_to_id', topic_id: topic_id)
-            .where('created_at < ?', min_hours.hours.ago)
+            .where('created_at < ?', min_hours.to_i.hours.ago)
             .exists?
           next
         end
