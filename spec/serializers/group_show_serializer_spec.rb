@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe GroupShowSerializer do
   fab!(:user) { Fabricate(:user) }
-  fab!(:group) { Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]) }
+  fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
   fab!(:group_user) { Fabricate(:group_user, group: group, user: user) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }

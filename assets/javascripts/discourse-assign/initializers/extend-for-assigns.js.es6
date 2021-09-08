@@ -273,6 +273,14 @@ function initialize(api) {
     },
   });
 
+  api.modifyClass("model:group", {
+    asJSON() {
+      return Object.assign({}, this._super(...arguments), {
+        assignable_level: this.assignable_level,
+      });
+    },
+  });
+
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
 
@@ -441,6 +449,9 @@ export default {
     withPluginApi("0.12.2", (api) => {
       api.addGroupPostSmallActionCode("assigned_group");
       api.addGroupPostSmallActionCode("unassigned_group");
+    });
+    withPluginApi("0.12.3", (api) => {
+      api.addUserSearchOption("assignableGroups");
     });
   },
 };

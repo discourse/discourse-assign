@@ -36,8 +36,31 @@ after_initialize do
   require 'topic_assigner'
   require 'pending_assigns_reminder'
 
+  # TODO: Drop when Discourse stable 2.8.0 is released
+  if respond_to?(:register_group_param)
+    register_group_param(:assignable_level)
+  end
+  if respond_to?(:register_groups_callback_for_users_search_controller_action)
+    register_groups_callback_for_users_search_controller_action(:assignable_groups) do |groups, user|
+      groups.assignable(user)
+    end
+  end
+
   class ::Topic
     has_one :assignment, dependent: :destroy
+  end
+
+  class ::Group
+    scope :assignable, ->(user) {
+      where("assignable_level in (:levels) OR
+          (
+            assignable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id)
+          ) OR (
+            assignable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
+            SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+          )", levels: alias_levels(user), user_id: user && user.id)
+    }
   end
 
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
@@ -71,6 +94,10 @@ after_initialize do
 
   add_to_serializer(:group_show, 'include_assignment_count?') do
     scope.can_assign?
+  end
+
+  add_to_serializer(:group_show, :assignable_level) do
+    object.assignable_level
   end
 
   add_to_serializer(:group_show, :can_show_assigned_tab?) do

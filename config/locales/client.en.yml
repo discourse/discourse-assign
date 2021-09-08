@@ -47,6 +47,13 @@ en:
         weekly: "Weekly"
         monthly: "Monthly"
         quarterly: "Quarterly"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Assign"
+              assignable_levels:
+                title: "Who can assign this group"
     user:
       messages:
         assigned_title: "Assigned (%{count})"
