@@ -38,7 +38,7 @@ describe TopicQuery do
     it 'Excludes topics and PMs not assigned to user' do
       assigned_messages = TopicQuery.new(user2, { page: 0 }).list_messages_assigned(user2).topics
 
-      expect(assigned_messages).to eq([group_topic])
+      expect(assigned_messages).to contain_exactly(group_topic)
     end
 
     it 'direct filter excludes group assignment' do
