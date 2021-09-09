@@ -66,6 +66,7 @@ after_initialize do
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
   register_editable_user_custom_field frequency_field
   User.register_custom_field_type frequency_field, :integer
+  Topic.register_custom_field_type "prev_assigned_to_id", :integer
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) do
     RemindAssignsFrequencySiteSettings.values
@@ -535,14 +536,21 @@ after_initialize do
   )
 
   # TopicTrackingState
-  add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, user_id|
+  add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, assignee|
     return unless topic.private_message?
-
-    MessageBus.publish(
-      "/private-messages/assigned",
-      { topic_id: topic.id },
-      user_ids: [user_id]
-    )
+    if assignee.is_a?(User)
+      MessageBus.publish(
+        "/private-messages/assigned",
+        { topic_id: topic.id },
+        user_ids: [assignee.id]
+      )
+    else
+      MessageBus.publish(
+        "/private-messages/assigned",
+        { topic_id: topic.id },
+        group_ids: [assignee.id]
+      )
+    end
   end
 
   # Event listeners
@@ -563,19 +571,8 @@ after_initialize do
 
   on(:move_to_inbox) do |info|
     topic = info[:topic]
-    assigned_to_id = topic.assignment&.assigned_to_id
-    assigned_to_type = topic.assignment&.assigned_to_type
 
-    assigned_to_ids =
-      if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
-        [assigned_to_id]
-      elsif info[:group]&.id == assigned_to_id && assigned_to_type == "Group"
-        Group.find(assigned_to_id).users.pluck(:id)
-      end
-
-    assigned_to_ids && assigned_to_ids.each do |user_id|
-      TopicTrackingState.publish_assigned_private_message(topic, user_id)
-    end
+    TopicTrackingState.publish_assigned_private_message(topic, topic.assignment.assigned_to) if topic.assignment
 
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
@@ -597,25 +594,13 @@ after_initialize do
     topic = info[:topic]
     next if !topic.assignment
 
-    assigned_to_id = topic.assignment.assigned_to_id
-    assigned_to_type = topic.assignment.assigned_to_type
-
-    assigned_to_ids =
-      if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
-        [assigned_to_id]
-      elsif info[:group]&.id == assigned_to_id && assigned_to_type == "Group"
-        Group.find(assigned_to_id).users.pluck(:id)
-      end
-
-    assigned_to_ids && assigned_to_ids.each do |user_id|
-      TopicTrackingState.publish_assigned_private_message(topic, user_id)
-    end
+    TopicTrackingState.publish_assigned_private_message(topic, topic.assignment.assigned_to)
 
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
 
-    topic.custom_fields["prev_assigned_to_id"] = assigned_to_id
-    topic.custom_fields["prev_assigned_to_type"] = assigned_to_type
+    topic.custom_fields["prev_assigned_to_id"] = topic.assignment.assigned_to_id
+    topic.custom_fields["prev_assigned_to_type"] = topic.assignment.assigned_to_type
     topic.save!
 
     assigner = TopicAssigner.new(topic, Discourse.system_user)

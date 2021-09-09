@@ -34,7 +34,7 @@ describe 'integration tests' do
       group.add(user2)
     end
 
-    def assert_publish_topic_state(topic, user)
+    def assert_publish_topic_state(topic, user: nil, group: nil)
       messages = MessageBus.track_publish do
         yield
       end
@@ -42,18 +42,19 @@ describe 'integration tests' do
       message = messages.find { |m| m.channel == channel }
 
       expect(message.data[:topic_id]).to eq(topic.id)
-      expect(message.user_ids).to eq([user.id])
+      expect(message.user_ids).to eq([user.id]) if user
+      expect(message.group_ids).to eq([group.id]) if group
     end
 
     it 'publishes the right message on archive and move to inbox' do
       assigner = TopicAssigner.new(pm, user)
       assigner.assign(user)
 
-      assert_publish_topic_state(pm, user) do
+      assert_publish_topic_state(pm, user: user) do
         UserArchivedMessage.archive!(user.id, pm.reload)
       end
 
-      assert_publish_topic_state(pm, user) do
+      assert_publish_topic_state(pm, user: user) do
         UserArchivedMessage.move_to_inbox!(user.id, pm.reload)
       end
     end
@@ -62,11 +63,11 @@ describe 'integration tests' do
       assigner = TopicAssigner.new(pm, user)
       assigner.assign(group)
 
-      assert_publish_topic_state(pm, user) do
+      assert_publish_topic_state(pm, group: group) do
         GroupArchivedMessage.archive!(group.id, pm.reload)
       end
 
-      assert_publish_topic_state(pm, user) do
+      assert_publish_topic_state(pm, group: group) do
         GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
       end
     end
@@ -78,7 +79,7 @@ describe 'integration tests' do
 
       GroupArchivedMessage.archive!(group.id, pm.reload)
       expect(pm.assignment).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(user.id.to_s)
+      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(user.id)
       expect(pm.custom_fields["prev_assigned_to_type"]).to eq("User")
 
       GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
@@ -92,7 +93,7 @@ describe 'integration tests' do
 
       GroupArchivedMessage.archive!(group.id, pm.reload)
       expect(pm.assignment).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(group.id.to_s)
+      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(group.id)
       expect(pm.custom_fields["prev_assigned_to_type"]).to eq("Group")
 
       GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
