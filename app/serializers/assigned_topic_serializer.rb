@@ -17,7 +17,7 @@ class AssignedTopicSerializer < BasicTopicSerializer
   end
 
   def include_assigned_to_user?
-    object.assigned_to.is_a?(User)
+    object.assignment.assigned_to_user?
   end
 
   def assigned_to_group
@@ -25,6 +25,6 @@ class AssignedTopicSerializer < BasicTopicSerializer
   end
 
   def include_assigned_to_group?
-    object.assigned_to.is_a?(Group)
+    object.assignment.assigned_to_group?
   end
 end

@@ -179,7 +179,7 @@ class ::TopicAssigner
     first_post = @topic.posts.find_by(post_number: 1)
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
-    serializer = assign_to.is_a?(User) ? BasicUserSerializer : BasicGroupSerializer
+    serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
 
     Jobs.enqueue(:assign_notification,
                  topic_id: @topic.id,
@@ -199,7 +199,7 @@ class ::TopicAssigner
       user_ids: allowed_user_ids
     )
 
-    if assign_to.is_a?(User)
+    if assignment.assigned_to_user?
       if !TopicUser.exists?(
         user_id: assign_to.id,
         topic_id: @topic.id,
@@ -226,7 +226,7 @@ class ::TopicAssigner
         nil,
         bump: false,
         post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
-        action_code: assign_to.is_a?(User) ? "assigned" : "assigned_group",
+        action_code: assignment.assigned_to_user? ? "assigned" : "assigned_group",
         custom_fields: { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
       )
 
@@ -244,7 +244,7 @@ class ::TopicAssigner
         assigned_by_id: @assigned_by.id,
         assigned_by_username: @assigned_by.username
       }
-      if assign_to.is_a?(User)
+      if assignment.assigned_to_user?
         payload.merge!({
           assigned_to_id: assign_to.id,
           assigned_to_username: assign_to.username,
@@ -275,7 +275,7 @@ class ::TopicAssigner
                    assigned_to_id: assignment.assigned_to.id,
                    assigned_to_type: assignment.assigned_to_type)
 
-      if assignment.assigned_to_type == "User"
+      if assignment.assigned_to_user?
         if TopicUser.exists?(
           user_id: assignment.assigned_to_id,
           topic: @topic,
@@ -301,7 +301,7 @@ class ::TopicAssigner
           bump: false,
           post_type: post_type,
           custom_fields: { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name },
-          action_code: assigned_to.is_a?(User) ? "unassigned" : "unassigned_group",
+          action_code: assignment.assigned_to_user? ? "unassigned" : "unassigned_group",
         )
       end
 
@@ -315,7 +315,7 @@ class ::TopicAssigner
           unassigned_by_id: @assigned_by.id,
           unassigned_by_username: @assigned_by.username
         }
-        if assigned_to.is_a?(User)
+        if assignment.assigned_to_user?
           payload.merge!({
             unassigned_to_id: assigned_to.id,
             unassigned_to_username: assigned_to.username,
