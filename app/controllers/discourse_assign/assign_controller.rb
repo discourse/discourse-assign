@@ -126,17 +126,25 @@ module DiscourseAssign
         SQL
       end
 
-      assignment_count = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL ")
+      group_assignment_count = Topic
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where(<<~SQL, group_id: group.id)
-          (a.assigned_to_id IN (SELECT group_users.user_id FROM group_users WHERE group_id = :group_id) AND a.assigned_to_type = 'User')
-          OR
-          (a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group')
+          a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group'
         SQL
-        .where("topics.deleted_at IS NULL")
         .count
 
-      render json: { members: serialize_data(members, GroupUserAssignedSerializer), assignment_count: assignment_count }
+      assignment_count = Topic
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .joins("JOIN group_users ON group_users.user_id = a.assigned_to_id ")
+        .where("group_users.group_id = ?", group.id)
+        .where("a.assigned_to_type = 'User'")
+        .count
+
+      render json: {
+        members: serialize_data(members, GroupUserAssignedSerializer),
+        assignment_count: assignment_count + group_assignment_count,
+        group_assignment_count: group_assignment_count
+      }
     end
 
     private

@@ -8,8 +8,8 @@ describe TopicQuery do
     SiteSetting.assign_enabled = true
   end
 
-  let(:user) { Fabricate(:user) }
-  let(:user2) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:user) }
+  fab!(:user2) { Fabricate(:user) }
 
   include_context 'A group that is allowed to assign'
 
@@ -19,56 +19,73 @@ describe TopicQuery do
   end
 
   describe '#list_messages_assigned' do
-    before do
-      @private_message = Fabricate(:private_message_topic, user: user)
-      @topic = Fabricate(:topic, user: user)
+    fab!(:private_message) { Fabricate(:private_message_topic, user: user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:group_topic) { Fabricate(:topic, user: user) }
 
-      assign_to(@private_message, user)
-      assign_to(@topic, user)
+    before do
+      assign_to(private_message, user, user)
+      assign_to(topic, user, user)
+      assign_to(group_topic, user, assign_allowed_group)
     end
 
     it 'Includes topics and PMs assigned to user' do
       assigned_messages = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
 
-      expect(assigned_messages).to contain_exactly(@private_message, @topic)
+      expect(assigned_messages).to contain_exactly(private_message, topic, group_topic)
     end
 
     it 'Excludes topics and PMs not assigned to user' do
       assigned_messages = TopicQuery.new(user2, { page: 0 }).list_messages_assigned(user2).topics
 
-      expect(assigned_messages).to be_empty
+      expect(assigned_messages).to contain_exactly(group_topic)
+    end
+
+    it 'direct filter excludes group assignment' do
+      assigned_messages = TopicQuery.new(user, { page: 0, filter: :direct }).list_messages_assigned(user).topics
+
+      expect(assigned_messages).to contain_exactly(private_message, topic)
     end
 
     it 'Returns the results ordered by the bumped_at field' do
-      @topic.update(bumped_at: 2.weeks.ago)
+      topic.update(bumped_at: 2.weeks.ago)
 
       assigned_messages = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
 
-      expect(assigned_messages).to eq([@private_message, @topic])
+      expect(assigned_messages).to eq([group_topic, private_message, topic])
     end
   end
 
   describe '#list_group_topics_assigned' do
-    before do
-      @private_message = Fabricate(:private_message_topic, user: user)
-      @topic = Fabricate(:topic, user: user)
 
-      assign_to(@private_message, user)
-      assign_to(@topic, user2)
+    fab!(:private_message) { Fabricate(:private_message_topic, user: user) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:group_topic) { Fabricate(:topic, user: user) }
+
+    before do
+      assign_to(private_message, user, user)
+      assign_to(topic, user2, user2)
+      assign_to(group_topic, user, assign_allowed_group)
     end
 
     it 'Includes topics and PMs assigned to user' do
       assigned_messages = TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
 
-      expect(assigned_messages).to contain_exactly(@private_message, @topic)
+      expect(assigned_messages).to contain_exactly(private_message, topic, group_topic)
     end
 
     it 'Returns the results ordered by the bumped_at field' do
-      @topic.update(bumped_at: 2.weeks.ago)
+      topic.update(bumped_at: 2.weeks.ago)
 
       assigned_messages = TopicQuery.new(user, { page: 0 }).list_group_topics_assigned(assign_allowed_group).topics
 
-      expect(assigned_messages).to eq([@private_message, @topic])
+      expect(assigned_messages).to eq([group_topic, private_message, topic])
+    end
+
+    it 'direct filter shows only group assignments' do
+      assigned_messages = TopicQuery.new(user, { page: 0, filter: :direct }).list_group_topics_assigned(assign_allowed_group).topics
+
+      expect(assigned_messages).to contain_exactly(group_topic)
     end
   end
 
@@ -92,7 +109,7 @@ describe TopicQuery do
           Fabricate.build(:topic_allowed_user, user: user2)
         ],
       )
-      assign_to(topic, user)
+      assign_to(topic, user, user)
     end
 
     let(:group2) { Fabricate(:group) }
@@ -106,7 +123,7 @@ describe TopicQuery do
         ],
       )
 
-      assign_to(topic, user)
+      assign_to(topic, user, user)
     end
 
     before do
@@ -178,7 +195,7 @@ describe TopicQuery do
 
     it "filters topics assigned to anybody (*)" do
       assigned_topic = Fabricate(:post).topic
-      unassigned_topic = Fabricate(:topic)
+      Fabricate(:topic)
 
       TopicAssigner.new(assigned_topic, user).assign(user)
       query = TopicQuery.new(user, assigned: "*").list_latest
@@ -188,10 +205,10 @@ describe TopicQuery do
     end
   end
 
-  def assign_to(topic, user)
+  def assign_to(topic, user, assignee)
     topic.tap do |t|
       t.posts << Fabricate(:post)
-      TopicAssigner.new(t, user).assign(user)
+      TopicAssigner.new(t, user).assign(assignee)
     end
   end
 end

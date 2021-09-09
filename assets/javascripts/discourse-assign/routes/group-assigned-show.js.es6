@@ -13,12 +13,14 @@ export default DiscourseRoute.extend({
 
   model(params) {
     let filter = null;
-    if (params.filter !== "everyone") {
-      filter = `topics/messages-assigned/${params.filter}`;
-    } else {
+    if (
+      ["everyone", this.modelFor("group").get("name")].includes(params.filter)
+    ) {
       filter = `topics/group-topics-assigned/${this.modelFor("group").get(
         "name"
       )}`;
+    } else {
+      filter = `topics/messages-assigned/${params.filter}`;
     }
     const lastTopicList = findOrResetCachedTopicList(this.session, filter);
     return lastTopicList
@@ -29,6 +31,7 @@ export default DiscourseRoute.extend({
             order: params.order,
             ascending: params.ascending,
             search: params.search,
+            direct: params.filter !== "everyone",
           },
         });
   },

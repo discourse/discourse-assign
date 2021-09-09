@@ -275,16 +275,22 @@ after_initialize do
   add_to_class(:topic_query, :list_messages_assigned) do |user|
     list = default_results(include_pms: true)
 
-    list = list.where(<<~SQL, user_id: user.id)
-      topics.id IN (
-        SELECT topic_id FROM assignments
-        LEFT JOIN group_users ON group_users.user_id = :user_id
-        WHERE
-          assigned_to_id = :user_id AND assigned_to_type = 'User'
-          OR
-          assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group'
-      )
+    topic_ids_sql = +<<~SQL
+      SELECT topic_id FROM assignments
+      LEFT JOIN group_users ON group_users.user_id = :user_id
+      WHERE
+        assigned_to_id = :user_id AND assigned_to_type = 'User'
     SQL
+
+    if @options[:filter] != :direct
+      topic_ids_sql << <<~SQL
+        OR assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group'
+      SQL
+    end
+
+    sql = "topics.id IN (#{topic_ids_sql})"
+
+    list = list.where(sql, user_id: user.id)
 
     create_list(:assigned, { unordered: true }, list)
   end
@@ -292,16 +298,24 @@ after_initialize do
   add_to_class(:topic_query, :list_group_topics_assigned) do |group|
     list = default_results(include_pms: true)
 
-    list = list.where(<<~SQL, group_id: group.id)
-      topics.id IN (
-        SELECT topic_id FROM assignments
-        WHERE (
-          assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND assigned_to_type = 'User'
-        ) OR (
-          assigned_to_id = :group_id AND assigned_to_type = 'Group'
-        )
+    topic_ids_sql = +<<~SQL
+      SELECT topic_id FROM assignments
+      WHERE (
+        assigned_to_id = :group_id AND assigned_to_type = 'Group'
       )
     SQL
+
+    if @options[:filter] != :direct
+      topic_ids_sql << <<~SQL
+        OR (
+          assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND assigned_to_type = 'User'
+        )
+      SQL
+    end
+
+    sql = "topics.id IN (#{topic_ids_sql})"
+
+    list = list.where(sql, group_id: group.id)
 
     create_list(:assigned, { unordered: true }, list)
   end
@@ -337,6 +351,7 @@ after_initialize do
     raise Discourse::InvalidAccess unless current_user.can_assign?
 
     list_opts = build_topic_list_options
+    list_opts.merge!({ filter: :direct }) if params[:direct] == "true"
     list = generate_list_for("messages_assigned", user, list_opts)
 
     list.more_topics_url = construct_url_with(:next, list_opts)
@@ -354,6 +369,7 @@ after_initialize do
     raise Discourse::InvalidAccess unless group.can_show_assigned_tab?
 
     list_opts = build_topic_list_options
+    list_opts.merge!({ filter: :direct }) if params[:direct] == "true"
     list = generate_list_for("group_topics_assigned", group, list_opts)
 
     list.more_topics_url = construct_url_with(:next, list_opts)

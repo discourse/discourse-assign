@@ -38,6 +38,7 @@ export default UserTopicsList.extend({
           order: this.order,
           ascending: this.ascending,
           search: this.search,
+          direct: this.model.params.direct,
         },
       })
       .then((result) => this.set("model", result))

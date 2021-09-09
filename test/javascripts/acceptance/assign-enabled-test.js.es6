@@ -19,6 +19,7 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
       return helper.response({
         success: true,
         assign_allowed_groups: false,
+        assign_allowed_for_groups: [],
         suggestions: [
           {
             id: 19,
@@ -60,6 +61,7 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
       return helper.response({
         success: true,
         assign_allowed_groups: false,
+        assign_allowed_for_groups: [],
         suggestions: [
           {
             id: 19,
