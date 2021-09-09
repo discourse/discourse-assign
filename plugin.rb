@@ -67,6 +67,7 @@ after_initialize do
   register_editable_user_custom_field frequency_field
   User.register_custom_field_type frequency_field, :integer
   Topic.register_custom_field_type "prev_assigned_to_id", :integer
+  Topic.register_custom_field_type "prev_assigned_to_type", :string
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) do
     RemindAssignsFrequencySiteSettings.values
