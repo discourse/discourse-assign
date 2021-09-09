@@ -66,6 +66,8 @@ after_initialize do
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
   register_editable_user_custom_field frequency_field
   User.register_custom_field_type frequency_field, :integer
+  Topic.register_custom_field_type "prev_assigned_to_id", :integer
+  Topic.register_custom_field_type "prev_assigned_to_type", :string
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) do
     RemindAssignsFrequencySiteSettings.values
@@ -535,13 +537,19 @@ after_initialize do
   )
 
   # TopicTrackingState
-  add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, user_id|
+  add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, assignee|
     return unless topic.private_message?
+    opts =
+      if assignee.is_a?(User)
+        { user_ids: [assignee.id] }
+      else
+        { group_ids: [assignee.id] }
+      end
 
     MessageBus.publish(
       "/private-messages/assigned",
       { topic_id: topic.id },
-      user_ids: [user_id]
+      opts
     )
   end
 
@@ -563,12 +571,8 @@ after_initialize do
 
   on(:move_to_inbox) do |info|
     topic = info[:topic]
-    assigned_to_id = topic.assignment&.assigned_to_id
-    assigned_to_type = topic.assignment&.assigned_to_type
 
-    if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
-      TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
-    end
+    TopicTrackingState.publish_assigned_private_message(topic, topic.assignment.assigned_to) if topic.assignment
 
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
@@ -584,30 +588,27 @@ after_initialize do
       assigner = TopicAssigner.new(topic, Discourse.system_user)
       assigner.assign(previous_assigned_to, silent: true)
     end
+
+    topic.custom_fields.delete("prev_assigned_to_id")
+    topic.custom_fields.delete("prev_assigned_to_type")
+    topic.save!
   end
 
   on(:archive_message) do |info|
     topic = info[:topic]
     next if !topic.assignment
 
-    assigned_to_id = topic.assignment.assigned_to_id
-    assigned_to_type = topic.assignment.assigned_to_type
-
-    if info[:user]&.id == assigned_to_id && assigned_to_type == "User"
-      TopicTrackingState.publish_assigned_private_message(topic, assigned_to_id)
-    end
+    TopicTrackingState.publish_assigned_private_message(topic, topic.assignment.assigned_to)
 
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
 
-    if assigned_to = topic.assignment
-      topic.custom_fields["prev_assigned_to_id"] = assigned_to.id
-      topic.custom_fields["prev_assigned_to_type"] = assigned_to.class
-      topic.save!
+    topic.custom_fields["prev_assigned_to_id"] = topic.assignment.assigned_to_id
+    topic.custom_fields["prev_assigned_to_type"] = topic.assignment.assigned_to_type
+    topic.save!
 
-      assigner = TopicAssigner.new(topic, Discourse.system_user)
-      assigner.unassign(silent: true)
-    end
+    assigner = TopicAssigner.new(topic, Discourse.system_user)
+    assigner.unassign(silent: true)
   end
 
   on(:user_removed_from_group) do |user, group|
