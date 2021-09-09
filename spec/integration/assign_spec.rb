@@ -84,6 +84,8 @@ describe 'integration tests' do
 
       GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
       expect(pm.assignment.assigned_to).to eq(user)
+      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(nil)
+      expect(pm.custom_fields["prev_assigned_to_type"]).to eq(nil)
     end
 
     it "unassign and assign group if unassign_on_group_archive" do

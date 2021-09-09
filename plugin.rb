@@ -538,7 +538,7 @@ after_initialize do
   # TopicTrackingState
   add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, assignee|
     return unless topic.private_message?
-    opts = 
+    opts =
       if assignee.is_a?(User)
         { user_ids: [assignee.id] }
       else
@@ -587,6 +587,10 @@ after_initialize do
       assigner = TopicAssigner.new(topic, Discourse.system_user)
       assigner.assign(previous_assigned_to, silent: true)
     end
+
+    topic.custom_fields.delete("prev_assigned_to_id")
+    topic.custom_fields.delete("prev_assigned_to_type")
+    topic.save!
   end
 
   on(:archive_message) do |info|
