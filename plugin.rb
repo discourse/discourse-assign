@@ -538,19 +538,18 @@ after_initialize do
   # TopicTrackingState
   add_class_method(:topic_tracking_state, :publish_assigned_private_message) do |topic, assignee|
     return unless topic.private_message?
-    if assignee.is_a?(User)
-      MessageBus.publish(
-        "/private-messages/assigned",
-        { topic_id: topic.id },
-        user_ids: [assignee.id]
-      )
-    else
-      MessageBus.publish(
-        "/private-messages/assigned",
-        { topic_id: topic.id },
-        group_ids: [assignee.id]
-      )
-    end
+    opts = 
+      if assignee.is_a?(User)
+        { user_ids: [assignee.id] }
+      else
+        { group_ids: [assignee.id] }
+      end
+
+    MessageBus.publish(
+      "/private-messages/assigned",
+      { topic_id: topic.id },
+      opts
+    )
   end
 
   # Event listeners
