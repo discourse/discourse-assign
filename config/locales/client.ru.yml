@@ -53,6 +53,13 @@ ru:
         weekly: "Еженедельно"
         monthly: "Ежемесячно"
         quarterly: "Ежеквартально"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Назначить"
+              assignable_levels:
+                title: "Кто может назначить эту группу"
     user:
       messages:
         assigned_title: "Назначенные (%{count})"
@@ -86,3 +93,5 @@ ru:
               label: Минимальное количество часов между назначениями
             assigned_topic:
               label: ID назначенной темы
+            in_working_hours:
+              label: В рабочее время
