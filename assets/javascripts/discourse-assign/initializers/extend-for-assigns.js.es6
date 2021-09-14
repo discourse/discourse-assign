@@ -274,6 +274,8 @@ function initialize(api) {
   });
 
   api.modifyClass("model:group", {
+    pluginId: PLUGIN_ID,
+
     asJSON() {
       return Object.assign({}, this._super(...arguments), {
         assignable_level: this.assignable_level,
