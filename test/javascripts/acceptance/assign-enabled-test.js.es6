@@ -1,4 +1,6 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { cloneJSON } from "discourse-common/lib/object";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
   exists,
@@ -89,3 +91,106 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     await click(".assign-suggestions .avatar");
   });
 });
+
+// See RemindAssignsFrequencySiteSettings
+const remindersFrequency = [
+  {
+    name: "discourse_assign.reminders_frequency.never",
+    value: 0,
+  },
+  {
+    name: "discourse_assign.reminders_frequency.daily",
+    value: 1440,
+  },
+  {
+    name: "discourse_assign.reminders_frequency.weekly",
+    value: 10080,
+  },
+  {
+    name: "discourse_assign.reminders_frequency.monthly",
+    value: 43200,
+  },
+  {
+    name: "discourse_assign.reminders_frequency.quarterly",
+    value: 129600,
+  },
+];
+
+acceptance("Discourse Assign | User preferences", function (needs) {
+  needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
+  needs.settings({
+    assign_enabled: true,
+    remind_assigns_frequency: 43200,
+  });
+
+  test("The frequency for assigned topic reminders defaults to the site setting", async (assert) => {
+    await visit("/u/eviltrout/preferences/notifications");
+
+    assert.equal(
+      selectKit("#remind-assigns-frequency").header().value(),
+      "43200",
+      "set frequency to default of Monthly"
+    );
+  });
+
+  test("The user can change the frequency to Never", async (assert) => {
+    await visit("/u/eviltrout/preferences/notifications");
+
+    await selectKit("#remind-assigns-frequency").expand();
+    await selectKit("#remind-assigns-frequency").selectRowByValue(0);
+
+    assert.equal(
+      selectKit("#remind-assigns-frequency").header().value(),
+      "0",
+      "set frequency to Never"
+    );
+  });
+
+  test("The user can change the frequency to some other non-default value", async (assert) => {
+    await visit("/u/eviltrout/preferences/notifications");
+
+    await selectKit("#remind-assigns-frequency").expand();
+    await selectKit("#remind-assigns-frequency").selectRowByValue(10080); // weekly
+
+    assert.equal(
+      selectKit("#remind-assigns-frequency").header().value(),
+      "10080",
+      "set frequency to Weekly"
+    );
+  });
+});
+
+acceptance(
+  "Discourse Assign | User preferences | Pre-selected reminder frequency",
+  function (needs) {
+    needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
+    needs.settings({
+      assign_enabled: true,
+      remind_assigns_frequency: 43200,
+    });
+
+    needs.pretender((server, helper) => {
+      server.get("/u/eviltrout.json", () => {
+        let json = cloneJSON(userFixtures["/u/eviltrout.json"]);
+        json.user.custom_fields = { remind_assigns_frequency: 10080 };
+
+        // usually this is done automatically by this pretender but we
+        // have to do it manually here because we are overriding the
+        // pretender see app/assets/javascripts/discourse/tests/helpers/create-pretender.js
+        json.user.can_edit = true;
+
+        return helper.response(200, json);
+      });
+    });
+
+    test("The user's previously selected value is loaded", async (assert) => {
+      await visit("/u/eviltrout/preferences/notifications");
+
+      assert.equal(
+        selectKit("#remind-assigns-frequency").header().value(),
+        "10080",
+        "frequency is pre-selected to Weekly"
+      );
+    });
+  }
+);
