@@ -412,7 +412,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_view, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assignment&.assigned_to_user?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:topic_view, :assigned_to_group, false) do
@@ -420,7 +420,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_view, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assignment&.assigned_to_group?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
   end
 
   # SuggestedTopic serializer
@@ -429,7 +429,7 @@ after_initialize do
   end
 
   add_to_serializer(:suggested_topic, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to_user?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:suggested_topic, :assigned_to_group, false) do
@@ -437,7 +437,7 @@ after_initialize do
   end
 
   add_to_serializer(:suggested_topic, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to_group?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
   end
 
   # TopicListItem serializer
@@ -446,7 +446,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_list_item, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to_user?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:topic_list_item, :assigned_to_group) do
@@ -454,7 +454,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_list_item, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to_group?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
   end
 
   # SearchTopicListItem serializer
@@ -463,7 +463,7 @@ after_initialize do
   end
 
   add_to_serializer(:search_topic_list_item, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to_user?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:search_topic_list_item, :assigned_to_group, false) do
@@ -471,7 +471,7 @@ after_initialize do
   end
 
   add_to_serializer(:search_topic_list_item, 'include_assigned_to_group?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to_group?
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
   end
 
   # TopicsBulkAction
@@ -524,7 +524,7 @@ after_initialize do
   end
 
   add_to_serializer(:flagged_topic, :include_assigned_to_user?) do
-    object.assignment&.assigned_to_user?
+    object.assigned_to && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:flagged_topic, :assigned_to_group) do
@@ -532,7 +532,7 @@ after_initialize do
   end
 
   add_to_serializer(:flagged_topic, :include_assigned_to_group?) do
-    object.assignment&.assigned_to_group?
+    object.assigned_to && object.assigned_to&.is_a?(Group)
   end
 
   # Reviewable

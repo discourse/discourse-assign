@@ -25,6 +25,6 @@ class AssignedTopicSerializer < BasicTopicSerializer
   end
 
   def include_assigned_to_group?
-    object.assignment.assigned_to_group?
+    object.assigned_to.is_a?(Group)
   end
 end
