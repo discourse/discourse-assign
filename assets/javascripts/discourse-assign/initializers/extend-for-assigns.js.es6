@@ -1,6 +1,6 @@
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import discourseComputed, { observes } from "discourse-common/utils/decorators";
+import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
@@ -379,13 +379,6 @@ export default {
     const currentUser = container.lookup("current-user:main");
     if (currentUser && currentUser.can_assign) {
       SearchAdvancedOptions.reopen({
-        _init() {
-          this._super();
-
-          this.set("searchedTerms.assigned", "");
-        },
-
-        @observes("searchedTerms.assigned")
         updateSearchTermForAssignedUsername() {
           const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
           const userFilter = this.get("searchedTerms.assigned");
@@ -406,14 +399,6 @@ export default {
             searchTerm = searchTerm.replace(match[0], "");
             this.set("searchTerm", searchTerm.trim());
           }
-        },
-
-        _update() {
-          this._super(...arguments);
-          this.setSearchedTermValue(
-            "searchedTerms.assigned",
-            REGEXP_USERNAME_PREFIX
-          );
         },
       });
 

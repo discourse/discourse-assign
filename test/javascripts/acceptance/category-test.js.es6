@@ -1,7 +1,6 @@
 import {
   acceptance,
-  exists,
-  updateCurrentUser,
+  exists
 } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
@@ -32,7 +31,7 @@ function stubCategory(needs, customFields) {
 acceptance(
   "Discourse Assign | Categories for users that can assign",
   function (needs) {
-    needs.user();
+    needs.user({ can_assign: true });
     needs.settings({
       assign_enabled: true,
       assigns_user_url_path: "/",
@@ -41,7 +40,6 @@ acceptance(
     stubCategory(needs, { enable_unassigned_filter: "true" });
 
     test("can see Unassigned button", async (assert) => {
-      updateCurrentUser({ can_assign: true });
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
@@ -62,7 +60,6 @@ acceptance(
     stubCategory(needs, { enable_unassigned_filter: "false" });
 
     test("cannot see Unassigned button", async (assert) => {
-      updateCurrentUser({ can_assign: true });
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
@@ -83,7 +80,6 @@ acceptance(
     stubCategory(needs, { enable_unassigned_filter: "true" });
 
     test("can see Unassigned button", async (assert) => {
-      updateCurrentUser({ can_assign: false });
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
@@ -104,7 +100,6 @@ acceptance(
     stubCategory(needs, { enable_unassigned_filter: "true" });
 
     test("cannot see Unassigned button", async (assert) => {
-      updateCurrentUser({ can_assign: false });
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
