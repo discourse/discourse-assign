@@ -19,9 +19,12 @@ describe TopicQuery do
   end
 
   describe '#list_messages_assigned' do
-    fab!(:private_message) { Fabricate(:private_message_topic, user: user) }
-    fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:group_topic) { Fabricate(:topic, user: user) }
+    fab!(:private_message) do
+      Fabricate(:private_message_post, user: user).topic
+    end
+
+    fab!(:topic) { Fabricate(:post, user: user).topic }
+    fab!(:group_topic) { Fabricate(:post, user: user).topic }
 
     before do
       assign_to(private_message, user, user)
@@ -58,9 +61,13 @@ describe TopicQuery do
 
   describe '#list_group_topics_assigned' do
 
-    fab!(:private_message) { Fabricate(:private_message_topic, user: user) }
-    fab!(:topic) { Fabricate(:topic, user: user) }
-    fab!(:group_topic) { Fabricate(:topic, user: user) }
+    fab!(:private_message) do
+      Fabricate(:private_message_post, user: user).topic
+    end
+
+    fab!(:topic) { Fabricate(:post, user: user).topic }
+
+    fab!(:group_topic) { Fabricate(:post, user: user).topic }
 
     before do
       assign_to(private_message, user, user)
@@ -91,42 +98,46 @@ describe TopicQuery do
 
   describe '#list_private_messages_assigned' do
     let(:user_topic) do
-      topic = Fabricate(:private_message_topic,
-        topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: user),
-          Fabricate.build(:topic_allowed_user, user: user2)
-        ],
-      )
+      topic = create_post(
+        user: Fabricate(:user),
+        target_usernames: [user.username, user2.username],
+        archetype: Archetype.private_message
+      ).topic
 
-      topic.posts << Fabricate(:post)
+      create_post(topic_id: topic.id, user: user)
+
       topic
     end
 
     let(:assigned_topic) do
-      topic = Fabricate(:private_message_topic,
-        topic_allowed_users: [
-          Fabricate.build(:topic_allowed_user, user: user),
-          Fabricate.build(:topic_allowed_user, user: user2)
-        ],
-      )
+      topic = create_post(
+        user: Fabricate(:user),
+        target_usernames: [user.username, user2.username],
+        archetype: Archetype.private_message
+      ).topic
+
       assign_to(topic, user, user)
     end
 
-    let(:group2) { Fabricate(:group) }
+    let(:group2) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone])
+    end
 
     let(:group_assigned_topic) do
-      topic = Fabricate(:private_message_topic,
-        topic_allowed_users: [],
-        topic_allowed_groups: [
-          Fabricate.build(:topic_allowed_group, group: assign_allowed_group),
-          Fabricate.build(:topic_allowed_group, group: group2)
-        ],
-      )
+      topic = create_post(
+        user: user,
+        target_group_names: [assign_allowed_group.name, group2.name],
+        archetype: Archetype.private_message
+      ).topic
 
       assign_to(topic, user, user)
     end
 
     before do
+      assign_allowed_group.update!(
+        messageable_level: Group::ALIAS_LEVELS[:everyone]
+      )
+
       user_topic
       assigned_topic
       group_assigned_topic
@@ -207,7 +218,6 @@ describe TopicQuery do
 
   def assign_to(topic, user, assignee)
     topic.tap do |t|
-      t.posts << Fabricate(:post)
       TopicAssigner.new(t, user).assign(assignee)
     end
   end
