@@ -91,16 +91,21 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
       const topic = this.topic;
-      const assignedUser = topic.get("assigned_to_user.username");
 
-      if (assignedUser) {
+      if (topic.assigned_to_user || topic.assigned_to_group) {
         this.set("topic.assigned_to_user", null);
-        taskActions.unassign(topic.id);
-      } else if (topic.assigned_to_group) {
         this.set("topic.assigned_to_group", null);
-        taskActions.unassign(topic.id);
+        taskActions.unassign(topic.id).then(() => {
+          this.appEvents.trigger("post-stream:refresh", {
+            id: topic.postStream.firstPostId,
+          });
+        });
       } else {
-        taskActions.assign(topic);
+        taskActions.assign(topic).set("model.onSuccess", () => {
+          this.appEvents.trigger("post-stream:refresh", {
+            id: topic.postStream.firstPostId,
+          });
+        });
       }
     },
     dropdown() {
