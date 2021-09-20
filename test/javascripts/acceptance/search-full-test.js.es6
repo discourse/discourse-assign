@@ -1,8 +1,5 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import {
-  acceptance,
-  query,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
