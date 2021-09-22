@@ -10,10 +10,7 @@
   </div>
 </div>
 {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
-  {{bulk-select-button
-    selected=selected
-    action=(action "refresh")
-  }}
+
   {{basic-assigned-topic-list
     topicList=model
     hideCategory=hideCategory
@@ -27,6 +24,7 @@
     tagsForUser=tagsForUser
     changeSort=(action "changeSort")
     toggleBulkSelect=(action "toggleBulkSelect")
+    bulkSelectAction=(action "refresh")
     unassign=(action "unassign")
     reassign=(action "reassign")
     onScroll=saveScrollPosition
