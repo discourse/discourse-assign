@@ -294,7 +294,7 @@ after_initialize do
 
     sql = "topics.id IN (#{topic_ids_sql})"
 
-    list = list.where(sql, user_id: user.id)
+    list = list.where(sql, user_id: user.id).includes(:allowed_users)
 
     create_list(:assigned, { unordered: true }, list)
   end
@@ -319,7 +319,7 @@ after_initialize do
 
     sql = "topics.id IN (#{topic_ids_sql})"
 
-    list = list.where(sql, group_id: group.id)
+    list = list.where(sql, group_id: group.id).includes(:allowed_users)
 
     create_list(:assigned, { unordered: true }, list)
   end
