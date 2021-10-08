@@ -11,7 +11,7 @@ module Jobs
       assigned_to_users = args[:assigned_to_type] == "User" ? [User.find(args[:assigned_to_id])] : Group.find(args[:assigned_to_id]).users
 
       assigned_to_users.each do |user|
-        TopicAssigner.publish_topic_tracking_state(topic, user.id)
+        Assigner.publish_topic_tracking_state(topic, user.id)
 
         Notification.where(
           notification_type: Notification.types[:custom],

@@ -3,7 +3,7 @@
 require 'email/sender'
 require 'nokogiri'
 
-class ::TopicAssigner
+class ::Assigner
   def self.backfill_auto_assign
     staff_mention = User
       .assign_allowed
@@ -15,7 +15,7 @@ class ::TopicAssigner
       SELECT p.topic_id, MAX(post_number) post_number
         FROM posts p
         JOIN topics t ON t.id = p.topic_id
-        LEFT JOIN assignments a ON a.topic_id = p.topic_id
+        LEFT JOIN assignments a ON a.target_id = p.topic_id AND a.target_type = 'Topic'
        WHERE p.user_id IN (SELECT id FROM users WHERE moderator OR admin)
          AND (#{staff_mention})
          AND a.assigned_to_id IS NULL
@@ -107,6 +107,7 @@ class ::TopicAssigner
   end
 
   def self.publish_topic_tracking_state(topic, user_id)
+    # TODO decide later if we want general or separate method to publish about post tracking
     if topic.private_message?
       MessageBus.publish(
         "/private-messages/assigned",
@@ -116,9 +117,9 @@ class ::TopicAssigner
     end
   end
 
-  def initialize(topic, user)
+  def initialize(target, user)
     @assigned_by = user
-    @topic = topic
+    @target = target
   end
 
   def allowed_user_ids
@@ -134,7 +135,7 @@ class ::TopicAssigner
     return true if @assigned_by.id == assign_to.id
 
     assigned_total = Assignment
-      .joins(:topic)
+      .joins_with_topics
       .where(topics: { deleted_at: nil })
       .where(assigned_to_id: assign_to.id)
       .count
@@ -150,20 +151,32 @@ class ::TopicAssigner
     end
   end
 
-  def can_assignee_see_topic?(assignee)
-    Guardian.new(assignee).can_see_topic?(@topic)
+  def topic_target?
+    @topic_target ||= @target.is_a?(Topic)
+  end
+
+  def can_assignee_see_target?(assignee)
+    topic_target? ? Guardian.new(assignee).can_see_topic?(@target) : Guardian.new(assignee).can_see_post?(@target)
+  end
+
+  def topic
+    @topic ||= topic_target? ? @target : @target.topic
+  end
+
+  def first_post
+    topic.posts.where(post_number: 1).first
   end
 
   def assign(assign_to, silent: false)
     forbidden_reason =
       case
-      when assign_to.is_a?(User) && !can_assignee_see_topic?(assign_to)
-        @topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
-      when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_topic?(user) }
-        @topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
+      when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
+        topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
+      when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_target?(user) }
+        topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
       when !can_be_assigned?(assign_to)
         assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-      when @topic.assignment&.assigned_to_id == assign_to.id
+      when topic.assignment&.assigned_to_id == assign_to.id
         assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
       when !can_assign_to?(assign_to)
         :too_many_assigns
@@ -171,28 +184,29 @@ class ::TopicAssigner
 
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
-    @topic.assignment&.destroy!
+    @target.assignment&.destroy!
 
     type = assign_to.is_a?(User) ? "User" : "Group"
-    assignment = @topic.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id)
+    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, cache_topic_id: topic.id)
 
-    first_post = @topic.posts.find_by(post_number: 1)
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
     serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
 
+    #TODO assign notification for post
     Jobs.enqueue(:assign_notification,
-                 topic_id: @topic.id,
+                 topic_id: topic.id,
                  assigned_to_id: assign_to.id,
                  assigned_to_type: type,
                  assigned_by_id: @assigned_by.id,
                  silent: silent)
 
+    #TODO message bus for post assignment
     MessageBus.publish(
       "/staff/topic-assignment",
       {
         type: "assigned",
-        topic_id: @topic.id,
+        topic_id: topic.id,
         assigned_type: type,
         assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json
       },
@@ -202,26 +216,27 @@ class ::TopicAssigner
     if assignment.assigned_to_user?
       if !TopicUser.exists?(
         user_id: assign_to.id,
-        topic_id: @topic.id,
+        topic_id: topic.id,
         notification_level: TopicUser.notification_levels[:watching]
       )
         TopicUser.change(
           assign_to.id,
-          @topic.id,
+          topic.id,
           notification_level: TopicUser.notification_levels[:watching],
           notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
         )
       end
 
       if SiteSetting.assign_mailer == AssignMailer.levels[:always] || (SiteSetting.assign_mailer == AssignMailer.levels[:different_users] && @assigned_by.id != assign_to.id)
-        if !@topic.muted?(assign_to)
-          message = AssignMailer.send_assignment(assign_to.email, @topic, @assigned_by)
+        if !topic.muted?(assign_to)
+          message = AssignMailer.send_assignment(assign_to.email, topic, @assigned_by)
           Email::Sender.new(message, :assign_message).send
         end
       end
     end
     if !silent
-      @topic.add_moderator_post(
+      #TODO moderator post when assigned to post
+      topic.add_moderator_post(
         @assigned_by,
         nil,
         bump: false,
@@ -237,8 +252,8 @@ class ::TopicAssigner
       type = :assigned
       payload = {
         type: type,
-        topic_id: @topic.id,
-        topic_title: @topic.title,
+        topic_id: topic.id,
+        topic_title: topic.title,
         assigned_to_id: assign_to.id,
         assigned_to_username: assign_to.username,
         assigned_by_id: @assigned_by.id,
@@ -262,30 +277,30 @@ class ::TopicAssigner
   end
 
   def unassign(silent: false)
-    if assignment = @topic.assignment
+    if assignment = @target.assignment
       assignment.destroy!
 
-      post = @topic.posts.where(post_number: 1).first
-      return if post.blank?
+      return if first_post.blank?
 
-      post.publish_change_to_clients!(:revised, reload_topic: true)
+      first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
+      #TODO unassign notification for post
       Jobs.enqueue(:unassign_notification,
-                   topic_id: @topic.id,
+                   topic_id: topic.id,
                    assigned_to_id: assignment.assigned_to.id,
                    assigned_to_type: assignment.assigned_to_type)
 
       if assignment.assigned_to_user?
         if TopicUser.exists?(
           user_id: assignment.assigned_to_id,
-          topic: @topic,
+          topic: topic,
           notification_level: TopicUser.notification_levels[:watching],
           notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
         )
 
           TopicUser.change(
             assignment.assigned_to_id,
-            @topic.id,
+            topic.id,
             notification_level: TopicUser.notification_levels[:tracking],
             notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
           )
@@ -294,9 +309,10 @@ class ::TopicAssigner
 
       assigned_to = assignment.assigned_to
 
+      # TODO unassign post for post assignment
       if SiteSetting.unassign_creates_tracking_post && !silent
         post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
-        @topic.add_moderator_post(
+        topic.add_moderator_post(
           @assigned_by, nil,
           bump: false,
           post_type: post_type,
@@ -310,8 +326,8 @@ class ::TopicAssigner
         type = :unassigned
         payload = {
           type: type,
-          topic_id: @topic.id,
-          topic_title: @topic.title,
+          topic_id: topic.id,
+          topic_title: topic.title,
           unassigned_by_id: @assigned_by.id,
           unassigned_by_username: @assigned_by.username
         }
@@ -333,7 +349,7 @@ class ::TopicAssigner
         "/staff/topic-assignment",
         {
           type: 'unassigned',
-          topic_id: @topic.id,
+          topic_id: topic.id,
         },
         user_ids: allowed_user_ids
       )

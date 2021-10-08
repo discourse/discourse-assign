@@ -31,27 +31,34 @@ module DiscourseAssign
     end
 
     def unassign
-      topic_id = params.require(:topic_id)
-      topic = Topic.find(topic_id.to_i)
-      assigner = TopicAssigner.new(topic, current_user)
+      target_id = params.require(:target_id)
+      target_type = params.require(:target_type)
+      raise Discourse::NotFound if !['Post', 'Topic'].include?(target_type)
+      target = target_type.constantize.where(id: target_id).first
+      raise Discourse::NotFound unless target
+
+      assigner = Assigner.new(target, current_user)
       assigner.unassign
 
       render json: success_json
     end
 
     def assign
-      topic_id = params.require(:topic_id)
+      target_id = params.require(:target_id)
+      target_type = params.require(:target_type)
       username = params.permit(:username)['username']
       group_name = params.permit(:group_name)['group_name']
 
-      topic = Topic.find(topic_id.to_i)
       assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
 
       raise Discourse::NotFound unless assign_to
+      raise Discourse::NotFound if !['Post', 'Topic'].include?(target_type)
+      target = target_type.constantize.where(id: target_id).first
+      raise Discourse::NotFound unless target
 
       # perhaps?
       #Scheduler::Defer.later "assign topic" do
-      assign = TopicAssigner.new(topic, current_user).assign(assign_to)
+      assign = Assigner.new(target, current_user).assign(assign_to)
 
       if assign[:success]
         render json: success_json
@@ -69,14 +76,14 @@ module DiscourseAssign
       topics = Topic
         .includes(:tags)
         .includes(:user)
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND a.assigned_to_id IS NOT NULL")
+        .joins("JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic' AND a.assigned_to_id IS NOT NULL")
         .order("a.assigned_to_id, topics.bumped_at desc")
         .offset(offset)
         .limit(limit)
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
-      assignments = Assignment.where(topic: topics).pluck(:topic_id, :assigned_to_id).to_h
+      assignments = Assignment.where(target_id: topics.map(&:id), target_type: 'Topic').pluck(:target_id, :assigned_to_id).to_h
 
       users = User
         .where("users.id IN (?)", assignments.values.uniq)
@@ -111,7 +118,7 @@ module DiscourseAssign
       members = User
         .joins("LEFT OUTER JOIN group_users g ON g.user_id = users.id")
         .joins("LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id AND a.assigned_to_type = 'User'")
-        .joins("LEFT OUTER JOIN topics t ON t.id = a.topic_id")
+        .joins("LEFT OUTER JOIN topics t ON t.id = a.target_id AND a.target_type = 'Topic'")
         .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
         .where("a.assigned_to_id IS NOT NULL")
         .order('COUNT(users.id) DESC')
@@ -127,14 +134,14 @@ module DiscourseAssign
       end
 
       group_assignment_count = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .joins("JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic'")
         .where(<<~SQL, group_id: group.id)
           a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group'
         SQL
         .count
 
       assignment_count = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .joins("JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic'")
         .joins("JOIN group_users ON group_users.user_id = a.assigned_to_id ")
         .where("group_users.group_id = ?", group.id)
         .where("a.assigned_to_type = 'User'")

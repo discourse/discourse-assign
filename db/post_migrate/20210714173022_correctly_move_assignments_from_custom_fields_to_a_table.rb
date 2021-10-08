@@ -4,15 +4,44 @@ class CorrectlyMoveAssignmentsFromCustomFieldsToATable < ActiveRecord::Migration
   def up
     # An old version of 20210709101534 incorrectly imported `assignments` with
     # the topic_id and assigned_to_id columns flipped. This query deletes those invalid records.
-    execute <<~SQL
+    if column_exists?(:assignments, :cache_topic_id)
+      execute <<~SQL
+      DELETE FROM assignments USING topic_custom_fields
+      WHERE
+        assignments.assigned_to_id = topic_custom_fields.topic_id
+        AND assignments.cache_topic_id = topic_custom_fields.value::integer
+        AND topic_custom_fields.name = 'assigned_to_id'
+      SQL
+    else
+      execute <<~SQL
       DELETE FROM assignments USING topic_custom_fields
       WHERE
         assignments.assigned_to_id = topic_custom_fields.topic_id
         AND assignments.topic_id = topic_custom_fields.value::integer
         AND topic_custom_fields.name = 'assigned_to_id'
-    SQL
+      SQL
+    end
 
-    if column_exists?(:assignments, :assigned_to_type)
+    if column_exists?(:assignments, :cache_topic_id)
+      execute <<~SQL
+        INSERT INTO assignments (assigned_to_id, assigned_by_user_id, cache_topic_id, created_at, updated_at, assigned_to_type, target_id, target_type)
+        SELECT
+          assigned_to.value::integer,
+          assigned_by.value::integer,
+          assigned_by.topic_id,
+          assigned_by.created_at,
+          assigned_by.updated_at,
+          'User',
+          assigned_by.topic_id,
+          'Topic'
+        FROM topic_custom_fields assigned_by
+        INNER JOIN topic_custom_fields assigned_to ON assigned_to.topic_id = assigned_by.topic_id
+        WHERE assigned_by.name = 'assigned_by_id'
+          AND assigned_to.name = 'assigned_to_id'
+        ORDER BY assigned_by.created_at DESC
+        ON CONFLICT DO NOTHING
+      SQL
+    elsif column_exists?(:assignments, :assigned_to_type)
       execute <<~SQL
         INSERT INTO assignments (assigned_to_id, assigned_by_user_id, topic_id, created_at, updated_at, assigned_to_type)
         SELECT
@@ -21,7 +50,7 @@ class CorrectlyMoveAssignmentsFromCustomFieldsToATable < ActiveRecord::Migration
           assigned_by.topic_id,
           assigned_by.created_at,
           assigned_by.updated_at,
-          'User'
+          'User',
         FROM topic_custom_fields assigned_by
         INNER JOIN topic_custom_fields assigned_to ON assigned_to.topic_id = assigned_by.topic_id
         WHERE assigned_by.name = 'assigned_by_id'
@@ -29,6 +58,7 @@ class CorrectlyMoveAssignmentsFromCustomFieldsToATable < ActiveRecord::Migration
         ORDER BY assigned_by.created_at DESC
         ON CONFLICT DO NOTHING
       SQL
+
     else
       execute <<~SQL
         INSERT INTO assignments (assigned_to_id, assigned_by_user_id, topic_id, created_at, updated_at)

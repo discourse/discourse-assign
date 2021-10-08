@@ -14,13 +14,13 @@ describe Topic do
 
   describe "#assigned_to" do
     it "correctly points to a user" do
-      Assignment.create!(topic: topic, assigned_by_user: user1, assigned_to: user2)
+      Assignment.create!(target_id: topic.id, target_type: "Topic", cache_topic_id: topic.id, assigned_by_user: user1, assigned_to: user2)
 
       expect(topic.reload.assigned_to).to eq(user2)
     end
 
     it "correctly points to a group" do
-      Assignment.create!(topic: topic, assigned_by_user: user1, assigned_to: group)
+      Assignment.create!(target_id: topic.id, target_type: "Topic", cache_topic_id: topic.id, assigned_by_user: user1, assigned_to: group)
 
       expect(topic.reload.assigned_to).to eq(group)
     end

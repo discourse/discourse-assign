@@ -56,8 +56,8 @@ describe ListController do
     before do
       add_to_assign_allowed_group(user)
 
-      TopicAssigner.new(topic1, user).assign(user)
-      TopicAssigner.new(topic2, user).assign(user2)
+      Assigner.new(topic1, user).assign(user)
+      Assigner.new(topic2, user).assign(user2)
 
       sign_in(user)
     end
@@ -81,7 +81,7 @@ describe ListController do
     it 'doesnt returns deleted topics' do
       sign_in(admin)
 
-      TopicAssigner.new(topic, user).assign(user)
+      Assigner.new(topic, user).assign(user)
 
       delete "/t/#{topic.id}.json"
 
@@ -114,9 +114,9 @@ describe ListController do
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
-      TopicAssigner.new(post3.topic, user).assign(user)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post3.topic, user).assign(user)
 
       sign_in(user)
     end
@@ -206,9 +206,9 @@ describe ListController do
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
-      TopicAssigner.new(post3.topic, user).assign(user)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post3.topic, user).assign(user)
 
       sign_in(user)
     end
@@ -260,8 +260,8 @@ describe ListController do
     before do
       add_to_assign_allowed_group(user)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
 
       sign_in(user)
     end

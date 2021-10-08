@@ -94,7 +94,8 @@ export default Controller.extend({
       data: {
         username: this.get("model.username"),
         group_name: this.get("model.group_name"),
-        topic_id: this.get("model.topic.id"),
+        target_id: this.get("model.topic.id"),
+        target_type: "Topic",
       },
     })
       .then(() => {

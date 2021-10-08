@@ -36,7 +36,7 @@ module Jobs
         AND user_frequency.name = '#{PendingAssignsReminder::REMINDERS_FREQUENCY}'
 
         INNER JOIN group_users ON assignments.assigned_to_id = group_users.user_id
-        INNER JOIN topics ON topics.id = assignments.topic_id AND topics.deleted_at IS NULL
+        INNER JOIN topics ON topics.id = assignments.target_id AND assignments.target_type = 'Topic' AND topics.deleted_at IS NULL
 
         WHERE group_users.group_id IN (#{allowed_group_ids})
         AND #{frequency} > 0

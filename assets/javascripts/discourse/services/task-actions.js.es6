@@ -6,7 +6,10 @@ export default Service.extend({
   unassign(topicId) {
     return ajax("/assign/unassign", {
       type: "PUT",
-      data: { topic_id: topicId },
+      data: {
+        target_id: topicId,
+        target_type: "Topic",
+      },
     });
   },
 
@@ -25,7 +28,8 @@ export default Service.extend({
       type: "PUT",
       data: {
         username: user.username,
-        topic_id: topic.id,
+        target_id: topic.id,
+        target_type: "Topic",
       },
     });
   },

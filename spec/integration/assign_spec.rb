@@ -47,7 +47,7 @@ describe 'integration tests' do
     end
 
     it 'publishes the right message on archive and move to inbox' do
-      assigner = TopicAssigner.new(pm, user)
+      assigner = Assigner.new(pm, user)
       assigner.assign(user)
 
       assert_publish_topic_state(pm, user: user) do
@@ -60,7 +60,7 @@ describe 'integration tests' do
     end
 
     it 'publishes the right message on archive and move to inbox for groups' do
-      assigner = TopicAssigner.new(pm, user)
+      assigner = Assigner.new(pm, user)
       assigner.assign(group)
 
       assert_publish_topic_state(pm, group: group) do
@@ -74,7 +74,7 @@ describe 'integration tests' do
 
     it "unassign and assign user if unassign_on_group_archive" do
       SiteSetting.unassign_on_group_archive = true
-      assigner = TopicAssigner.new(pm, user)
+      assigner = Assigner.new(pm, user)
       assigner.assign(user)
 
       GroupArchivedMessage.archive!(group.id, pm.reload)
@@ -90,7 +90,7 @@ describe 'integration tests' do
 
     it "unassign and assign group if unassign_on_group_archive" do
       SiteSetting.unassign_on_group_archive = true
-      assigner = TopicAssigner.new(pm, user)
+      assigner = Assigner.new(pm, user)
       assigner.assign(group)
 
       GroupArchivedMessage.archive!(group.id, pm.reload)

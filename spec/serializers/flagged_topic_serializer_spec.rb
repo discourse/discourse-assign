@@ -35,7 +35,7 @@ describe FlaggedTopicSerializer do
 
       topic.posts << Fabricate(:post)
 
-      TopicAssigner.new(topic, user).assign(user)
+      Assigner.new(topic, user).assign(user)
       topic
     end
 
@@ -62,7 +62,7 @@ describe FlaggedTopicSerializer do
 
       topic.posts << Fabricate(:post)
 
-      TopicAssigner.new(topic, user).assign(assign_allowed_group)
+      Assigner.new(topic, user).assign(assign_allowed_group)
       topic
     end
 

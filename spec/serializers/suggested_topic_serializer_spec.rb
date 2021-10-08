@@ -20,10 +20,10 @@ RSpec.describe SuggestedTopicSerializer do
   end
 
   it "adds information about assignee for users and groups" do
-    TopicAssigner.new(topic, user).assign(user)
+    Assigner.new(topic, user).assign(user)
     expect(serializer.as_json[:suggested_topic][:assigned_to_user][:username]).to eq(user.username)
 
-    TopicAssigner.new(topic2, user).assign(group)
+    Assigner.new(topic2, user).assign(group)
     expect(serializer2.as_json[:suggested_topic][:assigned_to_group][:name]).to eq(group.name)
   end
 end
