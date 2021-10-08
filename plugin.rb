@@ -79,7 +79,7 @@ after_initialize do
     Topic
       .joins(<<~SQL)
         JOIN assignments a
-        ON topics.id = a.cache_topic_id AND a.assigned_to_id IS NOT NULL
+        ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
       SQL
       .where(<<~SQL, group_id: object.id)
         (
@@ -185,7 +185,7 @@ after_initialize do
   BookmarkQuery.on_preload do |bookmarks, bookmark_query|
     if SiteSetting.assign_enabled?
       topics = bookmarks.map(&:topic)
-      assignments = Assignment.strict_loading.where(cache_topic_id: topics).includes(:assigned_to).index_by(&:cache_topic_id)
+      assignments = Assignment.strict_loading.where(topic_id: topics).includes(:assigned_to).index_by(&:topic_id)
 
       topics.each do |topic|
         assigned_to = assignments[topic.id]&.assigned_to
@@ -200,8 +200,8 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
-        assignments = Assignment.strict_loading.where(cache_topic: topics)
-        assignments_map = assignments.index_by(&:cache_topic_id)
+        assignments = Assignment.strict_loading.where(topic: topics)
+        assignments_map = assignments.index_by(&:topic_id)
 
         user_ids = assignments.filter { |assignment| assignment.assigned_to_user? }.map(&:assigned_to_id)
         users_map = User.where(id: user_ids).select(UserLookup.lookup_columns).index_by(&:id)
@@ -226,7 +226,7 @@ after_initialize do
 
       if allowed_access && results.posts.length > 0
         topics = results.posts.map(&:topic)
-        assignments = Assignment.strict_loading.where(target: topics).includes(:assigned_to).index_by(&:cache_topic_id)
+        assignments = Assignment.strict_loading.where(target: topics).includes(:assigned_to).index_by(&:topic_id)
 
         results.posts.each do |post|
           assigned_to = assignments[post.topic.id]&.assigned_to
@@ -246,13 +246,13 @@ after_initialize do
 
     if name == "nobody"
       next results
-        .joins("LEFT JOIN assignments a ON a.cache_topic_id = topics.id")
+        .joins("LEFT JOIN assignments a ON a.topic_id = topics.id")
         .where("a.assigned_to_id IS NULL")
     end
 
     if name == "*"
       next results
-        .joins("JOIN assignments a ON a.cache_topic_id = topics.id")
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where("a.assigned_to_id IS NOT NULL")
     end
 
@@ -261,7 +261,7 @@ after_initialize do
 
     if user_id
       next results
-        .joins("JOIN assignments a ON a.cache_topic_id = topics.id")
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where("a.assigned_to_id = ? AND a.assigned_to_type = 'User'", user_id)
     end
 
@@ -269,7 +269,7 @@ after_initialize do
 
     if group_id
       next results
-        .joins("JOIN assignments a ON a.cache_topic_id = topics.id")
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where("a.assigned_to_id = ? AND a.assigned_to_type = 'Group'", group_id)
     end
 
@@ -280,7 +280,7 @@ after_initialize do
     list = default_results(include_pms: true)
 
     topic_ids_sql = +<<~SQL
-      SELECT cache_topic_id FROM assignments
+      SELECT topic_id FROM assignments
       LEFT JOIN group_users ON group_users.user_id = :user_id
       WHERE
         assigned_to_id = :user_id AND assigned_to_type = 'User'
@@ -303,7 +303,7 @@ after_initialize do
     list = default_results(include_pms: true)
 
     topic_ids_sql = +<<~SQL
-      SELECT cache_topic_id FROM assignments
+      SELECT topic_id FROM assignments
       WHERE (
         assigned_to_id = :group_id AND assigned_to_type = 'Group'
       )
@@ -336,7 +336,7 @@ after_initialize do
 
     list = list.where(<<~SQL, user_id: user.id, group_ids: group_ids)
       topics.id IN (
-        SELECT cache_topic_id FROM assignments WHERE
+        SELECT topic_id FROM assignments WHERE
         (assigned_to_id = :user_id AND assigned_to_type = 'User') OR
         (assigned_to_id IN (:group_ids) AND assigned_to_type = 'Group')
       )
@@ -545,7 +545,7 @@ after_initialize do
         results.joins(<<~SQL
           INNER JOIN posts p ON p.id = target_id
           INNER JOIN topics t ON t.id = p.topic_id
-          INNER JOIN assignments a ON a.cache_topic_id = t.id AND a.assigned_to_type == 'User'
+          INNER JOIN assignments a ON a.topic_id = t.id AND a.assigned_to_type == 'User'
           INNER JOIN users u ON u.id = a.assigned_to_id
         SQL
         )
@@ -660,7 +660,7 @@ after_initialize do
     if @guardian.can_assign?
       posts.where(<<~SQL)
         topics.id IN (
-          SELECT a.cache_topic_id FROM assignments a
+          SELECT a.topic_id FROM assignments a
         )
       SQL
     end
@@ -670,7 +670,7 @@ after_initialize do
     if @guardian.can_assign?
       posts.where(<<~SQL)
         topics.id NOT IN (
-          SELECT a.cache_topic_id FROM assignments a
+          SELECT a.topic_id FROM assignments a
         )
       SQL
     end
@@ -681,13 +681,13 @@ after_initialize do
       if user_id = User.find_by_username(match)&.id
         posts.where(<<~SQL, user_id)
           topics.id IN (
-            SELECT a.cache_topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User'
+            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User'
           )
         SQL
       elsif group_id = Group.find_by_name(match)&.id
         posts.where(<<~SQL, group_id)
           topics.id IN (
-            SELECT a.cache_topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group'
+            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group'
           )
         SQL
       end

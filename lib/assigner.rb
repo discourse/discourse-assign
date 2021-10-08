@@ -187,7 +187,7 @@ class ::Assigner
     @target.assignment&.destroy!
 
     type = assign_to.is_a?(User) ? "User" : "Group"
-    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, cache_topic_id: topic.id)
+    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
