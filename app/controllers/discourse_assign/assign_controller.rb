@@ -33,7 +33,7 @@ module DiscourseAssign
     def unassign
       target_id = params.require(:target_id)
       target_type = params.require(:target_type)
-      raise Discourse::NotFound if !['Post', 'Topic'].include?(target_type)
+      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound unless target
 
@@ -52,7 +52,7 @@ module DiscourseAssign
       assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
 
       raise Discourse::NotFound unless assign_to
-      raise Discourse::NotFound if !['Post', 'Topic'].include?(target_type)
+      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound unless target
 
@@ -83,10 +83,10 @@ module DiscourseAssign
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
-      assignments = Assignment.where(target_id: topics.map(&:id), target_type: 'Topic').pluck(:target_id, :assigned_to_id).to_h
+      topic_assignments = Assignment.where(target_id: topics.map(&:id), target_type: 'Topic').pluck(:target_id, :assigned_to_id).to_h
 
       users = User
-        .where("users.id IN (?)", assignments.values.uniq)
+        .where("users.id IN (?)", topic_assignments.values.uniq)
         .joins("join user_emails on user_emails.user_id = users.id AND user_emails.primary")
         .select(UserLookup.lookup_columns)
         .to_a
@@ -96,7 +96,7 @@ module DiscourseAssign
       users_map = users.index_by(&:id)
 
       topics.each do |topic|
-        user_id = assignments[topic.id]
+        user_id = topic_assignments[topic.id]
         topic.preload_assigned_to(users_map[user_id]) if user_id
       end
 

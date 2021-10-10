@@ -205,6 +205,12 @@ RSpec.describe Assigner do
 
       expect(assign[:success]).to eq(true)
     end
+
+    it 'triggers error for incorrect type' do
+      expect do
+        described_class.new(secure_category, moderator).assign(moderator)
+      end.to raise_error(Discourse::InvalidAccess)
+    end
   end
 
   context "assign_self_regex" do

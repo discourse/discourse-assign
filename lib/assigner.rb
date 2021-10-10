@@ -155,12 +155,24 @@ class ::Assigner
     @topic_target ||= @target.is_a?(Topic)
   end
 
+  def post_target?
+    @post_target ||= @target.is_a?(Post)
+  end
+
   def can_assignee_see_target?(assignee)
-    topic_target? ? Guardian.new(assignee).can_see_topic?(@target) : Guardian.new(assignee).can_see_post?(@target)
+    return Guardian.new(assignee).can_see_topic?(@target) if topic_target?
+    return Guardian.new(assignee).can_see_post?(@target) if post_target?
+
+    raise Discourse::InvalidAccess
   end
 
   def topic
-    @topic ||= topic_target? ? @target : @target.topic
+    return @topic if @topic
+    @topic = @target if topic_target?
+    @topic = @target.topic if post_target?
+
+    raise Discourse::InvalidParameters if !@topic
+    @topic
   end
 
   def first_post
