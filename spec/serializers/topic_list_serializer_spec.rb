@@ -25,7 +25,7 @@ RSpec.describe TopicListSerializer do
 
     topic.posts << Fabricate(:post)
 
-    TopicAssigner.new(topic, user).assign(user)
+    Assigner.new(topic, user).assign(user)
     topic
   end
 

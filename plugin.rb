@@ -33,7 +33,7 @@ after_initialize do
   require File.expand_path('../jobs/regular/remind_user.rb', __FILE__)
   require File.expand_path('../jobs/regular/assign_notification.rb', __FILE__)
   require File.expand_path('../jobs/regular/unassign_notification.rb', __FILE__)
-  require 'topic_assigner'
+  require 'assigner'
   require 'pending_assigns_reminder'
 
   # TODO: Drop when Discourse stable 2.8.0 is released
@@ -48,7 +48,7 @@ after_initialize do
 
   reloadable_patch do |plugin|
     class ::Topic
-      has_one :assignment, dependent: :destroy
+      has_one :assignment, as: :target, dependent: :destroy
     end
 
     class ::Group
@@ -171,13 +171,13 @@ after_initialize do
   end
 
   on(:assign_topic) do |topic, user, assigning_user, force|
-    if force || !Assignment.exists?(topic: topic)
-      TopicAssigner.new(topic, assigning_user).assign(user)
+    if force || !Assignment.exists?(target: topic)
+      Assigner.new(topic, assigning_user).assign(user)
     end
   end
 
   on(:unassign_topic) do |topic, unassigning_user|
-    TopicAssigner.new(topic, unassigning_user).unassign
+    Assigner.new(topic, unassigning_user).unassign
   end
 
   Site.preloaded_category_custom_fields << "enable_unassigned_filter"
@@ -185,7 +185,7 @@ after_initialize do
   BookmarkQuery.on_preload do |bookmarks, bookmark_query|
     if SiteSetting.assign_enabled?
       topics = bookmarks.map(&:topic)
-      assignments = Assignment.strict_loading.where(topic: topics).includes(:assigned_to).index_by(&:topic_id)
+      assignments = Assignment.strict_loading.where(topic_id: topics).includes(:assigned_to).index_by(&:topic_id)
 
       topics.each do |topic|
         assigned_to = assignments[topic.id]&.assigned_to
@@ -226,7 +226,7 @@ after_initialize do
 
       if allowed_access && results.posts.length > 0
         topics = results.posts.map(&:topic)
-        assignments = Assignment.strict_loading.where(topic: topics).includes(:assigned_to).index_by(&:topic_id)
+        assignments = Assignment.strict_loading.where(target: topics).includes(:assigned_to).index_by(&:topic_id)
 
         results.posts.each do |post|
           assigned_to = assignments[post.topic.id]&.assigned_to
@@ -480,17 +480,17 @@ after_initialize do
   TopicsBulkAction.register_operation("assign") do
     if @user.can_assign?
       assign_user = User.find_by_username(@operation[:username])
-      topics.each do |t|
-        TopicAssigner.new(t, @user).assign(assign_user)
+      topics.each do |topic|
+        Assigner.new(topic, @user).assign(assign_user)
       end
     end
   end
 
   TopicsBulkAction.register_operation("unassign") do
     if @user.can_assign?
-      topics.each do |t|
+      topics.each do |topic|
         if guardian.can_assign?
-          TopicAssigner.new(t, @user).unassign
+          Assigner.new(topic, @user).unassign
         end
       end
     end
@@ -574,16 +574,16 @@ after_initialize do
 
   # Event listeners
   on(:post_created) do |post|
-    ::TopicAssigner.auto_assign(post, force: true)
+    ::Assigner.auto_assign(post, force: true)
   end
 
   on(:post_edited) do |post, topic_changed|
-    ::TopicAssigner.auto_assign(post, force: true)
+    ::Assigner.auto_assign(post, force: true)
   end
 
   on(:topic_status_updated) do |topic, status, enabled|
     if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed') && enabled
-      assigner = ::TopicAssigner.new(topic, Discourse.system_user)
+      assigner = ::Assigner.new(topic, Discourse.system_user)
       assigner.unassign(silent: true)
     end
   end
@@ -604,7 +604,7 @@ after_initialize do
     previous_assigned_to = assigned_class.find_by(id: previous_assigned_to_id)
 
     if previous_assigned_to
-      assigner = TopicAssigner.new(topic, Discourse.system_user)
+      assigner = Assigner.new(topic, Discourse.system_user)
       assigner.assign(previous_assigned_to, silent: true)
     end
 
@@ -626,7 +626,7 @@ after_initialize do
     topic.custom_fields["prev_assigned_to_type"] = topic.assignment.assigned_to_type
     topic.save!
 
-    assigner = TopicAssigner.new(topic, Discourse.system_user)
+    assigner = Assigner.new(topic, Discourse.system_user)
     assigner.unassign(silent: true)
   end
 
@@ -640,7 +640,7 @@ after_initialize do
         topics = Topic.joins(:assignment).where('assignments.assigned_to_id = ?', user.id)
 
         topics.each do |topic|
-          TopicAssigner.new(topic, Discourse.system_user).unassign
+          Assigner.new(topic, Discourse.system_user).unassign
         end
       end
     end
@@ -785,7 +785,7 @@ after_initialize do
         end
 
         assign_to = User.find_by(id: assign_to_user_id)
-        assign_to && TopicAssigner.new(topic, Discourse.system_user).assign(assign_to)
+        assign_to && Assigner.new(topic, Discourse.system_user).assign(assign_to)
       end
     end
   end

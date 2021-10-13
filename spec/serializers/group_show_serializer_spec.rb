@@ -19,10 +19,10 @@ RSpec.describe GroupShowSerializer do
   end
 
   it "counts assigned users and groups" do
-    TopicAssigner.new(topic, user).assign(user)
+    Assigner.new(topic, user).assign(user)
     expect(serializer.as_json[:group_show][:assignment_count]).to eq(1)
 
-    TopicAssigner.new(topic2, user).assign(group)
+    Assigner.new(topic2, user).assign(group)
     expect(serializer.as_json[:group_show][:assignment_count]).to eq(2)
   end
 end

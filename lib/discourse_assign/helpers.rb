@@ -9,7 +9,7 @@ module DiscourseAssign
         username: user.username,
         name: user.name,
         avatar_template: user.avatar_template,
-        assigned_at: Assignment.where(topic_id: topic.id).pluck_first(:created_at)
+        assigned_at: Assignment.where(target: topic).pluck_first(:created_at)
       }
     end
 
@@ -22,7 +22,7 @@ module DiscourseAssign
         flair_color: group.flair_color,
         flair_icon: group.flair_icon,
         flair_upload_id: group.flair_upload_id,
-        assigned_at: Assignment.where(topic_id: topic.id).pluck_first(:created_at)
+        assigned_at: Assignment.where(target: topic).pluck_first(:created_at)
       }
     end
   end

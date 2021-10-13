@@ -173,8 +173,8 @@ describe TopicQuery do
       assigned_topic = Fabricate(:post).topic
       assigned_topic2 = Fabricate(:post).topic
 
-      TopicAssigner.new(assigned_topic, user).assign(user)
-      TopicAssigner.new(assigned_topic2, user2).assign(user2)
+      Assigner.new(assigned_topic, user).assign(user)
+      Assigner.new(assigned_topic2, user2).assign(user2)
       query = TopicQuery.new(user, assigned: user.username).list_latest
 
       expect(query.topics.length).to eq(1)
@@ -185,8 +185,8 @@ describe TopicQuery do
       assigned_topic = Fabricate(:post).topic
       assigned_topic2 = Fabricate(:post).topic
 
-      TopicAssigner.new(assigned_topic, user).assign(user)
-      TopicAssigner.new(assigned_topic2, user2).assign(user2)
+      Assigner.new(assigned_topic, user).assign(user)
+      Assigner.new(assigned_topic2, user2).assign(user2)
       query = TopicQuery.new(user2, assigned: "me").list_latest
 
       expect(query.topics.length).to eq(1)
@@ -197,7 +197,7 @@ describe TopicQuery do
       assigned_topic = Fabricate(:post).topic
       unassigned_topic = Fabricate(:topic)
 
-      TopicAssigner.new(assigned_topic, user).assign(user)
+      Assigner.new(assigned_topic, user).assign(user)
       query = TopicQuery.new(user, assigned: "nobody").list_latest
 
       expect(query.topics.length).to eq(1)
@@ -208,7 +208,7 @@ describe TopicQuery do
       assigned_topic = Fabricate(:post).topic
       Fabricate(:topic)
 
-      TopicAssigner.new(assigned_topic, user).assign(user)
+      Assigner.new(assigned_topic, user).assign(user)
       query = TopicQuery.new(user, assigned: "*").list_latest
 
       expect(query.topics.length).to eq(1)
@@ -218,7 +218,7 @@ describe TopicQuery do
 
   def assign_to(topic, user, assignee)
     topic.tap do |t|
-      TopicAssigner.new(t, user).assign(assignee)
+      Assigner.new(t, user).assign(assignee)
     end
   end
 end

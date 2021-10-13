@@ -15,6 +15,8 @@ describe CorrectlyMoveAssignmentsFromCustomFieldsToATable do
       expect(assignment.topic_id).to eq(99)
       expect(assignment.assigned_to_id).to eq(50)
       expect(assignment.assigned_by_user_id).to eq(60)
+      expect(assignment.target_id).to eq(99)
+      expect(assignment.target_type).to eq('Topic')
     end
   end
 

@@ -23,15 +23,15 @@ describe Search do
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
-      TopicAssigner.new(post3.topic, user).assign(user)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post3.topic, user).assign(user)
     end
 
     it 'can find by status' do
       expect(Search.execute('in:assigned', guardian: Guardian.new(user)).posts.length).to eq(3)
 
-      TopicAssigner.new(post3.topic, user).unassign
+      Assigner.new(post3.topic, user).unassign
 
       expect(Search.execute('in:unassigned', guardian: Guardian.new(user)).posts.length).to eq(1)
       expect(Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length).to eq(1)

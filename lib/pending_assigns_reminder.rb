@@ -28,7 +28,7 @@ class PendingAssignsReminder
   private
 
   def assigned_count_for(user)
-    Assignment.joins(:topic).where(assigned_to_id: user.id, assigned_to_type: 'User').count
+    Assignment.joins_with_topics.where(assigned_to_id: user.id, assigned_to_type: 'User').count
   end
 
   def assigned_topics(user, order:)

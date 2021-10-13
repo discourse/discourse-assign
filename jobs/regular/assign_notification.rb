@@ -16,7 +16,7 @@ module Jobs
       assigned_to_users = args[:assigned_to_type] == "User" ? [assigned_to] : assigned_to.users
 
       assigned_to_users.each do |user|
-        TopicAssigner.publish_topic_tracking_state(topic, user.id)
+        Assigner.publish_topic_tracking_state(topic, user.id)
 
         next if assigned_by == user
 

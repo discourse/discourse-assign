@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe TopicAssigner do
+RSpec.describe Assigner do
   before { SiteSetting.assign_enabled = true }
 
   let(:assign_allowed_group) { Group.find_by(name: 'staff') }
@@ -26,8 +26,8 @@ RSpec.describe TopicAssigner do
     let(:secure_topic) { Fabricate(:post).topic.tap { |t| t.update(category: secure_category) } }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
     let(:moderator2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:assigner) { TopicAssigner.new(topic, moderator2) }
-    let(:assigner_self) { TopicAssigner.new(topic, moderator) }
+    let(:assigner) { described_class.new(topic, moderator2) }
+    let(:assigner_self) { described_class.new(topic, moderator) }
 
     it "can assign and unassign correctly" do
       expect_enqueued_with(job: :assign_notification) do
@@ -91,14 +91,14 @@ RSpec.describe TopicAssigner do
       end
 
       it "doesn't assign system user" do
-        TopicAssigner.auto_assign(post)
+        described_class.auto_assign(post)
 
         expect(topic.assignment).to eq(nil)
       end
 
       it "assigns first mentioned staff user after system user" do
         post.update(raw: "Don't assign @system. @modi, can you add this to your list?")
-        TopicAssigner.auto_assign(post)
+        described_class.auto_assign(post)
 
         expect(topic.assignment.assigned_to_id).to eq(moderator.id)
       end
@@ -127,7 +127,7 @@ RSpec.describe TopicAssigner do
       another_post = Fabricate.build(:post)
       assigner.assign(moderator)
 
-      second_assign = TopicAssigner.new(another_post.topic, moderator2).assign(moderator)
+      second_assign = described_class.new(another_post.topic, moderator2).assign(moderator)
 
       expect(second_assign[:success]).to eq(false)
       expect(second_assign[:reason]).to eq(:too_many_assigns)
@@ -138,7 +138,7 @@ RSpec.describe TopicAssigner do
       another_post = Fabricate(:post)
       assigner.assign(moderator)
 
-      second_assign = TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+      second_assign = described_class.new(another_post.topic, moderator).assign(moderator)
 
       expect(second_assign[:success]).to eq(true)
     end
@@ -150,10 +150,10 @@ RSpec.describe TopicAssigner do
       first_assign = assigner.assign(moderator)
 
       # reached limit so stop
-      second_assign = TopicAssigner.new(Fabricate(:topic), moderator2).assign(moderator)
+      second_assign = described_class.new(Fabricate(:topic), moderator2).assign(moderator)
 
       # self assign has a bypass
-      third_assign = TopicAssigner.new(another_post.topic, moderator).assign(moderator)
+      third_assign = described_class.new(another_post.topic, moderator).assign(moderator)
 
       expect(first_assign[:success]).to eq(true)
       expect(second_assign[:success]).to eq(false)
@@ -163,28 +163,28 @@ RSpec.describe TopicAssigner do
     fab!(:admin) { Fabricate(:admin) }
 
     it 'fails to assign when the assigned user cannot view the pm' do
-      assign = TopicAssigner.new(pm, admin).assign(moderator)
+      assign = described_class.new(pm, admin).assign(moderator)
 
       expect(assign[:success]).to eq(false)
       expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
     end
 
     it 'fails to assign when not all group members has access to pm' do
-      assign = TopicAssigner.new(pm, admin).assign(moderator.groups.first)
+      assign = described_class.new(pm, admin).assign(moderator.groups.first)
 
       expect(assign[:success]).to eq(false)
       expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
     end
 
     it 'fails to assign when the assigned user cannot view the topic' do
-      assign = TopicAssigner.new(secure_topic, admin).assign(moderator)
+      assign = described_class.new(secure_topic, admin).assign(moderator)
 
       expect(assign[:success]).to eq(false)
       expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
     end
 
     it 'fails to assign when the not all group members can view the topic' do
-      assign = TopicAssigner.new(secure_topic, admin).assign(moderator.groups.first)
+      assign = described_class.new(secure_topic, admin).assign(moderator.groups.first)
 
       expect(assign[:success]).to eq(false)
       expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
@@ -193,7 +193,7 @@ RSpec.describe TopicAssigner do
     it "assigns the PM to the moderator when it's included in the list of allowed users" do
       pm.allowed_users << moderator
 
-      assign = TopicAssigner.new(pm, admin).assign(moderator)
+      assign = described_class.new(pm, admin).assign(moderator)
 
       expect(assign[:success]).to eq(true)
     end
@@ -201,9 +201,15 @@ RSpec.describe TopicAssigner do
     it "assigns the PM to the moderator when it's a member of an allowed group" do
       pm.allowed_groups << assign_allowed_group
 
-      assign = TopicAssigner.new(pm, admin).assign(moderator)
+      assign = described_class.new(pm, admin).assign(moderator)
 
       expect(assign[:success]).to eq(true)
+    end
+
+    it 'triggers error for incorrect type' do
+      expect do
+        described_class.new(secure_category, moderator).assign(moderator)
+      end.to raise_error(Discourse::InvalidAccess)
     end
   end
 
@@ -218,7 +224,7 @@ RSpec.describe TopicAssigner do
     end
 
     it "automatically assigns to myself" do
-      expect(TopicAssigner.auto_assign(reply)).to eq(success: true)
+      expect(described_class.auto_assign(reply)).to eq(success: true)
       expect(op.topic.assignment.assigned_to_id).to eq(me.id)
       expect(op.topic.assignment.assigned_by_user_id).to eq(me.id)
     end
@@ -242,7 +248,7 @@ RSpec.describe TopicAssigner do
       MD
 
       another_reply = Fabricate(:post, topic: op.topic, user: admin, raw: raw)
-      expect(TopicAssigner.auto_assign(another_reply)).to eq(nil)
+      expect(described_class.auto_assign(another_reply)).to eq(nil)
     end
   end
 
@@ -258,7 +264,7 @@ RSpec.describe TopicAssigner do
     end
 
     it "automatically assigns to other" do
-      expect(TopicAssigner.auto_assign(reply)).to eq(success: true)
+      expect(described_class.auto_assign(reply)).to eq(success: true)
       expect(op.topic.assignment.assigned_to_id).to eq(other.id)
       expect(op.topic.assignment.assigned_by_user_id).to eq(me.id)
     end
@@ -268,7 +274,7 @@ RSpec.describe TopicAssigner do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:assigner) { TopicAssigner.new(topic, moderator) }
+    let(:assigner) { described_class.new(topic, moderator) }
 
     before do
       SiteSetting.unassign_on_close = true
@@ -306,35 +312,35 @@ RSpec.describe TopicAssigner do
     it "send an email if set to 'always'" do
       SiteSetting.assign_mailer = AssignMailer.levels[:always]
 
-      expect { TopicAssigner.new(topic, moderator).assign(moderator) }
+      expect { described_class.new(topic, moderator).assign(moderator) }
         .to change { ActionMailer::Base.deliveries.size }.by(1)
     end
 
     it "doesn't send an email if assignee is a group" do
       SiteSetting.assign_mailer = AssignMailer.levels[:always]
 
-      expect { TopicAssigner.new(topic, moderator).assign(assign_allowed_group) }
+      expect { described_class.new(topic, moderator).assign(assign_allowed_group) }
         .to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "doesn't send an email if the assigner and assignee are not different" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
-      expect { TopicAssigner.new(topic, moderator).assign(moderator2) }
+      expect { described_class.new(topic, moderator).assign(moderator2) }
         .to change { ActionMailer::Base.deliveries.size }.by(1)
     end
 
     it "doesn't send an email if the assigner and assignee are not different" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
-      expect { TopicAssigner.new(topic, moderator).assign(moderator) }
+      expect { described_class.new(topic, moderator).assign(moderator) }
         .to change { ActionMailer::Base.deliveries.size }.by(0)
     end
 
     it "doesn't send an email" do
       SiteSetting.assign_mailer = AssignMailer.levels[:never]
 
-      expect { TopicAssigner.new(topic, moderator).assign(moderator2) }
+      expect { described_class.new(topic, moderator).assign(moderator2) }
         .to change { ActionMailer::Base.deliveries.size }.by(0)
     end
   end

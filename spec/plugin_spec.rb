@@ -17,7 +17,7 @@ describe 'plugin' do
       it 'unassigns the user' do
         SiteSetting.assign_allowed_on_groups = @group_a.id.to_s
 
-        TopicAssigner.new(@topic, Discourse.system_user).assign(@user)
+        Assigner.new(@topic, Discourse.system_user).assign(@user)
         @group_a.remove(@user)
 
         expect(Assignment.count).to eq(0)
@@ -28,7 +28,7 @@ describe 'plugin' do
         @group_b.add(@user)
         SiteSetting.assign_allowed_on_groups = [@group_a.id.to_s, @group_b.id.to_s].join('|')
 
-        TopicAssigner.new(@topic, Discourse.system_user).assign(@user)
+        Assigner.new(@topic, Discourse.system_user).assign(@user)
         @group_a.remove(@user)
 
         assignment = Assignment.first
