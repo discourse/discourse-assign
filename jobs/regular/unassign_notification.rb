@@ -17,7 +17,6 @@ module Jobs
           notification_type: Notification.types[:custom],
           user_id: user.id,
           topic_id: topic.id,
-          post_number: 1
         ).where("data like '%discourse_assign.assign_notification%' OR data like '%discourse_assign.assign_group_notification%'").destroy_all
       end
     end

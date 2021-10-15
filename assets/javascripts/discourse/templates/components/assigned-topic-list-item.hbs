@@ -54,13 +54,18 @@
       unassign=unassign
       reassign=reassign
     }}
-  {{else}}
+  {{else if topic.assigned_to_group}}
     {{assign-actions-dropdown
       topic=topic
       assignee=topic.assigned_to_group.name
       group=true
       unassign=unassign
       reassign=reassign
+    }}
+  {{else}}
+    {{assign-actions-dropdown
+      topic=topic
+      unassign=unassign
     }}
   {{/if}}
 </td>

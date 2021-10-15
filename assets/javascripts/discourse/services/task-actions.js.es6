@@ -3,22 +3,23 @@ import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 
 export default Service.extend({
-  unassign(topicId) {
+  unassign(targetId, targetType = "Topic") {
     return ajax("/assign/unassign", {
       type: "PUT",
       data: {
-        target_id: topicId,
-        target_type: "Topic",
+        target_id: targetId,
+        target_type: targetType,
       },
     });
   },
 
-  assign(topic) {
+  assign(target, targetType = "Topic") {
     return showModal("assign-user", {
       model: {
-        username: topic.get("assigned_to_user.username"),
-        group_name: topic.get("assigned_to_group.name"),
-        topic,
+        username: target.get("assigned_to_user.username"),
+        group_name: target.get("assigned_to_group.name"),
+        target,
+        targetType,
       },
     });
   },

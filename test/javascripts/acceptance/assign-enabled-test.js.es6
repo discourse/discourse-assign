@@ -80,6 +80,22 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
       return helper.response({ success: true });
     });
   });
+  test("Post contains hidden assign button", async (assert) => {
+    updateCurrentUser({ can_assign: true });
+    await visit("/t/internationalization-localization/280");
+
+    assert.ok(
+      !exists("#post_2 .extra-buttons .d-icon-user-plus"),
+      "assign to post button is hidden"
+    );
+    await click("#post_2 button.show-more-actions");
+    assert.ok(
+      exists("#post_2 .extra-buttons .d-icon-user-plus"),
+      "assign to post button exists"
+    );
+    await click("#post_2 .extra-buttons .d-icon-user-plus");
+    assert.ok(exists(".assign.modal-body"), "assign modal opens");
+  });
 
   test("Footer dropdown contains button", async (assert) => {
     updateCurrentUser({ can_assign: true });

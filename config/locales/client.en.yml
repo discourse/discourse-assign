@@ -7,8 +7,12 @@ en:
     action_codes:
       assigned: "assigned %{who} %{when}"
       assigned_group: "assigned %{who} %{when}"
+      assigned_to_post: "assigned %{who} to post %{when}"
+      assigned_group_to_post: "assigned %{who} to post %{when}"
       unassigned: "unassigned %{who} %{when}"
       unassigned_group: "unassigned %{who} %{when}"
+      unassigned_from_post: "unassigned %{who} from post %{when}"
+      unassigned_group_from_post: "unassigned %{who} from post %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
@@ -26,6 +30,11 @@ en:
       assign:
         title: "Assign"
         help: "Assign Topic to User"
+      assign_post:
+        title: "Assign Post"
+      unassign_post:
+        title: "Unassign from Post"
+        help: "Unassign %{username} from Post"
       reassign:
         title: "Re-assign"
         help: "Re-assign Topic to a different user"
@@ -33,6 +42,9 @@ en:
         title: "Assign Topic"
         description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
+      assign_post_modal:
+        title: "Assign Post"
+        description: "Enter the name of the user you'd like to assign this post"
       claim:
         title: "claim"
         help: "Assign topic to yourself"

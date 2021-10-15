@@ -4,6 +4,8 @@ require 'email/sender'
 require 'nokogiri'
 
 class ::Assigner
+  ASSIGNMENTS_PER_TOPIC_LIMIT = 5
+
   def self.backfill_auto_assign
     staff_mention = User
       .assign_allowed
@@ -107,7 +109,6 @@ class ::Assigner
   end
 
   def self.publish_topic_tracking_state(topic, user_id)
-    # TODO decide later if we want general or separate method to publish about post tracking
     if topic.private_message?
       MessageBus.publish(
         "/private-messages/assigned",
@@ -190,6 +191,8 @@ class ::Assigner
         assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
       when topic.assignment&.assigned_to_id == assign_to.id
         assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
+      when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
+        :too_many_assigns_for_topic
       when !can_assign_to?(assign_to)
         :too_many_assigns
       end
@@ -205,20 +208,20 @@ class ::Assigner
 
     serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
 
-    #TODO assign notification for post
     Jobs.enqueue(:assign_notification,
                  topic_id: topic.id,
+                 post_id: topic_target? ? first_post.id : @target.id,
                  assigned_to_id: assign_to.id,
                  assigned_to_type: type,
                  assigned_by_id: @assigned_by.id,
                  silent: silent)
 
-    #TODO message bus for post assignment
     MessageBus.publish(
       "/staff/topic-assignment",
       {
         type: "assigned",
         topic_id: topic.id,
+        post_id: post_target? && @target.id,
         assigned_type: type,
         assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json
       },
@@ -247,16 +250,14 @@ class ::Assigner
       end
     end
     if !silent
-      #TODO moderator post when assigned to post
       topic.add_moderator_post(
         @assigned_by,
         nil,
         bump: false,
         post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
-        action_code: assignment.assigned_to_user? ? "assigned" : "assigned_group",
+        action_code: moderator_post_assign_action_code(assignment),
         custom_fields: { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
       )
-
     end
 
     # Create a webhook event
@@ -296,7 +297,6 @@ class ::Assigner
 
       first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
-      #TODO unassign notification for post
       Jobs.enqueue(:unassign_notification,
                    topic_id: topic.id,
                    assigned_to_id: assignment.assigned_to.id,
@@ -321,7 +321,6 @@ class ::Assigner
 
       assigned_to = assignment.assigned_to
 
-      # TODO unassign post for post assignment
       if SiteSetting.unassign_creates_tracking_post && !silent
         post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
         topic.add_moderator_post(
@@ -329,7 +328,7 @@ class ::Assigner
           bump: false,
           post_type: post_type,
           custom_fields: { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name },
-          action_code: assignment.assigned_to_user? ? "unassigned" : "unassigned_group",
+          action_code: moderator_post_unassign_action_code(assignment),
         )
       end
 
@@ -362,9 +361,35 @@ class ::Assigner
         {
           type: 'unassigned',
           topic_id: topic.id,
+          post_id: post_target? && @target.id,
+          assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group"
         },
         user_ids: allowed_user_ids
       )
     end
+  end
+
+  private
+
+  def moderator_post_assign_action_code(assignment)
+    suffix =
+      if assignment.target.is_a?(Post)
+        "_to_post"
+      elsif assignment.target.is_a?(Topic)
+        ""
+      end
+    return "assigned#{suffix}" if assignment.assigned_to_user?
+    return "assigned_group#{suffix}" if assignment.assigned_to_group?
+  end
+
+  def moderator_post_unassign_action_code(assignment)
+    suffix =
+      if assignment.target.is_a?(Post)
+        "_from_post"
+      elsif assignment.target.is_a?(Topic)
+        ""
+      end
+    return "unassigned#{suffix}" if assignment.assigned_to_user?
+    return "unassigned_group#{suffix}" if assignment.assigned_to_group?
   end
 end
