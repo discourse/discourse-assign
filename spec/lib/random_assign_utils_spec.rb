@@ -3,7 +3,6 @@
 require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
-
 describe RandomAssignUtils do
   before do
     SiteSetting.assign_enabled = true
