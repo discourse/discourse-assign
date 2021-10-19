@@ -701,6 +701,8 @@ after_initialize do
       field :assignees_group, component: :group
       field :assigned_topic, component: :text
       field :minimum_time_between_assignments, component: :text
+      field :max_recently_assigned_days, component: :text
+      field :min_recently_assigned_days, component: :text
       field :in_working_hours, component: :boolean
 
       version 1
@@ -719,7 +721,7 @@ after_initialize do
         next unless group_id = fields.dig('assignees_group', 'value')
         next unless group = Group.find_by(id: group_id)
 
-        min_hours = fields.dig('minimum_time_between_assignments', 'value')
+        min_hours = fields.dig('minimum_time_between_assignments', 'value').presence
         if min_hours && TopicCustomField
             .where(name: 'assigned_to_id', topic_id: topic_id)
             .where('created_at < ?', min_hours.to_i.hours.ago)
@@ -747,23 +749,14 @@ after_initialize do
           next
         end
 
-        last_assignees_ids = UserAction
-          .joins(:user)
-          .where(action_type: UserAction::ASSIGNED, target_topic_id: topic_id)
-          .where('user_actions.created_at > ?', 6.months.ago)
-          .order(created_at: :desc)
-          .limit(group_users_ids.length)
-          .pluck('users.id')
-          .uniq
+        last_assignees_ids = RandomAssignUtils.recently_assigned_users_ids(
+          topic_id,
+          (fields.dig('max_recently_assigned_days', 'value').presence || 180).to_i.days.ago
+        )
 
         users_ids = group_users_ids - last_assignees_ids
         if users_ids.blank?
-          recently_assigned_users_ids = UserAction
-            .joins(:user)
-            .where(action_type: UserAction::ASSIGNED, target_topic_id: topic_id)
-            .where('user_actions.created_at < ?', 2.weeks.ago)
-            .pluck('users.id')
-            .uniq
+          recently_assigned_users_ids = RandomAssignUtils.recently_assigned_users_ids(topic_id, (fields.dig('min_recently_assigned_days', 'value').presence || 14).to_i.days.ago)
           users_ids = group_users_ids - recently_assigned_users_ids
         end
 
