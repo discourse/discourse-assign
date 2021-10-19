@@ -2,6 +2,7 @@
 
 require 'rails_helper'
 require_relative '../support/assign_allowed_group'
+require 'random_assign_utils'
 
 describe RandomAssignUtils do
   before do
