@@ -79,7 +79,5 @@ zh_CN:
           fields:
             assignees_group:
               label: 指派给群组
-            minimum_time_between_assignments:
-              label: 指派间隔时间
             assigned_topic:
               label: 指派主题
