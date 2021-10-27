@@ -90,7 +90,13 @@ sv:
             assignees_group:
               label: Tilldelade-grupp
             minimum_time_between_assignments:
-              label: Timmar mellan uppdrag
+              label: Minsta antal timmar mellan tilldelningar
+            min_recently_assigned_days:
+              label: Lägsta antal dagar som nyligen tilldelat
+              description: Standardvärdet är 14 dagar.
+            max_recently_assigned_days:
+              label: Högsta antal dagar som nyligen tilldelat
+              description: Första försöket att hoppa över användare som tilldelats under de senaste `n` dagarna. Om ingen användare finns kvar återgår det till 'min_recently_assigned_days'. Standardvärden är 180 dagar.
             assigned_topic:
               label: Tilldelat ämnes-ID
             in_working_hours:
