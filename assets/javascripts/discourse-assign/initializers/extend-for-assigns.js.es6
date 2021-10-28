@@ -14,6 +14,8 @@ import TopicButtonAction, {
 import { inject } from "@ember/controller";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
+import { get } from "@ember/object";
+import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -28,6 +30,70 @@ function titleForState(name) {
 }
 
 function registerTopicFooterButtons(api) {
+  registerTopicFooterDropdown({
+    id: "reassign-button",
+
+    icon: "cog",
+
+    action(id) {
+      if (!this.get("currentUser.can_assign")) {
+        return;
+      }
+
+      const taskActions = getOwner(this).lookup("service:task-actions");
+      const topic = this.topic;
+
+
+      switch (id) {
+        case "unassign": {
+          this.set("topic.assigned_to_user", null);
+          this.set("topic.assigned_to_group", null);
+          taskActions.unassign(topic.id).then(() => {
+            this.appEvents.trigger("post-stream:refresh", {
+              id: topic.postStream.firstPostId,
+            });
+          });
+          break;
+        }
+        case "assign-self": {
+          this.set("topic.assigned_to_user", null);
+          this.set("topic.assigned_to_group", null);
+          taskActions.unassign(topic.id)
+          taskActions.assignUserToTopic(this.currentUser, topic).then(() => {
+            this.appEvents.trigger("post-stream:refresh", {
+              id: topic.postStream.firstPostId,
+            });
+          });
+          break;
+        }
+        case "reassign": {
+          taskActions.reassign(topic).set("model.onSuccess", () => {
+            this.appEvents.trigger("post-stream:refresh", {
+              id: topic.postStream.firstPostId,
+            });
+          });
+          break;
+        }
+      }
+    },
+
+    noneItem() {
+      return { id: null, name: "Unassign..." };
+    },
+
+    content() {
+      return [
+        { id: "unassign", name: "Unassign" },
+        { id: "assign-self", name: "Assign to self" },
+        { id: "reassign", name: "Reassign to..." },
+      ];
+    },
+
+    displayed() {
+      return !this.site.mobileView;
+    },
+  });
+
   api.registerTopicFooterButton({
     id: "assign",
     icon() {

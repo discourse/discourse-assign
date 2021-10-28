@@ -15,6 +15,7 @@ export default Service.extend({
 
   assign(target, targetType = "Topic") {
     return showModal("assign-user", {
+      title: "discourse_assign.assign_modal.title",
       model: {
         username: target.get("assigned_to_user.username"),
         group_name: target.get("assigned_to_group.name"),
@@ -31,6 +32,18 @@ export default Service.extend({
         username: user.username,
         target_id: topic.id,
         target_type: "Topic",
+      },
+    });
+  },
+
+  reassign(topic) {
+    return showModal("assign-user", {
+      title: "discourse_assign.assign_modal.reassign_title",
+      model: {
+        reassign: true,
+        username: topic.get("assigned_to_user.username"),
+        group_name: topic.get("assigned_to_group.name"),
+        topic,
       },
     });
   },

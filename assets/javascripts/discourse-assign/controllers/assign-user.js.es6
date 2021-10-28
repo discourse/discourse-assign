@@ -117,8 +117,55 @@ export default Controller.extend({
       .catch(popupAjaxError);
   },
 
+
+  @action
+  reassign() {
+    if (this.isBulkAction) {
+      this.bulkAction(this.model.username);
+      return;
+    }
+    let path = "/assign/reassign";
+
+    if (isEmpty(this.get("model.username"))) {
+      this.model.topic.set("assigned_to_user", null);
+    }
+
+    if (isEmpty(this.get("model.group_name"))) {
+      this.model.topic.set("assigned_to_group", null);
+    }
+
+    if (
+      isEmpty(this.get("model.username")) &&
+      isEmpty(this.get("model.group_name"))
+    ) {
+      path = "/assign/unassign";
+    }
+
+    this.send("closeModal");
+
+    return ajax(path, {
+      type: "PUT",
+      data: {
+        username: this.get("model.username"),
+        group_name: this.get("model.group_name"),
+        target_id: this.get("model.topic.id"),
+        target_type: "Topic",
+      },
+    })
+      .then(() => {
+          this.get("model.onSuccess")();
+        }
+      })
+      .catch(popupAjaxError);
+  },
+
   @action
   assignUsername(selected) {
+    this.assignUser(selected.firstObject);
+  },
+
+  @action
+  reassignUsername(selected) {
     this.assignUser(selected.firstObject);
   },
 });

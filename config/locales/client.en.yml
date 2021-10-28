@@ -13,6 +13,8 @@ en:
       unassigned_group: "unassigned %{who} %{when}"
       unassigned_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
       unassigned_group_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
+      reassigned: "Re-assigned %{who} %{when}"
+      reassigned_group: "Re-assigned %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
@@ -40,6 +42,7 @@ en:
         help: "Re-assign Topic to a different user"
       assign_modal:
         title: "Assign Topic"
+        reassign_title: "Re-assign Topic"
         description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
       assign_post_modal:
