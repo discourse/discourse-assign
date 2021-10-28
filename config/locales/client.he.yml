@@ -92,8 +92,10 @@ he:
             minimum_time_between_assignments:
               label: כמות מזערית של שעות בין הקצאות
             min_recently_assigned_days:
+              label: כמות מזערית של ימים שהוקצו לאחרונה
               description: ברירת המחדל היא 14 ימים.
             max_recently_assigned_days:
+              label: כמות מרבית של ימים שהוקצו לאחרונה
               description: הניסיון הראשון להחריג משתמש שהוקצו ב־`n` הימים האחרונים. אם לא עזבו משתמשים, תתבצע נסיגה אל `min_recently_assigned_days`. ברירת המחדל היא 180 ימים.
             assigned_topic:
               label: מזהה נושא מוקצה
