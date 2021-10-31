@@ -260,9 +260,18 @@ function initialize(api) {
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
   api.addTagsHtmlCallback((topic, params = {}) => {
-    const assignedToUser = topic.get("assigned_to_user");
-    const assignedToGroup = topic.get("assigned_to_group");
-    const assignedToIndirectly = topic.get("indirectly_assigned_to");
+    const [
+      assignedToUser,
+      assignedToGroup,
+      assignedToIndirectly,
+    ] = Object.values(
+      topic.getProperties(
+        "assigned_to_user",
+        "assigned_to_group",
+        "indirectly_assigned_to"
+      )
+    );
+
     const assignedTo = []
       .concat(
         assignedToUser,
