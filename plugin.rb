@@ -52,6 +52,10 @@ after_initialize do
       has_one :assignment, as: :target, dependent: :destroy
     end
 
+    class ::Post
+      has_one :assignment, as: :target, dependent: :destroy
+    end
+
     class ::Group
       scope :assignable, ->(user) {
         where("assignable_level in (:levels) OR
@@ -195,6 +199,10 @@ after_initialize do
     end
   end
 
+  TopicView.on_preload do |topic_view|
+    topic_view.instance_variable_set(:@posts, topic_view.posts.includes(:assignment))
+  end
+
   TopicList.on_preload do |topics, topic_list|
     if SiteSetting.assign_enabled?
       can_assign = topic_list.current_user && topic_list.current_user.can_assign?
@@ -202,7 +210,7 @@ after_initialize do
 
       if allowed_access && topics.length > 0
         assignments = Assignment.strict_loading.where(topic: topics)
-        assignments_map = assignments.index_by(&:topic_id)
+        assignments_map = assignments.group_by(&:topic_id)
 
         user_ids = assignments.filter { |assignment| assignment.assigned_to_user? }.map(&:assigned_to_id)
         users_map = User.where(id: user_ids).select(UserLookup.lookup_columns).index_by(&:id)
@@ -211,10 +219,23 @@ after_initialize do
         groups_map = Group.where(id: group_ids).index_by(&:id)
 
         topics.each do |topic|
-          assignment = assignments_map[topic.id]
-          assigned_to = users_map[assignment.assigned_to_id] if assignment&.assigned_to_user?
-          assigned_to = groups_map[assignment.assigned_to_id] if assignment&.assigned_to_group?
+          assignments = assignments_map[topic.id]
+          direct_assignment = assignments&.find { |assignment| assignment.target_type == "Topic" && assignment.target_id == topic.id }
+          indirectly_assigned_to = {}
+          assignments&.each do |assignment|
+            next if assignment.target_type == "Topic"
+            next indirectly_assigned_to[assignment.target_id] = users_map[assignment.assigned_to_id] if assignment&.assigned_to_user?
+            next indirectly_assigned_to[assignment.target_id] = groups_map[assignment.assigned_to_id] if assignment&.assigned_to_group?
+          end&.compact&.uniq
+
+          assigned_to =
+            if direct_assignment&.assigned_to_user?
+              users_map[direct_assignment.assigned_to_id]
+            elsif direct_assignment&.assigned_to_group?
+              groups_map[direct_assignment.assigned_to_id]
+            end
           topic.preload_assigned_to(assigned_to)
+          topic.preload_indirectly_assigned_to(indirectly_assigned_to)
         end
       end
     end
@@ -389,8 +410,20 @@ after_initialize do
     @assigned_to = assignment&.assigned_to
   end
 
+  add_to_class(:topic, :indirectly_assigned_to) do
+    return @indirectly_assigned_to if defined?(@indirectly_assigned_to)
+    @indirectly_assigned_to = Assignment.where(topic_id: id, target_type: "Post").inject({}) do |acc, assignment|
+      acc[assignment.target_id] = assignment.assigned_to
+      acc
+    end
+  end
+
   add_to_class(:topic, :preload_assigned_to) do |assigned_to|
     @assigned_to = assigned_to
+  end
+
+  add_to_class(:topic, :preload_indirectly_assigned_to) do |indirectly_assigned_to|
+    @indirectly_assigned_to = indirectly_assigned_to
   end
 
   # TopicList serializer
@@ -426,6 +459,14 @@ after_initialize do
     (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
   end
 
+  add_to_serializer(:topic_view, :indirectly_assigned_to) do
+    DiscourseAssign::Helpers.build_indirectly_assigned_to(object.topic.indirectly_assigned_to, object.topic)
+  end
+
+  add_to_serializer(:topic_view, :include_indirectly_assigned_to?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.indirectly_assigned_to.present?
+  end
+
   # SuggestedTopic serializer
   add_to_serializer(:suggested_topic, :assigned_to_user, false) do
     DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
@@ -443,7 +484,23 @@ after_initialize do
     (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
   end
 
+  add_to_serializer(:suggested_topic, :indirectly_assigned_to) do
+    DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object)
+  end
+
+  add_to_serializer(:suggested_topic, :include_indirectly_assigned_to?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
+  end
+
   # TopicListItem serializer
+  add_to_serializer(:topic_list_item, :indirectly_assigned_to) do
+    DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object)
+  end
+
+  add_to_serializer(:topic_list_item, :include_indirectly_assigned_to?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
+  end
+
   add_to_serializer(:topic_list_item, :assigned_to_user) do
     BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json
   end
@@ -504,6 +561,22 @@ after_initialize do
     topic.assigned_to
   end
 
+  add_to_serializer(:basic_user, :assign_icon) do
+    'user-plus'
+  end
+  add_to_serializer(:basic_user, :assign_path) do
+    return if !object.is_a?(User)
+    SiteSetting.assigns_user_url_path.gsub("{username}", object.username)
+  end
+
+  add_to_serializer(:basic_group, :assign_icon) do
+    'group-plus'
+  end
+
+  add_to_serializer(:basic_group, :assign_path) do
+    "/g/#{object.name}/assigned/everyone"
+  end
+
   add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
     (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(User)
   end
@@ -514,6 +587,23 @@ after_initialize do
 
   add_to_serializer(:user_bookmark, 'include_assigned_to_group?') do
     (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(Group)
+  end
+
+  # PostSerializer
+  add_to_serializer(:post, :assigned_to_user) do
+    object.assignment&.assigned_to
+  end
+
+  add_to_serializer(:post, 'include_assigned_to_user?') do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(User)
+  end
+
+  add_to_serializer(:post, :assigned_to_group, false) do
+    object.assignment&.assigned_to
+  end
+
+  add_to_serializer(:post, 'include_assigned_to_group?') do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(Group)
   end
 
   # CurrentUser serializer

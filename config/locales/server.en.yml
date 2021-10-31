@@ -20,6 +20,7 @@ en:
     already_claimed: "That topic has already been claimed."
     already_assigned: "Topic is already assigned to @%{username}"
     too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
+    too_many_assigns_for_topic: "Limit of %{limit} assignments per topic has been reached."
     forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
     forbidden_assignee_not_pm_participant: "@%{username} can't be assigned because they don't have access to this PM. You can grant @%{username} access by inviting them to this PM."
     forbidden_assignee_cant_see_topic: "@%{username} can't be assigned because they don't have access to this topic."

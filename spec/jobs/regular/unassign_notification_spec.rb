@@ -27,10 +27,10 @@ RSpec.describe Jobs::UnassignNotification do
 
     context 'User' do
       it 'deletes notifications' do
-        Jobs::AssignNotification.new.execute({ topic_id: topic.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, silent: false })
+        Jobs::AssignNotification.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, silent: false })
 
         expect {
-          described_class.new.execute({ topic_id: topic.id, assigned_to_id: user2.id, assigned_to_type: 'User' })
+          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User' })
         }.to change { user2.notifications.count }.by(-1)
       end
 
@@ -39,7 +39,7 @@ RSpec.describe Jobs::UnassignNotification do
         assign_allowed_group.add(user)
 
         assert_publish_topic_state(pm, user) do
-          described_class.new.execute({ topic_id: pm.id, assigned_to_id: pm.allowed_users.first.id, assigned_to_type: 'User' })
+          described_class.new.execute({ topic_id: pm.id, post_id: pm_post.id, assigned_to_id: pm.allowed_users.first.id, assigned_to_type: 'User' })
         end
       end
     end
@@ -55,10 +55,10 @@ RSpec.describe Jobs::UnassignNotification do
       end
 
       it 'deletes notifications' do
-        Jobs::AssignNotification.new.execute({ topic_id: topic.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
+        Jobs::AssignNotification.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
 
         expect {
-          described_class.new.execute({ topic_id: topic.id, assigned_to_id: group.id, assigned_to_type: 'Group' })
+          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group' })
         }.to change { Notification.count }.by(-2)
       end
     end

@@ -5,6 +5,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not, or } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   topicBulkActions: controller(),
@@ -36,6 +37,16 @@ export default Controller.extend({
       type: "assign",
       username,
     });
+  },
+
+  @discourseComputed("model.targetType")
+  i18nSuffix(targetType) {
+    switch (targetType) {
+      case "Post":
+        return "_post_modal";
+      case "Topic":
+        return "_modal";
+    }
   },
 
   @action
@@ -73,11 +84,11 @@ export default Controller.extend({
     let path = "/assign/assign";
 
     if (isEmpty(this.get("model.username"))) {
-      this.model.topic.set("assigned_to_user", null);
+      this.model.target.set("assigned_to_user", null);
     }
 
     if (isEmpty(this.get("model.group_name"))) {
-      this.model.topic.set("assigned_to_group", null);
+      this.model.target.set("assigned_to_group", null);
     }
 
     if (
@@ -94,8 +105,8 @@ export default Controller.extend({
       data: {
         username: this.get("model.username"),
         group_name: this.get("model.group_name"),
-        target_id: this.get("model.topic.id"),
-        target_type: "Topic",
+        target_id: this.get("model.target.id"),
+        target_type: this.get("model.targetType"),
       },
     })
       .then(() => {

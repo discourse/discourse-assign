@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Assignment < ActiveRecord::Base
-  VALID_TYPES = %w(topic).freeze
+  VALID_TYPES = %w(topic post).freeze
 
   belongs_to :topic
   belongs_to :assigned_to, polymorphic: true

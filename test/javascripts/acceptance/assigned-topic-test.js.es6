@@ -25,7 +25,6 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
         name: "Robin Ward",
         avatar_template:
           "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
-        assigned_at: "2021-06-13T16:33:14.189Z",
       };
       return helper.response(topic);
     });
@@ -34,7 +33,6 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       let topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
       topic["assigned_to_group"] = {
         name: "Developers",
-        assigned_at: "2021-06-13T16:33:14.189Z",
       };
       return helper.response(topic);
     });

@@ -45,8 +45,9 @@ describe FlaggedTopicSerializer do
       expect(json[:flagged_topic][:assigned_to_user]).to match({
         username: user.username,
         name: user.name,
+        assign_icon: "user-plus",
         avatar_template: /letter_avatar_proxy.*/,
-        assigned_at: Assignment.last.created_at,
+        assign_path: "/u/#{user.username}/activity/assigned",
       })
       expect(json[:flagged_topic]).to_not have_key(:assigned_to_group)
     end
@@ -75,7 +76,8 @@ describe FlaggedTopicSerializer do
         flair_color: assign_allowed_group.flair_color,
         flair_icon: assign_allowed_group.flair_icon,
         flair_upload_id: assign_allowed_group.flair_upload_id,
-        assigned_at: Assignment.last.created_at,
+        assign_icon: "group-plus",
+        assign_path: "/g/#{assign_allowed_group.name}/assigned/everyone",
       })
       expect(json[:flagged_topic]).to_not have_key(:assigned_to_user)
     end

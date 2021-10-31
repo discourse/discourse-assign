@@ -133,24 +133,24 @@ module DiscourseAssign
         SQL
       end
 
-      group_assignment_count = Topic
-        .joins("JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic'")
+      group_assignments = Topic
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where(<<~SQL, group_id: group.id)
           a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group'
         SQL
-        .count
+        .pluck(:topic_id)
 
-      assignment_count = Topic
-        .joins("JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic'")
+      assignments = Topic
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
         .joins("JOIN group_users ON group_users.user_id = a.assigned_to_id ")
         .where("group_users.group_id = ?", group.id)
         .where("a.assigned_to_type = 'User'")
-        .count
+        .pluck(:topic_id)
 
       render json: {
         members: serialize_data(members, GroupUserAssignedSerializer),
-        assignment_count: assignment_count + group_assignment_count,
-        group_assignment_count: group_assignment_count
+        assignment_count: (assignments | group_assignments).count,
+        group_assignment_count: group_assignments.count
       }
     end
 
@@ -174,6 +174,8 @@ module DiscourseAssign
         { error: I18n.t('discourse_assign.forbidden_group_assignee_not_pm_participant', group: assign_to.name) }
       when :forbidden_group_assignee_cant_see_topic
         { error: I18n.t('discourse_assign.forbidden_group_assignee_cant_see_topic', group: assign_to.name) }
+      when :too_many_assigns_for_topic
+        { error: I18n.t('discourse_assign.too_many_assigns_for_topic', limit: Assigner::ASSIGNMENTS_PER_TOPIC_LIMIT) }
       else
         max = SiteSetting.max_assigned_topics
         { error: I18n.t('discourse_assign.too_many_assigns', username: assign_to.username, max: max) }

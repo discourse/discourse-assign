@@ -58,9 +58,9 @@ export default UserTopicsList.extend({
   },
 
   @action
-  unassign(topic) {
+  unassign(targetId, targetType = "Topic") {
     this.taskActions
-      .unassign(topic.get("id"))
+      .unassign(targetId, targetType)
       .then(() => this.send("changeAssigned"));
   },
 
