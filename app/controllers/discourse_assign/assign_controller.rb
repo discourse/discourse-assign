@@ -73,19 +73,19 @@ module DiscourseAssign
       username = params.permit(:username)['username']
       group_name = params.permit(:group_name)['group_name']
 
-      reassign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
+      assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
 
-      raise Discourse::NotFound unless reassign_to
+      raise Discourse::NotFound unless assign_to
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound unless target
 
-      reassign = Assigner.new(target, current_user).reassign(reassign_to)
+      assign = Assigner.new(target, current_user).reassign(assign_to)
 
-      if reassign[:success]
+      if assign[:success]
         render json: success_json
       else
-        render json: translate_failure(reassign[:reason], reassign_to), status: 400
+        render json: translate_failure(assign[:reason], assign_to), status: 400
       end
     end
 

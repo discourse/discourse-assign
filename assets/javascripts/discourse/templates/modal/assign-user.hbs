@@ -19,9 +19,15 @@
     }}
     <div class="assign-suggestions">
       {{#each assignSuggestions as |user|}}
-        <a href {{action "assignUser" user.username }}>
-          {{avatar user imageSize="small"}}
-        </a>
+        {{#if model.reassign}}
+          <a href {{action "reassignUser" user.username }}>
+            {{avatar user imageSize="small"}}
+          </a>
+        {{else}}
+          <a href {{action "assignUser" user.username }}>
+            {{avatar user imageSize="small"}}
+          </a>
+        {{/if}}
       {{/each}}
     </div>
   </div>

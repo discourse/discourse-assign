@@ -25,8 +25,8 @@ export default Service.extend({
     });
   },
 
-  assignUserToTopic(user, topic) {
-    return ajax("/assign/assign", {
+  reassignUserToTopic(user, topic) {
+    return ajax("/assign/reassign", {
       type: "PUT",
       data: {
         username: user.username,

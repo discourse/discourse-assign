@@ -153,10 +153,37 @@ export default Controller.extend({
       },
     })
       .then(() => {
+        if (this.get("model.onSuccess")) {
           this.get("model.onSuccess")();
         }
       })
       .catch(popupAjaxError);
+  },
+
+  @action
+  reassignUser(name) {
+    if (this.isBulkAction) {
+      this.bulkAction(name);
+      return;
+    }
+
+    if (this.allowedGroupsForAssignment.includes(name)) {
+      this.setProperties({
+        "model.username": null,
+        "model.group_name": name,
+        "model.allowedGroups": this.taskActions.allowedGroups,
+      });
+    } else {
+      this.setProperties({
+        "model.username": name,
+        "model.group_name": null,
+        "model.allowedGroups": this.taskActions.allowedGroups,
+      });
+    }
+
+    if (name) {
+      return this.reassign();
+    }
   },
 
   @action
@@ -166,6 +193,6 @@ export default Controller.extend({
 
   @action
   reassignUsername(selected) {
-    this.assignUser(selected.firstObject);
+    this.reassignUser(selected.firstObject);
   },
 });

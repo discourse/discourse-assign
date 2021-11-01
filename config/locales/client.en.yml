@@ -39,6 +39,7 @@ en:
         help: "Unassign %{username} from Post"
       reassign:
         title: "Re-assign"
+        dropdown: "Unassign..."
         help: "Re-assign Topic to a different user"
       assign_modal:
         title: "Assign Topic"

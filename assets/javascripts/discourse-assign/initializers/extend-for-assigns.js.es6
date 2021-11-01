@@ -33,8 +33,6 @@ function registerTopicFooterButtons(api) {
   registerTopicFooterDropdown({
     id: "reassign-button",
 
-    icon: "cog",
-
     action(id) {
       if (!this.get("currentUser.can_assign")) {
         return;
@@ -42,7 +40,6 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
       const topic = this.topic;
-
 
       switch (id) {
         case "unassign": {
@@ -58,8 +55,7 @@ function registerTopicFooterButtons(api) {
         case "assign-self": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions.unassign(topic.id)
-          taskActions.assignUserToTopic(this.currentUser, topic).then(() => {
+          taskActions.reassignUserToTopic(this.currentUser, topic).then(() => {
             this.appEvents.trigger("post-stream:refresh", {
               id: topic.postStream.firstPostId,
             });
@@ -78,19 +74,56 @@ function registerTopicFooterButtons(api) {
     },
 
     noneItem() {
-      return { id: null, name: "Unassign..." };
+      const user = this.get("topic.assigned_to_user");
+      const group = this.get("topic.assigned_to_group");
+      const label = I18n.t("discourse_assign.reassign.dropdown");
+
+      if (user) {
+        if (this.site.mobileView) {
+          return { id: null, name: htmlSafe(
+            `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
+              user.username
+            }</span></span>${renderAvatar(user, {
+              imageSize: "small",
+              ignoreTitle: true,
+            })}`
+          )};
+        } else {
+          return { id: null, name: htmlSafe(
+            `${renderAvatar(user, {
+              imageSize: "tiny",
+              ignoreTitle: true,
+            })}<span class="unassign-label">${label}</span>`
+          )};
+        }
+      } else if (group) {
+        return { id: null, name: htmlSafe(
+          `<span class="unassign-label">${label}</span> @${group.name}`
+        )};
+      } else {
+        return { id: null, name: I18n.t("discourse_assign.assign.title")};
+      }
     },
 
+    dependentKeys: [
+      "topic.assigned_to_user",
+      "topic.assigned_to_group",
+      "currentUser.can_assign",
+      "topic.assigned_to_user.username",
+    ],
+
     content() {
-      return [
-        { id: "unassign", name: "Unassign" },
-        { id: "assign-self", name: "Assign to self" },
-        { id: "reassign", name: "Reassign to..." },
-      ];
+      const content = [{ id: "unassign", name: "Unassign" }];
+      if (this.get("topic.assigned_to_user") && this.get("topic.assigned_to_user").username !== this.currentUser.username) {
+        content.push({ id: "assign-self", name: "Re-assign to me" });
+      }
+      content.push({ id: "reassign", name: "Re-assign to..." });
+      return content;
     },
 
     displayed() {
-      return !this.site.mobileView;
+      const assigned = this.get("topic.assigned_to_group") || this.get("topic.assigned_to_user");
+      return !this.site.mobileView && assigned;
     },
   });
 
@@ -185,7 +218,10 @@ function registerTopicFooterButtons(api) {
       "topic.assigned_to_user.username",
     ],
     displayed() {
-      return this.currentUser && this.currentUser.can_assign;
+      const assigned =
+        this.get("topic.assigned_to_user") ||
+        this.get("topic.assigned_to_group");
+      return this.currentUser && this.currentUser.can_assign && !assigned;
     },
   });
 }
@@ -306,16 +342,19 @@ function initialize(api) {
   api.addPostSmallActionIcon("unassigned_group", "group-times");
   api.addPostSmallActionIcon("unassigned_from_post", "user-times");
   api.addPostSmallActionIcon("unassigned_group_from_post", "group-times");
-
   api.includePostAttributes("assigned_to_user", "assigned_to_group");
+  api.addPostSmallActionIcon("reassigned", "user-plus");
+  api.addPostSmallActionIcon("reassigned_group", "group-plus");
 
   api.addPostTransformCallback((transformed) => {
     if (
       [
         "assigned",
         "unassigned",
+        "reassigned",
         "assigned_group",
         "unassigned_group",
+        "reassigned_group",
         "assigned_to_post",
         "assigned_group_to_post",
         "unassigned_from_post",
