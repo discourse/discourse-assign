@@ -13,7 +13,7 @@ import TopicButtonAction, {
 } from "discourse/controllers/topic-bulk-actions";
 import { inject } from "@ember/controller";
 import I18n from "I18n";
-import { get } from "@ember/object";
+import { isEmpty } from "@ember/utils";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -336,6 +336,77 @@ function initialize(api) {
     },
   });
 
+  api.createWidget("assigned-to-first-post", {
+    html(attrs) {
+      const topic = attrs.topic;
+      const [assignedToUser, assignedToGroup, indirectlyAssignedTo] = [
+        topic.assigned_to_user,
+        topic.assigned_to_group,
+        topic.indirectly_assigned_to,
+      ];
+      const assigneeElements = [];
+
+      if (assignedToUser) {
+        assigneeElements.push(
+          h("span.assignee", [
+            h(
+              "a",
+              {
+                attributes: {
+                  class: "assigned-to-username",
+                  href: assignedToUserPath(assignedToUser),
+                },
+              },
+              assignedToUser.username
+            ),
+          ])
+        );
+      }
+      if (assignedToGroup) {
+        assigneeElements.push(
+          h("span.assignee", [
+            h(
+              "a",
+              {
+                attributes: {
+                  class: "assigned-to-group",
+                  href: assignedToGroupPath(assignedToGroup),
+                },
+              },
+              assignedToGroup.name
+            ),
+          ])
+        );
+      }
+      if (indirectlyAssignedTo) {
+        Object.keys(indirectlyAssignedTo).map((postNumber) => {
+          const assignee = indirectlyAssignedTo[postNumber];
+          assigneeElements.push(
+            h("span.assignee", [
+              h(
+                "a",
+                {
+                  attributes: {
+                    class: "assigned-indirectly",
+                    href: `${topic.url}/${postNumber}`,
+                  },
+                },
+                `#${postNumber} ${assignee.username || assignee.name}`
+              ),
+            ])
+          );
+        });
+      }
+      if (!isEmpty(assigneeElements)) {
+        return h("p.assigned-to", [
+          assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
+          h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
+          assigneeElements,
+        ]);
+      }
+    },
+  });
+
   api.modifyClass("model:group", {
     pluginId: PLUGIN_ID,
 
@@ -404,10 +475,12 @@ function initialize(api) {
     if (postModel) {
       let assignedToUser, assignedToGroup, postAssignment, href;
       if (dec.attrs.post_number === 1) {
-        assignedToUser = get(postModel, "topic.assigned_to_user");
-        assignedToGroup = get(postModel, "topic.assigned_to_group");
+        return dec.widget.attach("assigned-to-first-post", {
+          topic: postModel.topic,
+        });
       } else {
-        postAssignment = postModel.topic.indirectly_assigned_to?.[postModel.id];
+        postAssignment =
+          postModel.topic.indirectly_assigned_to?.[postModel.post_number];
         if (postAssignment?.username) {
           assignedToUser = postAssignment;
         }
