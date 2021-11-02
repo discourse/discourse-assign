@@ -26,6 +26,11 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
         avatar_template:
           "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
       };
+      topic["indirectly_assigned_to"] = {
+        2: {
+          name: "Developers",
+        },
+      };
       return helper.response(topic);
     });
 
@@ -48,9 +53,9 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "shows assignment in the header"
     );
     assert.equal(
-      query("#post_1 .assigned-to-username").innerText.trim(),
-      "eviltrout",
-      "shows assignment in the first post"
+      query("#post_1 .assigned-to").innerText,
+      "Assigned toeviltrout#2 Developers",
+      "shows assignment and indirect assignments in the first post"
     );
     assert.ok(exists("#post_1 .assigned-to svg.d-icon-user-plus"));
     assert.ok(
@@ -69,7 +74,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "shows assignment in the header"
     );
     assert.equal(
-      query("#post_1 .assigned-to-username").innerText.trim(),
+      query("#post_1 .assigned-to-group").innerText.trim(),
       "Developers",
       "shows assignment in the first post"
     );
