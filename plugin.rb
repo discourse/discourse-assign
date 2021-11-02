@@ -737,6 +737,16 @@ after_initialize do
     end
   end
 
+  on(:post_moved) do |post, original_topic_id|
+    assignment = Assignment.where(topic_id: original_topic_id, target_type: "Post", target_id: post.id).first
+    return if !assignment
+    if post.is_first_post?
+      assignment.update!(topic_id: post.topic_id, target_type: "Topic", target_id: post.topic_id)
+    else
+      assignment.update!(topic_id: post.topic_id)
+    end
+  end
+
   class ::WebHook
     def self.enqueue_assign_hooks(event, payload)
       if active_web_hooks('assign').exists?
