@@ -13,8 +13,12 @@ he:
     action_codes:
       assigned: "מוקצה לטובת %{who} %{when}"
       assigned_group: "מוקצה לטובת %{who} %{when}"
+      assigned_to_post: "בוצעה הקצאה של %{who} לפוסט %{when}"
+      assigned_group_to_post: "בוצעה הקצאה של %{who} לפוסט %{when}"
       unassigned: "הוסרה ההקצאה של %{who} %{when}"
       unassigned_group: "הוסרה ההקצאה של %{who} %{when}"
+      unassigned_from_post: "הוסרה ההקצאה של %{who} מהפוסט %{when}"
+      unassigned_group_from_post: "הוסרה ההקצאה של %{who} מהפוסט %{when}"
     discourse_assign:
       add_unassigned_filter: "הוספת מסנן ‚ללא הקצאה’ לקטגוריה"
       cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
@@ -32,6 +36,11 @@ he:
       assign:
         title: "הקצאה"
         help: "הקצאת משתמש לנושא"
+      assign_post:
+        title: "הקצאת פוסט"
+      unassign_post:
+        title: "ביטול הקצאת פוסט"
+        help: "לבטל את הקצאת %{username} מהפוסט"
       reassign:
         title: "הקצאה מחדש"
         help: "הקצאת נושא מחדש למשתמש אחר"
@@ -39,6 +48,9 @@ he:
         title: "הקצאת נושא"
         description: "נא להקליד את שם המשתמש להקצאת הנושא"
         assign: "הקצאה"
+      assign_post_modal:
+        title: "הקצאת פוסט"
+        description: "נא להקליד את שם המשתמש להקצאת הפוסט"
       claim:
         title: "דרישה"
         help: "הקצאת נושא לעצמך"

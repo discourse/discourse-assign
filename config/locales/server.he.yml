@@ -26,6 +26,7 @@ he:
     already_claimed: "נושא זה כבר נדרש."
     already_assigned: "הנושא כבר מוקצה לטובת ‎@%{username}"
     too_many_assigns: "‎@%{username}‎ כבר הגיע לכמות הנושאים המרבית שניתן להקצות לטובתו (%{max})."
+    too_many_assigns_for_topic: "המגבלה של %{limit} הקצאות לנושא הושגה."
     forbidden_assign_to: "אין אפשרות להקצות את ‎@%{username}‎ כיוון שאין להם שייכות לקבוצות מורשות מוקצות."
     forbidden_assignee_not_pm_participant: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה להודעה הפרטית הזאת. ניתן להעניק ל־‎@%{username} גישה על ידי שליחת הזמנה להודעה הפרטית הזאת."
     forbidden_assignee_cant_see_topic: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה לנושא הזה."
