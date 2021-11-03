@@ -248,11 +248,23 @@ after_initialize do
 
       if allowed_access && results.posts.length > 0
         topics = results.posts.map(&:topic)
-        assignments = Assignment.strict_loading.where(target: topics).includes(:assigned_to).index_by(&:topic_id)
+        assignments = Assignment.strict_loading.where(topic: topics).includes(:assigned_to).group_by(&:topic_id)
 
         results.posts.each do |post|
-          assigned_to = assignments[post.topic.id]&.assigned_to
-          post.topic.preload_assigned_to(assigned_to)
+          topic_assignments = assignments[post.topic.id]
+          direct_assignment = topic_assignments&.find { |assignment| assignment.target_type == "Topic" }
+          indirect_assignments = topic_assignments&.select { |assignment| assignment.target_type == "Post" }
+          if direct_assignment
+            assigned_to = direct_assignment.assigned_to
+            post.topic.preload_assigned_to(assigned_to)
+          end
+          if indirect_assignments.present?
+            indirect_assignment_map = indirect_assignments.reduce({}) do |acc, assignment|
+              acc[assignment.target_id] = assignment.assigned_to
+              acc
+            end
+            post.topic.preload_indirectly_assigned_to(indirect_assignment_map)
+          end
         end
       end
     end
@@ -519,7 +531,7 @@ after_initialize do
 
   # SearchTopicListItem serializer
   add_to_serializer(:search_topic_list_item, :assigned_to_user, false) do
-    object.assigned_to
+    DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
   end
 
   add_to_serializer(:search_topic_list_item, 'include_assigned_to_user?') do
@@ -527,11 +539,19 @@ after_initialize do
   end
 
   add_to_serializer(:search_topic_list_item, :assigned_to_group, false) do
-    object.assigned_to
+    BasicGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:search_topic_list_item, 'include_assigned_to_group?') do
     (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+  end
+
+  add_to_serializer(:search_topic_list_item, :indirectly_assigned_to) do
+    DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object)
+  end
+
+  add_to_serializer(:search_topic_list_item, :include_indirectly_assigned_to?) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
   end
 
   # TopicsBulkAction
