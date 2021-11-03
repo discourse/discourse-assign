@@ -56,6 +56,8 @@ module DiscourseAssign
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound unless target
 
+      # perhaps?
+      #Scheduler::Defer.later "assign topic" do
       assign = Assigner.new(target, current_user).assign(assign_to)
 
       if assign[:success]
