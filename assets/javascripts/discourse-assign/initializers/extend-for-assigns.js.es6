@@ -189,19 +189,18 @@ function registerTopicFooterButtons(api) {
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
-      const assigned = this.topic.isAssigned();
-      return this.currentUser && this.currentUser.can_assign && !assigned;
+      return (
+        this.currentUser &&
+        this.currentUser.can_assign &&
+        !this.topic.isAssigned()
+      );
     },
   });
 
   api.registerTopicFooterButton({
     id: "unassign-mobile",
     icon() {
-      return this.topic.isAssigned()
-        ? this.site.mobileView
-          ? "user-times"
-          : null
-        : "user-plus";
+      return this.topic.isAssigned() ? "user-times" : "user-plus";
     },
     translatedTitle() {
       return titleForState(
@@ -252,7 +251,11 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return this.currentUser && this.currentUser.can_assign && this.topic.isAssigned();
+      return (
+        this.currentUser &&
+        this.currentUser.can_assign &&
+        this.topic.isAssigned()
+      );
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -265,11 +268,7 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "assign-self-mobile",
     icon() {
-      return this.topic.isAssigned()
-        ? this.site.mobileView
-          ? "user-times"
-          : null
-        : "user-plus";
+      return this.topic.isAssigned() ? "user-times" : "user-plus";
     },
     translatedTitle() {
       return titleForState(
@@ -313,7 +312,11 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return this.currentUser && this.currentUser.can_assign && this.topic.isAssigned();
+      return (
+        this.currentUser &&
+        this.currentUser.can_assign &&
+        this.topic.isAssigned()
+      );
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -331,11 +334,7 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "reassign-mobile",
     icon() {
-      return this.topic.isAssigned()
-        ? this.site.mobileView
-          ? "user-times"
-          : null
-        : "user-plus";
+      return this.topic.isAssigned() ? "user-times" : "user-plus";
     },
     translatedTitle() {
       return titleForState(
@@ -384,7 +383,11 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return this.currentUser && this.currentUser.can_assign && this.topic.isAssigned();
+      return (
+        this.currentUser &&
+        this.currentUser.can_assign &&
+        this.topic.isAssigned()
+      );
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
