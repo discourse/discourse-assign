@@ -180,7 +180,9 @@ class ::Assigner
     topic.posts.where(post_number: 1).first
   end
 
-  def assign(assign_to, silent: false)
+  def assign(assign_to, silent: false)\
+    type = assign_to.is_a?(User) ? "User" : "Group"
+
     forbidden_reason =
       case
       when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
@@ -189,7 +191,7 @@ class ::Assigner
         topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
       when !can_be_assigned?(assign_to)
         assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-      when topic.assignment&.assigned_to_id == assign_to.id
+      when topic.assignment&.assigned_to_id == assign_to.id && topic.custom_fields["prev_assigned_to_type"] == type
         assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
       when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
         :too_many_assigns_for_topic
@@ -201,7 +203,6 @@ class ::Assigner
 
     @target.assignment&.destroy!
 
-    type = assign_to.is_a?(User) ? "User" : "Group"
     assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
@@ -297,6 +298,13 @@ class ::Assigner
   end
 
   def reassign(assign_to, silent: false)
+
+    puts "*" * 88
+    puts topic.inspect
+    puts "*" * 88
+
+    type = assign_to.is_a?(User) ? "User" : "Group"
+
     forbidden_reason =
       case
       when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
@@ -305,7 +313,7 @@ class ::Assigner
         topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
       when !can_be_assigned?(assign_to)
         assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-      when topic.assignment&.assigned_to_id == assign_to.id
+      when topic.assignment&.assigned_to_id == assign_to.id && topic.custom_fields["prev_assigned_to_type"] == type
         assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
       when !can_assign_to?(assign_to)
         :too_many_assigns
@@ -315,7 +323,6 @@ class ::Assigner
 
     @target.assignment&.destroy!
 
-    type = assign_to.is_a?(User) ? "User" : "Group"
     assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)

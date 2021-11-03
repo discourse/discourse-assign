@@ -117,7 +117,6 @@ export default Controller.extend({
       .catch(popupAjaxError);
   },
 
-
   @action
   reassign() {
     if (this.isBulkAction) {
