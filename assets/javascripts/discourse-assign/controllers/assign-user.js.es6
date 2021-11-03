@@ -77,11 +77,12 @@ export default Controller.extend({
 
   @action
   assign() {
+  reassignOrAssignTarget(action) {
     if (this.isBulkAction) {
       this.bulkAction(this.model.username);
       return;
     }
-    let path = "/assign/assign";
+    let path = "/assign/" + action;
 
     if (isEmpty(this.get("model.username"))) {
       this.model.target.set("assigned_to_user", null);
@@ -118,45 +119,39 @@ export default Controller.extend({
   },
 
   @action
-  reassign() {
+  assignUser(name) {
     if (this.isBulkAction) {
-      this.bulkAction(this.model.username);
+      this.bulkAction(name);
       return;
     }
-    let path = "/assign/reassign";
 
-    if (isEmpty(this.get("model.username"))) {
-      this.model.topic.set("assigned_to_user", null);
+    if (this.allowedGroupsForAssignment.includes(name)) {
+      this.setProperties({
+        "model.username": null,
+        "model.group_name": name,
+        "model.allowedGroups": this.taskActions.allowedGroups,
+      });
+    } else {
+      this.setProperties({
+        "model.username": name,
+        "model.group_name": null,
+        "model.allowedGroups": this.taskActions.allowedGroups,
+      });
     }
 
-    if (isEmpty(this.get("model.group_name"))) {
-      this.model.topic.set("assigned_to_group", null);
+    if (name) {
+      return this.assign();
     }
+  },
 
-    if (
-      isEmpty(this.get("model.username")) &&
-      isEmpty(this.get("model.group_name"))
-    ) {
-      path = "/assign/unassign";
-    }
+  @action
+  assign() {
+    this.reassignOrAssignTarget("assign");
+  },
 
-    this.send("closeModal");
-
-    return ajax(path, {
-      type: "PUT",
-      data: {
-        username: this.get("model.username"),
-        group_name: this.get("model.group_name"),
-        target_id: this.get("model.topic.id"),
-        target_type: "Topic",
-      },
-    })
-      .then(() => {
-        if (this.get("model.onSuccess")) {
-          this.get("model.onSuccess")();
-        }
-      })
-      .catch(popupAjaxError);
+  @action
+  reassign() {
+    this.reassignOrAssignTarget("reassign");
   },
 
   @action
