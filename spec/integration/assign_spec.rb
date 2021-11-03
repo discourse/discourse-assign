@@ -145,4 +145,30 @@ describe 'integration tests' do
       expect(payload["unassigned_to_id"]).to eq(user2.id)
     end
   end
+
+  context 'move post' do
+    fab!(:old_topic) { Fabricate(:topic) }
+    fab!(:post) { Fabricate(:post, topic: old_topic) }
+    fab!(:user) { Fabricate(:user) }
+    fab!(:assignment) { Assignment.create!(target_id: post.id, target_type: "Post", topic_id: old_topic.id, assigned_by_user: user, assigned_to: user) }
+    let(:new_topic) { Fabricate(:topic) }
+
+    it 'assignment becomes topic assignment when new topic' do
+      post.update!(topic: new_topic)
+      DiscourseEvent.trigger(:post_moved, post, old_topic.id)
+      assignment.reload
+      expect(assignment.topic_id).to eq(new_topic.id)
+      expect(assignment.target_type).to eq("Topic")
+      expect(assignment.target_id).to eq(new_topic.id)
+    end
+
+    it 'assigment is still post assignment when not first post' do
+      post.update!(topic: new_topic, post_number: "3")
+      DiscourseEvent.trigger(:post_moved, post, old_topic.id)
+      assignment.reload
+      expect(assignment.topic_id).to eq(new_topic.id)
+      expect(assignment.target_type).to eq("Post")
+      expect(assignment.target_id).to eq(post.id)
+    end
+  end
 end
