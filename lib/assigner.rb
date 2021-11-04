@@ -250,13 +250,19 @@ class ::Assigner
       end
     end
     if !silent
+      custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
+
+      if post_target?
+        custom_fields.merge!("action_code_href" => "#{topic.url}/#{@target.post_number}")
+      end
+
       topic.add_moderator_post(
         @assigned_by,
         nil,
         bump: false,
         post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
         action_code: moderator_post_assign_action_code(assignment),
-        custom_fields: { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
+        custom_fields: custom_fields
       )
     end
 
@@ -323,11 +329,18 @@ class ::Assigner
 
       if SiteSetting.unassign_creates_tracking_post && !silent
         post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
+
+        custom_fields = { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name }
+
+        if post_target?
+          custom_fields.merge!("action_code_href" => "#{topic.url}/#{@target.post_number}")
+        end
+
         topic.add_moderator_post(
           @assigned_by, nil,
           bump: false,
           post_type: post_type,
-          custom_fields: { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name },
+          custom_fields: custom_fields,
           action_code: moderator_post_unassign_action_code(assignment),
         )
       end
