@@ -36,6 +36,13 @@ function titleForState(name) {
   }
 }
 
+function defaultTitle(topic) {
+  return titleForState(
+    topic.get("topic.assigned_to_user.username") ||
+      topic.get("topic.assigned_to_group.name")
+  );
+}
+
 function makeTopicChanges(api) {
   api.modifyClass("model:topic", {
     pluginId: PLUGIN_ID,
@@ -92,7 +99,8 @@ function registerTopicFooterButtons(api) {
     noneItem() {
       const user = this.get("topic.assigned_to_user");
       const group = this.get("topic.assigned_to_group");
-      const label = I18n.t("discourse_assign.reassign.dropdown");
+      const label = I18n.t("discourse_assign.unassign.title_w_ellipsis");
+      const group_label = I18n.t("discourse_assign.unassign.title");
 
       if (user) {
         return {
@@ -108,24 +116,28 @@ function registerTopicFooterButtons(api) {
         return {
           id: null,
           name: htmlSafe(
-            `<span class="unassign-label">${label}</span> @${group.name}`
+            `<span class="unassign-label">${group_label}</span> @${group.name}...`
           ),
         };
-      } else {
-        return { id: null, name: I18n.t("discourse_assign.assign.title") };
       }
     },
     dependentKeys: DEPENDENT_KEYS,
     content() {
-      const content = [{ id: "unassign", name: "Unassign" }];
+      const content = [{ id: "unassign", name: I18n.t("discourse_assign.unassign.title") }];
       if (
-        this.get("topic.assigned_to_user") &&
-        this.get("topic.assigned_to_user").username !==
+        this.topic.isAssigned() &&
+        this.get("topic.assigned_to_user")?.username !==
           this.currentUser.username
       ) {
-        content.push({ id: "assign-self", name: "Re-assign to me" });
+        content.push({
+          id: "assign-self",
+          name: I18n.t("discourse_assign.reassign.to_self"),
+        });
       }
-      content.push({ id: "reassign", name: "Re-assign to..." });
+      content.push({
+        id: "reassign",
+        name: I18n.t("discourse_assign.reassign.title_w_ellipsis"),
+      });
       return content;
     },
 
@@ -145,16 +157,10 @@ function registerTopicFooterButtons(api) {
     },
     priority: 250,
     translatedTitle() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedAriaLabel() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedLabel() {
       return I18n.t("discourse_assign.assign.title");
@@ -203,16 +209,10 @@ function registerTopicFooterButtons(api) {
       return this.topic.isAssigned() ? "user-times" : "user-plus";
     },
     translatedTitle() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedAriaLabel() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedLabel() {
       const user = this.get("topic.assigned_to_user");
@@ -271,16 +271,10 @@ function registerTopicFooterButtons(api) {
       return this.topic.isAssigned() ? "user-times" : "user-plus";
     },
     translatedTitle() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedAriaLabel() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedLabel() {
       const label = "Re-assign to me";
@@ -337,16 +331,10 @@ function registerTopicFooterButtons(api) {
       return this.topic.isAssigned() ? "user-times" : "user-plus";
     },
     translatedTitle() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedAriaLabel() {
-      return titleForState(
-        this.get("topic.assigned_to_user.username") ||
-          this.get("topic.assigned_to_group.name")
-      );
+      defaultTitle(this);
     },
     translatedLabel() {
       const user = this.get("topic.assigned_to_user");
