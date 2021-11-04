@@ -14,7 +14,6 @@ import TopicButtonAction, {
 import { inject } from "@ember/controller";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
-import { get } from "@ember/object";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 
 const PLUGIN_ID = "discourse-assign";
