@@ -5,7 +5,6 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not, or } from "@ember/object/computed";
 import { isEmpty } from "@ember/utils";
 import { action } from "@ember/object";
-import discourseComputed from "discourse-common/utils/decorators";
 
 export default Controller.extend({
   topicBulkActions: controller(),
@@ -39,12 +38,12 @@ export default Controller.extend({
     });
   },
 
-  reassignOrAssignTarget(action) {
+  reassignOrAssignTarget(assign_action) {
     if (this.isBulkAction) {
       this.bulkAction(this.model.username);
       return;
     }
-    let path = "/assign/" + action;
+    let path = "/assign/" + assign_action;
 
     if (isEmpty(this.get("model.username"))) {
       this.model.target.set("assigned_to_user", null);
