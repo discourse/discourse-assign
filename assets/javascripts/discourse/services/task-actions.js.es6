@@ -3,6 +3,15 @@ import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 
 export default Service.extend({
+  i18nSuffix(targetType) {
+    switch (targetType) {
+      case "Post":
+        return "_post_modal";
+      case "Topic":
+        return "_modal";
+    }
+  },
+
   unassign(targetId, targetType = "Topic") {
     return ajax("/assign/unassign", {
       type: "PUT",
@@ -15,8 +24,12 @@ export default Service.extend({
 
   assign(target, targetType = "Topic") {
     return showModal("assign-user", {
-      title: "discourse_assign.assign_modal.title",
+      title: "discourse_assign.assign" + this.i18nSuffix(targetType) + ".title",
       model: {
+        description:
+          "discourse_assign.assign" +
+          this.i18nSuffix(targetType) +
+          ".description",
         username: target.get("assigned_to_user.username"),
         group_name: target.get("assigned_to_group.name"),
         target,
@@ -25,25 +38,33 @@ export default Service.extend({
     });
   },
 
-  reassignUserToTopic(user, topic) {
+  reassignUserToTopic(user, target, targetType = "Topic") {
     return ajax("/assign/reassign", {
       type: "PUT",
       data: {
         username: user.username,
-        target_id: topic.id,
-        target_type: "Topic",
+        target_id: target.id,
+        target_type: targetType,
       },
     });
   },
 
-  reassign(topic) {
+  reassign(target, targetType = "Topic") {
     return showModal("assign-user", {
-      title: "discourse_assign.assign_modal.reassign_title",
+      title:
+        "discourse_assign.assign" +
+        this.i18nSuffix(targetType) +
+        ".reassign_title",
       model: {
+        description:
+          "discourse_assign.reassign" +
+          this.i18nSuffix(targetType) +
+          ".description",
         reassign: true,
-        username: topic.get("assigned_to_user.username"),
-        group_name: topic.get("assigned_to_group.name"),
-        topic,
+        username: target.get("assigned_to_user.username"),
+        group_name: target.get("assigned_to_group.name"),
+        target,
+        targetType,
       },
     });
   },

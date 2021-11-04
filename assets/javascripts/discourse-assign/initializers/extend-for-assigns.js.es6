@@ -123,7 +123,9 @@ function registerTopicFooterButtons(api) {
     },
     dependentKeys: DEPENDENT_KEYS,
     content() {
-      const content = [{ id: "unassign", name: I18n.t("discourse_assign.unassign.title") }];
+      const content = [
+        { id: "unassign", name: I18n.t("discourse_assign.unassign.title") },
+      ];
       if (
         this.topic.isAssigned() &&
         this.get("topic.assigned_to_user")?.username !==

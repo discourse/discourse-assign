@@ -261,7 +261,7 @@ class ::Assigner
         nil,
         bump: false,
         post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
-        action_code: moderator_post_assign_action_code(assignment),
+        action_code: moderator_post_assign_action_code(assignment, action_code),
         custom_fields: custom_fields
       )
     end
@@ -405,15 +405,15 @@ class ::Assigner
 
   private
 
-  def moderator_post_assign_action_code(assignment)
+  def moderator_post_assign_action_code(assignment, action_code)
     suffix =
       if assignment.target.is_a?(Post)
         "_to_post"
       elsif assignment.target.is_a?(Topic)
         ""
       end
-    return "assigned#{suffix}" if assignment.assigned_to_user?
-    return "assigned_group#{suffix}" if assignment.assigned_to_group?
+    return "#{action_code[:user]}#{suffix}" if assignment.assigned_to_user?
+    return "#{action_code[:group]}#{suffix}" if assignment.assigned_to_group?
   end
 
   def moderator_post_unassign_action_code(assignment)

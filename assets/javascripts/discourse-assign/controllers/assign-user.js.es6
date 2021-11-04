@@ -39,44 +39,6 @@ export default Controller.extend({
     });
   },
 
-  @discourseComputed("model.targetType")
-  i18nSuffix(targetType) {
-    switch (targetType) {
-      case "Post":
-        return "_post_modal";
-      case "Topic":
-        return "_modal";
-    }
-  },
-
-  @action
-  assignUser(name) {
-    if (this.isBulkAction) {
-      this.bulkAction(name);
-      return;
-    }
-
-    if (this.allowedGroupsForAssignment.includes(name)) {
-      this.setProperties({
-        "model.username": null,
-        "model.group_name": name,
-        "model.allowedGroups": this.taskActions.allowedGroups,
-      });
-    } else {
-      this.setProperties({
-        "model.username": name,
-        "model.group_name": null,
-        "model.allowedGroups": this.taskActions.allowedGroups,
-      });
-    }
-
-    if (name) {
-      return this.assign();
-    }
-  },
-
-  @action
-  assign() {
   reassignOrAssignTarget(action) {
     if (this.isBulkAction) {
       this.bulkAction(this.model.username);

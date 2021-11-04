@@ -1,6 +1,6 @@
-{{#d-modal-body title=(concat "discourse_assign.assign" i18nSuffix ".title") class="assign"}}
+{{#d-modal-body class="assign"}}
   <div>
-    <p>{{i18n (concat "discourse_assign.assign" i18nSuffix ".description")}}</p>
+    <p>{{i18n model.description}}</p>
     {{email-group-user-chooser
       autocomplete="off"
       value=assigneeName
