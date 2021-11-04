@@ -253,7 +253,7 @@ class ::Assigner
       custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
 
       if post_target?
-        custom_fields.merge!("action_code_href" => "#{topic.url}/#{@target.post_number}")
+        custom_fields.merge!("action_code_href" => "/p/#{@target.id}")
       end
 
       topic.add_moderator_post(
@@ -333,7 +333,7 @@ class ::Assigner
         custom_fields = { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name }
 
         if post_target?
-          custom_fields.merge!("action_code_href" => "#{topic.url}/#{@target.post_number}")
+          custom_fields.merge!("action_code_href" => "/p/#{@target.id}")
         end
 
         topic.add_moderator_post(
