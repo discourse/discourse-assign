@@ -279,7 +279,7 @@ function registerTopicFooterButtons(api) {
       defaultTitle(this);
     },
     translatedLabel() {
-      const label = I18n.t("discourse_assign.reassign.to_self")
+      const label = I18n.t("discourse_assign.reassign.to_self");
       const user = this.currentUser;
 
       return htmlSafe(
