@@ -53,7 +53,7 @@ function makeTopicChanges(api) {
 
 function registerTopicFooterButtons(api) {
   registerTopicFooterDropdown({
-    id: "reassign-button",
+    id: "reassign",
 
     action(id) {
       if (!this.get("currentUser.can_assign")) {
@@ -74,7 +74,7 @@ function registerTopicFooterButtons(api) {
           });
           break;
         }
-        case "assign-self": {
+        case "reassign-self": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
           taskActions.reassignUserToTopic(this.currentUser, topic).then(() => {
@@ -121,6 +121,7 @@ function registerTopicFooterButtons(api) {
       }
     },
     dependentKeys: DEPENDENT_KEYS,
+    classNames: ["reassign"],
     content() {
       const content = [
         { id: "unassign", name: I18n.t("discourse_assign.unassign.title") },
@@ -131,7 +132,7 @@ function registerTopicFooterButtons(api) {
           this.currentUser.username
       ) {
         content.push({
-          id: "assign-self",
+          id: "reassign-self",
           name: I18n.t("discourse_assign.reassign.to_self"),
         });
       }
@@ -267,7 +268,7 @@ function registerTopicFooterButtons(api) {
   });
 
   api.registerTopicFooterButton({
-    id: "assign-self-mobile",
+    id: "reassign-self-mobile",
     icon() {
       return this.topic.isAssigned() ? "user-times" : "user-plus";
     },
@@ -278,7 +279,7 @@ function registerTopicFooterButtons(api) {
       defaultTitle(this);
     },
     translatedLabel() {
-      const label = "Re-assign to me";
+      const label = I18n.t("discourse_assign.reassign.to_self")
       const user = this.currentUser;
 
       return htmlSafe(
