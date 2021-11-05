@@ -10,7 +10,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-function assignCurrentUserToTopic(needs){
+function assignCurrentUserToTopic(needs) {
   needs.pretender((server, helper) => {
     server.get("/t/44.json", () => {
       let topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
@@ -38,7 +38,7 @@ function assignCurrentUserToTopic(needs){
   });
 }
 
-function assignNewUserToTopic(needs){
+function assignNewUserToTopic(needs) {
   needs.pretender((server, helper) => {
     server.get("/t/44.json", () => {
       let topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
