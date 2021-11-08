@@ -206,10 +206,7 @@ function registerTopicFooterButtons(api) {
   });
 
   api.registerTopicFooterButton({
-    id: "unassign-mobile",
-    icon() {
-      return this.topic.isAssigned() ? "user-times" : "user-plus";
-    },
+    id: "unassign-mobile-header",
     translatedTitle() {
       defaultTitle(this);
     },
@@ -219,7 +216,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const user = this.get("topic.assigned_to_user");
       const group = this.get("topic.assigned_to_group");
-      const label = I18n.t("discourse_assign.unassign.title");
+      const label = I18n.t("discourse_assign.assigned_to_w_ellipsis");
 
       if (user) {
         return htmlSafe(
@@ -235,6 +232,39 @@ function registerTopicFooterButtons(api) {
           `<span class="unassign-label">${label}</span> @${group.name}`
         );
       }
+    },
+    dropdown() {
+      return (
+        this.currentUser &&
+        this.currentUser.can_assign &&
+        this.topic.isAssigned()
+      );
+    },
+    classNames: ["assign"],
+    dependentKeys: DEPENDENT_KEYS,
+    displayed() {
+      // only display the button in the mobile view
+      return this.site.mobileView;
+    },
+  });
+
+  api.registerTopicFooterButton({
+    id: "unassign-mobile",
+    icon() {
+      return "user-times";
+    },
+    translatedTitle() {
+      defaultTitle(this);
+    },
+    translatedAriaLabel() {
+      defaultTitle(this);
+    },
+    translatedLabel() {
+      const label = I18n.t("discourse_assign.unassign.title");
+
+      return htmlSafe(
+        `<span class="unassign-label"><span class="text">${label}</span></span>`
+      );
     },
     action() {
       if (!this.get("currentUser.can_assign")) {
@@ -270,7 +300,7 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "reassign-self-mobile",
     icon() {
-      return this.topic.isAssigned() ? "user-times" : "user-plus";
+      return "user-plus";
     },
     translatedTitle() {
       defaultTitle(this);
@@ -280,15 +310,9 @@ function registerTopicFooterButtons(api) {
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.reassign.to_self");
-      const user = this.currentUser;
 
       return htmlSafe(
-        `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
-          user.username
-        }</span></span>${renderAvatar(user, {
-          imageSize: "small",
-          ignoreTitle: true,
-        })}`
+        `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
     action() {
@@ -330,7 +354,7 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "reassign-mobile",
     icon() {
-      return this.topic.isAssigned() ? "user-times" : "user-plus";
+      return "user-plus";
     },
     translatedTitle() {
       defaultTitle(this);
@@ -339,24 +363,11 @@ function registerTopicFooterButtons(api) {
       defaultTitle(this);
     },
     translatedLabel() {
-      const user = this.get("topic.assigned_to_user");
-      const group = this.get("topic.assigned_to_group");
-      const label = I18n.t("discourse_assign.reassign.title");
+      const label = I18n.t("discourse_assign.reassign.title_w_ellipsis");
 
-      if (user) {
-        return htmlSafe(
-          `<span class="unassign-label"><span class="text">${label}</span><span class="username">${
-            user.username
-          }</span></span>${renderAvatar(user, {
-            imageSize: "small",
-            ignoreTitle: true,
-          })}`
-        );
-      } else if (group) {
-        return htmlSafe(
-          `<span class="unassign-label">${label}</span> @${group.name}`
-        );
-      }
+      return htmlSafe(
+        `<span class="unassign-label"><span class="text">${label}</span></span>`
+      );
     },
     action() {
       if (!this.get("currentUser.can_assign")) {

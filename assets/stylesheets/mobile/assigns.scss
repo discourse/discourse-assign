@@ -5,6 +5,11 @@
   }
 }
 
+.select-kit-row[data-value="unassign-mobile-header"] {
+  background: rgba(var(--primary-low-rgb), 0.5);
+  pointer-events: none;
+}
+
 .select-kit-row.assign {
   .name {
     display: flex;
