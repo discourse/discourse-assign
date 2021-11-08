@@ -180,7 +180,11 @@ function initialize(api) {
       });
       api.attachWidgetAction("post", "unassignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.unassign(this.model.id, "Post");
+        taskActions.unassign(this.model.id, "Post").then(() => {
+          delete this.model.topic.indirectly_assigned_to[
+            this.model.post_number
+          ];
+        });
       });
     }
   }
@@ -450,8 +454,11 @@ function initialize(api) {
 
           if (data.post_id) {
             if (data.type === "unassigned") {
-              delete topic.indirectly_assigned_to[data.post_id];
+              delete topic.indirectly_assigned_to[data.post_number];
             }
+            this.appEvents.trigger("post-stream:refresh", {
+              id: topic.postStream.posts[0].id,
+            });
             this.appEvents.trigger("post-stream:refresh", { id: data.post_id });
           }
         }

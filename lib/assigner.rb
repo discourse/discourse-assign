@@ -222,6 +222,7 @@ class ::Assigner
         type: "assigned",
         topic_id: topic.id,
         post_id: post_target? && @target.id,
+        post_number: post_target? && @target.post_number,
         assigned_type: type,
         assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json
       },
@@ -375,6 +376,7 @@ class ::Assigner
           type: 'unassigned',
           topic_id: topic.id,
           post_id: post_target? && @target.id,
+          post_number: post_target? && @target.post_number,
           assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group"
         },
         user_ids: allowed_user_ids
