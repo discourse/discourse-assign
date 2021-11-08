@@ -7,12 +7,12 @@ en:
     action_codes:
       assigned: "assigned %{who} %{when}"
       assigned_group: "assigned %{who} %{when}"
-      assigned_to_post: "assigned %{who} to <a href='%{href}' data-auto-route='true'>post</a> %{when}"
-      assigned_group_to_post: "assigned %{who} to <a href='%{href}' data-auto-route='true'>post</a> %{when}"
+      assigned_to_post: "assigned %{who} to <a href='%{path}' data-auto-route='true'>post</a> %{when}"
+      assigned_group_to_post: "assigned %{who} to <a href='%{path}' data-auto-route='true'>post</a> %{when}"
       unassigned: "unassigned %{who} %{when}"
       unassigned_group: "unassigned %{who} %{when}"
-      unassigned_from_post: "unassigned %{who} from <a href='%{href}' data-auto-route='true'>post</a> %{when}"
-      unassigned_group_from_post: "unassigned %{who} from <a href='%{href}' data-auto-route='true'>post</a> %{when}"
+      unassigned_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
+      unassigned_group_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
