@@ -13,12 +13,12 @@ ru:
     action_codes:
       assigned: "назначил(а) ответственным %{who} %{when}"
       assigned_group: "назначил(а) ответственным %{who} %{when}"
-      assigned_to_post: "назначил(а) ответственным за сообщение %{who} %{when}"
-      assigned_group_to_post: "назначил(а) ответственным за сообщение %{who} %{when}"
+      assigned_to_post: "назначил пользователя %{who} на <a href='%{path}' data-auto-route='true'>это</a> сообщение %{when}."
+      assigned_group_to_post: "назначил пользователя %{who} на <a href='%{path}' data-auto-route='true'>это</a> сообщение %{when}."
       unassigned: "снял(а) ответственного %{who} %{when}"
       unassigned_group: "снял(а) ответственного %{who} %{when}"
-      unassigned_from_post: "снял(а) ответственного за сообщение %{who} %{when}"
-      unassigned_group_from_post: "снял(а) ответственного за сообщение %{who} %{when}"
+      unassigned_from_post: "снял назначение пользователя %{who} с <a href='%{path}' data-auto-route='true'>этого</a> сообщения %{when}."
+      unassigned_group_from_post: "снял назначение пользователя %{who} с <a href='%{path}' data-auto-route='true'>этого</a> сообщения %{when}."
     discourse_assign:
       add_unassigned_filter: "Добавить в раздел фильтр 'Неназначенные'"
       cant_act: "Вы не можете работать с жалобами, назначенными другому сотруднику"

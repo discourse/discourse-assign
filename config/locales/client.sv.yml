@@ -13,8 +13,12 @@ sv:
     action_codes:
       assigned: "tilldelat %{who} %{when}"
       assigned_group: "tilldelat %{who} %{when}"
+      assigned_to_post: "tilldelade %{who} till <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
+      assigned_group_to_post: "tilldelade %{who} till <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
       unassigned: "otilldelat %{who} %{when}"
       unassigned_group: "otilldelat %{who} %{when}"
+      unassigned_from_post: "otilldelad %{who} från <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
+      unassigned_group_from_post: "otilldelad %{who} från <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
     discourse_assign:
       add_unassigned_filter: "Lägg till 'otilldelat' som en filterkategori"
       cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
@@ -32,6 +36,11 @@ sv:
       assign:
         title: "Tilldela"
         help: "Tilldela ämne till användare"
+      assign_post:
+        title: "Tilldela inlägg"
+      unassign_post:
+        title: "Ta bort tilldelning från inlägg"
+        help: "Ta bort tilldelning %{username} från inlägg"
       reassign:
         title: "Åter-tilldela"
         help: "Åter-tilldela ämne till en annan användare"
@@ -39,6 +48,9 @@ sv:
         title: "Tilldela ämne"
         description: "Ange namn på den användare som du vill tilldela detta ämne."
         assign: "Tilldela"
+      assign_post_modal:
+        title: "Tilldela inlägg"
+        description: "Ange namn på den användare som du vill tilldela detta ämne"
       claim:
         title: "begär"
         help: "Tilldela ämne till dig själv"

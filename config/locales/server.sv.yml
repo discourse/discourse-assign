@@ -26,6 +26,7 @@ sv:
     already_claimed: "Det har redan gjorts anspråk på det ämnet."
     already_assigned: "Ämnet har redan tilldelats till @%{username}"
     too_many_assigns: "@%{username} har redan nått maximalt antal tilldelade ämnen (%{max})."
+    too_many_assigns_for_topic: "Gränsen på %{limit} tilldelningar per ämne har nåtts."
     forbidden_assign_to: "@%{username} kan inte tilldelas eftersom hen inte tillhör någon tillåten grupp för tilldelning."
     forbidden_assignee_not_pm_participant: "@%{username} kan inte tilldelas eftersom hen inte har tillgång till detta PM. Du kan bevilja @%{username} åtkomst genom att bjuda in hen till detta PM."
     forbidden_assignee_cant_see_topic: "@%{username} kan inte tilldelas eftersom hen inte har tillgång till detta ämne."
