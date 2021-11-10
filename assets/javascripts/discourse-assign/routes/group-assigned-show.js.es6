@@ -26,7 +26,7 @@ export default DiscourseRoute.extend({
     return lastTopicList
       ? lastTopicList
       : this.store.findFiltered("topicList", {
-          filter: filter,
+          filter,
           params: {
             order: params.order,
             ascending: params.ascending,
