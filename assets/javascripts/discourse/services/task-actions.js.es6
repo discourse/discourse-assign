@@ -30,8 +30,8 @@ export default Service.extend({
           "discourse_assign.assign" +
           this.i18nSuffix(targetType) +
           ".description",
-        username: target.get("assigned_to_user.username"),
-        group_name: target.get("assigned_to_group.name"),
+        username: target.assigned_to_user?.username,
+        group_name: target.assigned_to_group?.name,
         target,
         targetType,
       },
@@ -61,8 +61,8 @@ export default Service.extend({
           this.i18nSuffix(targetType) +
           ".description",
         reassign: true,
-        username: target.get("assigned_to_user.username"),
-        group_name: target.get("assigned_to_group.name"),
+        username: target.assigned_to_user?.username,
+        group_name: target.assigned_to_group?.name,
         target,
         targetType,
       },
