@@ -1,10 +1,10 @@
-{{#d-modal-body title=(concat "discourse_assign.assign" i18nSuffix ".title") class="assign"}}
+{{#d-modal-body class="assign"}}
   <div>
-    <p>{{i18n (concat "discourse_assign.assign" i18nSuffix ".description")}}</p>
+    <p>{{i18n model.description}}</p>
     {{email-group-user-chooser
       autocomplete="off"
       value=assigneeName
-      onChange=(action "assignUsername")
+      onChange=(action (if model.reassign "reassignUsername" "assignUsername"))
       autofocus="autofocus"
       options=(hash
         placementStrategy="absolute"
@@ -19,7 +19,7 @@
     }}
     <div class="assign-suggestions">
       {{#each assignSuggestions as |user|}}
-        <a href {{action "assignUser" user.username }}>
+        <a href {{action (if model.reassign "reassignUser" "assignUser") user.username }}>
           {{avatar user imageSize="small"}}
         </a>
       {{/each}}
@@ -29,9 +29,9 @@
 
 <div class="modal-footer">
   {{d-button
-    label="discourse_assign.assign_modal.assign"
+    label= (if model.reassign "discourse_assign.reassign.title" "discourse_assign.assign_modal.assign")
     icon=inviteIcon
-    action=(action "assign")
+    action=(action (if model.reassign "reassign" "assign"))
     class="btn-primary"
     disabled=disabled
   }}

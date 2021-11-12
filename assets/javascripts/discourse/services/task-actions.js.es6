@@ -3,6 +3,15 @@ import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 
 export default Service.extend({
+  i18nSuffix(targetType) {
+    switch (targetType) {
+      case "Post":
+        return "_post_modal";
+      case "Topic":
+        return "_modal";
+    }
+  },
+
   unassign(targetId, targetType = "Topic") {
     return ajax("/assign/unassign", {
       type: "PUT",
@@ -15,22 +24,47 @@ export default Service.extend({
 
   assign(target, targetType = "Topic") {
     return showModal("assign-user", {
+      title: "discourse_assign.assign" + this.i18nSuffix(targetType) + ".title",
       model: {
-        username: target.get("assigned_to_user.username"),
-        group_name: target.get("assigned_to_group.name"),
+        description:
+          "discourse_assign.assign" +
+          this.i18nSuffix(targetType) +
+          ".description",
+        username: target.assigned_to_user?.username,
+        group_name: target.assigned_to_group?.name,
         target,
         targetType,
       },
     });
   },
 
-  assignUserToTopic(user, topic) {
-    return ajax("/assign/assign", {
+  reassignUserToTopic(user, target, targetType = "Topic") {
+    return ajax("/assign/reassign", {
       type: "PUT",
       data: {
         username: user.username,
-        target_id: topic.id,
-        target_type: "Topic",
+        target_id: target.id,
+        target_type: targetType,
+      },
+    });
+  },
+
+  reassign(target, targetType = "Topic") {
+    return showModal("assign-user", {
+      title:
+        "discourse_assign.assign" +
+        this.i18nSuffix(targetType) +
+        ".reassign_title",
+      model: {
+        description:
+          "discourse_assign.reassign" +
+          this.i18nSuffix(targetType) +
+          ".description",
+        reassign: true,
+        username: target.assigned_to_user?.username,
+        group_name: target.assigned_to_group?.name,
+        target,
+        targetType,
       },
     });
   },
