@@ -105,7 +105,8 @@ function registerTopicFooterButtons(api) {
       if (user) {
         return {
           id: null,
-          name: htmlSafe(
+          name: "Re-assign topic",
+          label: htmlSafe(
             `${renderAvatar(user, {
               imageSize: "tiny",
               ignoreTitle: true,
@@ -115,7 +116,8 @@ function registerTopicFooterButtons(api) {
       } else if (group) {
         return {
           id: null,
-          name: htmlSafe(
+          name: "Re-assign topic",
+          label: htmlSafe(
             `<span class="unassign-label">${groupLabel}</span> @${group.name}...`
           ),
         };
@@ -160,10 +162,10 @@ function registerTopicFooterButtons(api) {
     },
     priority: 250,
     translatedTitle() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedAriaLabel() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedLabel() {
       return I18n.t("discourse_assign.assign.title");
@@ -204,10 +206,10 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "unassign-mobile-header",
     translatedTitle() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedAriaLabel() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedLabel() {
       const user = this.get("topic.assigned_to_user");
@@ -246,10 +248,10 @@ function registerTopicFooterButtons(api) {
       return "user-times";
     },
     translatedTitle() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedAriaLabel() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.unassign.title");
@@ -290,10 +292,10 @@ function registerTopicFooterButtons(api) {
       return "user-plus";
     },
     translatedTitle() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedAriaLabel() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.reassign.to_self");
@@ -339,10 +341,10 @@ function registerTopicFooterButtons(api) {
       return "user-plus";
     },
     translatedTitle() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedAriaLabel() {
-      defaultTitle(this);
+      return defaultTitle(this);
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.reassign.title_w_ellipsis");
