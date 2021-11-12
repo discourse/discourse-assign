@@ -61,15 +61,14 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
-      const topic = this.topic;
 
       switch (id) {
         case "unassign": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions.unassign(topic.id).then(() => {
+          taskActions.unassign(this.topic.id).then(() => {
             this.appEvents.trigger("post-stream:refresh", {
-              id: topic.postStream.firstPostId,
+              id: this.topic.postStream.firstPostId,
             });
           });
           break;
@@ -77,17 +76,17 @@ function registerTopicFooterButtons(api) {
         case "reassign-self": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions.reassignUserToTopic(this.currentUser, topic).then(() => {
+          taskActions.reassignUserToTopic(this.currentUser, this.topic).then(() => {
             this.appEvents.trigger("post-stream:refresh", {
-              id: topic.postStream.firstPostId,
+              id: this.topic.postStream.firstPostId,
             });
           });
           break;
         }
         case "reassign": {
-          taskActions.reassign(topic).set("model.onSuccess", () => {
+          taskActions.reassign(this.topic).set("model.onSuccess", () => {
             this.appEvents.trigger("post-stream:refresh", {
-              id: topic.postStream.firstPostId,
+              id: this.topic.postStream.firstPostId,
             });
           });
           break;
@@ -99,7 +98,7 @@ function registerTopicFooterButtons(api) {
       const user = this.get("topic.assigned_to_user");
       const group = this.get("topic.assigned_to_group");
       const label = I18n.t("discourse_assign.unassign.title_w_ellipsis");
-      const group_label = I18n.t("discourse_assign.unassign.title");
+      const groupLabel = I18n.t("discourse_assign.unassign.title");
 
       if (user) {
         return {
@@ -115,7 +114,7 @@ function registerTopicFooterButtons(api) {
         return {
           id: null,
           name: htmlSafe(
-            `<span class="unassign-label">${group_label}</span> @${group.name}...`
+            `<span class="unassign-label">${groupLabel}</span> @${group.name}...`
           ),
         };
       }
@@ -173,20 +172,19 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
-      const topic = this.topic;
 
       if (this.topic.isAssigned()) {
         this.set("topic.assigned_to_user", null);
         this.set("topic.assigned_to_group", null);
-        taskActions.unassign(topic.id, "Topic").then(() => {
+        taskActions.unassign(this.topic.id, "Topic").then(() => {
           this.appEvents.trigger("post-stream:refresh", {
-            id: topic.postStream.firstPostId,
+            id: this.topic.postStream.firstPostId,
           });
         });
       } else {
-        taskActions.assign(topic).set("model.onSuccess", () => {
+        taskActions.assign(this.topic).set("model.onSuccess", () => {
           this.appEvents.trigger("post-stream:refresh", {
-            id: topic.postStream.firstPostId,
+            id: this.topic.postStream.firstPostId,
           });
         });
       }
@@ -198,8 +196,7 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       return (
-        this.currentUser &&
-        this.currentUser.can_assign &&
+        this.currentUser?.can_assign &&
         !this.topic.isAssigned()
       );
     },
@@ -235,8 +232,7 @@ function registerTopicFooterButtons(api) {
     },
     dropdown() {
       return (
-        this.currentUser &&
-        this.currentUser.can_assign &&
+        this.currentUser?.can_assign &&
         this.topic.isAssigned()
       );
     },
@@ -272,20 +268,18 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
-      const topic = this.topic;
 
       this.set("topic.assigned_to_user", null);
       this.set("topic.assigned_to_group", null);
-      taskActions.unassign(topic.id).then(() => {
+      taskActions.unassign(this.topic.id).then(() => {
         this.appEvents.trigger("post-stream:refresh", {
-          id: topic.postStream.firstPostId,
+          id: this.topic.postStream.firstPostId,
         });
       });
     },
     dropdown() {
       return (
-        this.currentUser &&
-        this.currentUser.can_assign &&
+        this.currentUser?.can_assign &&
         this.topic.isAssigned()
       );
     },
@@ -321,20 +315,18 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
-      const topic = this.topic;
 
       this.set("topic.assigned_to_user", null);
       this.set("topic.assigned_to_group", null);
-      taskActions.reassignUserToTopic(this.currentUser, topic).then(() => {
+      taskActions.reassignUserToTopic(this.currentUser, this.topic).then(() => {
         this.appEvents.trigger("post-stream:refresh", {
-          id: topic.postStream.firstPostId,
+          id: this.topic.postStream.firstPostId,
         });
       });
     },
     dropdown() {
       return (
-        this.currentUser &&
-        this.currentUser.can_assign &&
+        this.currentUser?.can_assign &&
         this.topic.isAssigned()
       );
     },
@@ -375,18 +367,16 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
-      const topic = this.topic;
 
-      taskActions.reassign(topic).set("model.onSuccess", () => {
+      taskActions.reassign(this.topic).set("model.onSuccess", () => {
         this.appEvents.trigger("post-stream:refresh", {
-          id: topic.postStream.firstPostId,
+          id: this.topic.postStream.firstPostId,
         });
       });
     },
     dropdown() {
       return (
-        this.currentUser &&
-        this.currentUser.can_assign &&
+        this.currentUser?.can_assign &&
         this.topic.isAssigned()
       );
     },
