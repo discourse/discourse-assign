@@ -72,7 +72,7 @@ export default Controller.extend({
       },
     })
       .then(() => {
-        this.get("model.onSuccess")?.()
+        this.get("model.onSuccess")?.();
       })
       .catch(popupAjaxError);
   },

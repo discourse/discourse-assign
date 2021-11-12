@@ -42,7 +42,7 @@ function defaultTitle(topic) {
   );
 }
 
-function makeTopicChanges(api) {
+function includeIsAssignedOnTopic(api) {
   api.modifyClass("model:topic", {
     pluginId: PLUGIN_ID,
     isAssigned() {
@@ -76,11 +76,13 @@ function registerTopicFooterButtons(api) {
         case "reassign-self": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions.reassignUserToTopic(this.currentUser, this.topic).then(() => {
-            this.appEvents.trigger("post-stream:refresh", {
-              id: this.topic.postStream.firstPostId,
+          taskActions
+            .reassignUserToTopic(this.currentUser, this.topic)
+            .then(() => {
+              this.appEvents.trigger("post-stream:refresh", {
+                id: this.topic.postStream.firstPostId,
+              });
             });
-          });
           break;
         }
         case "reassign": {
@@ -195,10 +197,7 @@ function registerTopicFooterButtons(api) {
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
-      return (
-        this.currentUser?.can_assign &&
-        !this.topic.isAssigned()
-      );
+      return this.currentUser?.can_assign && !this.topic.isAssigned();
     },
   });
 
@@ -231,10 +230,7 @@ function registerTopicFooterButtons(api) {
       }
     },
     dropdown() {
-      return (
-        this.currentUser?.can_assign &&
-        this.topic.isAssigned()
-      );
+      return this.currentUser?.can_assign && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -278,10 +274,7 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return (
-        this.currentUser?.can_assign &&
-        this.topic.isAssigned()
-      );
+      return this.currentUser?.can_assign && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -325,10 +318,7 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return (
-        this.currentUser?.can_assign &&
-        this.topic.isAssigned()
-      );
+      return this.currentUser?.can_assign && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -375,10 +365,7 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return (
-        this.currentUser?.can_assign &&
-        this.topic.isAssigned()
-      );
+      return this.currentUser?.can_assign && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -860,7 +847,7 @@ export default {
       });
     }
 
-    withPluginApi("0.13.0", (api) => makeTopicChanges(api));
+    withPluginApi("0.13.0", (api) => includeIsAssignedOnTopic(api));
     withPluginApi("0.11.0", (api) => initialize(api));
     withPluginApi("0.8.28", (api) => registerTopicFooterButtons(api));
 
