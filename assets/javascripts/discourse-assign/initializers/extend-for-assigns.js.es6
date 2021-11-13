@@ -105,7 +105,7 @@ function registerTopicFooterButtons(api) {
       if (user) {
         return {
           id: null,
-          name: "Re-assign topic",
+          name: I18n.t("discourse_assign.reassign_modal.title"),
           label: htmlSafe(
             `${renderAvatar(user, {
               imageSize: "tiny",
@@ -116,7 +116,7 @@ function registerTopicFooterButtons(api) {
       } else if (group) {
         return {
           id: null,
-          name: "Re-assign topic",
+          name: I18n.t("discourse_assign.reassign_modal.title"),
           label: htmlSafe(
             `<span class="unassign-label">${groupLabel}</span> @${group.name}...`
           ),
