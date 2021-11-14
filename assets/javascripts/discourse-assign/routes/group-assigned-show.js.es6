@@ -39,7 +39,7 @@ export default DiscourseRoute.extend({
   setupController(controller, model) {
     controller.setProperties({
       model,
-      searchTerm: this.currentModel.params.search,
+      search: this.currentModel.params.search,
     });
   },
 

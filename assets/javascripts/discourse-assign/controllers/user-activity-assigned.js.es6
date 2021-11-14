@@ -8,6 +8,7 @@ import { action } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import { readOnly } from "@ember/object/computed";
 
 export default UserTopicsList.extend({
   user: controller(),
@@ -17,9 +18,11 @@ export default UserTopicsList.extend({
   ascending: false,
   search: "",
 
-  @discourseComputed("search")
-  searchTerm(search) {
-    return search;
+  searchTerm: readOnly("search"),
+
+  _setSearchTerm(searchTerm) {
+    this.set("search", searchTerm);
+    this.refreshModel();
   },
 
   @discourseComputed("model.topics.length", "search")
@@ -33,11 +36,6 @@ export default UserTopicsList.extend({
       preferencesUrl: getURL("/my/preferences/notifications"),
       icon: iconHTML("user-plus"),
     }).htmlSafe();
-  },
-
-  _setSearchTerm(searchTerm) {
-    this.set("search", searchTerm);
-    this.refreshModel();
   },
 
   refreshModel() {
