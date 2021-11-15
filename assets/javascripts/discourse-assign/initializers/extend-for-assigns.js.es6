@@ -358,7 +358,7 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "reassign-mobile",
     icon() {
-      return "user-plus";
+      return "group-plus";
     },
     translatedTitle() {
       return defaultTitle(this);
