@@ -238,7 +238,7 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return this.site.mobileView;
+      return this.currentUser?.can_assign && this.site.mobileView;
     },
   });
 
@@ -282,7 +282,11 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return this.site.mobileView && this.topic.isAssigned();
+      return (
+        this.currentUser?.can_assign &&
+        this.site.mobileView &&
+        this.topic.isAssigned()
+      );
     },
   });
 
@@ -328,6 +332,7 @@ function registerTopicFooterButtons(api) {
       return (
         // only display the button in the mobile view
         this.site.mobileView &&
+        this.currentUser?.can_assign &&
         this.topic.isAssigned() &&
         this.get("topic.assigned_to_user")?.username !==
           this.currentUser.username
@@ -373,7 +378,7 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return this.site.mobileView;
+      return this.currentUser?.can_assign && this.site.mobileView;
     },
   });
 }
