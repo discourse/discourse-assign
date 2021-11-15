@@ -107,9 +107,17 @@
   }
 }
 
-.topic-footer-dropdown {
+#topic-footer-dropdown-reassign {
+  .name {
+    font-weight: normal !important;
+  }
   .avatar {
     margin-right: 0.25em;
+  }
+  .d-icon,
+  i.fa {
+    margin-right: 0.25em;
+    color: var(--primary-medium);
   }
 }
 

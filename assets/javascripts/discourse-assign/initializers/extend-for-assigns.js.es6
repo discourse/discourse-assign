@@ -127,7 +127,14 @@ function registerTopicFooterButtons(api) {
     classNames: ["reassign"],
     content() {
       const content = [
-        { id: "unassign", name: I18n.t("discourse_assign.unassign.title") },
+        {
+          id: "unassign",
+          name: htmlSafe(
+            `${iconHTML("user-times")} ${I18n.t(
+              "discourse_assign.unassign.title"
+            )}`
+          ),
+        },
       ];
       if (
         this.topic.isAssigned() &&
@@ -136,12 +143,20 @@ function registerTopicFooterButtons(api) {
       ) {
         content.push({
           id: "reassign-self",
-          name: I18n.t("discourse_assign.reassign.to_self"),
+          name: htmlSafe(
+            `${iconHTML("user-plus")} ${I18n.t(
+              "discourse_assign.reassign.to_self"
+            )}`
+          ),
         });
       }
       content.push({
         id: "reassign",
-        name: I18n.t("discourse_assign.reassign.title_w_ellipsis"),
+        name: htmlSafe(
+          `${iconHTML("group-plus")} ${I18n.t(
+            "discourse_assign.reassign.title_w_ellipsis"
+          )}`
+        ),
       });
       return content;
     },
