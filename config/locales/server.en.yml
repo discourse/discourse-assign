@@ -13,23 +13,30 @@ en:
     remind_assigns: "Remind users about pending assigns."
     remind_assigns_frequency: "Frequency for reminding users about assigned topics."
     max_assigned_topics: "Maximum number of topics that can be assigned to a user."
-    assign_allowed_on_groups: "Groups that are allowed to assign topics."
+    assign_allowed_on_groups: "Users in these groups are allowed to assign topics and can be assigned topics."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
     already_claimed: "That topic has already been claimed."
-    already_assigned: 'Topic is already assigned to @%{username}'
+    already_assigned: "Topic is already assigned to @%{username}"
     too_many_assigns: "@%{username} has already reached the maximum number of assigned topics (%{max})."
+    too_many_assigns_for_topic: "Limit of %{limit} assignments per topic has been reached."
     forbidden_assign_to: "@%{username} can't be assigned since they don't belong to assigned allowed groups."
+    forbidden_assignee_not_pm_participant: "@%{username} can't be assigned because they don't have access to this PM. You can grant @%{username} access by inviting them to this PM."
+    forbidden_assignee_cant_see_topic: "@%{username} can't be assigned because they don't have access to this topic."
+    group_already_assigned: "Topic is already assigned to @%{group}"
+    forbidden_group_assign_to: "@%{group} can't be assigned since they don't belong to assigned allowed groups."
+    forbidden_group_assignee_not_pm_participant: "@%{group} can't be assigned because not all members have access to this PM."
+    forbidden_group_assignee_cant_see_topic: "@%{group} can't be assigned because not all members have access to this topic."
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
     topic_assigned_excerpt: "assigned you the topic '%{title}'"
     reminders_frequency:
-        never: 'never'
-        daily: 'daily'
-        weekly: 'weekly'
-        monthly: 'monthly'
-        quarterly: 'quarterly'
+      never: "never"
+      daily: "daily"
+      weekly: "weekly"
+      monthly: "monthly"
+      quarterly: "quarterly"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} assigned you to '%{topic_title}'!"
@@ -48,7 +55,7 @@ en:
 
       %{newest_assignments}
       %{oldest_assignments}
-      
+
       This reminder will be sent %{frequency} if you have more than one assigned topic.
     newest: |
       ### Newest
@@ -60,3 +67,8 @@ en:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Random assign
+        no_one: "Attempted randomly assign a member of @%{group}, but no one was available."

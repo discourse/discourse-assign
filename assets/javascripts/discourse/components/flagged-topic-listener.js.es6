@@ -1,10 +1,13 @@
+import Component from "@ember/component";
+import { set } from "@ember/object";
+
 function assignIfEqual(topic, data) {
   if (topic && topic.id === data.topic_id) {
-    Ember.set(topic, "assigned_to_user", data.assigned_to);
+    set(topic, "assigned_to_user", data.assigned_to);
   }
 }
 
-export default Ember.Component.extend({
+export default Component.extend({
   didInsertElement() {
     this._super();
     this.messageBus.subscribe("/staff/topic-assignment", (data) => {

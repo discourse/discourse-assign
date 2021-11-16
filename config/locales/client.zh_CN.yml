@@ -17,6 +17,8 @@ zh_CN:
       add_unassigned_filter: "将“未指派的”过滤器添加到分类"
       cant_act: "你不能操作已经指派给其他用户的标记"
       cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
+      topic_search_placeholder: "按标题或帖子内容搜索主题"
+      sidebar_name_filter_placeholder: "姓名/用户名"
       assigned: "已指派"
       group_everyone: "所有人"
       assigned_to: "指派给"
@@ -52,8 +54,30 @@ zh_CN:
       messages:
         assigned_title: "已指派%{count}"
         assigned: "已指派"
+      no_assignments_title: "您还没有任何任务"
+      no_assignments_body: >
+        您分配的主题和消息将在此处列出。您还将收到关于您的任务的定期提醒通知，您可以在 <a href='%{preferencesUrl}'>用户首选项</a>进行调整。 <br><br> 要将主题或消息分配给自己或其他人，请查找 %{icon} 分配按钮。
     admin:
       web_hooks:
         assign_event:
           name: "指派事件"
           details: "当用户被分配或取消分配一个主题时。"
+    search:
+      advanced:
+        in:
+          assigned: "已分配"
+          unassigned: "未指派的"
+        assigned:
+          label: "指派给"
+    topics:
+      bulk:
+        unassign: "取消指派主题"
+        assign: "指派主题"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: 指派给群组
+            assigned_topic:
+              label: 指派主题

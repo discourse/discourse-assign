@@ -12,7 +12,15 @@ he:
         help: "נושאים שאינם מוקצים"
     action_codes:
       assigned: "מוקצה לטובת %{who} %{when}"
+      assigned_group: "מוקצה לטובת %{who} %{when}"
+      assigned_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
+      assigned_group_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
       unassigned: "הוסרה ההקצאה של %{who} %{when}"
+      unassigned_group: "הוסרה ההקצאה של %{who} %{when}"
+      unassigned_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
+      unassigned_group_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
+      reassigned: "מוקצה מחדש לטובת %{who} %{when}"
+      reassigned_group: "מוקצה מחדש לטובת %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "הוספת מסנן ‚ללא הקצאה’ לקטגוריה"
       cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
@@ -22,20 +30,37 @@ he:
       assigned: "מוקצה"
       group_everyone: "כולם"
       assigned_to: "מוקצה לטובת"
+      assigned_to_w_ellipsis: "מוקצה לטובת..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "ביטול הקצאה"
+        title_w_ellipsis: "ביטול הקצאה..."
         help: "לבטל את הקצאת %{username} מהנושא"
       assign:
         title: "הקצאה"
         help: "הקצאת משתמש לנושא"
+      assign_post:
+        title: "הקצאת פוסט"
+      unassign_post:
+        title: "ביטול הקצאת פוסט"
+        help: "לבטל את הקצאת %{username} מהפוסט"
       reassign:
         title: "הקצאה מחדש"
+        title_w_ellipsis: "הקצאה מחדש לטובת…"
+        to_self: "הקצאה מחדש אלי"
         help: "הקצאת נושא מחדש למשתמש אחר"
+      reassign_modal:
+        title: "הקצאת נושא מחדש"
+        description: "נא להקליד את שם המשתמש להקצאת הנושא אליו מחדש"
       assign_modal:
         title: "הקצאת נושא"
+        reassign_title: "הקצאת נושא מחדש"
         description: "נא להקליד את שם המשתמש להקצאת הנושא"
         assign: "הקצאה"
+      assign_post_modal:
+        title: "הקצאת פוסט"
+        description: "נא להקליד את שם המשתמש להקצאת הפוסט"
       claim:
         title: "דרישה"
         help: "הקצאת נושא לעצמך"
@@ -50,12 +75,49 @@ he:
         weekly: "שבועי"
         monthly: "חודשי"
         quarterly: "רבעוני"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "הקצאה"
+              assignable_levels:
+                title: "מי יכול להקצות את הקבוצה הזאת"
     user:
       messages:
         assigned_title: "מוקצים (%{count})"
         assigned: "מוקצה"
+      no_assignments_title: "אין לך מטלות עדיין"
+      no_assignments_body: >
+        הנושאים שמוקצים אליך יופיעו כאן. תישלחנה אליך הודעות תזכורת מדי פעם בפעם כדי להזכיר לך את המטלות שלך, ניתן להגדיר אותן <a href='%{preferencesUrl}'>בהעדפות המשתמש</a> שלך. <br><br> כדי להקצות נושא או הודעה לעצמך או למישהו אחר יש לחפש את הכפתור %{icon} הקצאה למטה.
     admin:
       web_hooks:
         assign_event:
           name: "הקצאת אירוע"
           details: "כאשר משתמש מקצה או מבטל הקצאה של נושא."
+    search:
+      advanced:
+        in:
+          assigned: "מוקצים"
+          unassigned: "אינם מוקצים"
+        assigned:
+          label: "מוקצה לטובת"
+    topics:
+      bulk:
+        unassign: "ביטול הקצאת נושאים"
+        assign: "הקצאת נושאים"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: קבוצת מוקצים
+            min_recently_assigned_days:
+              label: כמות מזערית של ימים שהוקצו לאחרונה
+              description: ברירת המחדל היא 14 ימים.
+            max_recently_assigned_days:
+              label: כמות מרבית של ימים שהוקצו לאחרונה
+              description: הניסיון הראשון להחריג משתמש שהוקצו ב־`n` הימים האחרונים. אם לא עזבו משתמשים, תתבצע נסיגה אל `min_recently_assigned_days`. ברירת המחדל היא 180 ימים.
+            assigned_topic:
+              label: מזהה נושא מוקצה
+            in_working_hours:
+              label: משתמשים בשעות עבודה

@@ -21,7 +21,7 @@
       {{~topic-featured-link topic}}
     {{~/if}}
     {{~#if showTopicPostBadges}}
-      {{~raw "topic-post-badges" unread=topic.unread newPosts=topic.displayNewPosts unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+      {{~raw "topic-post-badges" unread=topic.unread unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
     {{~/if}}
   </span>
   <div class="link-bottom-line">
@@ -46,10 +46,26 @@
 
 <td class="num views {{topic.viewsHeat}} topic-list-data">{{number topic.views numberKey="views_long"}}</td>
 {{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="td"}}
-
 <td class="topic-list-data">
-  {{assign-actions-dropdown topic=topic
-                            user=username
-                            unassign=unassign
-                            reassign=reassign}}
+  {{#if topic.assigned_to_user}}
+    {{assign-actions-dropdown
+      topic=topic
+      assignee=topic.assigned_to_user.username
+      unassign=unassign
+      reassign=reassign
+    }}
+  {{else if topic.assigned_to_group}}
+    {{assign-actions-dropdown
+      topic=topic
+      assignee=topic.assigned_to_group.name
+      group=true
+      unassign=unassign
+      reassign=reassign
+    }}
+  {{else}}
+    {{assign-actions-dropdown
+      topic=topic
+      unassign=unassign
+    }}
+  {{/if}}
 </td>

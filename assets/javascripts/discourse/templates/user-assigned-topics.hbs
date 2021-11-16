@@ -1,31 +1,42 @@
-<div class="topic-search-div">
-  <div class="form-horizontal bookmark-search-form">
-    {{input
+{{#if doesntHaveAssignments}}
+  <div class="empty-state">
+    <span class="empty-state-title">{{i18n "user.no_assignments_title"}}</span>
+    <div class="empty-state-body">
+      <p>{{emptyStateBody}}</p>
+    </div>
+  </div>
+{{else}}
+  <div class="topic-search-div">
+    <div class="inline-form full-width">
+      {{input
         class="no-blur"
         value=searchTerm
         placeholder=(i18n "discourse_assign.topic_search_placeholder")
         input=(action "onChangeFilter" value="target.value")
-        autocomplete="discourse"}}
+        autocomplete="discourse"
+      }}
+    </div>
   </div>
-</div>
 
-{{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
-  {{basic-assigned-topic-list
-    topicList=model
-    hideCategory=hideCategory
-    showPosters=showPosters
-    bulkSelectEnabled=bulkSelectEnabled
-    selected=selected
-    hasIncoming=hasIncoming
-    incomingCount=incomingCount
-    showInserted=(action "showInserted")
-    tagsForUser=tagsForUser
-    changeSort=(action "changeSort")
-    unassign=(action "unassign")
-    reassign=(action "reassign")
-    onScroll=saveScrollPosition
-    scrollOnLoad=true
-  }}
+  {{#load-more class="paginated-topics-list" selector=".paginated-topics-list .topic-list tr" action=(action "loadMore")}}
+    {{basic-assigned-topic-list
+      topicList=model
+      hideCategory=hideCategory
+      showPosters=showPosters
+      bulkSelectEnabled=bulkSelectEnabled
+      selected=selected
+      hasIncoming=hasIncoming
+      incomingCount=incomingCount
+      showInserted=(action "showInserted")
+      tagsForUser=tagsForUser
+      changeSort=(action "changeSort")
+      unassign=(action "unassign")
+      reassign=(action "reassign")
+      onScroll=saveScrollPosition
+      scrollOnLoad=true
+    }}
 
-  {{conditional-loading-spinner condition=model.loadingMore}}
-{{/load-more}}
+    {{conditional-loading-spinner condition=model.loadingMore}}
+  {{/load-more}}
+{{/if}}
+

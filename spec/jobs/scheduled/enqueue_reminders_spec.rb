@@ -92,7 +92,7 @@ RSpec.describe Jobs::EnqueueReminders do
 
     def assign_one_task_to(user, assigned_on: 3.months.ago, post: Fabricate(:post))
       freeze_time(assigned_on) do
-        TopicAssigner.new(post.topic, user).assign(user)
+        Assigner.new(post.topic, user).assign(user)
       end
     end
 

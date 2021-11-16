@@ -28,19 +28,18 @@ class PendingAssignsReminder
   private
 
   def assigned_count_for(user)
-    TopicCustomField
-      .joins(:topic)
-      .where(name: TopicAssigner::ASSIGNED_TO_ID, value: user.id)
-      .count
+    Assignment.joins_with_topics.where(assigned_to_id: user.id, assigned_to_type: 'User').count
   end
 
   def assigned_topics(user, order:)
     secure = Topic.listable_topics.secured(Guardian.new(user)).or(Topic.private_messages_for_user(user))
 
-    Topic.joins(:_custom_fields).select(:slug, :id, :title, :fancy_title, 'topic_custom_fields.created_at AS assigned_at')
-      .where('topic_custom_fields.name = ? AND topic_custom_fields.value = ?', TopicAssigner::ASSIGNED_TO_ID, user.id.to_s)
+    Topic
+      .joins(:assignment)
+      .select(:slug, :id, :title, :fancy_title, 'assignments.created_at AS assigned_at')
+      .where("assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User'", user.id)
       .merge(secure)
-      .order("topic_custom_fields.created_at #{order}")
+      .order("assignments.created_at #{order}")
       .limit(3)
   end
 
@@ -87,12 +86,6 @@ class PendingAssignsReminder
 
   def update_last_reminded(user)
     update_last_reminded = { REMINDED_AT => DateTime.now }
-    # New API in Discouse that's better under concurrency
-    if user.respond_to?(:upsert_custom_fields)
-      user.upsert_custom_fields(update_last_reminded)
-    else
-      user.custom_fields.merge!(update_last_reminded)
-      user.save_custom_fields
-    end
+    user.upsert_custom_fields(update_last_reminded)
   end
 end

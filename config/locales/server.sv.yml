@@ -19,23 +19,30 @@ sv:
     remind_assigns: "Påminn användare om väntande tilldelningar."
     remind_assigns_frequency: "Hur ofta användare påminns om tilldelade ämnen."
     max_assigned_topics: "Maximalt antal ämnen som kan tilldelas en användare."
-    assign_allowed_on_groups: "Grupper som får tilldela ämnen."
+    assign_allowed_on_groups: "Användare i dessa grupper får tilldela ämnen och kan tilldelas ämnen."
   discourse_assign:
     assigned_to: "Ämne tilldelat @%{username}"
     unassigned: "Ämnets tilldelning togs bort"
     already_claimed: "Det har redan gjorts anspråk på det ämnet."
-    already_assigned: 'Ämnet har redan tilldelats till @%{username}'
+    already_assigned: "Ämnet har redan tilldelats till @%{username}"
     too_many_assigns: "@%{username} har redan nått maximalt antal tilldelade ämnen (%{max})."
+    too_many_assigns_for_topic: "Gränsen på %{limit} tilldelningar per ämne har nåtts."
     forbidden_assign_to: "@%{username} kan inte tilldelas eftersom hen inte tillhör någon tillåten grupp för tilldelning."
+    forbidden_assignee_not_pm_participant: "@%{username} kan inte tilldelas eftersom hen inte har tillgång till detta PM. Du kan bevilja @%{username} åtkomst genom att bjuda in hen till detta PM."
+    forbidden_assignee_cant_see_topic: "@%{username} kan inte tilldelas eftersom hen inte har tillgång till detta ämne."
+    group_already_assigned: "Ämnet har redan tilldelats till @%{group}"
+    forbidden_group_assign_to: "@%{group} kan inte tilldelas eftersom de inte tillhör tilldelade tillåtna grupper."
+    forbidden_group_assignee_not_pm_participant: "@%{group} kan inte tilldelas eftersom inte alla medlemmar har tillgång till detta PM."
+    forbidden_group_assignee_cant_see_topic: "@%{group} kan inte tilldelas eftersom inte alla medlemmar har tillgång till detta ämne."
     flag_assigned: "Tyvärr har den flaggans ämne tilldelats en annan användare"
     flag_unclaimed: "Du måste göra anspråk på det ämnet innan du gör något åt flaggan"
     topic_assigned_excerpt: "tilldelade ämnet '%{title}' till dig"
     reminders_frequency:
-      never: 'aldrig'
-      daily: 'dagligen'
-      weekly: 'veckovis'
-      monthly: 'månadsvis'
-      quarterly: 'kvartalsvis'
+      never: "aldrig"
+      daily: "dagligen"
+      weekly: "veckovis"
+      monthly: "månadsvis"
+      quarterly: "kvartalsvis"
   assign_mailer:
     title: "Tilldela e-postskrivare"
     subject_template: "[%{email_prefix}] %{assignee_name} tilldelade dig till '%{topic_title}'!"
@@ -66,3 +73,8 @@ sv:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Tilldela slumpmässigt
+        no_one: "Försökte slumpmässigt tilldela en medlem av @%{group}, men ingen var tillgänglig."

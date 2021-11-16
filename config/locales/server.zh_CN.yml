@@ -19,22 +19,25 @@ zh_CN:
     remind_assigns: "提醒用户正在分配"
     remind_assigns_frequency: "指派主题的用户提醒频率"
     max_assigned_topics: "每个用户每天能分配的主题数量的最大值。"
-    assign_allowed_on_groups: "允许分配主题的组"
+    assign_allowed_on_groups: "这些组中的用户被允许指派主题并且可以被分配到主题。"
   discourse_assign:
     assigned_to: "主题被指派给 @%{username}"
     unassigned: "主题未被指派"
     already_claimed: "这个主题已经被分配"
-    already_assigned: '主题已被指派给 @%{username}'
+    already_assigned: "主题已被指派给 @%{username}"
     too_many_assigns: "@%{username}已经到达指派主题的最大值（%{max}）。"
+    forbidden_assign_to: "@%{username} 不能分配，因为它们不属于被指派组。"
+    forbidden_assignee_not_pm_participant: "@%{username} 无法指派，因为他们无权访问此私信。您可以通过邀请 @%{username} 来使其加入。"
+    forbidden_assignee_cant_see_topic: "无法分配 @%{username} ，因为他们没有访问此主题的权限。"
     flag_assigned: "抱歉，这个标记的主题已被指派给其他用户"
     flag_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
     topic_assigned_excerpt: "主题%{title}已分配给您"
     reminders_frequency:
-      never: '从不'
-      daily: '每天'
-      weekly: '每周'
-      monthly: '月度'
-      quarterly: '季度'
+      never: "从不"
+      daily: "每天"
+      weekly: "每周"
+      monthly: "月度"
+      quarterly: "季度"
   assign_mailer:
     title: "指派邮件发送者"
     subject_template: "[%{email_prefix}]%{assignee_name}指派你到“%{topic_title}”！"
@@ -64,3 +67,8 @@ zh_CN:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: 随机分配
+        no_one: "尝试随机分配 @%{group}的成员，但没有人可用。"

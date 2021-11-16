@@ -7,6 +7,6 @@
 pt:
   discourse_assign:
     reminders_frequency:
-      never: 'nunca'
-      daily: 'diariamente'
-      weekly: 'semanalmente'
+      never: "nunca"
+      daily: "diariamente"
+      weekly: "semanalmente"

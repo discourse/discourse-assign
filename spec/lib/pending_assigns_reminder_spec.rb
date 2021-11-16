@@ -3,6 +3,10 @@
 require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
+def assert_reminder_not_created
+  expect { subject.remind(user) }.to change { Post.count }.by(0)
+end
+
 RSpec.describe PendingAssignsReminder do
   before { SiteSetting.assign_enabled = true }
 
@@ -14,13 +18,9 @@ RSpec.describe PendingAssignsReminder do
 
   it 'does not create a reminder if the user only has one task' do
     post = Fabricate(:post)
-    TopicAssigner.new(post.topic, user).assign(user)
+    Assigner.new(post.topic, user).assign(user)
 
     assert_reminder_not_created
-  end
-
-  def assert_reminder_not_created
-    expect { subject.remind(user) }.to change { Post.count }.by(0)
   end
 
   describe 'when the user has multiple tasks' do
@@ -38,10 +38,10 @@ RSpec.describe PendingAssignsReminder do
       @post2.topic.update_column(:fancy_title, nil)
       @post3 = Fabricate(:post)
       @post4 = Fabricate(:post)
-      TopicAssigner.new(@post1.topic, user).assign(user)
-      TopicAssigner.new(@post2.topic, user).assign(user)
-      TopicAssigner.new(@post3.topic, user).assign(user)
-      TopicAssigner.new(@post4.topic, user).assign(user)
+      Assigner.new(@post1.topic, user).assign(user)
+      Assigner.new(@post2.topic, user).assign(user)
+      Assigner.new(@post3.topic, user).assign(user)
+      Assigner.new(@post4.topic, user).assign(user)
       @post3.topic.trash!
       @post4.topic.update(category: secure_category)
     end

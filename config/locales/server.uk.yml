@@ -19,22 +19,21 @@ uk:
     remind_assigns: "Нагадуйте користувачам про очікувані призначення."
     remind_assigns_frequency: "Частота нагадування користувачам про призначені теми."
     max_assigned_topics: "Максимальна кількість тем, які можна призначити користувачеві."
-    assign_allowed_on_groups: "Групи, яким дозволено призначити теми."
   discourse_assign:
     assigned_to: "Тема призначена для @ %{username}"
     unassigned: "Тема не була призначена"
     already_claimed: "Цю тему вже заявлено."
-    already_assigned: 'Тема вже призначена для @ %{username}'
+    already_assigned: "Тема вже призначена для @ %{username}"
     too_many_assigns: "@ %{username} вже досяг максимальної кількості призначених тем (%{max})."
     flag_assigned: "На жаль, тема з цим прапором призначена іншому користувачеві"
     flag_unclaimed: "Ви повинні претендувати на цю тему, перш ніж діяти за прапором"
     topic_assigned_excerpt: "призначив вам тему '%{title}'"
     reminders_frequency:
-      never: 'ніколи'
-      daily: 'щодня'
-      weekly: 'щотижня'
-      monthly: 'щомісяця'
-      quarterly: 'щоквартально'
+      never: "ніколи"
+      daily: "щодня"
+      weekly: "щотижня"
+      monthly: "щомісяця"
+      quarterly: "щоквартально"
   assign_mailer:
     title: "Assign Mailer"
     subject_template: "[%{email_prefix}] %{assignee_name} призначив вас за '%{topic_title}'!"

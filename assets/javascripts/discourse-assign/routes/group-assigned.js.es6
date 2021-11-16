@@ -1,5 +1,6 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
+import { action } from "@ember/object";
 
 export default DiscourseRoute.extend({
   model() {
@@ -12,7 +13,10 @@ export default DiscourseRoute.extend({
       members: [],
       group: this.modelFor("group"),
     });
-    controller.group.set("assignment_count", model.assignment_count);
+    controller.group.setProperties({
+      assignment_count: model.assignment_count,
+      group_assignment_count: model.group_assignment_count,
+    });
 
     controller.findMembers(true);
   },
@@ -25,9 +29,8 @@ export default DiscourseRoute.extend({
     }
   },
 
-  actions: {
-    changeAssigned() {
-      this.refresh();
-    },
+  @action
+  changeAssigned() {
+    this.refresh();
   },
 });

@@ -4,31 +4,38 @@ require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
 RSpec.describe DiscourseAssign::AssignController do
-
   before { SiteSetting.assign_enabled = true }
 
-  let(:default_allowed_group) { Group.find_by(name: 'staff') }
+  fab!(:default_allowed_group) { Group.find_by(name: 'staff') }
   let(:user) { Fabricate(:admin, groups: [default_allowed_group], name: 'Robin Ward', username: 'eviltrout') }
-  let(:post) { Fabricate(:post) }
-  let(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david') }
+  fab!(:post) { Fabricate(:post) }
+  fab!(:user2) { Fabricate(:active_user, name: 'David Tylor', username: 'david', groups: [default_allowed_group]) }
   let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
-  let(:normal_user) { Fabricate(:user) }
-  let(:normal_admin) { Fabricate(:admin) }
+  fab!(:normal_user) { Fabricate(:user) }
+  fab!(:normal_admin) { Fabricate(:admin) }
 
-  describe 'only allow users from allowed groups' do
+  context 'only allow users from allowed groups' do
     before { sign_in(user2) }
 
     it 'filters requests where current_user is not member of an allowed group' do
       SiteSetting.assign_allowed_on_groups = ''
 
       put '/assign/assign.json', params: {
-        topic_id: post.topic_id, username: user2.username
+        target_id: post.topic_id, target_type: 'Topic', username: user2.username
       }
 
       expect(response.status).to eq(403)
     end
 
-    context '#suggestions' do
+    it 'filters requests where assigne group is not allowed' do
+      put '/assign/assign.json', params: {
+        target_id: post.topic_id, target_type: 'Topic', group_name: default_allowed_group.name
+      }
+
+      expect(response.status).to eq(400)
+    end
+
+    describe '#suggestions' do
       before { sign_in(user) }
 
       it 'includes users in allowed groups' do
@@ -38,7 +45,7 @@ RSpec.describe DiscourseAssign::AssignController do
         defaults = "#{default_allowed_group.id}|#{allowed_group.id}"
 
         SiteSetting.assign_allowed_on_groups = defaults
-        TopicAssigner.new(post.topic, user).assign(user2)
+        Assigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
         suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
@@ -50,12 +57,12 @@ RSpec.describe DiscourseAssign::AssignController do
         allowed_group = Group.find_by(name: 'everyone')
         allowed_group.add(user2)
         SiteSetting.assign_allowed_on_groups = default_allowed_group.id.to_s
-        TopicAssigner.new(post.topic, user).assign(user2)
+        Assigner.new(post.topic, user).assign(user2)
 
         get '/assign/suggestions.json'
-        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
+        suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }.sort
 
-        expect(suggestions).to contain_exactly(user.username)
+        expect(suggestions).to eq(['david', 'eviltrout'])
       end
 
       it 'does include only visible assign_allowed_on_groups' do
@@ -75,7 +82,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
-  context "#suggestions" do
+  describe "#suggestions" do
     before do
       SiteSetting.max_assigned_topics = 1
       sign_in(user)
@@ -83,7 +90,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it 'excludes other users from the suggestions when they already reached the max assigns limit' do
       another_admin = Fabricate(:admin, groups: [default_allowed_group])
-      TopicAssigner.new(post.topic, user).assign(another_admin)
+      Assigner.new(post.topic, user).assign(another_admin)
 
       get '/assign/suggestions.json'
       suggestions = JSON.parse(response.body)['suggestions'].map { |u| u['username'] }
@@ -92,8 +99,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
-  context '#assign' do
-
+  describe '#assign' do
     include_context 'A group that is allowed to assign'
 
     before do
@@ -103,23 +109,32 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it 'assigns topic to a user' do
       put '/assign/assign.json', params: {
-        topic_id: post.topic_id, username: user2.username
+        target_id: post.topic_id, target_type: 'Topic', username: user2.username
       }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.custom_fields['assigned_to_id']).to eq(user2.id.to_s)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
+    end
+
+    it 'assigns topic to a group' do
+      put '/assign/assign.json', params: {
+        target_id: post.topic_id, target_type: 'Topic', group_name: assign_allowed_group.name
+      }
+
+      expect(response.status).to eq(200)
+      expect(post.topic.reload.assignment.assigned_to).to eq(assign_allowed_group)
     end
 
     it 'fails to assign topic to the user if its already assigned to the same user' do
       put '/assign/assign.json', params: {
-        topic_id: post.topic_id, username: user2.username
+        target_id: post.topic_id, target_type: 'Topic', username: user2.username
       }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.custom_fields['assigned_to_id']).to eq(user2.id.to_s)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
 
       put '/assign/assign.json', params: {
-        topic_id: post.topic_id, username: user2.username
+        target_id: post.topic_id, target_type: 'Topic', username: user2.username
       }
 
       expect(response.status).to eq(400)
@@ -132,10 +147,10 @@ RSpec.describe DiscourseAssign::AssignController do
       another_post = Fabricate(:post)
       max_assigns = 1
       SiteSetting.max_assigned_topics = max_assigns
-      TopicAssigner.new(post.topic, user).assign(another_user)
+      Assigner.new(post.topic, user).assign(another_user)
 
       put '/assign/assign.json', params: {
-        topic_id: another_post.topic_id, username: another_user.username
+        target_id: another_post.topic_id, target_type: 'Topic', username: another_user.username
       }
 
       expect(response.status).to eq(400)
@@ -143,9 +158,35 @@ RSpec.describe DiscourseAssign::AssignController do
         I18n.t('discourse_assign.too_many_assigns', username: another_user.username, max: max_assigns)
       )
     end
+
+    it 'fails with a specific error message if the topic is a PM and the assignee can not see it' do
+      pm = Fabricate(:private_message_post, user: user).topic
+      another_user = Fabricate(:user)
+      add_to_assign_allowed_group(another_user)
+      put '/assign/assign.json', params: {
+        target_id: pm.id, target_type: 'Topic', username: another_user.username
+      }
+
+      expect(response.parsed_body['error']).to eq(
+        I18n.t('discourse_assign.forbidden_assignee_not_pm_participant', username: another_user.username)
+      )
+    end
+
+    it 'fails with a specific error message if the topic is not a PM and the assignee can not see it' do
+      topic = Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
+      another_user = Fabricate(:user)
+      add_to_assign_allowed_group(another_user)
+      put '/assign/assign.json', params: {
+        target_id: topic.id, target_type: "Topic", username: another_user.username
+      }
+
+      expect(response.parsed_body['error']).to eq(
+        I18n.t('discourse_assign.forbidden_assignee_cant_see_topic', username: another_user.username)
+      )
+    end
   end
 
-  context '#assigned' do
+  describe '#assigned' do
     include_context 'A group that is allowed to assign'
 
     fab!(:post1) { Fabricate(:post) }
@@ -156,13 +197,13 @@ RSpec.describe DiscourseAssign::AssignController do
       add_to_assign_allowed_group(user2)
 
       freeze_time 1.hour.from_now
-      TopicAssigner.new(post1.topic, user).assign(user)
+      Assigner.new(post1.topic, user).assign(user)
 
       freeze_time 1.hour.from_now
-      TopicAssigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post2.topic, user).assign(user2)
 
       freeze_time 1.hour.from_now
-      TopicAssigner.new(post3.topic, user).assign(user)
+      Assigner.new(post3.topic, user).assign(user)
 
       sign_in(user)
     end
@@ -181,6 +222,7 @@ RSpec.describe DiscourseAssign::AssignController do
     context "with custom allowed groups" do
       let(:custom_allowed_group) { Fabricate(:group, name: 'mygroup') }
       let(:other_user) { Fabricate(:user, groups: [custom_allowed_group]) }
+
       before do
         SiteSetting.assign_allowed_on_groups += "|#{custom_allowed_group.id}"
       end
@@ -198,7 +240,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
-  context '#group_members' do
+  describe '#group_members' do
     include_context 'A group that is allowed to assign'
 
     fab!(:post1) { Fabricate(:post) }
@@ -209,9 +251,9 @@ RSpec.describe DiscourseAssign::AssignController do
       add_to_assign_allowed_group(user2)
       add_to_assign_allowed_group(user)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
-      TopicAssigner.new(post3.topic, user).assign(user)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post3.topic, user).assign(user)
     end
 
     it 'list members order by assignments_count' do

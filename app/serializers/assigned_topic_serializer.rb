@@ -6,8 +6,25 @@ class AssignedTopicSerializer < BasicTopicSerializer
   attributes :excerpt,
              :category_id,
              :created_at,
-             :updated_at
+             :updated_at,
+             :assigned_to_user,
+             :assigned_to_group
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
-  has_one :assigned_to_user, serializer: BasicUserSerializer, embed: :objects
+
+  def assigned_to_user
+    BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json
+  end
+
+  def include_assigned_to_user?
+    object.assignment.assigned_to_user?
+  end
+
+  def assigned_to_group
+    BasicGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
+  end
+
+  def include_assigned_to_group?
+    object.assigned_to.is_a?(Group)
+  end
 end

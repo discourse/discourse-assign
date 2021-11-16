@@ -14,10 +14,17 @@
   .d-icon,
   i.fa {
     margin-right: 0.25em;
-    color: var(--primary-medium, $primary-medium);
+    color: var(--primary-medium);
   }
   .assign-text {
     margin-right: 0.25em;
+  }
+
+  .composer-popup & {
+    margin-left: 0.5em;
+  }
+  .assignee:not(:last-child):after {
+    content: ", ";
   }
 }
 
@@ -29,8 +36,8 @@
 
 .cant-act-flagged-post {
   padding: 0.5em;
-  border: 1px dashed var(--primary-medium, $primary-medium);
-  color: var(--primary, $primary);
+  border: 1px dashed var(--primary-medium);
+  color: var(--primary);
 
   display: flex;
   justify-content: space-between;
@@ -59,19 +66,28 @@
   margin-left: 5px;
 }
 
-.assign.modal-body .ember-text-field {
+.assign.modal-body .email-group-user-chooser {
+  display: block;
   width: 300px;
-}
-.assign.modal-body .ac-wrap {
   margin-top: 5px;
 }
 
+.assign-user-modal p {
+  margin-top: 0;
+}
+
 .assign-suggestions {
-  height: 25px;
   margin-top: 15px;
   img {
     margin-right: 5px;
     cursor: pointer;
+  }
+
+  .groups {
+    margin-top: 5px;
+    a {
+      margin-right: 5px;
+    }
   }
 }
 
@@ -82,12 +98,26 @@
 }
 
 #topic-footer-button-assign {
-  padding: 0 12px;
-
+  padding-top: 0.35em;
+  padding-bottom: 0.35em;
   .d-button-label {
     .avatar {
       margin-right: 0.25em;
     }
+  }
+}
+
+#topic-footer-dropdown-reassign {
+  .name {
+    font-weight: normal !important;
+  }
+  .avatar {
+    margin-right: 0.25em;
+  }
+  .d-icon,
+  i.fa {
+    margin-right: 0.25em;
+    color: var(--primary-medium);
   }
 }
 
@@ -102,6 +132,16 @@
     grid-template-columns: auto 1fr auto;
     align-items: center;
     padding: 0.5em 13px;
+
+    .assign-image {
+      width: 45px;
+      margin-right: 0.5em;
+      text-align: center;
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
 
     .assign-names {
       font-size: $font-down-1;
@@ -130,7 +170,6 @@
     }
   }
   .search {
-    height: 1em;
     width: 100%;
   }
   .search-div {
@@ -138,6 +177,6 @@
   }
 }
 
-.topic-search-div {
-  margin-left: 1em;
+.assigned-to.discourse-tag.simple {
+  color: var(--primary-medium);
 }

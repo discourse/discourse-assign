@@ -6,7 +6,15 @@ en:
         help: "Topics that are not assigned"
     action_codes:
       assigned: "assigned %{who} %{when}"
+      assigned_group: "assigned %{who} %{when}"
+      assigned_to_post: "assigned %{who} to <a href='%{path}' data-auto-route='true'>post</a> %{when}"
+      assigned_group_to_post: "assigned %{who} to <a href='%{path}' data-auto-route='true'>post</a> %{when}"
       unassigned: "unassigned %{who} %{when}"
+      unassigned_group: "unassigned %{who} %{when}"
+      unassigned_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
+      unassigned_group_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
+      reassigned: "Re-assigned %{who} %{when}"
+      reassigned_group: "Re-assigned %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
@@ -16,20 +24,37 @@ en:
       assigned: "Assigned"
       group_everyone: "Everyone"
       assigned_to: "Assigned to"
+      assigned_to_w_ellipsis: "Assigned to..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Unassign"
+        title_w_ellipsis: "Unassign..."
         help: "Unassign %{username} from Topic"
       assign:
         title: "Assign"
         help: "Assign Topic to User"
+      assign_post:
+        title: "Assign Post"
+      unassign_post:
+        title: "Unassign from Post"
+        help: "Unassign %{username} from Post"
       reassign:
         title: "Re-assign"
+        title_w_ellipsis: "Re-assign to..."
+        to_self: "Re-assign to me"
         help: "Re-assign Topic to a different user"
+      reassign_modal:
+        title: "Re-assign Topic"
+        description: "Enter the name of the user you'd like to Re-assign this topic"
       assign_modal:
         title: "Assign Topic"
+        reassign_title: "Re-assign Topic"
         description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
+      assign_post_modal:
+        title: "Assign Post"
+        description: "Enter the name of the user you'd like to assign this post"
       claim:
         title: "claim"
         help: "Assign topic to yourself"
@@ -44,10 +69,22 @@ en:
         weekly: "Weekly"
         monthly: "Monthly"
         quarterly: "Quarterly"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Assign"
+              assignable_levels:
+                title: "Who can assign this group"
     user:
       messages:
         assigned_title: "Assigned (%{count})"
         assigned: "Assigned"
+      no_assignments_title: "You don’t have any assignments yet"
+      no_assignments_body: >
+        Your assigned topics and messages will be listed here. You will also receive a periodic reminder notification of your assignments, which you can adjust in your <a href='%{preferencesUrl}'>user preferences</a>.
+        <br><br>
+        To assign a topic or message to yourself or to someone else, look for the %{icon} assign button at the bottom.
     admin:
       web_hooks:
         assign_event:
@@ -64,3 +101,21 @@ en:
       bulk:
         unassign: "Unassign Topics"
         assign: "Assign Topics"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Assignees Group
+            minimum_time_between_assignments:
+              label: Minimum hours between assignments
+            min_recently_assigned_days:
+              label: Min recently assigned days
+              description: Defaults to 14 days.
+            max_recently_assigned_days:
+              label: Max recently assigned days
+              description: First attempt to exclude users assigned in the last `n` days. If no user left, fallbacks to `min_recently_assigned_days`. Defaults to 180 days.
+            assigned_topic:
+              label: Assigned Topic ID
+            in_working_hours:
+              label: Users in working hours

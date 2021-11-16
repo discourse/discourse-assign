@@ -19,23 +19,22 @@ nl:
     remind_assigns: "Gebruikers aan wachtende toewijzingen herinneren"
     remind_assigns_frequency: "Frequentie voor het herinneren van gebruikers aan toegewezen topics."
     max_assigned_topics: "Maximale aantal topics dat aan een gebruiker kan worden toegewezen."
-    assign_allowed_on_groups: "Groepen die topics mogen toewijzen."
   discourse_assign:
     assigned_to: "Topic toegewezen aan @%{username}"
     unassigned: "Toewijzing van topic is opgeheven"
     already_claimed: "Dat topic is al opgeëist."
-    already_assigned: 'Topic is al toegewezen aan @%{username}'
+    already_assigned: "Topic is al toegewezen aan @%{username}"
     too_many_assigns: "@%{username} heeft het maximale aantal toegewezen topics (%{max}) al bereikt."
     forbidden_assign_to: "@%{username} kan niet worden toegewezen, omdat hij of zij niet tot toegewezen toegestane groepen behoort."
     flag_assigned: "Sorry, het topic van die markering is aan een andere gebruiker toegewezen"
     flag_unclaimed: "U moet dat topic opeisen voordat u een handeling op de markering kunt uitvoeren"
     topic_assigned_excerpt: "heeft het topic '%{title}' aan u toegewezen"
     reminders_frequency:
-      never: 'nooit'
-      daily: 'dagelijks'
-      weekly: 'wekelijks'
-      monthly: 'maandelijks'
-      quarterly: 'per kwartaal'
+      never: "nooit"
+      daily: "dagelijks"
+      weekly: "wekelijks"
+      monthly: "maandelijks"
+      quarterly: "per kwartaal"
   assign_mailer:
     title: "Toewijzingsmailer"
     subject_template: "[%{email_prefix}] %{assignee_name} heeft u aan '%{topic_title}' toegewezen!"

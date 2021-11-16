@@ -7,6 +7,6 @@
 nb_NO:
   discourse_assign:
     reminders_frequency:
-      never: 'aldri'
-      daily: 'daglig'
-      weekly: 'ukentlig'
+      never: "aldri"
+      daily: "daglig"
+      weekly: "ukentlig"

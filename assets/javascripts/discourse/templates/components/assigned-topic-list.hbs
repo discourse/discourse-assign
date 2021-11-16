@@ -2,6 +2,7 @@
   <thead class="topic-list-header">
     {{raw "topic-list-header"
       canBulkSelect=canBulkSelect
+      canDoBulkActions=canDoBulkActions
       toggleInTitle=toggleInTitle
       hideCategory=hideCategory
       showPosters=showPosters
@@ -11,26 +12,29 @@
       ascending=ascending
       sortable=sortable
       listTitle=listTitle
-      bulkSelectEnabled=bulkSelectEnabled}}
+      bulkSelectEnabled=bulkSelectEnabled
+    }}
   </thead>
 {{/unless}}
 
 <tbody class="topic-list-body">
   {{#each filteredTopics as |topic|}}
-    {{assigned-topic-list-item topic=topic
-                               bulkSelectEnabled=bulkSelectEnabled
-                               showTopicPostBadges=showTopicPostBadges
-                               hideCategory=hideCategory
-                               showPosters=showPosters
-                               showLikes=showLikes
-                               showOpLikes=showOpLikes
-                               expandGloballyPinned=expandGloballyPinned
-                               expandAllPinned=expandAllPinned
-                               lastVisitedTopic=lastVisitedTopic
-                               selected=selected
-                               tagsForUser=tagsForUser
-                               unassign=unassign
-                               reassign=reassign}}
+    {{assigned-topic-list-item
+      topic=topic
+      bulkSelectEnabled=bulkSelectEnabled
+      showTopicPostBadges=showTopicPostBadges
+      hideCategory=hideCategory
+      showPosters=showPosters
+      showLikes=showLikes
+      showOpLikes=showOpLikes
+      expandGloballyPinned=expandGloballyPinned
+      expandAllPinned=expandAllPinned
+      lastVisitedTopic=lastVisitedTopic
+      selected=selected
+      tagsForUser=tagsForUser
+      unassign=unassign
+      reassign=reassign
+    }}
 
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}

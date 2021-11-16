@@ -7,6 +7,6 @@
 el:
   discourse_assign:
     reminders_frequency:
-      never: 'ποτέ'
-      daily: 'καθημερινά'
-      weekly: 'κάθε εβδομάδα'
+      never: "ποτέ"
+      daily: "καθημερινά"
+      weekly: "κάθε εβδομάδα"
