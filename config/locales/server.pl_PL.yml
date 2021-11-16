@@ -19,43 +19,43 @@ pl_PL:
     remind_assigns: "Przypominaj użytkownikom o oczekujących przypisaniach."
     remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
     max_assigned_topics: "Maksymalna liczba tematów, które można przypisać użytkownikowi."
-    assign_allowed_on_groups: "Grupy, którym zezwala się na przypisywanie tematów."
   discourse_assign:
     assigned_to: "Temat przypisany do @%{username}"
     unassigned: "Cofnięto przypisanie tematu"
     already_claimed: "Ten temat został już przejęty."
-    already_assigned: 'Temat jest już przypisany do @%{username}'
+    already_assigned: "Temat jest już przypisany do @%{username}"
     too_many_assigns: "@%{username} osiągnął już maksimum przypisanych tematów (%{max})."
+    group_already_assigned: "Temat jest już przypisany do @%{group}"
     flag_assigned: "Przepraszamy, temat, w którym jest ta flaga, został przypisany do innego użytkownika."
     flag_unclaimed: "Musisz przejąć ten temat, zanim zaczniesz działać na fladze."
     topic_assigned_excerpt: "przypisano ci temat '%{title}'"
     reminders_frequency:
-      never: 'nigdy'
-      daily: 'dziennie'
-      weekly: 'co tydzień'
-      monthly: 'miesięcznie'
-      quarterly: 'kwartalnie'
+      never: "nigdy"
+      daily: "dziennie"
+      weekly: "co tydzień"
+      monthly: "miesięcznie"
+      quarterly: "kwartalnie"
   assign_mailer:
     title: "Przypisz mailera"
-    subject_template: "[%{email_prefix}] %{assignee_name}przypisał cię do '%{topic_title}'!"
+    subject_template: "[%{email_prefix}] %{assignee_name} przypisał cię do '%{topic_title}'!"
     text_body_template: |
-      Hej, %{assignee_name}**przypisał** cię do dyskusji
-      >**%{topic_title}**
+      Hej, %{assignee_name} **przypisał** cię do dyskusji
+      > **%{topic_title}**
       >
-      >%{topic_excerpt}
+      > %{topic_excerpt}
 
       Jeśli jesteś zainteresowany, kliknij poniższy link:
 
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
-    title: "Masz %{pending_assignments}oczekujących przypisań"
+    title: "Masz %{pending_assignments} oczekujących przypisań"
     body: |
       Masz [%{pending_assignments} oczekujących przypisań](%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}
 
-      To przypomnienie będzie wysyłane z %{frequency} jeśli masz więcej niż jeden przypisany temat.
+      To przypomnienie będzie wysyłane %{frequency} jeśli masz więcej niż jeden przypisany temat.
     newest: |
       ### Najnowsze
       %{topic_0}
@@ -66,3 +66,8 @@ pl_PL:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Przypisanie losowe
+        no_one: "Próbowano losowo przypisać członka @%{group}, ale nikt nie był dostępny."

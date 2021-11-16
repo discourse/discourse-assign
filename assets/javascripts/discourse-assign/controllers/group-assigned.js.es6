@@ -1,9 +1,9 @@
 import { inject as service } from "@ember/service";
 import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { debounce } from "@ember/runloop";
 import { ajax } from "discourse/lib/ajax";
 import discourseComputed from "discourse-common/utils/decorators";
+import discourseDebounce from "discourse-common/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
 export default Controller.extend({
@@ -86,6 +86,6 @@ export default Controller.extend({
 
   @action
   onChangeFilterName(value) {
-    debounce(this, this._setFilter, value, INPUT_DELAY * 2);
+    discourseDebounce(this, this._setFilter, value, INPUT_DELAY * 2);
   },
 });

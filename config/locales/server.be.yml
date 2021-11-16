@@ -22,17 +22,17 @@ be:
     assigned_to: "Тэма прысвоены @% {імя карыстальніка}"
     unassigned: "Тэма была Unassigned"
     already_claimed: "Гэтая тэма ўжо запатрабаваная."
-    already_assigned: 'Тэма ўжо прызначана на @% {імя карыстальніка}'
+    already_assigned: "Тэма ўжо прызначана на @% {імя карыстальніка}"
     too_many_assigns: "@% {Імя карыстальніка} ужо дасягнута максімальная колькасць прысвоеных тэм (% {макс})."
     flag_assigned: "На жаль, тэма гэтага сцяга прысвойваецца іншаму карыстальніку"
     flag_unclaimed: "Вы павінны сцвярджаць, што тэма, перш чым дзейнічаць на сцягу"
     topic_assigned_excerpt: "прызначаны вам тэму «% {назву}»"
     reminders_frequency:
-      never: 'ніколі'
-      daily: 'штодня'
-      weekly: 'штотыдзень'
-      monthly: 'штомесяц'
-      quarterly: 'квартальны'
+      never: "ніколі"
+      daily: "штодня"
+      weekly: "штотыдзень"
+      monthly: "штомесяц"
+      quarterly: "квартальны"
   assign_mailer:
     title: "прызначаюць Mailer"
     subject_template: "[% {Email_prefix}] {% assignee_name} прысвойваецца вам '% {TOPIC_TITLE}'!"

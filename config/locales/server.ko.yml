@@ -19,22 +19,21 @@ ko:
     remind_assigns: "보류중인 할당에 대해 사용자에게 알립니다."
     remind_assigns_frequency: "할당 된 주제에 대해 사용자에게 알리는 빈도입니다."
     max_assigned_topics: "사용자에게 할당 할 수있는 최대 주제 수입니다."
-    assign_allowed_on_groups: "주제를 할당 할 수있는 그룹."
   discourse_assign:
     assigned_to: "@ %{username}에 할당 된 주제"
     unassigned: "주제가 할당되지 않았습니다"
     already_claimed: "그 주제는 이미 주장되었습니다."
-    already_assigned: '주제가 이미 @ %{username}에 할당되었습니다.'
+    already_assigned: "주제가 이미 @ %{username}에 할당되었습니다."
     too_many_assigns: "@ %{username}이 (가) 이미 지정된 최대 주제 수 (%{max})에 도달했습니다."
     flag_assigned: "해당 플래그의 주제가 다른 사용자에게 할당되었습니다."
     flag_unclaimed: "깃발에 행동하기 전에 그 주제를 주장해야합니다"
     topic_assigned_excerpt: "&#39;%{title}&#39;주제를 지정했습니다"
     reminders_frequency:
-      never: '하지않음'
-      daily: '매일'
-      weekly: '매주'
-      monthly: '월간 간행물'
-      quarterly: '계간지'
+      never: "하지않음"
+      daily: "매일"
+      weekly: "매주"
+      monthly: "월간 간행물"
+      quarterly: "계간지"
   assign_mailer:
     title: "메일러 할당"
     subject_template: "[%{email_prefix}] %{assignee_name}가 &#39;%{topic_title}&#39;에 당신을 할당했습니다!"

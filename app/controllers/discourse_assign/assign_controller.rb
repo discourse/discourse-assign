@@ -11,12 +11,12 @@ module DiscourseAssign
         .where('users.id <> ?', current_user.id)
         .joins(<<~SQL
           JOIN(
-                SELECT value::integer user_id, MAX(created_at) last_assigned
-                FROM topic_custom_fields
-                WHERE name = 'assigned_to_id'
-                GROUP BY value::integer
-                HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
-              ) as X ON X.user_id = users.id
+            SELECT assigned_to_id user_id, MAX(created_at) last_assigned
+            FROM assignments
+            WHERE assignments.assigned_to_type = 'User'
+            GROUP BY assigned_to_id
+            HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
+          ) as X ON X.user_id = users.id
         SQL
         )
         .assign_allowed
@@ -25,61 +25,30 @@ module DiscourseAssign
 
       render json: {
         assign_allowed_on_groups: Group.visible_groups(current_user).assign_allowed_groups.pluck(:name),
-        suggestions: ActiveModel::ArraySerializer.new(users, scope: guardian, each_serializer: BasicUserSerializer)
+        assign_allowed_for_groups: Group.visible_groups(current_user).assignable(current_user).pluck(:name),
+        suggestions: ActiveModel::ArraySerializer.new(users, scope: guardian, each_serializer: BasicUserSerializer),
       }
     end
 
-    def claim
-      topic_id = params.require(:topic_id).to_i
-      topic = Topic.find(topic_id)
-
-      assigned = TopicCustomField.where(
-        "topic_id = :topic_id AND name = 'assigned_to_id' AND value IS NOT NULL",
-        topic_id: topic_id
-      ).pluck(:value)
-
-      if assigned && user_id = assigned[0]
-        extras = nil
-        if user = User.where(id: user_id).first
-          extras = {
-            assigned_to: serialize_data(user, BasicUserSerializer, root: false)
-          }
-        end
-        return render_json_error(I18n.t('discourse_assign.already_claimed'), extras: extras)
-      end
-
-      assigner = TopicAssigner.new(topic, current_user)
-      assigner.assign(current_user)
-      render json: success_json
-    end
-
     def unassign
-      topic_id = params.require(:topic_id)
-      topic = Topic.find(topic_id.to_i)
-      assigner = TopicAssigner.new(topic, current_user)
+      target_id = params.require(:target_id)
+      target_type = params.require(:target_type)
+      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
+      target = target_type.constantize.where(id: target_id).first
+      raise Discourse::NotFound unless target
+
+      assigner = Assigner.new(target, current_user)
       assigner.unassign
 
       render json: success_json
     end
 
     def assign
-      topic_id = params.require(:topic_id)
-      username = params.require(:username)
+      reassign_or_assign_target(action: "assign")
+    end
 
-      topic = Topic.find(topic_id.to_i)
-      assign_to = User.find_by(username_lower: username.downcase)
-
-      raise Discourse::NotFound unless assign_to
-
-      # perhaps?
-      #Scheduler::Defer.later "assign topic" do
-      assign = TopicAssigner.new(topic, current_user).assign(assign_to)
-
-      if assign[:success]
-        render json: success_json
-      else
-        render json: translate_failure(assign[:reason], assign_to), status: 400
-      end
+    def reassign
+      reassign_or_assign_target(action: "reassign")
     end
 
     def assigned
@@ -91,34 +60,28 @@ module DiscourseAssign
       topics = Topic
         .includes(:tags)
         .includes(:user)
-        .joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .order('tcf.value::integer, topics.bumped_at desc')
+        .joins("JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic' AND a.assigned_to_id IS NOT NULL")
+        .order("a.assigned_to_id, topics.bumped_at desc")
         .offset(offset)
         .limit(limit)
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
-      # TODO Drop AvatarLookup after Discourse 2.6.0 release
-      lookup_columns = defined?(UserLookup) ? UserLookup.lookup_columns : AvatarLookup.lookup_columns
+      topic_assignments = Assignment.where(target_id: topics.map(&:id), target_type: 'Topic').pluck(:target_id, :assigned_to_id).to_h
 
       users = User
-        .where("users.id IN (SELECT value::int FROM topic_custom_fields WHERE name = 'assigned_to_id' AND topic_id IN (?))", topics.map(&:id))
-        .joins('join user_emails on user_emails.user_id = users.id AND user_emails.primary')
-        .select(lookup_columns)
+        .where("users.id IN (?)", topic_assignments.values.uniq)
+        .joins("join user_emails on user_emails.user_id = users.id AND user_emails.primary")
+        .select(UserLookup.lookup_columns)
         .to_a
 
-      # TODO Drop after Discourse 2.6.0 release
-      if User.respond_to?(:allowed_user_custom_fields)
-        User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
-      else
-        User.preload_custom_fields(users, User.whitelisted_user_custom_fields(guardian))
-      end
+      User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
 
-      users = users.to_h { |u| [u.id, u] }
-      topics.each do |t|
-        if id = t.custom_fields[TopicAssigner::ASSIGNED_TO_ID]
-          t.preload_assigned_to_user(users[id.to_i])
-        end
+      users_map = users.index_by(&:id)
+
+      topics.each do |topic|
+        user_id = topic_assignments[topic.id]
+        topic.preload_assigned_to(users_map[user_id]) if user_id
       end
 
       render json: { topics: serialize_data(topics, AssignedTopicSerializer) }
@@ -137,44 +100,98 @@ module DiscourseAssign
       guardian.ensure_can_see_group_members!(group)
 
       members = User
-        .joins("LEFT OUTER JOIN group_users g on users.id=g.user_id")
-        .joins("LEFT OUTER JOIN topic_custom_fields tcf ON tcf.value::int = users.id")
-        .joins("LEFT OUTER JOIN topics t ON t.id = tcf.topic_id")
-        .where("tcf.name = 'assigned_to_id' AND g.group_id=? AND (users.id > 0) AND t.deleted_at IS NULL", group.id)
+        .joins("LEFT OUTER JOIN group_users g ON g.user_id = users.id")
+        .joins("LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id AND a.assigned_to_type = 'User'")
+        .joins("LEFT OUTER JOIN topics t ON t.id = a.target_id AND a.target_type = 'Topic'")
+        .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
+        .where("a.assigned_to_id IS NOT NULL")
         .order('COUNT(users.id) DESC')
         .group('users.id')
         .select('users.*, COUNT(users.id) as "assignments_count"')
-
-        members = members.where("users.name ILIKE :pattern OR users.username_lower ILIKE :pattern", pattern: "%#{params[:filter]}%") if params[:filter]
-
-      members = members
         .limit(limit)
         .offset(offset)
 
-      assignment_count = Topic.joins("JOIN topic_custom_fields tcf ON topics.id = tcf.topic_id AND tcf.name = 'assigned_to_id' AND tcf.value IS NOT NULL")
-        .where("tcf.value IN (SELECT group_users.user_id::varchar(255) FROM group_users WHERE (group_id IN (SELECT id FROM groups WHERE name = ?)))", group.name)
-        .where("topics.deleted_at IS NULL")
-        .count
+      if params[:filter]
+        members = members.where(<<~SQL, pattern: "%#{params[:filter]}%")
+          users.name ILIKE :pattern OR users.username_lower ILIKE :pattern
+        SQL
+      end
 
-      render json: { members: serialize_data(members, GroupUserAssignedSerializer), "assignment_count" => assignment_count }
+      group_assignments = Topic
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .where(<<~SQL, group_id: group.id)
+          a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group'
+        SQL
+        .pluck(:topic_id)
+
+      assignments = Topic
+        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .joins("JOIN group_users ON group_users.user_id = a.assigned_to_id ")
+        .where("group_users.group_id = ?", group.id)
+        .where("a.assigned_to_type = 'User'")
+        .pluck(:topic_id)
+
+      render json: {
+        members: serialize_data(members, GroupUserAssignedSerializer),
+        assignment_count: (assignments | group_assignments).count,
+        group_assignment_count: group_assignments.count
+      }
     end
 
     private
 
-    def translate_failure(reason, user)
+    def translate_failure(reason, assign_to)
       case reason
       when :already_assigned
-        { error: I18n.t('discourse_assign.already_assigned', username: user.username) }
+        { error: I18n.t('discourse_assign.already_assigned', username: assign_to.username) }
       when :forbidden_assign_to
-        { error: I18n.t('discourse_assign.forbidden_assign_to', username: user.username) }
+        { error: I18n.t('discourse_assign.forbidden_assign_to', username: assign_to.username) }
+      when :forbidden_assignee_not_pm_participant
+        { error: I18n.t('discourse_assign.forbidden_assignee_not_pm_participant', username: assign_to.username) }
+      when :forbidden_assignee_cant_see_topic
+        { error: I18n.t('discourse_assign.forbidden_assignee_cant_see_topic', username: assign_to.username) }
+      when :group_already_assigned
+        { error: I18n.t('discourse_assign.group_already_assigned', group: assign_to.name) }
+      when :forbidden_group_assign_to
+        { error: I18n.t('discourse_assign.forbidden_group_assign_to', group: assign_to.name) }
+      when :forbidden_group_assignee_not_pm_participant
+        { error: I18n.t('discourse_assign.forbidden_group_assignee_not_pm_participant', group: assign_to.name) }
+      when :forbidden_group_assignee_cant_see_topic
+        { error: I18n.t('discourse_assign.forbidden_group_assignee_cant_see_topic', group: assign_to.name) }
+      when :too_many_assigns_for_topic
+        { error: I18n.t('discourse_assign.too_many_assigns_for_topic', limit: Assigner::ASSIGNMENTS_PER_TOPIC_LIMIT) }
       else
         max = SiteSetting.max_assigned_topics
-        { error: I18n.t('discourse_assign.too_many_assigns', username: user.username, max: max) }
+        { error: I18n.t('discourse_assign.too_many_assigns', username: assign_to.username, max: max) }
       end
     end
 
     def ensure_assign_allowed
       raise Discourse::InvalidAccess.new unless current_user.can_assign?
+    end
+
+    def reassign_or_assign_target(action:)
+      target_id = params.require(:target_id)
+      target_type = params.require(:target_type)
+      username = params.permit(:username)['username']
+      group_name = params.permit(:group_name)['group_name']
+
+      assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
+
+      raise Discourse::NotFound unless assign_to
+      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
+      target = target_type.constantize.where(id: target_id).first
+      raise Discourse::NotFound unless target
+
+      # perhaps?
+      #Scheduler::Defer.later "assign topic" do
+      assign = Assigner.new(target, current_user).send(action, assign_to)
+
+      if assign[:success]
+        render json: success_json
+      else
+        render json: translate_failure(assign[:reason], assign_to), status: 400
+      end
     end
   end
 end

@@ -19,22 +19,21 @@ de:
     remind_assigns: "Erinnere Benutzer an anstehende Zuweisungen."
     remind_assigns_frequency: "Frequenz, um Benutzer an zugewiesene Themen zu erinnern."
     max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugewiesen werden können."
-    assign_allowed_on_groups: "Gruppen, denen es erlaubt ist Themen zuzuordnen."
   discourse_assign:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
     already_claimed: "Dieses Thema wurde bereits übernommen."
-    already_assigned: 'Thema ist @%{username} zugewiesen'
+    already_assigned: "Thema ist @%{username} zugewiesen"
     too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugwiesenen Themen (%{max}). "
     flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugewiesen"
     flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst."
     topic_assigned_excerpt: "hat dich dem Thema '%{title}' zugewiesen"
     reminders_frequency:
-      never: 'nie'
-      daily: 'täglich'
-      weekly: 'wöchentlich'
-      monthly: 'monatlich'
-      quarterly: 'vierteljährlich'
+      never: "nie"
+      daily: "täglich"
+      weekly: "wöchentlich"
+      monthly: "monatlich"
+      quarterly: "vierteljährlich"
   assign_mailer:
     title: "E-Mail zuweisen"
     subject_template: "[%{email_prefix}] %{assignee_name} hat dir '%{topic_title}' zugewiesen!"

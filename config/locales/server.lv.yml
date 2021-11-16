@@ -7,6 +7,6 @@
 lv:
   discourse_assign:
     reminders_frequency:
-      never: 'nekad'
-      daily: 'katru dienu'
-      weekly: 'katru nedēļu'
+      never: "nekad"
+      daily: "katru dienu"
+      weekly: "katru nedēļu"

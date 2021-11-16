@@ -7,6 +7,6 @@
 sq:
   discourse_assign:
     reminders_frequency:
-      never: 'asnjëherë'
-      daily: 'çdo ditë'
-      weekly: 'çdo javë'
+      never: "asnjëherë"
+      daily: "çdo ditë"
+      weekly: "çdo javë"

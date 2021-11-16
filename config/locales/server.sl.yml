@@ -7,6 +7,6 @@
 sl:
   discourse_assign:
     reminders_frequency:
-      never: 'nikoli'
-      daily: 'dnevno'
-      weekly: 'tedensko'
+      never: "nikoli"
+      daily: "dnevno"
+      weekly: "tedensko"

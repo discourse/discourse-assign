@@ -4,7 +4,6 @@ require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
 describe ListController do
-
   before { SiteSetting.assign_enabled = true }
 
   let(:user) { Fabricate(:active_user) }
@@ -57,8 +56,8 @@ describe ListController do
     before do
       add_to_assign_allowed_group(user)
 
-      TopicAssigner.new(topic1, user).assign(user)
-      TopicAssigner.new(topic2, user).assign(user2)
+      Assigner.new(topic1, user).assign(user)
+      Assigner.new(topic2, user).assign(user2)
 
       sign_in(user)
     end
@@ -82,7 +81,7 @@ describe ListController do
     it 'doesnt returns deleted topics' do
       sign_in(admin)
 
-      TopicAssigner.new(topic, user).assign(user)
+      Assigner.new(topic, user).assign(user)
 
       delete "/t/#{topic.id}.json"
 
@@ -99,7 +98,6 @@ describe ListController do
 
       expect(id).to eq(0)
     end
-
   end
 
   context '#sorting messages_assigned and group_topics_assigned' do
@@ -116,15 +114,14 @@ describe ListController do
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
-      TopicAssigner.new(post3.topic, user).assign(user)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post3.topic, user).assign(user)
 
       sign_in(user)
     end
 
     it 'group_topics_assigned returns sorted topicsList' do
-
       topic1.bumped_at = Time.now
       topic2.bumped_at = 1.day.ago
       topic3.bumped_at = 3.day.ago
@@ -161,7 +158,6 @@ describe ListController do
     end
 
     it 'messages_assigned returns sorted topicsList' do
-
       topic1.bumped_at = Time.now
       topic3.bumped_at = 3.day.ago
 
@@ -210,9 +206,9 @@ describe ListController do
       add_to_assign_allowed_group(user)
       add_to_assign_allowed_group(user2)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
-      TopicAssigner.new(post3.topic, user).assign(user)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post3.topic, user).assign(user)
 
       sign_in(user)
     end
@@ -264,8 +260,8 @@ describe ListController do
     before do
       add_to_assign_allowed_group(user)
 
-      TopicAssigner.new(post1.topic, user).assign(user)
-      TopicAssigner.new(post2.topic, user).assign(user2)
+      Assigner.new(post1.topic, user).assign(user)
+      Assigner.new(post2.topic, user).assign(user2)
 
       sign_in(user)
     end

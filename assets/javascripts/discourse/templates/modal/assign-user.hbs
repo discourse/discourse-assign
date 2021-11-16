@@ -1,21 +1,25 @@
-{{#d-modal-body title="discourse_assign.assign_modal.title" class="assign"}}
+{{#d-modal-body class="assign"}}
   <div>
-    {{i18n "discourse_assign.assign_modal.description"}}
-    {{user-selector
-      single=true
-      allowAny=false
-      groupMembersOf=allowedGroups
-      excludeCurrentUser=false
-      includeMentionableGroups=false
-      hasGroups=false
-      usernames=model.username
-      placeholderKey=placeholderKey
+    <p>{{i18n model.description}}</p>
+    {{email-group-user-chooser
       autocomplete="off"
+      value=assigneeName
+      onChange=(action (if model.reassign "reassignUsername" "assignUsername"))
       autofocus="autofocus"
+      options=(hash
+        placementStrategy="absolute"
+        filterPlaceholder=placeholderKey
+        includeGroups=true
+        assignableGroups=true
+        groupMembersOf=allowedGroups
+        maximum=1
+        autofocus=autofocus
+        tabindex=1
+      )
     }}
     <div class="assign-suggestions">
       {{#each assignSuggestions as |user|}}
-        <a {{action "assignUser" user}}>
+        <a href {{action (if model.reassign "reassignUser" "assignUser") user.username }}>
           {{avatar user imageSize="small"}}
         </a>
       {{/each}}
@@ -25,8 +29,9 @@
 
 <div class="modal-footer">
   {{d-button
-    label="discourse_assign.assign_modal.assign"
-    icon=inviteIcon action=(action "assign")
+    label= (if model.reassign "discourse_assign.reassign.title" "discourse_assign.assign_modal.assign")
+    icon=inviteIcon
+    action=(action (if model.reassign "reassign" "assign"))
     class="btn-primary"
     disabled=disabled
   }}

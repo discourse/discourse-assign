@@ -17,6 +17,6 @@ bs_BA:
     unassign_on_close: "Kada je tema zatvorena, ne dodijeli temu"
   discourse_assign:
     reminders_frequency:
-      never: 'nikad'
-      daily: 'dnevno'
-      weekly: 'sedmično'
+      never: "nikad"
+      daily: "dnevno"
+      weekly: "sedmično"

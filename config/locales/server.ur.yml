@@ -15,25 +15,28 @@ ur:
     assign_other_regex: "رَیج اَیکس جو دوسروں کو، ذکر کے ذریعے، ٹاپک اسائین کرنے کیلیے پاس ہونا لاذمی ہے۔ مثال 'میری فہرست'۔"
     unassign_on_group_archive: "جب کسی گروپ کی طرف سے ایک پیغام آرکائو کیا حائے تو اسے غیر اسائین کر دیا جائے (اگر اِنباکس میں واپس منتقل ہو تو دوبارہ اسائین کیا جائے)"
     unassign_on_close: "جب ٹاپک بند کیا جائے تواسے غیراسائین کر دیں"
+    assign_mailer: "تفویض کے لئے اطلاعات ای میل کب بھیجیں"
     remind_assigns: "زیر التواء اسائین کردہ کے بارے میں صارفین کو یاد دہانی کرائیں۔"
     remind_assigns_frequency: "اسائین کردہ ٹاپکس کے بارے میں صارفین کو یاد دہانی کرانے کی فریکوئینسی۔"
     max_assigned_topics: "ٹاپکس کی زیادہ سے زیادہ تعداد جو ایک صارف کو اسائین کیے جاسکتے ہیں۔"
-    assign_allowed_on_groups: "گروپس جنہیں ٹاپکس اسائین کرنے کی اجازت ہے۔"
+    assign_allowed_on_groups: "ان گروپوں میں صارفین کو عنوانات تفویض کرنے کی اجازت ہے اور انہیں عنوانات تفویض کیے جاسکتے ہیں۔"
   discourse_assign:
     assigned_to: "ٹاپک @%{username} کو اسائین کر دیا گیا"
     unassigned: "ٹاپک اسائین شدہ نہیں تھا"
     already_claimed: "وہ ٹاپک پہلے سے ہی کََلیم کر لیا گیا ہے۔"
-    already_assigned: 'ٹاپک پہلے سے ہی @%{username} کو اسائین کیا ہوا ہے'
+    already_assigned: "ٹاپک پہلے سے ہی @%{username} کو اسائین کیا ہوا ہے"
     too_many_assigns: "@%{username} پہلے سے ہی اسائین کردہ ٹاپکس کی زیادہ سے زیادہ حد تک پہنچ چکا ہے (%{max})۔"
+    forbidden_assign_to: "@%{username} کو تفویض نہیں کیا جاسکتا ہے کیونکہ وہ تفویض کردہ گروپوں سے تعلق نہیں رکھتے ہیں۔"
+    forbidden_assignee_cant_see_topic: "@%{username} کو تفویض نہیں کیا جاسکتا کیونکہ ان کے پاس اس موضوع تک رسائی نہیں ہے۔"
     flag_assigned: "معذرت، اُس فلَیگ کا ٹاپک ایک دوسرے صارف کو آسائین ہواوا ہے"
     flag_unclaimed: "فلَیگ پر عمل کرنے سے پہلے آپ کا یہ ٹاپک کلَیم کرنا ضروری ہے"
     topic_assigned_excerpt: "نے ٹاپک '%{title}' اسائین کیا"
     reminders_frequency:
-      never: 'کبھی نہیں '
-      daily: 'روزانہ '
-      weekly: 'ہفتہ وار'
-      monthly: 'ماہانہ'
-      quarterly: 'سہ ماہی'
+      never: "کبھی نہیں "
+      daily: "روزانہ "
+      weekly: "ہفتہ وار"
+      monthly: "ماہانہ"
+      quarterly: "سہ ماہی"
   assign_mailer:
     title: "مَیلر اسائین کریں"
     subject_template: "[%{email_prefix}] %{assignee_name} نے آپ کو '%{topic_title}' اسائین کیا! "

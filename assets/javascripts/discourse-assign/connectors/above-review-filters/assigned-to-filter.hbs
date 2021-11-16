@@ -1,16 +1,15 @@
 <div class="reviewable-filter discourse-assign-assign-to-filter">
   <label class="filter-label">{{i18n "discourse_assign.assigned_to"}}</label>
-  {{user-selector
-    single=true
-    fullWidthWrap=true
-    allowAny=false
-    group="staff"
-    groupMembersOf=allowedGroups
-    excludeCurrentUser=false
-    includeMentionableGroups=false
-    hasGroups=false
-    usernames=additionalFilters.assigned_to
-    placeholderKey=placeholderKey
+  {{email-group-user-chooser
+    value=additionalFilters.assigned_to
+    onChange=(action "updateAssignedTo")
     autocomplete="off"
+    options=(hash
+      maximum=1
+      fullWidthWrap=true
+      filterPlaceholder=placeholderKey
+      includeGroups=false
+      groupMembersOf=allowedGroups
+    )
   }}
 </div>

@@ -8,6 +8,6 @@ et:
   discourse_assign:
     unassigned: "Teema määramine on tühistatud"
     reminders_frequency:
-      never: 'mitte kunagi'
-      daily: 'iga päev'
-      weekly: 'iga nädal'
+      never: "mitte kunagi"
+      daily: "iga päev"
+      weekly: "iga nädal"

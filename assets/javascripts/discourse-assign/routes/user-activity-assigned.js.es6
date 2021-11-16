@@ -1,9 +1,18 @@
 import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
+import cookie from "discourse/lib/cookie";
+import { action } from "@ember/object";
 
 export default UserTopicListRoute.extend({
   userActionType: 16,
   noContentHelpKey: "discourse_assigns.no_assigns",
+
+  beforeModel() {
+    if (this.currentUser === undefined) {
+      cookie("destination_url", window.location.href);
+      this.transitionTo("login");
+    }
+  },
 
   model(params) {
     return this.store.findFiltered("topicList", {
@@ -34,9 +43,8 @@ export default UserTopicListRoute.extend({
     controller.set("model", model);
   },
 
-  actions: {
-    changeAssigned() {
-      this.refresh();
-    },
+  @action
+  changeAssigned() {
+    this.refresh();
   },
 });

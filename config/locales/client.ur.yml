@@ -6,17 +6,25 @@
 
 ur:
   js:
+    filters:
+      unassigned:
+        title: "غیر اسائین کریں"
+        help: "عنوانات جو تفویض نہیں کیے گئے ہیں"
     action_codes:
-      assigned: "%{who} کو %{when} اسائین کیا "
-      unassigned: "%{who} کو %{when} غیر اسائین کیا "
+      assigned: "تفویض %{who} %{when}"
+      unassigned: "غیر تفویض %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "زمرے میں 'غیر تفویض' فلٹر شامل کریں"
       cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
       cant_act_unclaimed: "فلَیگز پر عمل کرنے سے پہلے آپ کو یہ ٹاپک کَلَیم کرنا ہوگا۔"
+      topic_search_placeholder: "عنوان یا پوسٹ مواد کے ذریعہ موضوعات تلاش کریں"
+      sidebar_name_filter_placeholder: "نام/صارف نام"
       assigned: "اسائین کردہ"
       group_everyone: "ہر کوئی"
       assigned_to: "جس کو اسائین کیا گیا"
       unassign:
         title: "غیر اسائین کریں"
+        help: "موضوع سے %{username} کو غیر متعین کریں"
       assign:
         title: "اسائین کریں"
         help: "صارف کو ٹاپک اسائین کریں"
@@ -25,12 +33,14 @@ ur:
         help: "ایک مختلف صارف کو ٹاپک دوبارہ اسائین کریں"
       assign_modal:
         title: "ٹاپک اسائین کریں"
+        description: "اس صارف کا نام درج کریں جسے آپ اس موضوع کو تفویض کرنا چاہتے ہیں"
         assign: "اسائین کریں"
       claim:
         title: "کلیم کریں"
         help: "اپنے آپ کو ٹاپک اسائین کریں"
       assign_mailer:
         never: "کبھی نہیں "
+        different_users: "صرف اس صورت میں جب تفویض کرنے والے اور تفویض کرنے والے مختلف صارفین ہیں"
         always: "ہمیشہ"
       reminders_frequency:
         description: "اسائین کردہ ٹاپکس کے بارے میں یاد دہانیاں وصول کرنے کی فریکوئینسی"
@@ -43,3 +53,22 @@ ur:
       messages:
         assigned_title: "اسائین کردہ (%{count})"
         assigned: "اسائین کردہ"
+      no_assignments_title: "آپ کے پاس ابھی تک کوئی اسائنمنٹ نہیں ہے"
+      no_assignments_body: >
+        آپ کے تفویض کردہ عنوانات اور پیغامات یہاں درج ہوں گے۔ آپ کو اپنے اسائنمنٹس کی وقفے وقفہ سے یاد دہانی کا نوٹیفکیشن بھی ملے گا ، جسے آپ اپنی <a href='%{preferencesUrl}'>صارف ترجیحات</a>میں ایڈجسٹ کرسکتے ہیں۔ <br><br> اپنے آپ کو یا کسی اور کو موضوع یا پیغام تفویض کرنے کے لئے ، %{icon} تفویض والے بٹن کو تلاش کریں۔
+    admin:
+      web_hooks:
+        assign_event:
+          name: "واقعہ تفویض کریں"
+          details: "جب کوئی صارف کسی موضوع کو تفویض یا غیر متعین کرتا ہے۔"
+    search:
+      advanced:
+        in:
+          assigned: "تفویض کیے گئے"
+          unassigned: "غیرتفویض شدہ ہیں"
+        assigned:
+          label: "کو تفویض"
+    topics:
+      bulk:
+        unassign: "موضوعات کو غیر تفویض کریں"
+        assign: "موضوعات تفویض کریں"

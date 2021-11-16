@@ -7,6 +7,6 @@
 th:
   discourse_assign:
     reminders_frequency:
-      never: 'ไม่เลย'
-      daily: 'ทุกวัน'
-      weekly: 'รายสัปดาห์'
+      never: "ไม่เลย"
+      daily: "ทุกวัน"
+      weekly: "รายสัปดาห์"

@@ -19,23 +19,30 @@ he:
     remind_assigns: "להזכיר למשתמשים בנוגע להקצאות מתאימות."
     remind_assigns_frequency: "תדירות לשליחת תזכורת למשתמשים בנוגע לנושאים מוקצים."
     max_assigned_topics: "מספר הנושאים המרבי שניתן להקצות למשתמש."
-    assign_allowed_on_groups: "קבוצות שרשאיות להקצות נושאים."
+    assign_allowed_on_groups: "משתמשים בקבוצות אלה רשאים להקצות נושאים וניתן להקצות להם נושאים."
   discourse_assign:
     assigned_to: "הנושא רשום ל@%{username}"
     unassigned: "הקצאת הנושא בוטלה"
     already_claimed: "נושא זה כבר נדרש."
-    already_assigned: 'הנושא כבר מוקצה לטובת ‎@%{username}'
+    already_assigned: "הנושא כבר מוקצה לטובת ‎@%{username}"
     too_many_assigns: "‎@%{username}‎ כבר הגיע לכמות הנושאים המרבית שניתן להקצות לטובתו (%{max})."
+    too_many_assigns_for_topic: "המגבלה של %{limit} הקצאות לנושא הושגה."
     forbidden_assign_to: "אין אפשרות להקצות את ‎@%{username}‎ כיוון שאין להם שייכות לקבוצות מורשות מוקצות."
+    forbidden_assignee_not_pm_participant: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה להודעה הפרטית הזאת. ניתן להעניק ל־‎@%{username} גישה על ידי שליחת הזמנה להודעה הפרטית הזאת."
+    forbidden_assignee_cant_see_topic: "אין אפשרות להקצות את ‎@%{username} כיוון שאין לו/לה גישה לנושא הזה."
+    group_already_assigned: "הנושא כבר מוקצה לטובת ‎@%{group}"
+    forbidden_group_assign_to: "אין אפשרות להקצות את ‎@%{group}‎ כיוון שאין להם שייכות לקבוצות מורשות מוקצות."
+    forbidden_group_assignee_not_pm_participant: "לא ניתן להקצות את ‎@%{group} כיוון שלא לכל החברים יש גישה להודעה הפרטית הזאת."
+    forbidden_group_assignee_cant_see_topic: "לא ניתן להקצות את ‎@%{group} כיוון שלא לכל החברים יש גישה לנושא הזה."
     flag_assigned: "הנושא של דגל זה מוקצה למשתמש אחר, עמך הסליחה"
     flag_unclaimed: "עליך לדרוש את הנושא הזה בטרם ביצוע פעילות על הדגל"
     topic_assigned_excerpt: "הקצאה של הנושא ‚%{title}’ אליך"
     reminders_frequency:
-      never: 'אף פעם'
-      daily: 'יומית'
-      weekly: 'שבועית'
-      monthly: 'חודשית'
-      quarterly: 'רבעונית'
+      never: "אף פעם"
+      daily: "יומית"
+      weekly: "שבועית"
+      monthly: "חודשית"
+      quarterly: "רבעונית"
   assign_mailer:
     title: "הקצאת שולח דוא״ל"
     subject_template: "[%{email_prefix}] ‚%{topic_title}’ הוקצה אליך על ידי %{assignee_name} !"
@@ -66,3 +73,8 @@ he:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: הקצאה אקראית
+        no_one: "היה ניסיון אקראי להקצות אחד מחברי הקבוצה @%{group}, אך אף אחד מהם לא היה זמין."
