@@ -108,7 +108,7 @@ en:
             assignees_group:
               label: Assignees Group
             minimum_time_between_assignments:
-              label: Mininmum hours between assignments
+              label: Minimum hours between assignments
             min_recently_assigned_days:
               label: Min recently assigned days
               description: Defaults to 14 days.
