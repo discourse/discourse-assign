@@ -17,7 +17,6 @@ module DiscourseAssign
       return if !group
 
       {
-        id: group.id,
         name: group.name,
         flair_bg_color: group.flair_bg_color,
         flair_color: group.flair_color,

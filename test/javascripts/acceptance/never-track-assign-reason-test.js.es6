@@ -66,23 +66,5 @@ acceptance(
         "You will see a count of new replies because this topic was assigned to you."
       );
     });
-
-    test("Show group assign reason when user never tracks topics", async (assert) => {
-      updateCurrentUser({
-        auto_track_topics_after_msecs: -1,
-        groups: [
-          {
-            id: 47,
-          },
-        ],
-      });
-
-      await visit("/t/assignment-topic/46");
-
-      assert.strictEqual(
-        query(".topic-notifications-button .reason span.text").innerText,
-        "You will see a count of new replies because this topic was assigned to your group @discourse."
-      );
-    });
   }
 );

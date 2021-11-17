@@ -511,25 +511,13 @@ function initialize(api) {
       "topic",
       "topic.details.{notification_level,notifications_reason_id}"
     )
-    notificationReasonText(topic, topicDetails) {
-      if (this.currentUser.auto_track_topics_after_msecs === -1) {
-        if (
-          topic.assigned_to_user &&
-          topic.assigned_to_user.username === this.currentUser.username
-        ) {
-          return I18n.t("notification_reason.user");
-        }
-        if (
-          topic.assigned_to_group &&
-          this.currentUser.groups &&
-          this.currentUser.groups.some(
-            ({ id }) => id === topic.assigned_to_group.id
-          )
-        ) {
-          return I18n.t("notification_reason.group", {
-            name: topic.assigned_to_group.name,
-          });
-        }
+    notificationReasonText(topic) {
+      if (
+        this.currentUser.auto_track_topics_after_msecs === -1 &&
+        topic.assigned_to_user &&
+        topic.assigned_to_user.username === this.currentUser.username
+      ) {
+        return I18n.t("notification_reason.user");
       }
 
       return this._super(...arguments);

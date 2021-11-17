@@ -121,4 +121,3 @@ en:
               label: Users in working hours
     notification_reason:
       user: "You will see a count of new replies because this topic was assigned to you."
-      group: "You will see a count of new replies because this topic was assigned to your group @%{name}."
