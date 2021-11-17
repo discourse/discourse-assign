@@ -506,6 +506,36 @@ function initialize(api) {
     },
   });
 
+  api.modifyClass("component:topic-notifications-button", {
+    @discourseComputed(
+      "topic",
+      "topic.details.{notification_level,notifications_reason_id}"
+    )
+    notificationReasonText(topic, topicDetails) {
+      if (this.currentUser.auto_track_topics_after_msecs === -1) {
+        if (
+          topic.assigned_to_user &&
+          topic.assigned_to_user.username === this.currentUser.username
+        ) {
+          return I18n.t("notification_reason.user");
+        }
+        if (
+          topic.assigned_to_group &&
+          this.currentUser.groups &&
+          this.currentUser.groups.some(
+            ({ id }) => id === topic.assigned_to_group.id
+          )
+        ) {
+          return I18n.t("notification_reason.group", {
+            name: topic.assigned_to_group.name,
+          });
+        }
+      }
+
+      return this._super(...arguments);
+    },
+  });
+
   api.addPostSmallActionIcon("assigned", "user-plus");
   api.addPostSmallActionIcon("assigned_to_post", "user-plus");
   api.addPostSmallActionIcon("assigned_group", "group-plus");

@@ -133,6 +133,10 @@ after_initialize do
     @can_assign == :true
   end
 
+  add_to_serializer(:current_user, :auto_track_topics_after_msecs) do
+    user.user_option.auto_track_topics_after_msecs
+  end
+
   add_to_class(:group, :can_show_assigned_tab?) do
     allowed_group_ids = SiteSetting.assign_allowed_on_groups.split("|")
 
