@@ -74,10 +74,11 @@ function registerTopicFooterButtons(api) {
           break;
         }
         case "reassign-self": {
+          const isAssigned = this.topic.isAssigned();
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
           taskActions
-            .reassignUserToTopic(this.currentUser, this.topic)
+            .reassignUserToTopic(this.currentUser, this.topic, isAssigned)
             .then(() => {
               this.appEvents.trigger("post-stream:refresh", {
                 id: this.topic.postStream.firstPostId,
@@ -329,14 +330,16 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
-
+      const isAssigned = this.topic.isAssigned();
       this.set("topic.assigned_to_user", null);
       this.set("topic.assigned_to_group", null);
-      taskActions.reassignUserToTopic(this.currentUser, this.topic).then(() => {
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
+      taskActions
+        .reassignUserToTopic(this.currentUser, this.topic, isAssigned)
+        .then(() => {
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
+          });
         });
-      });
     },
     dropdown() {
       return this.currentUser?.can_assign && this.topic.isAssigned();

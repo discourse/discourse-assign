@@ -38,19 +38,9 @@ export default Service.extend({
     });
   },
 
-  reassignUserToTopic(user, target, targetType = "Topic") {
-    return ajax("/assign/reassign", {
-      type: "PUT",
-      data: {
-        username: user.username,
-        target_id: target.id,
-        target_type: targetType,
-      },
-    });
-  },
-
-  assignUserToTopic(user, target, targetType = "Topic") {
-    return ajax("/assign/assign", {
+  reassignUserToTopic(user, target, isAssigned, targetType = "Topic") {
+    const action = isAssigned ? "reassign" : "assign";
+    return ajax(`/assign/${action}`, {
       type: "PUT",
       data: {
         username: user.username,
