@@ -44,11 +44,27 @@ module DiscourseAssign
     end
 
     def assign
-      reassign_or_assign_target(action: "assign")
-    end
+      target_id = params.require(:target_id)
+      target_type = params.require(:target_type)
+      username = params.permit(:username)['username']
+      group_name = params.permit(:group_name)['group_name']
 
-    def reassign
-      reassign_or_assign_target(action: "reassign")
+      assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
+
+      raise Discourse::NotFound unless assign_to
+      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
+      target = target_type.constantize.where(id: target_id).first
+      raise Discourse::NotFound unless target
+
+      # perhaps?
+      #Scheduler::Defer.later "assign topic" do
+      assign = Assigner.new(target, current_user).send("assign", assign_to)
+
+      if assign[:success]
+        render json: success_json
+      else
+        render json: translate_failure(assign[:reason], assign_to), status: 400
+      end
     end
 
     def assigned
@@ -168,30 +184,6 @@ module DiscourseAssign
 
     def ensure_assign_allowed
       raise Discourse::InvalidAccess.new unless current_user.can_assign?
-    end
-
-    def reassign_or_assign_target(action:)
-      target_id = params.require(:target_id)
-      target_type = params.require(:target_type)
-      username = params.permit(:username)['username']
-      group_name = params.permit(:group_name)['group_name']
-
-      assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
-
-      raise Discourse::NotFound unless assign_to
-      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
-      target = target_type.constantize.where(id: target_id).first
-      raise Discourse::NotFound unless target
-
-      # perhaps?
-      #Scheduler::Defer.later "assign topic" do
-      assign = Assigner.new(target, current_user).send(action, assign_to)
-
-      if assign[:success]
-        render json: success_json
-      else
-        render json: translate_failure(assign[:reason], assign_to), status: 400
-      end
     end
   end
 end

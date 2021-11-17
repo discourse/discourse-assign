@@ -198,7 +198,16 @@ class ::Assigner
       end
   end
 
-  def assign_or_reassign_target(assign_to:, type:, silent:, action_code:)
+  def assign(assign_to, silent: false)
+    type = assign_to.is_a?(User) ? "User" : "Group"
+
+    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
+    return { success: false, reason: forbidden_reason } if forbidden_reason
+
+    action_code = {}
+    action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
+    action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
+
     @target.assignment&.destroy!
 
     assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
@@ -293,26 +302,6 @@ class ::Assigner
     end
 
     { success: true }
-  end
-
-  def assign(assign_to, silent: false)
-    type = assign_to.is_a?(User) ? "User" : "Group"
-
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
-    return { success: false, reason: forbidden_reason } if forbidden_reason
-
-    action_code = { user: "assigned", group: "assigned_group" }
-    assign_or_reassign_target(assign_to: assign_to, type: type, silent: silent, action_code: action_code)
-  end
-
-  def reassign(assign_to, silent: false)
-    type = assign_to.is_a?(User) ? "User" : "Group"
-
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
-    return { success: false, reason: forbidden_reason } if forbidden_reason
-
-    action_code = { user: "reassigned", group: "reassigned_group" }
-    assign_or_reassign_target(assign_to: assign_to, type: type, silent: silent, action_code: action_code)
   end
 
   def unassign(silent: false)

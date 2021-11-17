@@ -78,7 +78,7 @@ function registerTopicFooterButtons(api) {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
           taskActions
-            .reassignUserToTopic(this.currentUser, this.topic, isAssigned)
+            .reassignUserToTopic(this.currentUser, this.topic)
             .then(() => {
               this.appEvents.trigger("post-stream:refresh", {
                 id: this.topic.postStream.firstPostId,
@@ -87,7 +87,7 @@ function registerTopicFooterButtons(api) {
           break;
         }
         case "reassign": {
-          taskActions.reassign(this.topic).set("model.onSuccess", () => {
+          taskActions.assign(this.topic, this.topic.isAssigned()).set("model.onSuccess", () => {
             this.appEvents.trigger("post-stream:refresh", {
               id: this.topic.postStream.firstPostId,
             });
@@ -196,7 +196,7 @@ function registerTopicFooterButtons(api) {
       if (this.topic.isAssigned()) {
         this.set("topic.assigned_to_user", null);
         this.set("topic.assigned_to_group", null);
-        taskActions.unassign(this.topic.id, "Topic").then(() => {
+        taskActions.unassign(this.topic.id).then(() => {
           this.appEvents.trigger("post-stream:refresh", {
             id: this.topic.postStream.firstPostId,
           });
@@ -334,7 +334,7 @@ function registerTopicFooterButtons(api) {
       this.set("topic.assigned_to_user", null);
       this.set("topic.assigned_to_group", null);
       taskActions
-        .reassignUserToTopic(this.currentUser, this.topic, isAssigned)
+        .reassignUserToTopic(this.currentUser, this.topic)
         .then(() => {
           this.appEvents.trigger("post-stream:refresh", {
             id: this.topic.postStream.firstPostId,
@@ -383,7 +383,7 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      taskActions.reassign(this.topic).set("model.onSuccess", () => {
+      taskActions.assign(this.topic, this.topic.isAssigned()).set("model.onSuccess", () => {
         this.appEvents.trigger("post-stream:refresh", {
           id: this.topic.postStream.firstPostId,
         });
@@ -453,7 +453,7 @@ function initialize(api) {
       });
       api.attachWidgetAction("post", "assignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.assign(this.model, "Post");
+        taskActions.assign(this.model, this.model.isAssigned(), "Post");
       });
       api.attachWidgetAction("post", "unassignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
