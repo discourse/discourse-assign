@@ -515,7 +515,7 @@ function initialize(api) {
     )
     notificationReasonText(topic) {
       if (
-        this.currentUser.auto_track_topics_after_msecs === -1 &&
+        this.currentUser.never_auto_track_topics &&
         topic.assigned_to_user &&
         topic.assigned_to_user.username === this.currentUser.username
       ) {
