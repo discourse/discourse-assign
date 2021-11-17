@@ -396,6 +396,7 @@ class ::Assigner
 
   def moderator_post_assign_action_code(assignment, action_code)
     if assignment.target.is_a?(Post)
+      # posts do not have to handle conditions of 'assign' or 'reassign'
       assignment.assigned_to_user? ? "assigned_to_post" : "assigned_group_to_post"
     elsif assignment.target.is_a?(Topic)
       assignment.assigned_to_user? ? "#{action_code[:user]}" : "#{action_code[:group]}"
