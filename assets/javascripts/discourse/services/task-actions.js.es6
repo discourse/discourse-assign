@@ -49,6 +49,18 @@ export default Service.extend({
     });
   },
 
+
+  assignUserToTopic(user, target, targetType = "Topic") {
+    return ajax("/assign/assign", {
+      type: "PUT",
+      data: {
+        username: user.username,
+        target_id: target.id,
+        target_type: targetType,
+      },
+    });
+  },
+
   reassign(target, targetType = "Topic") {
     return showModal("assign-user", {
       title:
