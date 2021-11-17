@@ -49,7 +49,6 @@ export default Service.extend({
     });
   },
 
-
   assignUserToTopic(user, target, targetType = "Topic") {
     return ajax("/assign/assign", {
       type: "PUT",
