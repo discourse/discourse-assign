@@ -395,14 +395,11 @@ class ::Assigner
   private
 
   def moderator_post_assign_action_code(assignment, action_code)
-    suffix =
-      if assignment.target.is_a?(Post)
-        "_to_post"
-      elsif assignment.target.is_a?(Topic)
-        ""
-      end
-    return "#{action_code[:user]}#{suffix}" if assignment.assigned_to_user?
-    return "#{action_code[:group]}#{suffix}" if assignment.assigned_to_group?
+    if assignment.target.is_a?(Post)
+      assignment.assigned_to_user? ? "assigned_to_post" : "assigned_group_to_post"
+    elsif assignment.target.is_a?(Topic)
+      assignment.assigned_to_user? ? "#{action_code[:user]}" : "#{action_code[:group]}"
+    end
   end
 
   def moderator_post_unassign_action_code(assignment)
