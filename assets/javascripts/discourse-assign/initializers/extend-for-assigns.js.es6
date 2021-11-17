@@ -507,6 +507,8 @@ function initialize(api) {
   });
 
   api.modifyClass("component:topic-notifications-button", {
+    pluginId: PLUGIN_ID,
+
     @discourseComputed(
       "topic",
       "topic.details.{notification_level,notifications_reason_id}"
