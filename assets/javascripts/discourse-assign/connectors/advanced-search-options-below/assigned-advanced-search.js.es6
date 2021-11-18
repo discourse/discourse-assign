@@ -2,7 +2,7 @@ import { action } from "@ember/object";
 
 export default {
   shouldRender(args, component) {
-    return component.currentUser && component.currentUser.can_assign;
+    return component.currentUser?.can_assign;
   },
 
   @action
@@ -12,6 +12,5 @@ export default {
       "updateSearchTermForAssignedUsername",
       value
     );
-    this.onChangeSearchedTermField("assigned", "updateInRegex", value);
   },
 };
