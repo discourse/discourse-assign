@@ -11,7 +11,7 @@ import SearchAdvancedOptions from "discourse/components/search-advanced-options"
 import TopicButtonAction, {
   addBulkButton,
 } from "discourse/controllers/topic-bulk-actions";
-import { inject } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
@@ -835,20 +835,23 @@ const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
 
 export default {
   name: "extend-for-assign",
+
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
     if (!siteSettings.assign_enabled) {
       return;
     }
+
     const currentUser = container.lookup("current-user:main");
-    if (currentUser && currentUser.can_assign) {
+    if (currentUser?.can_assign) {
       SearchAdvancedOptions.reopen({
         updateSearchTermForAssignedUsername() {
           const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
           const userFilter = this.get("searchedTerms.assigned");
           let searchTerm = this.searchTerm || "";
           let keyword = "assigned";
-          if (userFilter && userFilter.length !== 0) {
+
+          if (userFilter?.length !== 0) {
             if (match.length !== 0) {
               searchTerm = searchTerm.replace(
                 match[0],
@@ -858,16 +861,16 @@ export default {
               searchTerm += ` ${keyword}:${userFilter}`;
             }
 
-            this.set("searchTerm", searchTerm.trim());
+            this._updateSearchTerm(searchTerm);
           } else if (match.length !== 0) {
             searchTerm = searchTerm.replace(match[0], "");
-            this.set("searchTerm", searchTerm.trim());
+            this._updateSearchTerm(searchTerm);
           }
         },
       });
 
       TopicButtonAction.reopen({
-        assignUser: inject("assign-user"),
+        assignUser: controller("assign-user"),
         actions: {
           showReAssign() {
             this.set("assignUser.isBulkAction", true);
