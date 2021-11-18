@@ -134,7 +134,7 @@ after_initialize do
   end
 
   add_to_serializer(:current_user, :never_auto_track_topics) do
-    (user.user_option.auto_track_topics_after_msecs || 0) < 0
+    (user.user_option.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs) < 0
   end
 
   add_to_class(:group, :can_show_assigned_tab?) do
