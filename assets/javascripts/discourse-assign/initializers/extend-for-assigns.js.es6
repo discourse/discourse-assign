@@ -506,6 +506,26 @@ function initialize(api) {
     },
   });
 
+  api.modifyClass("component:topic-notifications-button", {
+    pluginId: PLUGIN_ID,
+
+    @discourseComputed(
+      "topic",
+      "topic.details.{notification_level,notifications_reason_id}"
+    )
+    notificationReasonText(topic) {
+      if (
+        this.currentUser.never_auto_track_topics &&
+        topic.assigned_to_user &&
+        topic.assigned_to_user.username === this.currentUser.username
+      ) {
+        return I18n.t("notification_reason.user");
+      }
+
+      return this._super(...arguments);
+    },
+  });
+
   api.addPostSmallActionIcon("assigned", "user-plus");
   api.addPostSmallActionIcon("assigned_to_post", "user-plus");
   api.addPostSmallActionIcon("assigned_group", "group-plus");
