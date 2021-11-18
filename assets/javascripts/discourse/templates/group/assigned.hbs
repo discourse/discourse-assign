@@ -5,7 +5,7 @@
         {{input
           type="text"
           placeholder=(i18n "discourse_assign.sidebar_name_filter_placeholder")
-          value=filterName
+          value=(readonly filterName)
           class="search"
           input=(action "onChangeFilterName" value="target.value")
         }}

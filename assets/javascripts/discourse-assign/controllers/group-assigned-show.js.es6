@@ -1,5 +1,5 @@
 import UserTopicsList from "discourse/controllers/user-topics-list";
-import { alias, readOnly } from "@ember/object/computed";
+import { alias } from "@ember/object/computed";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import { inject as controller } from "@ember/controller";
@@ -17,8 +17,6 @@ export default UserTopicsList.extend({
   canBulkSelect: alias("currentUser.staff"),
 
   queryParams: ["order", "ascending", "search"],
-
-  searchTerm: readOnly("search"),
 
   _setSearchTerm(searchTerm) {
     this.set("search", searchTerm);

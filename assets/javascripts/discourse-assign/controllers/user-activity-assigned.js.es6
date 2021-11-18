@@ -8,7 +8,6 @@ import { action } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
-import { readOnly } from "@ember/object/computed";
 
 export default UserTopicsList.extend({
   user: controller(),
@@ -17,8 +16,6 @@ export default UserTopicsList.extend({
   order: "",
   ascending: false,
   search: "",
-
-  searchTerm: readOnly("search"),
 
   _setSearchTerm(searchTerm) {
     this.set("search", searchTerm);
