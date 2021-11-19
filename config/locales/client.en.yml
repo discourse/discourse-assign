@@ -43,6 +43,7 @@ en:
         title: "Re-assign"
         title_w_ellipsis: "Re-assign to..."
         to_self: "Re-assign to me"
+        to_self_help: "Re-assign Topic to me"
         help: "Re-assign Topic to a different user"
       reassign_modal:
         title: "Re-assign Topic"
