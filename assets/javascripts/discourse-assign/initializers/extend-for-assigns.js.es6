@@ -129,7 +129,12 @@ function registerTopicFooterButtons(api) {
       const content = [
         {
           id: "unassign",
-          name: htmlSafe(
+          name: I18n.t("discourse_assign.unassign.help", {
+            username:
+              this.topic.assigned_to_user?.username ||
+              this.topic.assigned_to_group?.name,
+          }),
+          label: htmlSafe(
             `${iconHTML("user-times")} ${I18n.t(
               "discourse_assign.unassign.title"
             )}`
@@ -143,7 +148,8 @@ function registerTopicFooterButtons(api) {
       ) {
         content.push({
           id: "reassign-self",
-          name: htmlSafe(
+          name: I18n.t("discourse_assign.reassign.to_self_help"),
+          label: htmlSafe(
             `${iconHTML("user-plus")} ${I18n.t(
               "discourse_assign.reassign.to_self"
             )}`
@@ -152,7 +158,8 @@ function registerTopicFooterButtons(api) {
       }
       content.push({
         id: "reassign",
-        name: htmlSafe(
+        name: I18n.t("discourse_assign.reassign.help"),
+        label: htmlSafe(
           `${iconHTML("group-plus")} ${I18n.t(
             "discourse_assign.reassign.title_w_ellipsis"
           )}`
@@ -311,10 +318,10 @@ function registerTopicFooterButtons(api) {
       return "user-plus";
     },
     translatedTitle() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.to_self_help");
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.to_self_help");
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.reassign.to_self");
@@ -361,10 +368,10 @@ function registerTopicFooterButtons(api) {
       return "group-plus";
     },
     translatedTitle() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.help");
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.help");
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.reassign.title_w_ellipsis");
