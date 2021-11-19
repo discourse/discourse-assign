@@ -200,7 +200,7 @@ function registerTopicFooterButtons(api) {
       if (this.topic.isAssigned()) {
         this.set("topic.assigned_to_user", null);
         this.set("topic.assigned_to_group", null);
-        taskActions.unassign(this.topic.id).then(() => {
+        taskActions.unassign(this.topic.id, "Topic").then(() => {
           this.appEvents.trigger("post-stream:refresh", {
             id: this.topic.postStream.firstPostId,
           });
@@ -334,6 +334,7 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
+
       this.set("topic.assigned_to_user", null);
       this.set("topic.assigned_to_group", null);
       taskActions.reassignUserToTopic(this.currentUser, this.topic).then(() => {
