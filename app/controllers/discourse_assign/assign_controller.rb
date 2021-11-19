@@ -58,7 +58,7 @@ module DiscourseAssign
 
       # perhaps?
       #Scheduler::Defer.later "assign topic" do
-      assign = Assigner.new(target, current_user).send("assign", assign_to)
+      assign = Assigner.new(target, current_user).assign(assign_to)
 
       if assign[:success]
         render json: success_json
