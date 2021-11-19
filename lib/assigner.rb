@@ -205,8 +205,8 @@ class ::Assigner
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
     action_code = {}
-    action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
-    action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
+    action_code[:user] = topic.assigned_to.present? ? "reassigned" : "assigned"
+    action_code[:group] = topic.assigned_to.present? ? "reassigned_group" : "assigned_group"
 
     @target.assignment&.destroy!
 
