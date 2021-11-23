@@ -5,6 +5,12 @@
   }
 }
 
+.assigned-topic-list-item {
+  .pull-right .num.activity {
+    margin-right: 0.5em;
+  }
+}
+
 .select-kit-row[data-value="unassign-mobile-header"] {
   background: rgba(var(--primary-low-rgb), 0.5);
   pointer-events: none;
