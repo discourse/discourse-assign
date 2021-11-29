@@ -443,7 +443,10 @@ function initialize(api) {
             icon: "user-times",
             className: "unassign-post",
             title: "discourse_assign.unassign_post.title",
-            position: "second-last-hidden",
+            position:
+              post.assigned_to_user?.id === api.getCurrentUser().id
+                ? "first"
+                : "second-last-hidden",
           };
         } else {
           return {
@@ -568,24 +571,23 @@ function initialize(api) {
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
   api.addTagsHtmlCallback((topic, params = {}) => {
-    const [
-      assignedToUser,
-      assignedToGroup,
-      assignedToIndirectly,
-    ] = Object.values(
-      topic.getProperties(
-        "assigned_to_user",
-        "assigned_to_group",
-        "indirectly_assigned_to"
-      )
+    const [assignedToUser, assignedToGroup] = Object.values(
+      topic.getProperties("assigned_to_user", "assigned_to_group")
     );
 
+    let assignedToIndirectly;
+    if (topic.get("indirectly_assigned_to")) {
+      assignedToIndirectly = Object.entries(
+        topic.get("indirectly_assigned_to")
+      ).map(([key, value]) => {
+        value.assignedToPostId = key;
+        return value;
+      });
+    } else {
+      assignedToIndirectly = [];
+    }
     const assignedTo = []
-      .concat(
-        assignedToUser,
-        assignedToGroup,
-        assignedToIndirectly ? Object.values(assignedToIndirectly) : []
-      )
+      .concat(assignedToUser, assignedToGroup, assignedToIndirectly)
       .filter((element) => element)
       .flat()
       .uniqBy((assignee) => assignee.assign_path);
@@ -593,7 +595,12 @@ function initialize(api) {
     if (assignedTo) {
       return assignedTo
         .map((assignee) => {
-          const assignedPath = getURL(assignee.assign_path);
+          let assignedPath;
+          if (assignee.assignedToPostId) {
+            assignedPath = `/p/${assignee.assignedToPostId}`;
+          } else {
+            assignedPath = `/t/${topic.id}`;
+          }
           const icon = iconHTML(assignee.assign_icon);
           const name = assignee.username || assignee.name;
           const tagName = params.tagName || "a";
