@@ -181,21 +181,22 @@ class ::Assigner
   end
 
   def forbidden_reasons(assign_to:, type:)
-    forbidden_reason =
-      case
-      when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
-        topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
-      when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_target?(user) }
-        topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
-      when !can_be_assigned?(assign_to)
-        assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-      when topic.assignment&.assigned_to_id == assign_to.id && topic.assignment&.assigned_to_type == type
-        assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-      when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
-        :too_many_assigns_for_topic
-      when !can_assign_to?(assign_to)
-        :too_many_assigns
-      end
+    case
+    when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
+      topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
+    when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_target?(user) }
+      topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
+    when !can_be_assigned?(assign_to)
+      assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
+    when topic.assignment&.assigned_to_id == assign_to.id && topic.assignment&.assigned_to_type == type
+      assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
+    when @target.is_a?(Topic) && Assignment.where(topic_id: topic.id, target_type: "Post").any? { |assignment| assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type }
+      assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
+    when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
+      :too_many_assigns_for_topic
+    when !can_assign_to?(assign_to)
+      :too_many_assigns
+    end
   end
 
   def assign_or_reassign_target(assign_to:, type:, silent:, action_code:)
