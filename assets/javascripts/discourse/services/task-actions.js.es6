@@ -22,49 +22,33 @@ export default Service.extend({
     });
   },
 
-  assign(target, targetType = "Topic") {
+  assign(target, options = { isAssigned: false, targetType: "Topic" }) {
     return showModal("assign-user", {
-      title: "discourse_assign.assign" + this.i18nSuffix(targetType) + ".title",
+      title:
+        "discourse_assign.assign" +
+        this.i18nSuffix(options.targetType) +
+        `.${options.isAssigned ? "reassign_title" : "title"}`,
       model: {
         description:
-          "discourse_assign.assign" +
-          this.i18nSuffix(targetType) +
+          `discourse_assign.${options.isAssigned ? "reassign" : "assign"}` +
+          this.i18nSuffix(options.targetType) +
           ".description",
+        reassign: options.isAssigned,
         username: target.assigned_to_user?.username,
         group_name: target.assigned_to_group?.name,
         target,
-        targetType,
+        targetType: options.targetType,
       },
     });
   },
 
   reassignUserToTopic(user, target, targetType = "Topic") {
-    return ajax("/assign/reassign", {
+    return ajax("/assign/assign", {
       type: "PUT",
       data: {
         username: user.username,
         target_id: target.id,
         target_type: targetType,
-      },
-    });
-  },
-
-  reassign(target, targetType = "Topic") {
-    return showModal("assign-user", {
-      title:
-        "discourse_assign.assign" +
-        this.i18nSuffix(targetType) +
-        ".reassign_title",
-      model: {
-        description:
-          "discourse_assign.reassign" +
-          this.i18nSuffix(targetType) +
-          ".description",
-        reassign: true,
-        username: target.assigned_to_user?.username,
-        group_name: target.assigned_to_group?.name,
-        target,
-        targetType,
       },
     });
   },

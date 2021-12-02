@@ -198,7 +198,16 @@ class ::Assigner
       end
   end
 
-  def assign_or_reassign_target(assign_to:, type:, silent:, action_code:)
+  def assign(assign_to, silent: false)
+    type = assign_to.is_a?(User) ? "User" : "Group"
+
+    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
+    return { success: false, reason: forbidden_reason } if forbidden_reason
+
+    action_code = {}
+    action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
+    action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
+
     @target.assignment&.destroy!
 
     assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
@@ -295,26 +304,6 @@ class ::Assigner
     { success: true }
   end
 
-  def assign(assign_to, silent: false)
-    type = assign_to.is_a?(User) ? "User" : "Group"
-
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
-    return { success: false, reason: forbidden_reason } if forbidden_reason
-
-    action_code = { user: "assigned", group: "assigned_group" }
-    assign_or_reassign_target(assign_to: assign_to, type: type, silent: silent, action_code: action_code)
-  end
-
-  def reassign(assign_to, silent: false)
-    type = assign_to.is_a?(User) ? "User" : "Group"
-
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
-    return { success: false, reason: forbidden_reason } if forbidden_reason
-
-    action_code = { user: "reassigned", group: "reassigned_group" }
-    assign_or_reassign_target(assign_to: assign_to, type: type, silent: silent, action_code: action_code)
-  end
-
   def unassign(silent: false)
     if assignment = @target.assignment
       assignment.destroy!
@@ -406,14 +395,12 @@ class ::Assigner
   private
 
   def moderator_post_assign_action_code(assignment, action_code)
-    suffix =
-      if assignment.target.is_a?(Post)
-        "_to_post"
-      elsif assignment.target.is_a?(Topic)
-        ""
-      end
-    return "#{action_code[:user]}#{suffix}" if assignment.assigned_to_user?
-    return "#{action_code[:group]}#{suffix}" if assignment.assigned_to_group?
+    if assignment.target.is_a?(Post)
+      # posts do not have to handle conditions of 'assign' or 'reassign'
+      assignment.assigned_to_user? ? "assigned_to_post" : "assigned_group_to_post"
+    elsif assignment.target.is_a?(Topic)
+      assignment.assigned_to_user? ? "#{action_code[:user]}" : "#{action_code[:group]}"
+    end
   end
 
   def moderator_post_unassign_action_code(assignment)

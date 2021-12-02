@@ -86,11 +86,16 @@ function registerTopicFooterButtons(api) {
           break;
         }
         case "reassign": {
-          taskActions.reassign(this.topic).set("model.onSuccess", () => {
-            this.appEvents.trigger("post-stream:refresh", {
-              id: this.topic.postStream.firstPostId,
+          taskActions
+            .assign(this.topic, {
+              targetType: "Topic",
+              isAssigned: this.topic.isAssigned(),
+            })
+            .set("model.onSuccess", () => {
+              this.appEvents.trigger("post-stream:refresh", {
+                id: this.topic.postStream.firstPostId,
+              });
             });
-          });
           break;
         }
       }
@@ -387,11 +392,16 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      taskActions.reassign(this.topic).set("model.onSuccess", () => {
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
+      taskActions
+        .assign(this.topic, {
+          targetType: "Topic",
+          isAssigned: this.topic.isAssigned(),
+        })
+        .set("model.onSuccess", () => {
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
+          });
         });
-      });
     },
     dropdown() {
       return this.currentUser?.can_assign && this.topic.isAssigned();
@@ -460,7 +470,10 @@ function initialize(api) {
       });
       api.attachWidgetAction("post", "assignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.assign(this.model, "Post");
+        taskActions.assign(this.model, {
+          isAssigned: false,
+          targetType: "Post",
+        });
       });
       api.attachWidgetAction("post", "unassignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");

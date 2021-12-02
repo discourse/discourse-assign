@@ -38,12 +38,14 @@ export default Controller.extend({
     });
   },
 
-  reassignOrAssignTarget(assign_action) {
+  @action
+  assign() {
     if (this.isBulkAction) {
       this.bulkAction(this.model.username);
       return;
     }
-    let path = "/assign/" + assign_action;
+
+    let path = "/assign/assign";
 
     if (isEmpty(this.get("model.username"))) {
       this.model.target.set("assigned_to_user", null);
@@ -104,48 +106,7 @@ export default Controller.extend({
   },
 
   @action
-  assign() {
-    this.reassignOrAssignTarget("assign");
-  },
-
-  @action
-  reassign() {
-    this.reassignOrAssignTarget("reassign");
-  },
-
-  @action
-  reassignUser(name) {
-    if (this.isBulkAction) {
-      this.bulkAction(name);
-      return;
-    }
-
-    if (this.allowedGroupsForAssignment.includes(name)) {
-      this.setProperties({
-        "model.username": null,
-        "model.group_name": name,
-        "model.allowedGroups": this.taskActions.allowedGroups,
-      });
-    } else {
-      this.setProperties({
-        "model.username": name,
-        "model.group_name": null,
-        "model.allowedGroups": this.taskActions.allowedGroups,
-      });
-    }
-
-    if (name) {
-      return this.reassign();
-    }
-  },
-
-  @action
   assignUsername(selected) {
     this.assignUser(selected.firstObject);
-  },
-
-  @action
-  reassignUsername(selected) {
-    this.reassignUser(selected.firstObject);
   },
 });
