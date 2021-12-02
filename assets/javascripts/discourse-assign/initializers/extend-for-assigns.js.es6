@@ -461,7 +461,7 @@ function initialize(api) {
       api.attachWidgetAction("post", "assignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
         taskActions.assign(this.model, {
-          isAssinged: false,
+          isAssigned: false,
           targetType: "Post",
         });
       });
