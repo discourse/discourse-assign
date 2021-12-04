@@ -1,10 +1,8 @@
 {{#if doesntHaveAssignments}}
-  <div class="empty-state">
-    <span class="empty-state-title">{{i18n "user.no_assignments_title"}}</span>
-    <div class="empty-state-body">
-      <p>{{emptyStateBody}}</p>
-    </div>
-  </div>
+  <EmptyState
+    @title={{i18n "user.no_assignments_title"}}
+    @body={{emptyStateBody}}
+  />
 {{else}}
   <div class="topic-search-div">
     <div class="inline-form full-width">
