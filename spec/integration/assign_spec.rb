@@ -146,7 +146,7 @@ describe 'integration tests' do
     end
   end
 
-  context 'aleady assigned' do
+  context 'already assigned' do
     fab!(:post) { Fabricate(:post) }
     fab!(:post_2) { Fabricate(:post, topic: post.topic) }
     let(:topic) { post.topic }
