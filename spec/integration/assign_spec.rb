@@ -146,6 +146,32 @@ describe 'integration tests' do
     end
   end
 
+  context 'already assigned' do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:post_2) { Fabricate(:post, topic: post.topic) }
+    let(:topic) { post.topic }
+    fab!(:user) { Fabricate(:user) }
+
+    include_context 'A group that is allowed to assign'
+
+    it 'does not allow to assign topic if post is already assigned' do
+      add_to_assign_allowed_group(user)
+
+      assigner = Assigner.new(post, user)
+      response = assigner.assign(user)
+      expect(response[:success]).to be true
+
+      assigner = Assigner.new(post_2, user)
+      response = assigner.assign(user)
+      expect(response[:success]).to be true
+
+      assigner = Assigner.new(topic, user)
+      response = assigner.assign(user)
+      expect(response[:success]).to be false
+      expect(response[:reason]).to eq(:already_assigned)
+    end
+  end
+
   context 'move post' do
     fab!(:old_topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: old_topic) }
