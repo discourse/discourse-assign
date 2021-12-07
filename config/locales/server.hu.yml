@@ -5,8 +5,27 @@
 # https://translate.discourse.org/
 
 hu:
+  site_settings:
+    assign_enabled: "Az assign bővítmény engedélyezése"
+    assigns_public: "Engedélyezés, hogy a nagyközönség is láthassa a témák kiosztását"
   discourse_assign:
     reminders_frequency:
       never: "soha"
       daily: "naponta"
       weekly: "hetente"
+  pending_assigns_reminder:
+    newest: |
+      ### Legújabb
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### Legrégebbi
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Véletlenszerű kiosztás
+        no_one: "Megpróbálta véletlenszerűen hozzárendelni a(z) @%{group} egyik tagját, de senki sem volt elérhető."
