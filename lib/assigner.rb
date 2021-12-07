@@ -188,9 +188,9 @@ class ::Assigner
       topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-    when topic.assignment&.assigned_to_id == assign_to.id && topic.assignment&.assigned_to_type == type
+    when topic.assignment&.assigned_to_id == assign_to.id && topic.assignment&.assigned_to_type == type && topic.assignment.active == true
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when @target.is_a?(Topic) && Assignment.where(topic_id: topic.id, target_type: "Post").any? { |assignment| assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type }
+    when @target.is_a?(Topic) && Assignment.where(topic_id: topic.id, target_type: "Post", active: true).any? { |assignment| assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type }
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
       :too_many_assigns_for_topic
@@ -305,9 +305,9 @@ class ::Assigner
     { success: true }
   end
 
-  def unassign(silent: false)
+  def unassign(silent: false, deactivate: false)
     if assignment = @target.assignment
-      assignment.destroy!
+      deactivate ? assignment.update!(active: false) : assignment.destroy!
 
       return if first_post.blank?
 

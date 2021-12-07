@@ -78,14 +78,11 @@ describe 'integration tests' do
       assigner.assign(user)
 
       GroupArchivedMessage.archive!(group.id, pm.reload)
-      expect(pm.assignment).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(user.id)
-      expect(pm.custom_fields["prev_assigned_to_type"]).to eq("User")
+      expect(pm.assignment.active).to be false
 
       GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
+      expect(pm.assignment.active).to be true
       expect(pm.assignment.assigned_to).to eq(user)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_type"]).to eq(nil)
     end
 
     it "unassign and assign group if unassign_on_group_archive" do
@@ -94,11 +91,10 @@ describe 'integration tests' do
       assigner.assign(group)
 
       GroupArchivedMessage.archive!(group.id, pm.reload)
-      expect(pm.assignment).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(group.id)
-      expect(pm.custom_fields["prev_assigned_to_type"]).to eq("Group")
+      expect(pm.assignment.active).to be false
 
       GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
+      expect(pm.assignment.active).to be true
       expect(pm.assignment.assigned_to).to eq(group)
     end
   end

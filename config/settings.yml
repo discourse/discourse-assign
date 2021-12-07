@@ -11,6 +11,7 @@ plugins:
   assign_other_regex: ""
   unassign_on_close: false
   unassign_on_group_archive: false
+  reassign_on_open: false
   assigns_user_url_path:
     client: true
     default: "/u/{username}/activity/assigned"
