@@ -85,7 +85,7 @@ after_initialize do
         ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
       SQL
       .where(<<~SQL, group_id: object.id)
-        a.active IS TRUE AND
+        a.active AND
         ((
           a.assigned_to_type = 'User' AND a.assigned_to_id IN (
             SELECT group_users.user_id
@@ -284,13 +284,13 @@ after_initialize do
 
     if name == "nobody"
       next results
-        .joins("LEFT JOIN assignments a ON a.topic_id = topics.id AND active IS TRUE")
+        .joins("LEFT JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id IS NULL")
     end
 
     if name == "*"
       next results
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND active IS TRUE")
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id IS NOT NULL")
     end
 
@@ -299,7 +299,7 @@ after_initialize do
 
     if user_id
       next results
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND active IS TRUE")
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id = ? AND a.assigned_to_type = 'User'", user_id)
     end
 
@@ -307,7 +307,7 @@ after_initialize do
 
     if group_id
       next results
-        .joins("JOIN assignments a ON a.topic_id = topics.id AND active IS TRUE")
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id = ? AND a.assigned_to_type = 'Group'", group_id)
     end
 
@@ -321,7 +321,7 @@ after_initialize do
       SELECT topic_id FROM assignments
       LEFT JOIN group_users ON group_users.user_id = :user_id
       WHERE
-        assigned_to_id = :user_id AND assigned_to_type = 'User' AND active IS TRUE
+        assigned_to_id = :user_id AND assigned_to_type = 'User' AND active
     SQL
 
     if @options[:filter] != :direct
@@ -345,7 +345,7 @@ after_initialize do
       WHERE (
         assigned_to_id = :group_id AND assigned_to_type = 'Group'
       )
-      AND active IS TRUE
+      AND active
     SQL
 
     if @options[:filter] != :direct
@@ -376,7 +376,7 @@ after_initialize do
     list = list.where(<<~SQL, user_id: user.id, group_ids: group_ids)
       topics.id IN (
         SELECT topic_id FROM assignments WHERE
-        active IS TRUE AND
+        active AND
         ((assigned_to_id = :user_id AND assigned_to_type = 'User') OR
         (assigned_to_id IN (:group_ids) AND assigned_to_type = 'Group'))
       )
@@ -466,7 +466,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_view, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User) && object.topic.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:topic_view, :assigned_to_group, false) do
@@ -474,7 +474,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_view, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group) && object.topic.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
   end
 
   add_to_serializer(:topic_view, :indirectly_assigned_to) do
@@ -491,7 +491,7 @@ after_initialize do
   end
 
   add_to_serializer(:suggested_topic, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User) && object.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:suggested_topic, :assigned_to_group, false) do
@@ -499,7 +499,7 @@ after_initialize do
   end
 
   add_to_serializer(:suggested_topic, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group) && object.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
   end
 
   add_to_serializer(:suggested_topic, :indirectly_assigned_to) do
@@ -524,7 +524,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_list_item, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User) && object.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:topic_list_item, :assigned_to_group) do
@@ -532,7 +532,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_list_item, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group) && object.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
   end
 
   # SearchTopicListItem serializer
@@ -541,7 +541,7 @@ after_initialize do
   end
 
   add_to_serializer(:search_topic_list_item, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User) && object.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:search_topic_list_item, :assigned_to_group, false) do
@@ -549,7 +549,7 @@ after_initialize do
   end
 
   add_to_serializer(:search_topic_list_item, 'include_assigned_to_group?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group) && object.assignment&.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
   end
 
   add_to_serializer(:search_topic_list_item, :indirectly_assigned_to) do
@@ -604,7 +604,7 @@ after_initialize do
   end
 
   add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(User) && topic.assignment.active
+    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:user_bookmark, :assigned_to_group, false) do
@@ -612,7 +612,7 @@ after_initialize do
   end
 
   add_to_serializer(:user_bookmark, 'include_assigned_to_group?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(Group) && topic.assignment.active
+    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(Group)
   end
 
   # PostSerializer
@@ -629,7 +629,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, 'include_assigned_to_group?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(Group) && object.assignmen.active
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
   end
 
   # CurrentUser serializer
@@ -643,7 +643,7 @@ after_initialize do
   end
 
   add_to_serializer(:flagged_topic, :include_assigned_to_user?) do
-    object.assigned_to && object.assigned_to&.is_a?(User) && object.assignment.active
+    object.assigned_to && object.assigned_to&.is_a?(User)
   end
 
   add_to_serializer(:flagged_topic, :assigned_to_group) do
@@ -651,7 +651,7 @@ after_initialize do
   end
 
   add_to_serializer(:flagged_topic, :include_assigned_to_group?) do
-    object.assigned_to && object.assigned_to&.is_a?(Group) && object.assignment.active
+    object.assigned_to && object.assigned_to&.is_a?(Group)
   end
 
   # Reviewable
