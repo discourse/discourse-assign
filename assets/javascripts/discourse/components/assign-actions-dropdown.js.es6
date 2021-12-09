@@ -32,7 +32,8 @@ export default DropdownSelectBoxComponent.extend({
 
     if (this.topic.indirectly_assigned_to) {
       Object.entries(this.topic.indirectly_assigned_to).forEach((entry) => {
-        const [postId, assignee] = entry;
+        const [postId, assignment_map] = entry;
+        const assignee = assignment_map.assigned_to;
         options = options.concat({
           id: `unassign_post_${postId}`,
           icon: assignee.username ? "user-times" : "group-times",

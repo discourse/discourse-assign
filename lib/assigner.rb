@@ -263,7 +263,7 @@ class ::Assigner
       custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
 
       if post_target?
-        custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
+        custom_fields.merge!({ "action_code_path" => "/p/#{@target.id}", "action_code_post_id" => @target.id })
       end
 
       topic.add_moderator_post(
@@ -344,6 +344,7 @@ class ::Assigner
 
         if post_target?
           custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
+          custom_fields.merge!("action_code_post_id" => @target.id)
         end
 
         topic.add_moderator_post(

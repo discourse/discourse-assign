@@ -212,7 +212,7 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
-        assignments = Assignment.strict_loading.where(topic: topics, active: true)
+        assignments = Assignment.strict_loading.where(topic: topics, active: true).includes(:target)
         assignments_map = assignments.group_by(&:topic_id)
 
         user_ids = assignments.filter { |assignment| assignment.assigned_to_user? }.map(&:assigned_to_id)
@@ -227,8 +227,9 @@ after_initialize do
           indirectly_assigned_to = {}
           assignments&.each do |assignment|
             next if assignment.target_type == "Topic"
-            next indirectly_assigned_to[assignment.target_id] = users_map[assignment.assigned_to_id] if assignment&.assigned_to_user?
-            next indirectly_assigned_to[assignment.target_id] = groups_map[assignment.assigned_to_id] if assignment&.assigned_to_group?
+            next if !assignment.target
+            next indirectly_assigned_to[assignment.target_id] = { assigned_to: users_map[assignment.assigned_to_id], post_number: assignment.target.post_number } if assignment&.assigned_to_user?
+            next indirectly_assigned_to[assignment.target_id] = { assigned_to: groups_map[assignment.assigned_to_id], post_number: assignment.target.post_number } if assignment&.assigned_to_group?
           end&.compact&.uniq
 
           assigned_to =
@@ -275,7 +276,6 @@ after_initialize do
 
   # TopicQuery
   require_dependency 'topic_query'
-
   TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
     name = topic_query.options[:assigned]
     next results if name.blank?
@@ -430,8 +430,8 @@ after_initialize do
 
   add_to_class(:topic, :indirectly_assigned_to) do
     return @indirectly_assigned_to if defined?(@indirectly_assigned_to)
-    @indirectly_assigned_to = Assignment.where(topic_id: id, target_type: "Post", active: true).inject({}) do |acc, assignment|
-      acc[assignment.target.post_number] = assignment.assigned_to if assignment.target
+    @indirectly_assigned_to = Assignment.where(topic_id: id, target_type: "Post", active: true).includes(:target).inject({}) do |acc, assignment|
+      acc[assignment.target_id] = { assigned_to: assignment.assigned_to, post_number: assignment.target.post_number } if assignment.target
       acc
     end
   end
@@ -710,7 +710,29 @@ after_initialize do
     end
 
     if SiteSetting.reassign_on_open && (status == 'closed' || status == 'autoclosed') && !enabled
-      Assignment.where(topic_id: topic.id).update_all(active: true)
+      Assignment.where(topic_id: topic.id, target_type: "Topic").update_all(active: true)
+      Assignment
+        .where(topic_id: topic.id, target_type: "Post")
+        .joins("INNER JOIN posts ON posts.id = target_id AND posts.deleted_at IS NULL")
+        .update_all(active: true)
+    end
+  end
+
+  on(:post_destroyed) do |post|
+    if SiteSetting.unassign_on_close
+      Assignment.where(target_type: "Post", target_id: post.id).update_all(active: false)
+    end
+
+    # small actions have to be destroyed as link is incorrect
+    PostCustomField.where(name: "action_code_post_id", value: post.id).find_each do |post_custom_field|
+      next if ![Post.types[:small_action], Post.types[:whisper]].include?(post_custom_field.post.post_type)
+      post_custom_field.post.destroy
+    end
+  end
+
+  on(:post_recovered) do |post|
+    if SiteSetting.reassign_on_open
+      Assignment.where(target_type: "Post", target_id: post.id).update_all(active: true)
     end
   end
 
@@ -723,6 +745,7 @@ after_initialize do
     next if !info[:group]
 
     Assignment.where(topic_id: topic.id, active: false).find_each do |assignment|
+      next unless assignment.target
       assignment.update!(active: true)
       Jobs.enqueue(:assign_notification,
                    topic_id: topic.id,

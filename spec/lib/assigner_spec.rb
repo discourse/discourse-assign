@@ -310,17 +310,38 @@ RSpec.describe Assigner do
 
       before do
         SiteSetting.unassign_on_close = true
+        SiteSetting.reassign_on_open = true
 
         assigner.assign(moderator)
       end
 
-      it 'deactivates post assignments' do
+      it 'deactivates post assignments when topic is closed' do
         assigner.assign(moderator)
 
         expect(post_2.assignment.active).to be true
 
         topic.update_status("closed", true, moderator)
         expect(post_2.assignment.reload.active).to be false
+      end
+
+      it 'deactivates post assignments when post is deleted and activate when recovered' do
+        assigner.assign(moderator)
+
+        expect(post_2.assignment.active).to be true
+
+        PostDestroyer.new(moderator, post_2).destroy
+        expect(post_2.assignment.reload.active).to be false
+
+        PostDestroyer.new(moderator, post_2).recover
+        expect(post_2.assignment.reload.active).to be true
+      end
+
+      it 'deletes post small action for deleted post' do
+        assigner.assign(moderator)
+        small_action_post = PostCustomField.where(name: "action_code_post_id").first.post
+
+        PostDestroyer.new(moderator, post_2).destroy
+        expect { small_action_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
       end
     end
   end

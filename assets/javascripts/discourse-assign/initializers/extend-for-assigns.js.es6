@@ -478,9 +478,7 @@ function initialize(api) {
       api.attachWidgetAction("post", "unassignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
         taskActions.unassign(this.model.id, "Post").then(() => {
-          delete this.model.topic.indirectly_assigned_to[
-            this.model.post_number
-          ];
+          delete this.model.topic.indirectly_assigned_to[this.model.id];
         });
       });
     }
@@ -593,14 +591,18 @@ function initialize(api) {
       assignedToIndirectly = Object.entries(
         topic.get("indirectly_assigned_to")
       ).map(([key, value]) => {
-        value.assignedToPostId = key;
+        value.assigned_to.assignedToPostId = key;
         return value;
       });
     } else {
       assignedToIndirectly = [];
     }
     const assignedTo = []
-      .concat(assignedToUser, assignedToGroup, assignedToIndirectly)
+      .concat(
+        assignedToUser,
+        assignedToGroup,
+        assignedToIndirectly.map((assigned) => assigned.assigned_to)
+      )
       .filter((element) => element)
       .flat()
       .uniqBy((assignee) => assignee.assign_path);
@@ -707,8 +709,9 @@ function initialize(api) {
         );
       }
       if (indirectlyAssignedTo) {
-        Object.keys(indirectlyAssignedTo).map((postNumber) => {
-          const assignee = indirectlyAssignedTo[postNumber];
+        Object.keys(indirectlyAssignedTo).map((postId) => {
+          const assignee = indirectlyAssignedTo[postId].assigned_to;
+          const postNumber = indirectlyAssignedTo[postId].post_number;
           assigneeElements.push(
             h("span.assignee", [
               h(
@@ -811,7 +814,7 @@ function initialize(api) {
         });
       } else {
         postAssignment =
-          postModel.topic.indirectly_assigned_to?.[postModel.post_number];
+          postModel.topic.indirectly_assigned_to?.[postModel.id]?.assigned_to;
         if (postAssignment?.username) {
           assignedToUser = postAssignment;
         }
