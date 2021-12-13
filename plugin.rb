@@ -252,7 +252,7 @@ after_initialize do
 
       if allowed_access && results.posts.length > 0
         topics = results.posts.map(&:topic)
-        assignments = Assignment.strict_loading.where(topic: topics).includes(:assigned_to).group_by(&:topic_id)
+        assignments = Assignment.strict_loading.where(topic: topics, active: true).includes(:assigned_to, :target).group_by(&:topic_id)
 
         results.posts.each do |post|
           topic_assignments = assignments[post.topic.id]
@@ -264,7 +264,9 @@ after_initialize do
           end
           if indirect_assignments.present?
             indirect_assignment_map = indirect_assignments.reduce({}) do |acc, assignment|
-              acc[assignment.target_id] = assignment.assigned_to
+              if assignment.target
+                acc[assignment.target_id] = { assigned_to: assignment.assigned_to, post_number: assignment.target.post_number }
+              end
               acc
             end
             post.topic.preload_indirectly_assigned_to(indirect_assignment_map)
