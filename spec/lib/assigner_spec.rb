@@ -25,8 +25,8 @@ RSpec.describe Assigner do
     let(:secure_category) { Fabricate(:private_category, group: Fabricate(:group)) }
     let(:secure_topic) { Fabricate(:post).topic.tap { |t| t.update(category: secure_category) } }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:moderator2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:assigner) { described_class.new(topic, moderator2) }
+    let(:moderator_2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:assigner) { described_class.new(topic, moderator_2) }
     let(:assigner_self) { described_class.new(topic, moderator) }
 
     it "can assign and unassign correctly" do
@@ -127,7 +127,7 @@ RSpec.describe Assigner do
       another_post = Fabricate.build(:post)
       assigner.assign(moderator)
 
-      second_assign = described_class.new(another_post.topic, moderator2).assign(moderator)
+      second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
 
       expect(second_assign[:success]).to eq(false)
       expect(second_assign[:reason]).to eq(:too_many_assigns)
@@ -150,7 +150,7 @@ RSpec.describe Assigner do
       first_assign = assigner.assign(moderator)
 
       # reached limit so stop
-      second_assign = described_class.new(Fabricate(:topic), moderator2).assign(moderator)
+      second_assign = described_class.new(Fabricate(:topic), moderator_2).assign(moderator)
 
       # self assign has a bypass
       third_assign = described_class.new(another_post.topic, moderator).assign(moderator)
@@ -274,32 +274,123 @@ RSpec.describe Assigner do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:assigner) { described_class.new(topic, moderator) }
 
-    before do
-      SiteSetting.unassign_on_close = true
+    context 'topic' do
+      let(:assigner) { described_class.new(topic, moderator) }
 
-      assigner.assign(moderator)
+      before do
+        SiteSetting.unassign_on_close = true
+        assigner.assign(moderator)
+      end
+
+      it "unassigns on topic closed" do
+        topic.update_status("closed", true, moderator)
+        expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+      end
+
+      it "unassigns on topic autoclosed" do
+        topic.update_status("autoclosed", true, moderator)
+        expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+      end
+
+      it "does not unassign on topic open" do
+        topic.update_status("closed", false, moderator)
+        expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([topic])
+      end
+
+      it "does not unassign on automatic topic open" do
+        topic.update_status("autoclosed", false, moderator)
+        expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([topic])
+      end
     end
 
-    it "unassigns on topic closed" do
-      topic.update_status("closed", true, moderator)
-      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+    context 'post' do
+      let(:post_2) { Fabricate(:post, topic: topic) }
+      let(:assigner) { described_class.new(post_2, moderator) }
+
+      before do
+        SiteSetting.unassign_on_close = true
+        SiteSetting.reassign_on_open = true
+
+        assigner.assign(moderator)
+      end
+
+      it 'deactivates post assignments when topic is closed' do
+        assigner.assign(moderator)
+
+        expect(post_2.assignment.active).to be true
+
+        topic.update_status("closed", true, moderator)
+        expect(post_2.assignment.reload.active).to be false
+      end
+
+      it 'deactivates post assignments when post is deleted and activate when recovered' do
+        assigner.assign(moderator)
+
+        expect(post_2.assignment.active).to be true
+
+        PostDestroyer.new(moderator, post_2).destroy
+        expect(post_2.assignment.reload.active).to be false
+
+        PostDestroyer.new(moderator, post_2).recover
+        expect(post_2.assignment.reload.active).to be true
+      end
+
+      it 'deletes post small action for deleted post' do
+        assigner.assign(moderator)
+        small_action_post = PostCustomField.where(name: "action_code_post_id").first.post
+
+        PostDestroyer.new(moderator, post_2).destroy
+        expect { small_action_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+    end
+  end
+
+  context "reassign_on_open" do
+    let(:post) { Fabricate(:post) }
+    let(:topic) { post.topic }
+    let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+
+    context 'topic' do
+      let(:assigner) { described_class.new(topic, moderator) }
+
+      before do
+        SiteSetting.unassign_on_close = true
+        SiteSetting.reassign_on_open = true
+        assigner.assign(moderator)
+      end
+
+      it "reassigns on topic open" do
+        topic.update_status("closed", true, moderator)
+        expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
+
+        topic.update_status("closed", false, moderator)
+        expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([topic])
+      end
     end
 
-    it "unassigns on topic autoclosed" do
-      topic.update_status("autoclosed", true, moderator)
-      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to be_blank
-    end
+    context 'post' do
+      let(:post_2) { Fabricate(:post, topic: topic) }
+      let(:assigner) { described_class.new(post_2, moderator) }
 
-    it "does not unassign on topic open" do
-      topic.update_status("closed", false, moderator)
-      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([topic])
-    end
+      before do
+        SiteSetting.unassign_on_close = true
+        SiteSetting.reassign_on_open = true
 
-    it "does not unassign on automatic topic open" do
-      topic.update_status("autoclosed", false, moderator)
-      expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([topic])
+        assigner.assign(moderator)
+      end
+
+      it 'reassigns post on topic open' do
+        assigner.assign(moderator)
+
+        expect(post_2.assignment.active).to be true
+
+        topic.update_status("closed", true, moderator)
+        expect(post_2.assignment.reload.active).to be false
+
+        topic.update_status("closed", false, moderator)
+        expect(post_2.assignment.reload.active).to be true
+      end
     end
   end
 
@@ -307,7 +398,7 @@ RSpec.describe Assigner do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:moderator2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:moderator_2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
 
     it "send an email if set to 'always'" do
       SiteSetting.assign_mailer = AssignMailer.levels[:always]
@@ -326,7 +417,7 @@ RSpec.describe Assigner do
     it "doesn't send an email if the assigner and assignee are not different" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
-      expect { described_class.new(topic, moderator).assign(moderator2) }
+      expect { described_class.new(topic, moderator).assign(moderator_2) }
         .to change { ActionMailer::Base.deliveries.size }.by(1)
     end
 
@@ -340,7 +431,7 @@ RSpec.describe Assigner do
     it "doesn't send an email" do
       SiteSetting.assign_mailer = AssignMailer.levels[:never]
 
-      expect { described_class.new(topic, moderator).assign(moderator2) }
+      expect { described_class.new(topic, moderator).assign(moderator_2) }
         .to change { ActionMailer::Base.deliveries.size }.by(0)
     end
   end

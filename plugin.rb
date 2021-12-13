@@ -73,8 +73,6 @@ after_initialize do
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
   register_editable_user_custom_field frequency_field
   User.register_custom_field_type frequency_field, :integer
-  Topic.register_custom_field_type "prev_assigned_to_id", :integer
-  Topic.register_custom_field_type "prev_assigned_to_type", :string
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) do
     RemindAssignsFrequencySiteSettings.values
@@ -87,7 +85,8 @@ after_initialize do
         ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
       SQL
       .where(<<~SQL, group_id: object.id)
-        (
+        a.active AND
+        ((
           a.assigned_to_type = 'User' AND a.assigned_to_id IN (
             SELECT group_users.user_id
             FROM group_users
@@ -95,7 +94,7 @@ after_initialize do
           )
         ) OR (
           a.assigned_to_type = 'Group' AND a.assigned_to_id = :group_id
-        )
+        ))
       SQL
       .where("topics.deleted_at IS NULL")
       .count
@@ -213,7 +212,7 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
-        assignments = Assignment.strict_loading.where(topic: topics)
+        assignments = Assignment.strict_loading.where(topic: topics, active: true).includes(:target)
         assignments_map = assignments.group_by(&:topic_id)
 
         user_ids = assignments.filter { |assignment| assignment.assigned_to_user? }.map(&:assigned_to_id)
@@ -228,8 +227,9 @@ after_initialize do
           indirectly_assigned_to = {}
           assignments&.each do |assignment|
             next if assignment.target_type == "Topic"
-            next indirectly_assigned_to[assignment.target_id] = users_map[assignment.assigned_to_id] if assignment&.assigned_to_user?
-            next indirectly_assigned_to[assignment.target_id] = groups_map[assignment.assigned_to_id] if assignment&.assigned_to_group?
+            next if !assignment.target
+            next indirectly_assigned_to[assignment.target_id] = { assigned_to: users_map[assignment.assigned_to_id], post_number: assignment.target.post_number } if assignment&.assigned_to_user?
+            next indirectly_assigned_to[assignment.target_id] = { assigned_to: groups_map[assignment.assigned_to_id], post_number: assignment.target.post_number } if assignment&.assigned_to_group?
           end&.compact&.uniq
 
           assigned_to =
@@ -284,13 +284,13 @@ after_initialize do
 
     if name == "nobody"
       next results
-        .joins("LEFT JOIN assignments a ON a.topic_id = topics.id")
+        .joins("LEFT JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id IS NULL")
     end
 
     if name == "*"
       next results
-        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id IS NOT NULL")
     end
 
@@ -299,7 +299,7 @@ after_initialize do
 
     if user_id
       next results
-        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id = ? AND a.assigned_to_type = 'User'", user_id)
     end
 
@@ -307,7 +307,7 @@ after_initialize do
 
     if group_id
       next results
-        .joins("JOIN assignments a ON a.topic_id = topics.id")
+        .joins("JOIN assignments a ON a.topic_id = topics.id AND active")
         .where("a.assigned_to_id = ? AND a.assigned_to_type = 'Group'", group_id)
     end
 
@@ -321,7 +321,7 @@ after_initialize do
       SELECT topic_id FROM assignments
       LEFT JOIN group_users ON group_users.user_id = :user_id
       WHERE
-        assigned_to_id = :user_id AND assigned_to_type = 'User'
+        assigned_to_id = :user_id AND assigned_to_type = 'User' AND active
     SQL
 
     if @options[:filter] != :direct
@@ -345,6 +345,7 @@ after_initialize do
       WHERE (
         assigned_to_id = :group_id AND assigned_to_type = 'Group'
       )
+      AND active
     SQL
 
     if @options[:filter] != :direct
@@ -375,8 +376,9 @@ after_initialize do
     list = list.where(<<~SQL, user_id: user.id, group_ids: group_ids)
       topics.id IN (
         SELECT topic_id FROM assignments WHERE
-        (assigned_to_id = :user_id AND assigned_to_type = 'User') OR
-        (assigned_to_id IN (:group_ids) AND assigned_to_type = 'Group')
+        active AND
+        ((assigned_to_id = :user_id AND assigned_to_type = 'User') OR
+        (assigned_to_id IN (:group_ids) AND assigned_to_type = 'Group'))
       )
     SQL
   end
@@ -423,13 +425,13 @@ after_initialize do
   # Topic
   add_to_class(:topic, :assigned_to) do
     return @assigned_to if defined?(@assigned_to)
-    @assigned_to = assignment&.assigned_to
+    @assigned_to = assignment.assigned_to if assignment&.active
   end
 
   add_to_class(:topic, :indirectly_assigned_to) do
     return @indirectly_assigned_to if defined?(@indirectly_assigned_to)
-    @indirectly_assigned_to = Assignment.where(topic_id: id, target_type: "Post").inject({}) do |acc, assignment|
-      acc[assignment.target.post_number] = assignment.assigned_to if assignment.target
+    @indirectly_assigned_to = Assignment.where(topic_id: id, target_type: "Post", active: true).includes(:target).inject({}) do |acc, assignment|
+      acc[assignment.target_id] = { assigned_to: assignment.assigned_to, post_number: assignment.target.post_number } if assignment.target
       acc
     end
   end
@@ -619,7 +621,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(User)
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(User) && object.assignment.active
   end
 
   add_to_serializer(:post, :assigned_to_group, false) do
@@ -627,7 +629,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, 'include_assigned_to_group?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(Group)
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
   end
 
   # CurrentUser serializer
@@ -699,7 +701,38 @@ after_initialize do
   on(:topic_status_updated) do |topic, status, enabled|
     if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed') && enabled
       assigner = ::Assigner.new(topic, Discourse.system_user)
-      assigner.unassign(silent: true)
+      assigner.unassign(silent: true, deactivate: true)
+
+      topic.posts.joins(:assignment).find_each do |post|
+        assigner = ::Assigner.new(post, Discourse.system_user)
+        assigner.unassign(silent: true, deactivate: true)
+      end
+    end
+
+    if SiteSetting.reassign_on_open && (status == 'closed' || status == 'autoclosed') && !enabled
+      Assignment.where(topic_id: topic.id, target_type: "Topic").update_all(active: true)
+      Assignment
+        .where(topic_id: topic.id, target_type: "Post")
+        .joins("INNER JOIN posts ON posts.id = target_id AND posts.deleted_at IS NULL")
+        .update_all(active: true)
+    end
+  end
+
+  on(:post_destroyed) do |post|
+    if SiteSetting.unassign_on_close
+      Assignment.where(target_type: "Post", target_id: post.id).update_all(active: false)
+    end
+
+    # small actions have to be destroyed as link is incorrect
+    PostCustomField.where(name: "action_code_post_id", value: post.id).find_each do |post_custom_field|
+      next if ![Post.types[:small_action], Post.types[:whisper]].include?(post_custom_field.post.post_type)
+      post_custom_field.post.destroy
+    end
+  end
+
+  on(:post_recovered) do |post|
+    if SiteSetting.reassign_on_open
+      Assignment.where(target_type: "Post", target_id: post.id).update_all(active: true)
     end
   end
 
@@ -711,21 +744,17 @@ after_initialize do
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
 
-    previous_assigned_to_id = topic.custom_fields["prev_assigned_to_id"]&.to_i
-    next if !previous_assigned_to_id
-
-    assigned_type = topic.custom_fields["prev_assigned_to_type"]
-    assigned_class = assigned_type == "Group" ? Group : User
-    previous_assigned_to = assigned_class.find_by(id: previous_assigned_to_id)
-
-    if previous_assigned_to
-      assigner = Assigner.new(topic, Discourse.system_user)
-      assigner.assign(previous_assigned_to, silent: true)
+    Assignment.where(topic_id: topic.id, active: false).find_each do |assignment|
+      next unless assignment.target
+      assignment.update!(active: true)
+      Jobs.enqueue(:assign_notification,
+                   topic_id: topic.id,
+                   post_id: assignment.target_type.is_a?(Topic) ? topic.first_post.id : assignment.target.id,
+                   assigned_to_id: assignment.assigned_to_id,
+                   assigned_to_type: assignment.assigned_to_type,
+                   assigned_by_id: assignment.assigned_by_user_id,
+                   silent: true)
     end
-
-    topic.custom_fields.delete("prev_assigned_to_id")
-    topic.custom_fields.delete("prev_assigned_to_type")
-    topic.save!
   end
 
   on(:archive_message) do |info|
@@ -737,12 +766,13 @@ after_initialize do
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
 
-    topic.custom_fields["prev_assigned_to_id"] = topic.assignment.assigned_to_id
-    topic.custom_fields["prev_assigned_to_type"] = topic.assignment.assigned_to_type
-    topic.save!
-
-    assigner = Assigner.new(topic, Discourse.system_user)
-    assigner.unassign(silent: true)
+    Assignment.where(topic_id: topic.id, active: true).find_each do |assignment|
+      assignment.update!(active: false)
+      Jobs.enqueue(:unassign_notification,
+                   topic_id: topic.id,
+                   assigned_to_id: assignment.assigned_to.id,
+                   assigned_to_type: assignment.assigned_to_type)
+    end
   end
 
   on(:user_removed_from_group) do |user, group|
