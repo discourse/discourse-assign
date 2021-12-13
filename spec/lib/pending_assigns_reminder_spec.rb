@@ -74,5 +74,43 @@ RSpec.describe PendingAssignsReminder do
         user.reload.custom_fields[described_class::REMINDED_AT].to_datetime
       ).to eq_time(DateTime.now)
     end
+
+    it 'deletes previous reminders when creating a new one' do
+      subject.remind(user)
+      subject.remind(user)
+
+      reminders_count = Topic.joins(:_custom_fields)
+        .where(topic_custom_fields: { name: described_class::CUSTOM_FIELD_NAME }).count
+
+      expect(reminders_count).to eq(1)
+    end
+
+    it "doesn't delete reminders from a different user" do
+      subject.remind(user)
+      another_user = Fabricate(:user)
+      add_to_assign_allowed_group(another_user)
+      3.times do
+        post = Fabricate(:post)
+        Assigner.new(post.topic, user).assign(another_user)
+      end
+
+      subject.remind(another_user)
+
+      reminders_count = Topic.joins(:_custom_fields)
+        .where(topic_custom_fields: { name: described_class::CUSTOM_FIELD_NAME }).count
+
+      expect(reminders_count).to eq(2)
+    end
+
+    it "doesn't delete reminders if they have replies" do
+      subject.remind(user)
+      Fabricate(:post, topic: Topic.last)
+      subject.remind(user)
+
+      reminders_count = Topic.joins(:_custom_fields)
+        .where(topic_custom_fields: { name: described_class::CUSTOM_FIELD_NAME }).count
+
+      expect(reminders_count).to eq(2)
+    end
   end
 end
