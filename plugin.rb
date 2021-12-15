@@ -701,7 +701,8 @@ after_initialize do
   end
 
   on(:topic_status_updated) do |topic, status, enabled|
-    if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed') && enabled
+    if SiteSetting.unassign_on_close && (status == 'closed' || status == 'autoclosed') && enabled && Assignment.exists?(topic_id: topic.id, active: true)
+
       assigner = ::Assigner.new(topic, Discourse.system_user)
       assigner.unassign(silent: true, deactivate: true)
 
@@ -709,20 +710,23 @@ after_initialize do
         assigner = ::Assigner.new(post, Discourse.system_user)
         assigner.unassign(silent: true, deactivate: true)
       end
+      MessageBus.publish("/topic/#{topic.id}", reload_topic: true, refresh_stream: true)
     end
 
-    if SiteSetting.reassign_on_open && (status == 'closed' || status == 'autoclosed') && !enabled
+    if SiteSetting.reassign_on_open && (status == 'closed' || status == 'autoclosed') && !enabled && Assignment.exists?(topic_id: topic.id, active: false)
       Assignment.where(topic_id: topic.id, target_type: "Topic").update_all(active: true)
       Assignment
         .where(topic_id: topic.id, target_type: "Post")
         .joins("INNER JOIN posts ON posts.id = target_id AND posts.deleted_at IS NULL")
         .update_all(active: true)
+      MessageBus.publish("/topic/#{topic.id}", reload_topic: true, refresh_stream: true)
     end
   end
 
   on(:post_destroyed) do |post|
-    if SiteSetting.unassign_on_close
+    if SiteSetting.unassign_on_close && Assignment.exists?(target_type: "Post", target_id: post.id, active: true)
       Assignment.where(target_type: "Post", target_id: post.id).update_all(active: false)
+      MessageBus.publish("/topic/#{post.topic_id}", reload_topic: true, refresh_stream: true)
     end
 
     # small actions have to be destroyed as link is incorrect
@@ -733,8 +737,9 @@ after_initialize do
   end
 
   on(:post_recovered) do |post|
-    if SiteSetting.reassign_on_open
+    if SiteSetting.reassign_on_open && Assignment.where(target_type: "Post", target_id: post.id, active: false)
       Assignment.where(target_type: "Post", target_id: post.id).update_all(active: true)
+      MessageBus.publish("/topic/#{post.topic_id}", reload_topic: true, refresh_stream: true)
     end
   end
 
