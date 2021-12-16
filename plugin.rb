@@ -724,7 +724,7 @@ after_initialize do
   end
 
   on(:post_destroyed) do |post|
-    if SiteSetting.unassign_on_close && Assignment.exists?(target_type: "Post", target_id: post.id, active: true)
+    if Assignment.exists?(target_type: "Post", target_id: post.id, active: true)
       Assignment.where(target_type: "Post", target_id: post.id).update_all(active: false)
       MessageBus.publish("/topic/#{post.topic_id}", reload_topic: true, refresh_stream: true)
     end
