@@ -283,8 +283,6 @@ class ::Assigner
         type: type,
         topic_id: topic.id,
         topic_title: topic.title,
-        assigned_to_id: assign_to.id,
-        assigned_to_username: assign_to.username,
         assigned_by_id: @assigned_by.id,
         assigned_by_username: @assigned_by.username
       }
