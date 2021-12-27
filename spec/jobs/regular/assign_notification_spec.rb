@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Jobs::AssignNotification do
   describe '#execute' do
-    fab!(:user1) { Fabricate(:user) }
-    fab!(:user2) { Fabricate(:user) }
+    fab!(:user1) { Fabricate(:user, last_seen_at: 1.day.ago) }
+    fab!(:user2) { Fabricate(:user, last_seen_at: 1.day.ago) }
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:pm_post) { Fabricate(:private_message_post) }
@@ -63,7 +63,7 @@ RSpec.describe Jobs::AssignNotification do
     end
 
     context 'Group' do
-      fab!(:user3) { Fabricate(:user) }
+      fab!(:user3) { Fabricate(:user, last_seen_at: 1.day.ago) }
       fab!(:user4) { Fabricate(:user, suspended_till: 1.year.from_now) }
       fab!(:group) { Fabricate(:group) }
       let(:assignment) { Assignment.create!(topic: topic, assigned_by_user: user1, assigned_to: group) }

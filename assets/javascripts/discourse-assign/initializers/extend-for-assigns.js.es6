@@ -11,7 +11,7 @@ import SearchAdvancedOptions from "discourse/components/search-advanced-options"
 import TopicButtonAction, {
   addBulkButton,
 } from "discourse/controllers/topic-bulk-actions";
-import { inject } from "@ember/controller";
+import { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
@@ -86,11 +86,16 @@ function registerTopicFooterButtons(api) {
           break;
         }
         case "reassign": {
-          taskActions.reassign(this.topic).set("model.onSuccess", () => {
-            this.appEvents.trigger("post-stream:refresh", {
-              id: this.topic.postStream.firstPostId,
+          taskActions
+            .assign(this.topic, {
+              targetType: "Topic",
+              isAssigned: this.topic.isAssigned(),
+            })
+            .set("model.onSuccess", () => {
+              this.appEvents.trigger("post-stream:refresh", {
+                id: this.topic.postStream.firstPostId,
+              });
             });
-          });
           break;
         }
       }
@@ -129,7 +134,12 @@ function registerTopicFooterButtons(api) {
       const content = [
         {
           id: "unassign",
-          name: htmlSafe(
+          name: I18n.t("discourse_assign.unassign.help", {
+            username:
+              this.topic.assigned_to_user?.username ||
+              this.topic.assigned_to_group?.name,
+          }),
+          label: htmlSafe(
             `${iconHTML("user-times")} ${I18n.t(
               "discourse_assign.unassign.title"
             )}`
@@ -143,7 +153,8 @@ function registerTopicFooterButtons(api) {
       ) {
         content.push({
           id: "reassign-self",
-          name: htmlSafe(
+          name: I18n.t("discourse_assign.reassign.to_self_help"),
+          label: htmlSafe(
             `${iconHTML("user-plus")} ${I18n.t(
               "discourse_assign.reassign.to_self"
             )}`
@@ -152,7 +163,8 @@ function registerTopicFooterButtons(api) {
       }
       content.push({
         id: "reassign",
-        name: htmlSafe(
+        name: I18n.t("discourse_assign.reassign.help"),
+        label: htmlSafe(
           `${iconHTML("group-plus")} ${I18n.t(
             "discourse_assign.reassign.title_w_ellipsis"
           )}`
@@ -311,10 +323,10 @@ function registerTopicFooterButtons(api) {
       return "user-plus";
     },
     translatedTitle() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.to_self_help");
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.to_self_help");
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.reassign.to_self");
@@ -361,10 +373,10 @@ function registerTopicFooterButtons(api) {
       return "group-plus";
     },
     translatedTitle() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.help");
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return I18n.t("discourse_assign.reassign.help");
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.reassign.title_w_ellipsis");
@@ -380,11 +392,16 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      taskActions.reassign(this.topic).set("model.onSuccess", () => {
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
+      taskActions
+        .assign(this.topic, {
+          targetType: "Topic",
+          isAssigned: this.topic.isAssigned(),
+        })
+        .set("model.onSuccess", () => {
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
+          });
         });
-      });
     },
     dropdown() {
       return this.currentUser?.can_assign && this.topic.isAssigned();
@@ -436,7 +453,10 @@ function initialize(api) {
             icon: "user-times",
             className: "unassign-post",
             title: "discourse_assign.unassign_post.title",
-            position: "second-last-hidden",
+            position:
+              post.assigned_to_user?.id === api.getCurrentUser().id
+                ? "first"
+                : "second-last-hidden",
           };
         } else {
           return {
@@ -450,14 +470,15 @@ function initialize(api) {
       });
       api.attachWidgetAction("post", "assignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.assign(this.model, "Post");
+        taskActions.assign(this.model, {
+          isAssigned: false,
+          targetType: "Post",
+        });
       });
       api.attachWidgetAction("post", "unassignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
         taskActions.unassign(this.model.id, "Post").then(() => {
-          delete this.model.topic.indirectly_assigned_to[
-            this.model.post_number
-          ];
+          delete this.model.topic.indirectly_assigned_to[this.model.id];
         });
       });
     }
@@ -506,6 +527,26 @@ function initialize(api) {
     },
   });
 
+  api.modifyClass("component:topic-notifications-button", {
+    pluginId: PLUGIN_ID,
+
+    @discourseComputed(
+      "topic",
+      "topic.details.{notification_level,notifications_reason_id}"
+    )
+    notificationReasonText(topic) {
+      if (
+        this.currentUser.never_auto_track_topics &&
+        topic.assigned_to_user &&
+        topic.assigned_to_user.username === this.currentUser.username
+      ) {
+        return I18n.t("notification_reason.user");
+      }
+
+      return this._super(...arguments);
+    },
+  });
+
   api.addPostSmallActionIcon("assigned", "user-plus");
   api.addPostSmallActionIcon("assigned_to_post", "user-plus");
   api.addPostSmallActionIcon("assigned_group", "group-plus");
@@ -541,23 +582,26 @@ function initialize(api) {
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
   api.addTagsHtmlCallback((topic, params = {}) => {
-    const [
-      assignedToUser,
-      assignedToGroup,
-      assignedToIndirectly,
-    ] = Object.values(
-      topic.getProperties(
-        "assigned_to_user",
-        "assigned_to_group",
-        "indirectly_assigned_to"
-      )
+    const [assignedToUser, assignedToGroup] = Object.values(
+      topic.getProperties("assigned_to_user", "assigned_to_group")
     );
 
+    let assignedToIndirectly;
+    if (topic.get("indirectly_assigned_to")) {
+      assignedToIndirectly = Object.entries(
+        topic.get("indirectly_assigned_to")
+      ).map(([key, value]) => {
+        value.assigned_to.assignedToPostId = key;
+        return value;
+      });
+    } else {
+      assignedToIndirectly = [];
+    }
     const assignedTo = []
       .concat(
         assignedToUser,
         assignedToGroup,
-        assignedToIndirectly ? Object.values(assignedToIndirectly) : []
+        assignedToIndirectly.map((assigned) => assigned.assigned_to)
       )
       .filter((element) => element)
       .flat()
@@ -566,7 +610,12 @@ function initialize(api) {
     if (assignedTo) {
       return assignedTo
         .map((assignee) => {
-          const assignedPath = getURL(assignee.assign_path);
+          let assignedPath;
+          if (assignee.assignedToPostId) {
+            assignedPath = `/p/${assignee.assignedToPostId}`;
+          } else {
+            assignedPath = `/t/${topic.id}`;
+          }
           const icon = iconHTML(assignee.assign_icon);
           const name = assignee.username || assignee.name;
           const tagName = params.tagName || "a";
@@ -660,8 +709,9 @@ function initialize(api) {
         );
       }
       if (indirectlyAssignedTo) {
-        Object.keys(indirectlyAssignedTo).map((postNumber) => {
-          const assignee = indirectlyAssignedTo[postNumber];
+        Object.keys(indirectlyAssignedTo).map((postId) => {
+          const assignee = indirectlyAssignedTo[postId].assigned_to;
+          const postNumber = indirectlyAssignedTo[postId].post_number;
           assigneeElements.push(
             h("span.assignee", [
               h(
@@ -764,7 +814,7 @@ function initialize(api) {
         });
       } else {
         postAssignment =
-          postModel.topic.indirectly_assigned_to?.[postModel.post_number];
+          postModel.topic.indirectly_assigned_to?.[postModel.id]?.assigned_to;
         if (postAssignment?.username) {
           assignedToUser = postAssignment;
         }
@@ -815,20 +865,23 @@ const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
 
 export default {
   name: "extend-for-assign",
+
   initialize(container) {
     const siteSettings = container.lookup("site-settings:main");
     if (!siteSettings.assign_enabled) {
       return;
     }
+
     const currentUser = container.lookup("current-user:main");
-    if (currentUser && currentUser.can_assign) {
+    if (currentUser?.can_assign) {
       SearchAdvancedOptions.reopen({
         updateSearchTermForAssignedUsername() {
           const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
           const userFilter = this.get("searchedTerms.assigned");
           let searchTerm = this.searchTerm || "";
           let keyword = "assigned";
-          if (userFilter && userFilter.length !== 0) {
+
+          if (userFilter?.length !== 0) {
             if (match.length !== 0) {
               searchTerm = searchTerm.replace(
                 match[0],
@@ -838,16 +891,16 @@ export default {
               searchTerm += ` ${keyword}:${userFilter}`;
             }
 
-            this.set("searchTerm", searchTerm.trim());
+            this._updateSearchTerm(searchTerm);
           } else if (match.length !== 0) {
             searchTerm = searchTerm.replace(match[0], "");
-            this.set("searchTerm", searchTerm.trim());
+            this._updateSearchTerm(searchTerm);
           }
         },
       });
 
       TopicButtonAction.reopen({
-        assignUser: inject("assign-user"),
+        assignUser: controller("assign-user"),
         actions: {
           showReAssign() {
             this.set("assignUser.isBulkAction", true);

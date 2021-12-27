@@ -18,6 +18,8 @@ describe Search do
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }
     let(:post3) { Fabricate(:post) }
+    let(:post4) { Fabricate(:post) }
+    let(:post5) { Fabricate(:post, topic: post4.topic) }
 
     before do
       add_to_assign_allowed_group(user)
@@ -26,15 +28,30 @@ describe Search do
       Assigner.new(post1.topic, user).assign(user)
       Assigner.new(post2.topic, user).assign(user2)
       Assigner.new(post3.topic, user).assign(user)
+      Assigner.new(post5, user).assign(user)
     end
 
     it 'can find by status' do
-      expect(Search.execute('in:assigned', guardian: Guardian.new(user)).posts.length).to eq(3)
+      expect(Search.execute('in:assigned', guardian: Guardian.new(user)).posts.length).to eq(4)
 
       Assigner.new(post3.topic, user).unassign
 
       expect(Search.execute('in:unassigned', guardian: Guardian.new(user)).posts.length).to eq(1)
-      expect(Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length).to eq(1)
+      expect(Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length).to eq(2)
+    end
+
+    it 'serializes results' do
+      guardian = Guardian.new(user)
+      result = Search.execute('in:assigned', guardian: guardian)
+      serializer = GroupedSearchResultSerializer.new(result, scope: guardian)
+      indirectly_assigned_to = serializer.as_json[:topics].find { |topic| topic[:id] == post5.topic.id }[:indirectly_assigned_to]
+      expect(indirectly_assigned_to).to eq(post5.id => { assigned_to: {
+        assign_icon: "user-plus",
+        assign_path: "/u/#{user.username}/activity/assigned",
+        avatar_template: user.avatar_template,
+        name: user.name,
+        username: user.username
+      }, post_number: post5.post_number })
     end
   end
 end

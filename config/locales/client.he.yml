@@ -49,6 +49,7 @@ he:
         title: "הקצאה מחדש"
         title_w_ellipsis: "הקצאה מחדש לטובת…"
         to_self: "הקצאה מחדש אלי"
+        to_self_help: "הקצאת נושא אלי מחדש"
         help: "הקצאת נושא מחדש למשתמש אחר"
       reassign_modal:
         title: "הקצאת נושא מחדש"
@@ -111,6 +112,8 @@ he:
           fields:
             assignees_group:
               label: קבוצת מוקצים
+            minimum_time_between_assignments:
+              label: כמות מזערית של שעות בין הקצאות
             min_recently_assigned_days:
               label: כמות מזערית של ימים שהוקצו לאחרונה
               description: ברירת המחדל היא 14 ימים.
@@ -121,3 +124,5 @@ he:
               label: מזהה נושא מוקצה
             in_working_hours:
               label: משתמשים בשעות עבודה
+    notification_reason:
+      user: "תופיע ספירה של תגובות חדשות כיוון שהנושא הזה הוקצה אליך."

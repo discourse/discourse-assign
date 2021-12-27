@@ -13,8 +13,8 @@ en:
       unassigned_group: "unassigned %{who} %{when}"
       unassigned_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
       unassigned_group_from_post: "unassigned %{who} from <a href='%{path}' data-auto-route='true'>post</a> %{when}"
-      reassigned: "Re-assigned %{who} %{when}"
-      reassigned_group: "Re-assigned %{who} %{when}"
+      reassigned: "Reassigned %{who} %{when}"
+      reassigned_group: "Reassigned %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
@@ -40,16 +40,17 @@ en:
         title: "Unassign from Post"
         help: "Unassign %{username} from Post"
       reassign:
-        title: "Re-assign"
-        title_w_ellipsis: "Re-assign to..."
-        to_self: "Re-assign to me"
-        help: "Re-assign Topic to a different user"
+        title: "Reassign"
+        title_w_ellipsis: "Reassign to..."
+        to_self: "Reassign to me"
+        to_self_help: "Reassign Topic to me"
+        help: "Reassign Topic to a different user"
       reassign_modal:
-        title: "Re-assign Topic"
-        description: "Enter the name of the user you'd like to Re-assign this topic"
+        title: "Reassign Topic"
+        description: "Enter the name of the user you'd like to Reassign this topic"
       assign_modal:
         title: "Assign Topic"
-        reassign_title: "Re-assign Topic"
+        reassign_title: "Reassign Topic"
         description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
       assign_post_modal:
@@ -119,3 +120,5 @@ en:
               label: Assigned Topic ID
             in_working_hours:
               label: Users in working hours
+    notification_reason:
+      user: "You will see a count of new replies because this topic was assigned to you."

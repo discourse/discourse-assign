@@ -3,14 +3,17 @@
 class PendingAssignsReminder
   REMINDED_AT = 'last_reminded_at'
   REMINDERS_FREQUENCY = 'remind_assigns_frequency'
+  CUSTOM_FIELD_NAME = 'assigns_reminder'
   REMINDER_THRESHOLD = 2
 
   def remind(user)
     newest_topics = assigned_topics(user, order: :desc)
     return if newest_topics.size < REMINDER_THRESHOLD
+
+    delete_previous_reminders(user)
+
     oldest_topics = assigned_topics(user, order: :asc).where.not(id: newest_topics.map(&:id))
     assigned_topics_count = assigned_count_for(user)
-
     title = I18n.t('pending_assigns_reminder.title', pending_assignments: assigned_topics_count)
 
     PostCreator.create!(
@@ -18,14 +21,37 @@ class PendingAssignsReminder
       title: title,
       raw: reminder_body(user, assigned_topics_count, newest_topics, oldest_topics),
       archetype: Archetype.private_message,
+      subtype: TopicSubtype.system_message,
       target_usernames: user.username,
-      validate: false
+      custom_fields: { CUSTOM_FIELD_NAME => true }
     )
 
     update_last_reminded(user)
   end
 
   private
+
+  def delete_previous_reminders(user)
+    posts = Post
+      .joins(topic: { topic_allowed_users: :user })
+      .where(topic: {
+        posts_count: 1,
+        user_id: Discourse.system_user,
+        archetype: Archetype.private_message,
+        subtype: TopicSubtype.system_message,
+        topic_allowed_users: {
+          users: { id: user.id }
+        }
+      })
+      .joins(topic: :_custom_fields)
+      .where(topic_custom_fields: {
+        name: CUSTOM_FIELD_NAME
+      })
+
+    posts.find_each do |post|
+      PostDestroyer.new(Discourse.system_user, post).destroy
+    end
+  end
 
   def assigned_count_for(user)
     Assignment.joins_with_topics.where(assigned_to_id: user.id, assigned_to_type: 'User').count

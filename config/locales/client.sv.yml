@@ -49,6 +49,7 @@ sv:
         title: "Åter-tilldela"
         title_w_ellipsis: "Omtilldela till..."
         to_self: "Omtilldela till mig"
+        to_self_help: "Omtilldela ämne till mig"
         help: "Åter-tilldela ämne till en annan användare"
       reassign_modal:
         title: "Omtilldela ämne"
@@ -123,3 +124,5 @@ sv:
               label: Tilldelat ämnes-ID
             in_working_hours:
               label: Användare under arbetstid
+    notification_reason:
+      user: "Du kommer att se en räknare för nya svar eftersom detta ämne tilldelades dig."

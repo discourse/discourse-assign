@@ -22,7 +22,10 @@ function assignCurrentUserToTopic(needs) {
       };
       topic["indirectly_assigned_to"] = {
         2: {
-          name: "Developers",
+          assigned_to: {
+            name: "Developers",
+          },
+          post_number: 2,
         },
       };
       return helper.response(topic);
@@ -50,7 +53,10 @@ function assignNewUserToTopic(needs) {
       };
       topic["indirectly_assigned_to"] = {
         2: {
-          name: "Developers",
+          assigned_to: {
+            name: "Developers",
+          },
+          post_number: 2,
         },
       };
       return helper.response(topic);

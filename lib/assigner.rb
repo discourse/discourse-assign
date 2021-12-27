@@ -181,24 +181,34 @@ class ::Assigner
   end
 
   def forbidden_reasons(assign_to:, type:)
-    forbidden_reason =
-      case
-      when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
-        topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
-      when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_target?(user) }
-        topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
-      when !can_be_assigned?(assign_to)
-        assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-      when topic.assignment&.assigned_to_id == assign_to.id && topic.assignment&.assigned_to_type == type
-        assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-      when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
-        :too_many_assigns_for_topic
-      when !can_assign_to?(assign_to)
-        :too_many_assigns
-      end
+    case
+    when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
+      topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
+    when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_target?(user) }
+      topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
+    when !can_be_assigned?(assign_to)
+      assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
+    when topic.assignment&.assigned_to_id == assign_to.id && topic.assignment&.assigned_to_type == type && topic.assignment.active == true
+      assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
+    when @target.is_a?(Topic) && Assignment.where(topic_id: topic.id, target_type: "Post", active: true).any? { |assignment| assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type }
+      assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
+    when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
+      :too_many_assigns_for_topic
+    when !can_assign_to?(assign_to)
+      :too_many_assigns
+    end
   end
 
-  def assign_or_reassign_target(assign_to:, type:, silent:, action_code:)
+  def assign(assign_to, silent: false)
+    type = assign_to.is_a?(User) ? "User" : "Group"
+
+    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
+    return { success: false, reason: forbidden_reason } if forbidden_reason
+
+    action_code = {}
+    action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
+    action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
+
     @target.assignment&.destroy!
 
     assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
@@ -253,7 +263,7 @@ class ::Assigner
       custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
 
       if post_target?
-        custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
+        custom_fields.merge!({ "action_code_path" => "/p/#{@target.id}", "action_code_post_id" => @target.id })
       end
 
       topic.add_moderator_post(
@@ -273,8 +283,6 @@ class ::Assigner
         type: type,
         topic_id: topic.id,
         topic_title: topic.title,
-        assigned_to_id: assign_to.id,
-        assigned_to_username: assign_to.username,
         assigned_by_id: @assigned_by.id,
         assigned_by_username: @assigned_by.username
       }
@@ -295,29 +303,9 @@ class ::Assigner
     { success: true }
   end
 
-  def assign(assign_to, silent: false)
-    type = assign_to.is_a?(User) ? "User" : "Group"
-
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
-    return { success: false, reason: forbidden_reason } if forbidden_reason
-
-    action_code = { user: "assigned", group: "assigned_group" }
-    assign_or_reassign_target(assign_to: assign_to, type: type, silent: silent, action_code: action_code)
-  end
-
-  def reassign(assign_to, silent: false)
-    type = assign_to.is_a?(User) ? "User" : "Group"
-
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
-    return { success: false, reason: forbidden_reason } if forbidden_reason
-
-    action_code = { user: "reassigned", group: "reassigned_group" }
-    assign_or_reassign_target(assign_to: assign_to, type: type, silent: silent, action_code: action_code)
-  end
-
-  def unassign(silent: false)
+  def unassign(silent: false, deactivate: false)
     if assignment = @target.assignment
-      assignment.destroy!
+      deactivate ? assignment.update!(active: false) : assignment.destroy!
 
       return if first_post.blank?
 
@@ -354,6 +342,7 @@ class ::Assigner
 
         if post_target?
           custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
+          custom_fields.merge!("action_code_post_id" => @target.id)
         end
 
         topic.add_moderator_post(
@@ -406,14 +395,12 @@ class ::Assigner
   private
 
   def moderator_post_assign_action_code(assignment, action_code)
-    suffix =
-      if assignment.target.is_a?(Post)
-        "_to_post"
-      elsif assignment.target.is_a?(Topic)
-        ""
-      end
-    return "#{action_code[:user]}#{suffix}" if assignment.assigned_to_user?
-    return "#{action_code[:group]}#{suffix}" if assignment.assigned_to_group?
+    if assignment.target.is_a?(Post)
+      # posts do not have to handle conditions of 'assign' or 'reassign'
+      assignment.assigned_to_user? ? "assigned_to_post" : "assigned_group_to_post"
+    elsif assignment.target.is_a?(Topic)
+      assignment.assigned_to_user? ? "#{action_code[:user]}" : "#{action_code[:group]}"
+    end
   end
 
   def moderator_post_unassign_action_code(assignment)

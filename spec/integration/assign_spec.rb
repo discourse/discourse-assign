@@ -78,14 +78,11 @@ describe 'integration tests' do
       assigner.assign(user)
 
       GroupArchivedMessage.archive!(group.id, pm.reload)
-      expect(pm.assignment).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(user.id)
-      expect(pm.custom_fields["prev_assigned_to_type"]).to eq("User")
+      expect(pm.assignment.active).to be false
 
       GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
+      expect(pm.assignment.active).to be true
       expect(pm.assignment.assigned_to).to eq(user)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_type"]).to eq(nil)
     end
 
     it "unassign and assign group if unassign_on_group_archive" do
@@ -94,11 +91,10 @@ describe 'integration tests' do
       assigner.assign(group)
 
       GroupArchivedMessage.archive!(group.id, pm.reload)
-      expect(pm.assignment).to eq(nil)
-      expect(pm.custom_fields["prev_assigned_to_id"]).to eq(group.id)
-      expect(pm.custom_fields["prev_assigned_to_type"]).to eq("Group")
+      expect(pm.assignment.active).to be false
 
       GroupArchivedMessage.move_to_inbox!(group.id, pm.reload)
+      expect(pm.assignment.active).to be true
       expect(pm.assignment.assigned_to).to eq(group)
     end
   end
@@ -143,6 +139,32 @@ describe 'integration tests' do
       payload = JSON.parse(job_args["payload"])
       expect(payload["topic_id"]).to eq(topic.id)
       expect(payload["unassigned_to_id"]).to eq(user2.id)
+    end
+  end
+
+  context 'already assigned' do
+    fab!(:post) { Fabricate(:post) }
+    fab!(:post_2) { Fabricate(:post, topic: post.topic) }
+    let(:topic) { post.topic }
+    fab!(:user) { Fabricate(:user) }
+
+    include_context 'A group that is allowed to assign'
+
+    it 'does not allow to assign topic if post is already assigned' do
+      add_to_assign_allowed_group(user)
+
+      assigner = Assigner.new(post, user)
+      response = assigner.assign(user)
+      expect(response[:success]).to be true
+
+      assigner = Assigner.new(post_2, user)
+      response = assigner.assign(user)
+      expect(response[:success]).to be true
+
+      assigner = Assigner.new(topic, user)
+      response = assigner.assign(user)
+      expect(response[:success]).to be false
+      expect(response[:reason]).to eq(:already_assigned)
     end
   end
 
