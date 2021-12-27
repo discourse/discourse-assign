@@ -1,5 +1,5 @@
 {{#unless skipHeader}}
-  <thead class="topic-list-header">
+  <div class="topic-list-header">
     {{raw "topic-list-header"
       canBulkSelect=canBulkSelect
       canDoBulkActions=canDoBulkActions
@@ -14,10 +14,10 @@
       listTitle=listTitle
       bulkSelectEnabled=bulkSelectEnabled
     }}
-  </thead>
+  </div>
 {{/unless}}
 
-<tbody class="topic-list-body">
+<div class="topic-list-body">
   {{#each filteredTopics as |topic|}}
     {{assigned-topic-list-item
       topic=topic
@@ -38,4 +38,4 @@
 
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}
-</tbody>
+</div>

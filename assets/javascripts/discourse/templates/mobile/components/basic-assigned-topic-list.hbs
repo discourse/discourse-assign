@@ -8,8 +8,8 @@
   {{/if}}
 
   {{#if topics}}
-    <table class="topic-list">
-      <tbody>
+    <div class="topic-list">
+      <div class="topic-list-body">
         {{#each topics as |t|}}
           {{assigned-topic-list-item
             topic=t
@@ -22,8 +22,8 @@
             reassign=reassign
           }}
         {{/each}}
-      </tbody>
-    </table>
+      </div>
+    </div>
   {{else}}
     <div class="alert alert-info">
       {{i18n "choose_topic.none_found"}}
