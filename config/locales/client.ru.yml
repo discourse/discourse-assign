@@ -19,8 +19,8 @@ ru:
       unassigned_group: "снял(а) ответственного %{who} %{when}"
       unassigned_from_post: "снял назначение пользователя %{who} с <a href='%{path}' data-auto-route='true'>этого</a> сообщения %{when}."
       unassigned_group_from_post: "снял назначение пользователя %{who} с <a href='%{path}' data-auto-route='true'>этого</a> сообщения %{when}."
-      reassigned: "Повторное назначение %{who} %{when}"
-      reassigned_group: "Повторное назначение %{who} %{when}"
+      reassigned: "Переназначено: %{who} %{when}"
+      reassigned_group: "Переназначено: %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Добавить в раздел фильтр 'Неназначенные'"
       cant_act: "Вы не можете работать с жалобами, назначенными другому сотруднику"

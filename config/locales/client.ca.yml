@@ -26,9 +26,6 @@ ca:
       assign:
         title: "Assigna"
         help: "Assigna el tema a l'usuari"
-      reassign:
-        title: "Reassigna"
-        help: "Reassigna el tema a un altre usuari"
       assign_modal:
         title: "Assigna el tema"
         description: "Introduïu el nom de l’usuari a qui voleu assignar aquest tema"

@@ -6,40 +6,123 @@
 
 de:
   js:
+    filters:
+      unassigned:
+        title: "Zuordnung aufgehoben"
+        help: "Nicht zugeordnete Themen"
     action_codes:
-      assigned: "zugeordnet %{who} %{when}"
-      unassigned: "Zuordnung aufgehoben %{who} %{when}"
+      assigned: "%{who} zugeordnet %{when}"
+      assigned_group: "%{who} zugeordnet %{when}"
+      assigned_to_post: "%{who} zugeordnet zu <a href='%{path}' data-auto-route='true'>Beitrag</a> %{when}"
+      assigned_group_to_post: "%{who} zugeordnet zu <a href='%{path}' data-auto-route='true'>Beitrag</a> %{when}"
+      unassigned: "Zuordnung von %{who} aufgehoben %{when}"
+      unassigned_group: "Zuordnung von %{who} aufgehoben %{when}"
+      unassigned_from_post: "Zuordnung von %{who} zu <a href='%{path}' data-auto-route='true'>Beitrag</a> aufgehoben %{when}"
+      unassigned_group_from_post: "Zuordnung von %{who} zu <a href='%{path}' data-auto-route='true'>Beitrag</a> aufgehoben %{when}"
+      reassigned: "%{who} %{when} erneut zugeordnet"
+      reassigned_group: "%{who} %{when} erneut zugeordnet"
     discourse_assign:
-      cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugewiesen wurden."
+      add_unassigned_filter: "Filter „Nicht zugeordnet“ zur Kategorie hinzufügen"
+      cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugeordnet wurden."
       cant_act_unclaimed: "Du musst das Thema übernehmen, bevor du Meldungen behandeln kannst."
+      topic_search_placeholder: "Themen nach Titel oder Beitragsinhalt suchen"
+      sidebar_name_filter_placeholder: "Name/Benutzername"
       assigned: "Zugeordnet"
       group_everyone: "Jeder"
-      assigned_to: "Zugewiesen an"
+      assigned_to: "Zugeordnet zu"
+      assigned_to_w_ellipsis: "Zugeordnet zu …"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Zuordnung aufheben"
+        title_w_ellipsis: "Zuordnung aufheben …"
+        help: "Zuordnung von %{username} zu Thema aufheben"
       assign:
         title: "Zuordnen"
-        help: "Thema einer Person zuordnen"
+        help: "Thema einem Benutzer zuordnen"
+      assign_post:
+        title: "Beitrag zuordnen"
+      unassign_post:
+        title: "Zuordnung zu Beitrag aufheben"
+        help: "Zuordnung von %{username} zu Beitrag aufheben"
       reassign:
-        title: "Erneut zuweisen"
-        help: "Thema an einen anderen Benutzer zuweisen"
+        title: "Neu zuordnen"
+        title_w_ellipsis: "Neu zuordnen zu …"
+        to_self: "Mir neu zuordnen"
+        to_self_help: "Thema mir neu zuordnen"
+        help: "Thema einem anderen Benutzer neu zuordnen"
+      reassign_modal:
+        title: "Thema neu zuordnen"
+        description: "Gib den Namen des Benutzers ein, dem du dieses Thema neu zuordnen möchtest"
       assign_modal:
         title: "Thema zuordnen"
+        reassign_title: "Thema neu zuordnen"
+        description: "Gib den Namen des Benutzers ein, dem du dieses Thema zuordnen möchtest"
         assign: "Zuordnen"
+      assign_post_modal:
+        title: "Beitrag zuordnen"
+        description: "Gib den Namen des Benutzers ein, dem du diesen Beitrag zuordnen möchtest"
       claim:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"
       assign_mailer:
-        never: "nie"
-        always: "immer"
+        never: "Nie"
+        different_users: "Nur wenn die zuordnende Person und die zugeordnete Person unterschiedliche Benutzer sind"
+        always: "Immer"
       reminders_frequency:
-        description: "Intervall für das Erhalten von Erinnerungen an zugewiesene Themen"
-        never: "nie"
+        description: "Intervall für das Erhalten von Erinnerungen an zugeordnete Themen"
+        never: "Nie"
         daily: "Täglich"
         weekly: "Wöchentlich"
         monthly: "Monatlich"
         quarterly: "Vierteljährlich"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Zuordnen"
+              assignable_levels:
+                title: "Wer kann für diese Gruppe Zuordnungen vornehmen"
     user:
       messages:
         assigned_title: "Zugeordnet (%{count})"
         assigned: "Zugeordnet"
+      no_assignments_title: "Du hast noch keine Zuordnungen"
+      no_assignments_body: >
+        Deine zugeordneten Themen und Nachrichten werden hier aufgelistet. Außerdem erhältst du regelmäßig eine Erinnerungsbenachrichtigung betreffend deine Zuordnungen, die du in deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> anpassen kannst. <br><br> Um dir selbst oder einer anderen Person ein Thema oder eine Nachricht zuzuordnen, verwende die Zuordnungsschaltfläche %{icon} unten.
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Ereignis zuordnen"
+          details: "Wenn ein Benutzer ein Thema zuordnet oder die Zuordnung aufhebt."
+    search:
+      advanced:
+        in:
+          assigned: "sind zugeordnet"
+          unassigned: "sind nicht zugeordnet"
+        assigned:
+          label: "Zugeordnet zu"
+    topics:
+      bulk:
+        unassign: "Zuordnung von Themen aufheben"
+        assign: "Themen zuordnen"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Gruppe der zugeordneten Personen
+            minimum_time_between_assignments:
+              label: Mindestanzahl der Stunden zwischen Zuordnungen
+            min_recently_assigned_days:
+              label: 'Kürzlich zugeordnet: Mindestanzahl der Tage'
+              description: Standardmäßig 14 Tage.
+            max_recently_assigned_days:
+              label: 'Kürzlich zugeordnet: Maximalanzahl der Tage'
+              description: Erster Versuch, Benutzer auszuschließen, die in den letzten `n` Tagen zugeordnet wurden. Wenn kein Benutzer übrig ist, wird auf `min_recently_assigned_days` zurückgegriffen. Standardmäßig 180 Tage.
+            assigned_topic:
+              label: Zugeordnete Themen-ID
+            in_working_hours:
+              label: Benutzer in Arbeitszeit
+    notification_reason:
+      user: "Du siehst die Anzahl der neuen Antworten, weil dir dieses Thema zugeordnet wurde."

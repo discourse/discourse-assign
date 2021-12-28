@@ -8,76 +8,121 @@ zh_CN:
   js:
     filters:
       unassigned:
-        title: "未指派的"
-        help: "主题未指定"
+        title: "未分配"
+        help: "未分配的话题"
     action_codes:
-      assigned: "已于%{when}指派给%{who}"
-      unassigned: "于%{when}取消指派给%{who}"
+      assigned: "于 %{when}分配给 %{who}"
+      assigned_group: "于 %{when}分配给 %{who}"
+      assigned_to_post: "于 %{when}将 %{who} 分配给<a href='%{path}' data-auto-route='true'>帖子</a>"
+      assigned_group_to_post: "于 %{when}将 %{who} 分配给<a href='%{path}' data-auto-route='true'>帖子</a>"
+      unassigned: "于 %{when}取消分配 %{who}"
+      unassigned_group: "于 %{when}取消分配 %{who}"
+      unassigned_from_post: "于 %{when}从<a href='%{path}' data-auto-route='true'>帖子</a>中取消分配 %{who}"
+      unassigned_group_from_post: "于 %{when}从<a href='%{path}' data-auto-route='true'>帖子</a>中取消分配 %{who}"
+      reassigned: "于 %{when}重新分配 %{who}"
+      reassigned_group: "于 %{when}重新分配 %{who}"
     discourse_assign:
-      add_unassigned_filter: "将“未指派的”过滤器添加到分类"
-      cant_act: "你不能操作已经指派给其他用户的标记"
-      cant_act_unclaimed: "在对标记执行操作之前，你必须认领此主题。"
-      topic_search_placeholder: "按标题或帖子内容搜索主题"
+      add_unassigned_filter: "将“未分配”筛选器添加到类别"
+      cant_act: "您不能对已分配给其他用户的举报采取行动"
+      cant_act_unclaimed: "在对举报采取行动之前，您必须先认领此话题。"
+      topic_search_placeholder: "按标题或帖子内容搜索话题"
       sidebar_name_filter_placeholder: "姓名/用户名"
-      assigned: "已指派"
+      assigned: "已分配"
       group_everyone: "所有人"
-      assigned_to: "指派给"
-      assign_notification: "<p><span>%{username}</span>%{description}</p>"
+      assigned_to: "已分配给"
+      assigned_to_w_ellipsis: "已分配给…"
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
-        title: "未指派"
-        help: "取消指派主题给%{username}"
+        title: "取消分配"
+        title_w_ellipsis: "取消分配…"
+        help: "从话题中取消分配 %{username}"
       assign:
-        title: "指派"
-        help: "指派主题给用户"
+        title: "分配"
+        help: "将话题分配给用户"
+      assign_post:
+        title: "分配帖子"
+      unassign_post:
+        title: "从帖子中取消分配"
+        help: "从帖子中取消分配 %{username}"
       reassign:
-        title: "重新指派"
-        help: "重新指派主题给另一用户"
+        title: "重新分配"
+        title_w_ellipsis: "重新分配给…"
+        to_self: "重新分配给我"
+        to_self_help: "将话题重新分配给我"
+        help: "将话题重新分配给其他用户"
+      reassign_modal:
+        title: "重新分配话题"
+        description: "输入您要将此话题重新分配给的用户的名称"
       assign_modal:
-        title: "指派主题"
-        description: "输入你想要指派到此主题的用户名"
-        assign: "指派"
+        title: "分配话题"
+        reassign_title: "重新分配话题"
+        description: "输入您要将此话题分配给的用户的名称"
+        assign: "分配"
+      assign_post_modal:
+        title: "分配帖子"
+        description: "输入您要将此帖子分配给的用户的名称"
       claim:
         title: "认领"
-        help: "指派这个主题给你自己"
+        help: "将话题分配给自己"
       assign_mailer:
-        never: "从不"
-        different_users: "仅当转让人和受让人是不同的用户时"
+        never: "永不"
+        different_users: "仅当分配者和受理人是不同的用户时"
         always: "始终"
       reminders_frequency:
-        description: "接受指派主题提醒的频率"
-        never: "从不"
+        description: "接收分配话题提醒的频率"
+        never: "永不"
         daily: "每天"
         weekly: "每周"
-        monthly: "月度"
-        quarterly: "季度"
+        monthly: "每月"
+        quarterly: "每季度"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "分配"
+              assignable_levels:
+                title: "谁可以分配此群组"
     user:
       messages:
-        assigned_title: "已指派%{count}"
-        assigned: "已指派"
-      no_assignments_title: "您还没有任何任务"
+        assigned_title: "已分配 (%{count})"
+        assigned: "已分配"
+      no_assignments_title: "您还没有任何任务分配"
       no_assignments_body: >
-        您分配的主题和消息将在此处列出。您还将收到关于您的任务的定期提醒通知，您可以在 <a href='%{preferencesUrl}'>用户首选项</a>进行调整。 <br><br> 要将主题或消息分配给自己或其他人，请查找 %{icon} 分配按钮。
+        分配给您的话题和消息将在此处列出。您还将收到关于您的任务分配的定期提醒通知，您可以在<a href='%{preferencesUrl}'>用户偏好设置</a>中进行调整。 <br><br>要将话题或消息分配给自己或其他人，请查找底部的 %{icon} 分配按钮。
     admin:
       web_hooks:
         assign_event:
-          name: "指派事件"
-          details: "当用户被分配或取消分配一个主题时。"
+          name: "分配事件"
+          details: "当用户分配或取消分配话题时。"
     search:
       advanced:
         in:
           assigned: "已分配"
-          unassigned: "未指派的"
+          unassigned: "已被取消分配"
         assigned:
-          label: "指派给"
+          label: "已分配给"
     topics:
       bulk:
-        unassign: "取消指派主题"
-        assign: "指派主题"
+        unassign: "取消分配话题"
+        assign: "分配话题"
     discourse_automation:
       scriptables:
         random_assign:
           fields:
             assignees_group:
-              label: 指派给群组
+              label: 受理人群组
+            minimum_time_between_assignments:
+              label: 两次任务分配之间的最小时数
+            min_recently_assigned_days:
+              label: 最近分配的最小天数
+              description: 默认为 14 天。
+            max_recently_assigned_days:
+              label: 最近分配的最大天数
+              description: 首先尝试排除在最近 `n` 天内分配的用户。如果不剩任何用户，则回退到 `min_recently_assigned_days`。默认为 180 天。
             assigned_topic:
-              label: 指派主题
+              label: 分配的话题 ID
+            in_working_hours:
+              label: 正在上班的用户
+    notification_reason:
+      user: "由于此话题已被分配给您，您将看到新回复的计数。"

@@ -6,14 +6,123 @@
 
 ar:
   js:
+    filters:
+      unassigned:
+        title: "غير معيَّنة"
+        help: "الموضوعات غير المعيَّنة"
+    action_codes:
+      assigned: "تم تعيين %{who} في %{when}"
+      assigned_group: "تم تعيين %{who} في %{when}"
+      assigned_to_post: "تم تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
+      assigned_group_to_post: "تم تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
+      unassigned: "تم إلغاء تعيين %{who} في %{when}"
+      unassigned_group: "تم إلغاء تعيين %{who} في %{when}"
+      unassigned_from_post: "تم إلغاء تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
+      unassigned_group_from_post: "تم إلغاء تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
+      reassigned: "تمت إعادة تعيين %{who} في %{when}"
+      reassigned_group: "تمت إعادة تعيين %{who} في %{when}"
     discourse_assign:
-      group_everyone: "الكل"
+      add_unassigned_filter: "إضافة المرشح \"غير المعيَّنة\" إلى الفئة"
+      cant_act: "لا يمكنك اتخاذ إجراء بشأن البلاغات التي تم تعيينها إلى مستخدمين آخرين"
+      cant_act_unclaimed: "يجب عليك المطالبة بملكية هذا الموضوع قبل اتخاذ إجراء بشان البلاغات."
+      topic_search_placeholder: "البحث في الموضوعات بالعنوان أو محتوى المنشور"
+      sidebar_name_filter_placeholder: "الاسم/اسم المستخدم"
+      assigned: "المعيَّنة"
+      group_everyone: "الجميع"
+      assigned_to: "معيَّنة إلى"
+      assigned_to_w_ellipsis: "معيَّنة إلى..."
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
+      unassign:
+        title: "إلغاء التعيين"
+        title_w_ellipsis: "إلغاء تعيين..."
+        help: "إلغاء تعيين الموضوع إلى %{username}"
+      assign:
+        title: "تعيين"
+        help: "تعيين الموضوع إلى المستخدم"
+      assign_post:
+        title: "تعيين المنشور"
+      unassign_post:
+        title: "إلغاء تعيين المنشور"
+        help: "إلغاء تعيين المنشور إلى %{username}"
+      reassign:
+        title: "إعادة التعيين"
+        title_w_ellipsis: "إعادة التعيين إلى..."
+        to_self: "إعادة التعيين إليَّ"
+        to_self_help: "إعادة تعيين الموضوع إليَّ"
+        help: "إعادة تعيين الموضوع إلى مستخدم آخر"
+      reassign_modal:
+        title: "إعادة تعيين الموضوع"
+        description: "أدخل اسم المستخدم الذي ترغب في إعادة تعيين هذا الموضوع إليه"
+      assign_modal:
+        title: "تعيين الموضوع"
+        reassign_title: "إعادة تعيين الموضوع"
+        description: "أدخل اسم المستخدم الذي ترغب في تعيين هذا الموضوع إليه"
+        assign: "تعيين"
+      assign_post_modal:
+        title: "تعيين المنشور"
+        description: "أدخل اسم المستخدم الذي ترغب في تعيين هذا المنشور إليه"
+      claim:
+        title: "المطالبة بالملكية"
+        help: "تعيين الموضوع إلى نفسك"
       assign_mailer:
-        never: "أبدا"
-        always: "دوما"
+        never: "أبدًا"
+        different_users: "فقط إذا كان المعيِّن والمعيَّن مستخدمَين مختلفَين"
+        always: "دائمًا"
       reminders_frequency:
-        never: "أبدا"
-        daily: "يوم"
-        weekly: "اسبوع"
-        monthly: "شهر"
-        quarterly: "ربع سنة"
+        description: "معدل تكرار تلقي التذكيرات بالموضوعات المعيَّنة"
+        never: "أبدًا"
+        daily: "يوميًا"
+        weekly: "أسبوعيًا"
+        monthly: "شهريًا"
+        quarterly: "ربع سنوي"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "تعيين"
+              assignable_levels:
+                title: "من يمكنه تعيين هذه المجموعة"
+    user:
+      messages:
+        assigned_title: "المعيَّنة (%{count})"
+        assigned: "المعيَّنة"
+      no_assignments_title: "ليس لديك أي تعيينات بعد"
+      no_assignments_body: >
+        سيتم إدراج الموضوعات والرسائل المعيَّنة إليك هنا. ستتلقى أيضًا إشعار تذكير دوريًا بتعييناتك، والذي يمكنك تعديله في <a href='%{preferencesUrl}'>تفضيلات المستخدم</a>. <br><br> لتعيين موضوع أو رسالة إلى نفسك أو إلى شخص آخر، ابحث عن %{icon} في الأسفل.
+    admin:
+      web_hooks:
+        assign_event:
+          name: "تعيين الحدث"
+          details: "عندما يعيِّن مستخدم موضوعًا أو يلغي تعيينه."
+    search:
+      advanced:
+        in:
+          assigned: "معيَّنة"
+          unassigned: "غير معيَّنة"
+        assigned:
+          label: "معيَّنة إلى"
+    topics:
+      bulk:
+        unassign: "إلغاء تعيين الموضوعات"
+        assign: "تعيين الموضوعات"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: مجموعة المعيَّنين
+            minimum_time_between_assignments:
+              label: الحد الأدنى لعدد الساعات بين التعيينات
+            min_recently_assigned_days:
+              label: الحد الأدنى لعدد الأيام التي يعتبر فيها المستخدم حديث التعيين
+              description: الإعداد الافتراضي هو 14 يومًا.
+            max_recently_assigned_days:
+              label: الحد الأقصى لعدد الأيام التي يعتبر فيها المستخدم حديث التعيين
+              description: المحاولة الأولى لاستبعاد المستخدمين المعيَّنين في الأيام `n` الأخيرة. إذا لم يتبقَّ أي مستخدم، يتم التراجع إلى `min_recently_assigned_days`. الإعداد الافتراضي هو 180 يومًا.
+            assigned_topic:
+              label: مُعرِّف الموضوع المعيَّن
+            in_working_hours:
+              label: المستخدمون في ساعات العمل
+    notification_reason:
+      user: "سترى عدد الردود الجديدة لأن هذا الموضوع معيَّن إليك."

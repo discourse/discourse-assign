@@ -12,28 +12,44 @@ it:
         help: "Argomenti non assegnati"
     action_codes:
       assigned: "assegnato a %{who} %{when}"
+      assigned_group: "assegnato a %{who} %{when}"
+      assigned_to_post: "assegnato a %{who} nel <a href='%{path}' data-auto-route='true'>messaggio</a> %{when}"
+      assigned_group_to_post: "assegnato a %{who} nel <a href='%{path}' data-auto-route='true'>messaggio</a> %{when}"
       unassigned: "non assegnato a %{who} %{when}"
+      unassigned_group: "assegnazione a %{who} %{when} annullata"
+      unassigned_from_post: "assegnazione a %{who} dal <a href='%{path}' data-auto-route='true'>messaggio</a> %{when} annullata"
+      unassigned_group_from_post: "assegnazione a %{who} dal <a href='%{path}' data-auto-route='true'>messaggio</a> %{when} annullata"
     discourse_assign:
       add_unassigned_filter: "Aggiungi il filtro 'non assegnato' alla categoria"
       cant_act: "Non puoi intervenire su segnalazioni assegnate ad altri utenti"
       cant_act_unclaimed: "Devi prima rivendicare questo argomento per poter intervenire sulle segnalazioni. "
+      topic_search_placeholder: "Ricerca argomenti per titolo o contenuto del messaggio"
+      sidebar_name_filter_placeholder: "Nome/Nome utente"
       assigned: "Assegnato"
       group_everyone: "Chiunque"
       assigned_to: "Assegnato a"
+      assigned_to_w_ellipsis: "Assegnato a..."
       assign_notification: "<p> <span>%{username}</span> %{description} </p>"
+      assign_group_notification: "<p> <span>%{username}</span> %{description} </p>"
       unassign:
         title: "Annulla assegnazione"
-        help: "Dissocia %{username} dall'Argomento"
+        title_w_ellipsis: "Annullamento assegnazione..."
+        help: "Annulla assegnazione di %{username} da messaggio"
       assign:
         title: "Assegna"
         help: "Assegna Argomento ad Utente"
-      reassign:
-        title: "Riassegna"
-        help: "Riassegna argomento a un altro utente"
+      assign_post:
+        title: "Assegna messaggio"
+      unassign_post:
+        title: "Annulla assegnazione da messaggio"
+        help: "Annulla assegnazione di %{username} da messaggio"
       assign_modal:
         title: "Assegna Argomento"
         description: "Inserisci il nome dell'utente a cui desideri assegnare questo argomento"
         assign: "Assegna"
+      assign_post_modal:
+        title: "Assegna messaggio"
+        description: "Inserisci il nome dell'utente a cui desideri assegnare questo messaggio"
       claim:
         title: "rivendica"
         help: "Assegna l'argomento a te stesso"
@@ -48,12 +64,53 @@ it:
         weekly: "Settimanale"
         monthly: "Mensile"
         quarterly: "Trimestrale"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Assegna"
+              assignable_levels:
+                title: "Chi può assegnare questo gruppo"
     user:
       messages:
         assigned_title: "Assegnato (%{count})"
         assigned: "Assegnato"
+      no_assignments_title: "Non hai ancora assegnazioni"
+      no_assignments_body: >
+        Gli argomenti e i messaggi a te assegnati verranno elencati qui. Riceverai anche una notifica di promemoria periodica delle tue assegnazioni, che puoi modificare nelle tue <a href='%{preferencesUrl}'>preferenze utente</a>. <br><br> Per assegnare un argomento o un messaggio a te stesso o a qualcun altro, cerca il pulsante Assegna %{icon} in fondo.
     admin:
       web_hooks:
         assign_event:
-          name: "Evento Assegna"
+          name: "Evento di assegnazione"
           details: "Quando un utente assegna o annulla l'assegnazione di un argomento."
+    search:
+      advanced:
+        in:
+          assigned: "sono assegnati"
+          unassigned: "non sono assegnati"
+        assigned:
+          label: "Assegnato a"
+    topics:
+      bulk:
+        unassign: "Annulla assegnazione argomenti"
+        assign: "Assegna argomenti"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Gruppo di assegnatari
+            minimum_time_between_assignments:
+              label: Tempo minimo in ore tra le assegnazioni
+            min_recently_assigned_days:
+              label: Numero min di giorni per assegnazioni recenti
+              description: Valore predefinito 14 giorni.
+            max_recently_assigned_days:
+              label: Numero max di giorni per assegnazioni recenti
+              description: Primo tentativo di escludere gli utenti assegnati negli ultimi `n` giorni. Se non rimangono utenti, si applica il valore di `min_recently_assigned_days`. Il valore predefinito è 180 giorni.
+            assigned_topic:
+              label: ID argomento assegnato
+            in_working_hours:
+              label: Utenti in orario di lavoro
+    notification_reason:
+      user: "Vedrai il conteggio delle nuove risposte perché questo argomento ti è stato assegnato."

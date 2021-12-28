@@ -8,65 +8,121 @@ fr:
   js:
     filters:
       unassigned:
-        title: "Désaffecté"
-        help: "Sujets n'étant pas affectés"
+        title: "Non attribués"
+        help: "Sujets qui ne sont pas attribués"
     action_codes:
-      assigned: "%{who} a été affecté %{when}"
-      unassigned: "%{who} a été désaffecté %{when}"
+      assigned: "a attribué %{who} le %{when}"
+      assigned_group: "a attribué %{who} le %{when}"
+      assigned_to_post: "a attribué %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
+      assigned_group_to_post: "a attribué %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
+      unassigned: "a annulé l'attribution de %{who} le %{when}"
+      unassigned_group: "a annulé l'attribution de %{who} le %{when}"
+      unassigned_from_post: "a annulé l'attribution de %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
+      unassigned_group_from_post: "a annulé l'attribution de %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
+      reassigned: "Réattribution à %{who} le %{when}"
+      reassigned_group: "Réattribution à %{who} le %{when}"
     discourse_assign:
-      add_unassigned_filter: "Ajouter le filtre « désaffecté » à la catégorie"
-      cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été affectés à d'autres utilisateurs"
-      cant_act_unclaimed: "Il faut revendiquer ce sujet avant d'agir sur les signalements."
+      add_unassigned_filter: "Ajouter le filtre « Non attribués » à la catégorie"
+      cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été attribués à d'autres utilisateurs"
+      cant_act_unclaimed: "Il faut réserver ce sujet avant d'agir sur les signalements."
       topic_search_placeholder: "Rechercher des sujets par titre ou contenu"
-      sidebar_name_filter_placeholder: "Nom/Nom d'utilisateur"
-      assigned: "Affecté"
+      sidebar_name_filter_placeholder: "Nom ou nom d'utilisateur"
+      assigned: "Attribué"
       group_everyone: "Tout le monde"
-      assigned_to: "Affecté à"
+      assigned_to: "Attribué à"
+      assigned_to_w_ellipsis: "Attribué à…"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
-        title: "Désaffecter"
-        help: "Désaffecter %{username} du sujet"
+        title: "Annuler l'attribution"
+        title_w_ellipsis: "Annuler l'attribution…"
+        help: "Annuler l'attribution de %{username} au sujet"
       assign:
-        title: "Affecter"
-        help: "Affecter le sujet à l'utilisateur"
+        title: "Attribuer"
+        help: "Attribuer le sujet à l'utilisateur"
+      assign_post:
+        title: "Attribuer un message"
+      unassign_post:
+        title: "Annuler l'attribution du message"
+        help: "Annuler l'attribution de %{username} au message"
       reassign:
         title: "Réattribuer"
+        title_w_ellipsis: "Réattribuer à…"
+        to_self: "Réattribuer à moi"
+        to_self_help: "Me réattribuer le sujet"
         help: "Réattribuer le sujet à un autre utilisateur"
+      reassign_modal:
+        title: "Réattribuer le sujet"
+        description: "Saisissez le nom de l'utilisateur auquel réattribuer ce sujet"
       assign_modal:
-        title: "Affecter le sujet"
-        description: "Saisir le nom de l'utilisateur auquel attribuer ce sujet"
-        assign: "Affecter"
+        title: "Attribuer le sujet"
+        reassign_title: "Réattribuer le sujet"
+        description: "Saisissez le nom de l'utilisateur auquel attribuer ce sujet"
+        assign: "Attribuer"
+      assign_post_modal:
+        title: "Attribuer un message"
+        description: "Saisissez le nom de l'utilisateur auquel attribuer ce message"
       claim:
-        title: "revendiquer"
-        help: "Affecter le sujet à vous-même"
+        title: "réserver"
+        help: "Attribuer le sujet à vous-même"
       assign_mailer:
         never: "Jamais"
-        different_users: "Uniquement si l'utilisateur qui affecte et l'utilisateur qui est affecté sont différents"
+        different_users: "Uniquement si l'utilisateur qui effectue l'attribution et l'utilisateur qui reçoit l'attribution sont différents"
         always: "Toujours"
       reminders_frequency:
-        description: "Fréquence à laquelle recevoir des rappels de sujets assignés"
+        description: "Fréquence à laquelle recevoir des rappels de sujets attribués"
         never: "Jamais"
-        daily: "Quotidien"
-        weekly: "Hebdomadaire"
-        monthly: "Mensuel"
-        quarterly: "Trimestriel"
+        daily: "Chaque jour"
+        weekly: "Chaque semaine"
+        monthly: "Chaque mois"
+        quarterly: "Chaque trimestre"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Attribuer"
+              assignable_levels:
+                title: "Qui peut attribuer ce groupe"
     user:
       messages:
-        assigned_title: "Affecté(s) (%{count})"
-        assigned: "Affecté"
+        assigned_title: "Attribué(s) (%{count})"
+        assigned: "Attribué(s)"
+      no_assignments_title: "Vous n'avez pas encore d'attribution"
+      no_assignments_body: >
+        Vos sujets et messages attribués seront répertoriés ici. Vous recevrez également une notification de rappel périodique de vos attributions que vous pouvez ajuster dans vos <a href='%{preferencesUrl}'>préférences d'utilisateur</a>. <br><br> Pour attribuer un sujet ou un message à vous-même ou à quelqu'un d'autre, recherchez le bouton d'attribution %{icon} en bas de l'écran.
     admin:
       web_hooks:
         assign_event:
-          name: "Événement d'affectation"
-          details: "Lorsqu'un utilisateur affecte ou désaffecte un sujet."
+          name: "Attribuer un événement"
+          details: "Lorsqu'un utilisateur attribue ou annule l'attribution d'un sujet."
     search:
       advanced:
         in:
-          assigned: "sont affectés"
-          unassigned: "ne sont pas affectés"
+          assigned: "sont attribués"
+          unassigned: "ne sont pas attribués"
         assigned:
-          label: "Affecté à"
+          label: "Attribué à"
     topics:
       bulk:
-        unassign: "Désaffecter les sujets"
-        assign: "Affecter les sujets"
+        unassign: "Annuler l'attribution des sujets"
+        assign: "Attribuer les sujets"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Groupe d'attributaires
+            minimum_time_between_assignments:
+              label: Nombre minimal d'heures entre les attributions
+            min_recently_assigned_days:
+              label: Nombre minimal de jours récemment attribués
+              description: La valeur par défaut est fixée à 14 jours.
+            max_recently_assigned_days:
+              label: Nombre maximal de jours récemment attribués
+              description: Première tentative d'exclusion des utilisateurs attribués au cours des « n » derniers jours. Si aucun utilisateur n'est parti, cette valeur revient à « min_recently_assigned_days ». La valeur par défaut est de 180 jours.
+            assigned_topic:
+              label: ID du sujet attribué
+            in_working_hours:
+              label: Utilisateurs pendant les heures de travail
+    notification_reason:
+      user: "Vous verrez le nombre de nouvelles réponses, car ce sujet vous a été attribué."

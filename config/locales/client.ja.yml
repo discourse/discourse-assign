@@ -6,14 +6,123 @@
 
 ja:
   js:
+    filters:
+      unassigned:
+        title: "未割り当て"
+        help: "未割り当てのトピック"
+    action_codes:
+      assigned: "%{who} を割り当てました: %{when}"
+      assigned_group: "%{who} を割り当てました: %{when}"
+      assigned_to_post: "%{who} を<a href='%{path}' data-auto-route='true'>投稿</a>に割り当てました: %{when}"
+      assigned_group_to_post: "%{who} を<a href='%{path}' data-auto-route='true'>投稿</a>に割り当てました: %{when}"
+      unassigned: "%{who} の割り当てを解除しました: %{when}"
+      unassigned_group: "%{who} の割り当てを解除しました: %{when}"
+      unassigned_from_post: "%{who} を<a href='%{path}' data-auto-route='true'>投稿</a>の割り当てから解除しました: %{when}"
+      unassigned_group_from_post: "%{who} を<a href='%{path}' data-auto-route='true'>投稿</a>の割り当てから解除しました: %{when}"
+      reassigned: "%{who} を再割り当てしました: %{when}"
+      reassigned_group: "%{who} を再割り当てしました: %{when}"
     discourse_assign:
+      add_unassigned_filter: "カテゴリに「未割り当て」フィルタを追加"
+      cant_act: "他のユーザーに割り当てられた通報に対応することはできません"
+      cant_act_unclaimed: "通報に対応する前に、このトピックを引き受ける必要があります。"
+      topic_search_placeholder: "タイトルまたは投稿のコンテンツでトピックを検索"
+      sidebar_name_filter_placeholder: "名前/ユーザー名"
+      assigned: "割り当て済み"
       group_everyone: "だれでも"
+      assigned_to: "割り当て先"
+      assigned_to_w_ellipsis: "割り当て先..."
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
+      unassign:
+        title: "割り当て解除"
+        title_w_ellipsis: "割り当て解除..."
+        help: "トピックから %{username} の割り当てを解除する"
+      assign:
+        title: "割り当て"
+        help: "トピックをユーザーに割り当てる"
+      assign_post:
+        title: "投稿を割り当てる"
+      unassign_post:
+        title: "投稿の割り当てを解除する"
+        help: "投稿から %{username} の割り当てを解除する"
+      reassign:
+        title: "再割り当てする"
+        title_w_ellipsis: "再割り当て先..."
+        to_self: "自分に再割り当てする"
+        to_self_help: "トピックを自分に再割り当てする"
+        help: "トピックを別のユーザーに再割り当てする"
+      reassign_modal:
+        title: "トピックを再割り当てする"
+        description: "このトピックの再割り当て先のユーザー名を入力します"
+      assign_modal:
+        title: "トピックを割り当てる"
+        reassign_title: "トピックを再割り当てする"
+        description: "このトピックを割り当てるユーザーの名前を入力します"
+        assign: "割り当てる"
+      assign_post_modal:
+        title: "投稿を割り当てる"
+        description: "この投稿を割り当てるユーザーの名前を入力します"
+      claim:
+        title: "引き受ける"
+        help: "トピックを自分に割り当てる"
       assign_mailer:
         never: "通知しない"
+        different_users: "割り当てユーザーと割り当てられたユーザーが異なるユーザーである場合のみ"
         always: "常時"
       reminders_frequency:
+        description: "割り当てられたトピックのリマインダーを受け取る頻度"
         never: "通知しない"
         daily: "日ごと"
         weekly: "毎週"
         monthly: "月ごと"
         quarterly: "3ヶ月おき"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "割り当て"
+              assignable_levels:
+                title: "このグループを割り当てられるユーザー"
+    user:
+      messages:
+        assigned_title: "割り当て済み（%{count}）"
+        assigned: "割り当て済み"
+      no_assignments_title: "まだ割り当てはありません"
+      no_assignments_body: >
+        割り当てられたトピックとメッセージがここに一覧表示されます。また、割り当てのリマインダーが定期的に通知されます。この通知は<a href='%{preferencesUrl}'>ユーザー設定</a>で調整できます。 <br><br>トピックまたはメッセージを自分または別のユーザーに割り当てるには、下にある %{icon} 割り当てボタンを探してください。
+    admin:
+      web_hooks:
+        assign_event:
+          name: "イベントの割り当て"
+          details: "ユーザーがトピックを割り当てたか割り当てを解除したとき。"
+    search:
+      advanced:
+        in:
+          assigned: "割り当て済みである"
+          unassigned: "未割り当てである"
+        assigned:
+          label: "割り当て先"
+    topics:
+      bulk:
+        unassign: "トピックを割り当て解除"
+        assign: "トピックを割り当て"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: 割り当て先グループ
+            minimum_time_between_assignments:
+              label: 割り当て間の最低時間
+            min_recently_assigned_days:
+              label: 最近の割り当ての最小日数
+              description: デフォルトは 14 日です。
+            max_recently_assigned_days:
+              label: 最近の割り当ての最大日数
+              description: まず、過去 `n` 日に割り当てられたユーザーを除外します。ほかにユーザーがいない場合、`min_recently_assigned_days` にフォールバックします。デフォルトは 180 日です。
+            assigned_topic:
+              label: 割り当てられたトピック ID
+            in_working_hours:
+              label: 勤務時間内のユーザー
+    notification_reason:
+      user: "このトピックはあなたに割り当てられたため、新しい返信の件数が表示されます。"

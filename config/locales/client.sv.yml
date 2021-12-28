@@ -46,17 +46,17 @@ sv:
         title: "Ta bort tilldelning från inlägg"
         help: "Ta bort tilldelning %{username} från inlägg"
       reassign:
-        title: "Åter-tilldela"
+        title: "Tilldela om"
         title_w_ellipsis: "Omtilldela till..."
         to_self: "Omtilldela till mig"
         to_self_help: "Omtilldela ämne till mig"
-        help: "Åter-tilldela ämne till en annan användare"
+        help: "Omtilldela ämne till en annan användare"
       reassign_modal:
-        title: "Omtilldela ämne"
-        description: "Ange namn på den användare som du vill omtilldela detta ämne."
+        title: "Tilldela om ämne"
+        description: "Ange namnet på användaren du vill omtilldela detta ämne"
       assign_modal:
         title: "Tilldela ämne"
-        reassign_title: "Omtilldela ämne"
+        reassign_title: "Tilldela om ämne"
         description: "Ange namn på den användare som du vill tilldela detta ämne."
         assign: "Tilldela"
       assign_post_modal:

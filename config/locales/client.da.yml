@@ -29,9 +29,6 @@ da:
       assign:
         title: "Tildel"
         help: "Tildel Emne til Bruger"
-      reassign:
-        title: "Gentildel"
-        help: "Gentildel Emne til en anden bruger"
       assign_modal:
         title: "Tildel Emne"
         description: "Angiv navnet på den bruger, du vil tildele dette emne"
