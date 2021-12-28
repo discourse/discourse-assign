@@ -32,9 +32,6 @@ pl_PL:
       assign:
         title: "Przypisz"
         help: "Przypisz temat do użytkownika"
-      reassign:
-        title: "Przypisz ponownie"
-        help: "Przypisz ponownie temat do innego użytkownika"
       assign_modal:
         title: "Przypisz temat"
         description: "Wpisz nazwę użytkownika, któremu chcesz przypisać ten wątek"

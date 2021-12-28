@@ -6,28 +6,38 @@
 
 de:
   site_settings:
-    assign_enabled: "Aktiviere das Zuweisungs-Plugin"
+    assign_enabled: "Zuordnungs-Plug-in aktivieren"
     assigns_public: "Zuordnung von Themen öffentlich sichtbar machen"
     assigns_user_url_path: "Pfad zu Themen, die einem Benutzer zugeordnet sind (verwende {username}, um den Benutzernamen zu ersetzen)"
-    assigns_by_staff_mention: "Wenn ein Mitarbeiter einen anderen Mitarbeiter erwähnt, wird das Thema automatisch zugeordnet"
-    unassign_creates_tracking_post: "Wenn die Zurordnung aufgehoben wird, zur Nachvollziehbarkeit einen privaten Beitrag oder eine Aktion erstellen"
-    assign_self_regex: "Regulärer Ausdruck, der erfüllt sein muss, um sich einem Thema selbst zuzuordnen. Beispiel: 'meine Liste'."
-    assign_other_regex: "Regulärer Ausdruck, der erfüllt sein muss, um ein Thema jemand anderen zuzordnen. Beispiel: 'deine Liste'"
-    unassign_on_group_archive: "Zuordnung aufheben, wenn eine Nachricht von einer Gruppe archiviert worden ist (Wieder zuordnen, wenn in den Posteingang verschoben)"
-    unassign_on_close: "Wenn das Thema geschlossen wird, hebe die Zuordnung der Person zum Thema auf"
-    assign_mailer: "Wann für Zuweisungen Notifizierungs E-Mails gesendet werden"
-    remind_assigns: "Erinnere Benutzer an anstehende Zuweisungen."
-    remind_assigns_frequency: "Frequenz, um Benutzer an zugewiesene Themen zu erinnern."
-    max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugewiesen werden können."
+    assigns_by_staff_mention: "Wenn ein Team-Mitglied ein anderes Team-Mitglied erwähnt, wird das Thema automatisch zugeordnet"
+    unassign_creates_tracking_post: "Wenn die Zuordnung aufgehoben wird, zur Nachvollziehbarkeit einen geflüsterten Beitrag oder eine Aktion erstellen"
+    assign_self_regex: "Regulärer Ausdruck, der erfüllt sein muss, um sich einem Thema selbst zuzuordnen. Beispiel: „meine Liste“"
+    assign_other_regex: "Regulärer Ausdruck, der erfüllt sein muss, um ein Thema jemand anderem per Erwähnung zuzuordnen. Beispiel: „deine Liste“"
+    unassign_on_group_archive: "Zuordnung aufheben, wenn eine Nachricht von einer Gruppe archiviert wurde (neu zuordnen, wenn sie wieder in den Posteingang verschoben wird)"
+    unassign_on_close: "Zuordnung aufheben, wenn ein Thema geschlossen wird"
+    reassign_on_open: "Wenn ein Thema eröffnet wird, ordne zuvor zugeordnete Benutzer/Gruppen neu zu"
+    assign_mailer: "Wann für Zuordnungen Benachrichtigungs-E-Mails gesendet werden"
+    remind_assigns: "Benutzer an ausstehende Zuordnungen erinnern."
+    remind_assigns_frequency: "Häufigkeit, mit der Benutzer an zugeordnete Themen erinnert werden."
+    max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugeordnet werden können."
+    assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen und können Themen zugeordnet werden."
   discourse_assign:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
     already_claimed: "Dieses Thema wurde bereits übernommen."
-    already_assigned: "Thema ist @%{username} zugewiesen"
-    too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugwiesenen Themen (%{max}). "
-    flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugewiesen"
-    flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst."
-    topic_assigned_excerpt: "hat dich dem Thema '%{title}' zugewiesen"
+    already_assigned: "Thema ist bereits @%{username} zugeordnet"
+    too_many_assigns: "@%{username} hat bereits die maximale Anzahl der zugeordneten Themen erreicht (%{max})."
+    too_many_assigns_for_topic: "Das Limit von %{limit} Zuordnungen pro Thema wurde erreicht."
+    forbidden_assign_to: "@%{username} kann nicht zugeordnet werden, da die Person nicht zu den zugeordneten zulässigen Gruppen gehört."
+    forbidden_assignee_not_pm_participant: "@%{username} kann nicht zugeordnet werden, da die Person keinen Zugriff auf diese PN hat. Du kannst @%{username} Zugriff gewähren, indem du die Person zu dieser PN einlädst."
+    forbidden_assignee_cant_see_topic: "@%{username} kann nicht zugeordnet werden, da die Person keinen Zugriff auf dieses Thema hat."
+    group_already_assigned: "Thema ist bereits @%{group} zugeordnet"
+    forbidden_group_assign_to: "@%{group} kann nicht zugeordnet werden, da die Gruppe nicht zu den zugeordneten zulässigen Gruppen gehört."
+    forbidden_group_assignee_not_pm_participant: "@%{group} kann nicht zugeordnet werden, da nicht alle Mitglieder Zugriff auf diese PN haben."
+    forbidden_group_assignee_cant_see_topic: "@%{group} kann nicht zugeordnet werden, da nicht alle Mitglieder Zugriff auf dieses Thema haben."
+    flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugeordnet"
+    flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst"
+    topic_assigned_excerpt: "hat dir das Thema „%{title}“ zugeordnet"
     reminders_frequency:
       never: "nie"
       daily: "täglich"
@@ -35,10 +45,10 @@ de:
       monthly: "monatlich"
       quarterly: "vierteljährlich"
   assign_mailer:
-    title: "E-Mail zuweisen"
-    subject_template: "[%{email_prefix}] %{assignee_name} hat dir '%{topic_title}' zugewiesen!"
+    title: "Mailer zuordnen"
+    subject_template: "[%{email_prefix}] %{assignee_name} hat dir „%{topic_title}“ zugeordnet!"
     text_body_template: |
-      Hey, %{assignee_name} hat dich einer Diskussion **zugewiesen**
+      Hey, %{assignee_name} hat dich einer Diskussion **zugeordnet**
       > **%{topic_title}**
       >
       > %{topic_excerpt}
@@ -46,9 +56,14 @@ de:
       Wenn dich das interessiert, klicke auf den folgenden Link:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
-    title: "Du hast %{pending_assignments} anstehende Zuweisungen"
+    title: "Du hast %{pending_assignments} ausstehende Zuordnungen"
     body: |
-      Du hast aktuell [%{pending_assignments} anstehende Zuweisungen](%{assignments_link}).%{newest_assignments}%{oldest_assignments}Diese Erinnerung wird %{frequency} zugesandt, wenn du mehr als ein zugewiesenes Thema hast.
+      Du hast aktuell [%{pending_assignments} ausstehende Zuordnungen](%{assignments_link}).
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      Diese Erinnerung wird %{frequency} zugesandt, wenn du mehr als ein zugeordnetes Thema hast.
     newest: |
       ### Neuestes
       %{topic_0}
@@ -59,3 +74,8 @@ de:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Zufällig zuordnen
+        no_one: "Es wurde versucht, ein Mitglied von @%{group} zufällig zuzuordnen, aber es war niemand verfügbar."

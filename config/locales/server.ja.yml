@@ -5,8 +5,77 @@
 # https://translate.discourse.org/
 
 ja:
+  site_settings:
+    assign_enabled: "割り当てプラグインを有効化"
+    assigns_public: "一般ユーザーがトピックの割り当てを表示することを許可する"
+    assigns_user_url_path: "ユーザー割り当てトピックへのパス（使用: ユーザー名を置き換える {username}）"
+    assigns_by_staff_mention: "スタッフメンバーが別のスタッフメンバーをメンションすると、トピックは自動的に割り当てられる"
+    unassign_creates_tracking_post: "トピックの割り当てを解除すると、変更を槌焼するためのささやきまたは小さなアクションが作成される"
+    assign_self_regex: "自己割り当てのために渡す必要のある正規表現。例「マイリスト」"
+    assign_other_regex: "メンションによってトピックを別のユーザーに割り当てるために渡す必要のある正規表現。例「あなたのリスト」"
+    unassign_on_group_archive: "メッセージがグループによってアーカイブされると、メッセージの割り当てを解除する（受信トレイに戻されると再割り当てされる）"
+    unassign_on_close: "トピックがクローズされると、トピックの割り当てを解除する"
+    reassign_on_open: "トピックがオープンになると、前に割り当てられたユーザー/グループに再割り当てする"
+    assign_mailer: "割り当ての通知メールを送信するタイミング"
+    remind_assigns: "保留中の割り当てについてユーザーに通知します。"
+    remind_assigns_frequency: "割り当てられたトピックについてユーザーに通知する頻度です。"
+    max_assigned_topics: "ユーザーに割り当てられるトピックの最大数。"
+    assign_allowed_on_groups: "これらのグループのユーザーはトピックを割り当てたり、割り当てられたりすることができます。"
   discourse_assign:
+    assigned_to: "@%{username} に割り当てられたトピック"
+    unassigned: "トピックの割り当てが解除されました"
+    already_claimed: "そのトピックはすでに引き受けられています。"
+    already_assigned: "トピックはすでに @%{username} に割り当てられています"
+    too_many_assigns: "@%{username} はすでに割り当てられるトピックの最大数（%{max}）に達しています。"
+    too_many_assigns_for_topic: "トピック当たり %{limit} 件の割り当て制限に達しています。"
+    forbidden_assign_to: "@%{username} は割り当て可能なグループに属していないため、割り当てられません。"
+    forbidden_assignee_not_pm_participant: "@%{username} にはこの PM へのアクセス権がないため、割り当てられません。@%{username} をこの PM に招待することで、アクセス権を付与できます。"
+    forbidden_assignee_cant_see_topic: "@%{username} にはこのトピックへのアクセス権がないため、割り当てられません。"
+    group_already_assigned: "トピックはすでに @%{group} に割り当てられています"
+    forbidden_group_assign_to: "@%{group} は割り当て可能なグループに属していないため、割り当てられません。"
+    forbidden_group_assignee_not_pm_participant: "@%{group} のすべてのメンバーにこの PM へのアクセス権がないため、割り当てられません。"
+    forbidden_group_assignee_cant_see_topic: "@%{group} のすべてのメンバーにこのトピックへのアクセス権がないため、割り当てられません。"
+    flag_assigned: "申し訳ありませんが、その通報のトピックは別のユーザーに割り当てられています"
+    flag_unclaimed: "通報に対応する前にそのトピックを引き受ける必要があります"
+    topic_assigned_excerpt: "あなたにトピック「%{title}」を割り当てました"
     reminders_frequency:
       never: "追跡しない"
-      daily: "毎日"
-      weekly: "毎週"
+      daily: "日ごと"
+      weekly: "週ごと"
+      monthly: "月ごと"
+      quarterly: "3 か月ごと"
+  assign_mailer:
+    title: "メーラーの割り当て"
+    subject_template: "[%{email_prefix}] %{assignee_name} があなたを「%{topic_title}」に割り当てました！"
+    text_body_template: |
+      %{assignee_name} があなたをディスカッションに**割り当て**ました
+      > **%{topic_title}**
+      >
+      > %{topic_excerpt}
+
+      興味があれば、下のリンクをクリックしてください。
+      [%{topic_link}](%{topic_link})
+  pending_assigns_reminder:
+    title: "保留中の割り当てが %{pending_assignments} 件あります"
+    body: |
+      [保留中の割り当てが %{pending_assignments} 件]あります（%{assignments_link}）。
+
+      %{newest_assignments}
+      %{oldest_assignments}
+
+      これは、割り当てられたトピックが 2 件以上ある場合に、%{frequency}に送信されるリマインダーです。
+    newest: |
+      ### 最新
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+    oldest: |
+      ### 最古
+      %{topic_0}
+      %{topic_1}
+      %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: ランダム割り当て
+        no_one: "@%{group} のメンバーをランダムに割り当てようとしましたが、割り当て可能なメンバーがいませんでした。"

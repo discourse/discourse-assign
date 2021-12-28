@@ -25,9 +25,6 @@ tr_TR:
       assign:
         title: "Ata"
         help: "Kullanıcıya konu ata"
-      reassign:
-        title: "Yeniden atama"
-        help: "Konuyu farklı bir kullanıcıya yeniden atayın"
       assign_modal:
         title: "Konu Ata"
         description: "Bu konuyu atamak istediğiniz kullanıcının adını girin"

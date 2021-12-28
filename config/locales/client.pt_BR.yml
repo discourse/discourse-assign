@@ -8,34 +8,66 @@ pt_BR:
   js:
     filters:
       unassigned:
-        title: "Não designado"
-        help: "Tópicos que não têm designação"
+        title: "Não atribuído"
+        help: "Tópicos que não têm atribuição"
     action_codes:
-      assigned: "designou à %{who} %{when}"
-      unassigned: "removeu a designação à %{who} %{when}"
+      assigned: "atribuiu a %{who} %{when}"
+      assigned_group: "atribuiu %{who} %{when}"
+      assigned_to_post: "atribuiu %{who} a <a href='%{path}' data-auto-route='true'>postagem</a> %{when}"
+      assigned_group_to_post: "atribuiu %{who} a <a href='%{path}' data-auto-route='true'>postagem</a> %{when}"
+      unassigned: "removeu atribuição de %{who} %{when}"
+      unassigned_group: "removeu atribuição de %{who} %{when}"
+      unassigned_from_post: "removeu atribuição de %{who} da <a href='%{path}' data-auto-route='true'>postagem</a> %{when}"
+      unassigned_group_from_post: "removeu atribuição de %{who} da <a href='%{path}' data-auto-route='true'>postagem</a> %{when}"
+      reassigned: "reatribuiu %{who} %{when}"
+      reassigned_group: "reatribuiu %{who} %{when}"
     discourse_assign:
-      add_unassigned_filter: "Adicionar o filtro 'não designado' à categoria"
-      cant_act: "Você não pode atuar em sinalizações que foram atribuídas a outros usuários"
-      cant_act_unclaimed: "Você precisa reivindicar este tópico antes de atuar em sinalizações."
-      assigned: "Designado"
+      add_unassigned_filter: "Adicionar o filtro \"não atribuído\" à categoria"
+      cant_act: "Você não pode agir em sinalizações que foram atribuídas a outros(as) usuários(as)"
+      cant_act_unclaimed: "Você precisa reivindicar este tópico antes de agir em sinalizações."
+      topic_search_placeholder: "Procurar tópicos por título ou conteúdo da postagem"
+      sidebar_name_filter_placeholder: "Nome/nome de usuário(a)"
+      assigned: "Atribuiu"
       group_everyone: "Todos"
-      assigned_to: "Designado à"
+      assigned_to: "Atribuiu a"
+      assigned_to_w_ellipsis: "Atribuiu a..."
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
-        title: "Remover Designação"
+        title: "Remover atribuição"
+        title_w_ellipsis: "Remover atribuição..."
+        help: "Remover atribuição de %{username} do tópico"
       assign:
-        title: "Designar"
-        help: "Designar Tópico ao Usuário"
+        title: "Atribuir"
+        help: "Atribuir tópico a usuário(a)"
+      assign_post:
+        title: "Atribuir postagem"
+      unassign_post:
+        title: "Remover atribuição da postagem"
+        help: "Remover atribuição de %{username} da postagem"
       reassign:
-        title: "Designar Novamente"
-        help: "Designar Novamente o Tópico a um usuário diferente"
+        title: "Reatribuir"
+        title_w_ellipsis: "Reatribuir a..."
+        to_self: "Reatribuir a mim"
+        to_self_help: "Reatribuir tópico a mim"
+        help: "Reatribuir tópico a um usuário(a) diferente"
+      reassign_modal:
+        title: "Reatribuir tópico"
+        description: "Insira o nome do usuário(a) a quem você gostaria de reatribuir este tópico"
       assign_modal:
-        title: "Designar Tópico"
-        assign: "Designar"
+        title: "Atribuir tópico"
+        reassign_title: "Reatribuir tópico"
+        description: "Insira o nome do(a) usuário(a) a quem você gostaria da atribuir este tópico"
+        assign: "Atribuir"
+      assign_post_modal:
+        title: "Atribuir postagem"
+        description: "Insira o nome do(a) usuário(a) a quem você gostaria da atribuir esta postagem"
       claim:
         title: "reivindicar"
-        help: "Designar tópico à você mesmo"
+        help: "Atribuir tópico a si"
       assign_mailer:
         never: "Nunca"
+        different_users: "Apenas se o(a) atribuidor(a) e destinatário(a) forem usuários(as) diferentes"
         always: "Sempre"
       reminders_frequency:
         description: "Freqüência para receber lembretes de tópicos designados"
@@ -44,7 +76,53 @@ pt_BR:
         weekly: "Semanalmente"
         monthly: "Mensalmente"
         quarterly: "Trimestralmente"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Atribuir"
+              assignable_levels:
+                title: "Quem pode atribuir este grupo"
     user:
       messages:
-        assigned_title: "Designado (%{count})"
-        assigned: "Designado"
+        assigned_title: "Atribuiu (%{count})"
+        assigned: "Atribuiu"
+      no_assignments_title: "Você não tem atribuições ainda"
+      no_assignments_body: >
+        Seus tópicos e mensagens atribuídas serão listados aqui. Você receberá uma notificação periódica de lembrete das suas atribuições, que você pode ajustar em suas <a href='%{preferencesUrl}'>preferências de usuário(a)/a>. <br><br> Para atribuir uma mensagem ou tópico a si ou a outra pessoa, procure o botão de atribuir %{icon} na parte inferior.
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Evento Atribuir"
+          details: "Quando usuário(a) atribui ou remove atribuição de um tópico."
+    search:
+      advanced:
+        in:
+          assigned: "foram atribuídos"
+          unassigned: "tiveram atribuição removida"
+        assigned:
+          label: "Atribuiu a"
+    topics:
+      bulk:
+        unassign: "Remover atribuição de tópicos"
+        assign: "Atribuir tópicos"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Grupo de destinatários
+            minimum_time_between_assignments:
+              label: Horas mínimas entre atribuições
+            min_recently_assigned_days:
+              label: Dias mínimos atribuídos recentemente
+              description: O padrão é de 14 dias.
+            max_recently_assigned_days:
+              label: Dias máximos atribuídos recentemente
+              description: Primeira tentativa de excluir usuários(as) atribuídos(as) nos últimos "n" dias. Se não restar usuários(as), é revertido para "min_recently_assigned_days". O padrão é de 180 dias.
+            assigned_topic:
+              label: ID de tópico atribuído
+            in_working_hours:
+              label: Usuários(as) em horário de trabalho
+    notification_reason:
+      user: "Você verá uma contagem de novas respostas porque este tópico foi atribuído a você."

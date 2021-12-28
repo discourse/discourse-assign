@@ -25,9 +25,6 @@ fi:
       assign:
         title: "Osoita"
         help: "Osoita ketju käyttäjälle"
-      reassign:
-        title: "Määritä uudelleen"
-        help: "Osoita ketju uudelleen toiselle käyttäjälle"
       assign_modal:
         title: "Osoita ketju"
         description: "Syötä sen käyttäjän nimi, jolle haluat ketjun osoittaa"

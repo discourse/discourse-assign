@@ -29,9 +29,6 @@ nl:
       assign:
         title: "Toewijzen"
         help: "Topic aan gebruiker toewijzen"
-      reassign:
-        title: "Opnieuw toewijzen"
-        help: "Topic opnieuw toewijzen aan een andere gebruiker"
       assign_modal:
         title: "Topic toewijzen"
         description: "Voer de naam in van de gebruiker waaraan u dit topic wilt toewijzen"

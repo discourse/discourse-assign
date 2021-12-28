@@ -25,9 +25,6 @@ ko:
       assign:
         title: "할당"
         help: "사용자에게 토픽 할당"
-      reassign:
-        title: "재 할당"
-        help: "다른 사용자에게 주제를 다시 할당"
       assign_modal:
         title: "토픽 할당"
         description: "이 주제를 할당하려는 사용자의 이름을 입력하십시오"
