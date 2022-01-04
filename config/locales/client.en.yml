@@ -56,6 +56,8 @@ en:
       assign_post_modal:
         title: "Assign Post"
         description: "Enter the name of the user you'd like to assign this post"
+      assign_bulk_modal:
+        description: "Enter the name of the user you'd like to assign these topics"
       claim:
         title: "claim"
         help: "Assign topic to yourself"
