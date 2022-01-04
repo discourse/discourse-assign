@@ -62,6 +62,8 @@ sv:
       assign_post_modal:
         title: "Tilldela inlägg"
         description: "Ange namn på den användare som du vill tilldela detta ämne"
+      assign_bulk_modal:
+        description: "Ange namnet på den användare som du vill tilldela dessa ämnen"
       claim:
         title: "begär"
         help: "Tilldela ämne till dig själv"

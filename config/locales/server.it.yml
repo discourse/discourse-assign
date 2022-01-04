@@ -15,7 +15,7 @@ it:
     assign_other_regex: "L'espressione regolare che dovrà essere soddisfatta per assegnare argomenti ad altri utenti tramite menzione. Ad esempio 'la tua lista'."
     unassign_on_group_archive: "Quando un messaggio viene archiviato da un gruppo, annullare l'assegnazione (riassegnare se viene spostato nuovamente nella posta in arrivo)"
     unassign_on_close: "Quando un argomento viene chiuso annullare l'assegnazione"
-    reassign_on_open: "Quando viene aperto un argomento, riassegna utenti/gruppi assegnati in precedenza"
+    reassign_on_open: "Quando viene riaperto un argomento, riassegna utenti/gruppi assegnati in precedenza"
     assign_mailer: "Quando inviare email di notifica per le assegnazioni"
     remind_assigns: "Ricorda agli utenti le assegnazioni in sospeso."
     remind_assigns_frequency: "Frequenza per ricordare agli utenti gli argomenti assegnati."
