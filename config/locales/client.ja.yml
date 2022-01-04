@@ -22,13 +22,13 @@ ja:
       reassigned: "%{who} を再割り当てしました: %{when}"
       reassigned_group: "%{who} を再割り当てしました: %{when}"
     discourse_assign:
-      add_unassigned_filter: "カテゴリに「未割り当て」フィルタを追加"
+      add_unassigned_filter: "カテゴリに「未割り当て」フィルターを追加"
       cant_act: "他のユーザーに割り当てられた通報に対応することはできません"
       cant_act_unclaimed: "通報に対応する前に、このトピックを引き受ける必要があります。"
       topic_search_placeholder: "タイトルまたは投稿のコンテンツでトピックを検索"
       sidebar_name_filter_placeholder: "名前/ユーザー名"
       assigned: "割り当て済み"
-      group_everyone: "だれでも"
+      group_everyone: "全員"
       assigned_to: "割り当て先"
       assigned_to_w_ellipsis: "割り当て先..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
@@ -68,32 +68,32 @@ ja:
       assign_mailer:
         never: "通知しない"
         different_users: "割り当てユーザーと割り当てられたユーザーが異なるユーザーである場合のみ"
-        always: "常時"
+        always: "常に"
       reminders_frequency:
         description: "割り当てられたトピックのリマインダーを受け取る頻度"
         never: "通知しない"
-        daily: "日ごと"
+        daily: "毎日"
         weekly: "毎週"
-        monthly: "月ごと"
-        quarterly: "3ヶ月おき"
+        monthly: "毎月"
+        quarterly: "3 か月ごと"
       admin:
         groups:
           manage:
             interaction:
-              assign: "割り当て"
+              assign: "割り当てる"
               assignable_levels:
                 title: "このグループを割り当てられるユーザー"
     user:
       messages:
         assigned_title: "割り当て済み（%{count}）"
-        assigned: "割り当て済み"
+        assigned: "割り当てました"
       no_assignments_title: "まだ割り当てはありません"
       no_assignments_body: >
-        割り当てられたトピックとメッセージがここに一覧表示されます。また、割り当てのリマインダーが定期的に通知されます。この通知は<a href='%{preferencesUrl}'>ユーザー設定</a>で調整できます。 <br><br>トピックまたはメッセージを自分または別のユーザーに割り当てるには、下にある %{icon} 割り当てボタンを探してください。
+        割り当てられたトピックとメッセージがここに一覧表示されます。また、割り当てのリマインダーが定期的に通知されます。この通知頻度は<a href='%{preferencesUrl}'>ユーザー設定</a>で変更できます。 <br><br>トピックまたはメッセージを自分または別のユーザーに割り当てるには、下にある %{icon} 割り当てボタンを探してください。
     admin:
       web_hooks:
         assign_event:
-          name: "イベントの割り当て"
+          name: "割り当てイベント"
           details: "ユーザーがトピックを割り当てたか割り当てを解除したとき。"
     search:
       advanced:
@@ -105,7 +105,7 @@ ja:
     topics:
       bulk:
         unassign: "トピックを割り当て解除"
-        assign: "トピックを割り当て"
+        assign: "トピックを割り当てる"
     discourse_automation:
       scriptables:
         random_assign:

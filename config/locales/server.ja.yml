@@ -8,7 +8,7 @@ ja:
   site_settings:
     assign_enabled: "割り当てプラグインを有効化"
     assigns_public: "一般ユーザーがトピックの割り当てを表示することを許可する"
-    assigns_user_url_path: "ユーザー割り当てトピックへのパス（使用: ユーザー名を置き換える {username}）"
+    assigns_user_url_path: "ユーザー割り当てトピックへのパス（{username} でユーザー名を置き換えます）"
     assigns_by_staff_mention: "スタッフメンバーが別のスタッフメンバーをメンションすると、トピックは自動的に割り当てられる"
     unassign_creates_tracking_post: "トピックの割り当てを解除すると、変更を槌焼するためのささやきまたは小さなアクションが作成される"
     assign_self_regex: "自己割り当てのために渡す必要のある正規表現。例「マイリスト」"
@@ -33,19 +33,19 @@ ja:
     forbidden_assignee_cant_see_topic: "@%{username} にはこのトピックへのアクセス権がないため、割り当てられません。"
     group_already_assigned: "トピックはすでに @%{group} に割り当てられています"
     forbidden_group_assign_to: "@%{group} は割り当て可能なグループに属していないため、割り当てられません。"
-    forbidden_group_assignee_not_pm_participant: "@%{group} のすべてのメンバーにこの PM へのアクセス権がないため、割り当てられません。"
-    forbidden_group_assignee_cant_see_topic: "@%{group} のすべてのメンバーにこのトピックへのアクセス権がないため、割り当てられません。"
+    forbidden_group_assignee_not_pm_participant: "@%{group} の一部のメンバーにこの PM へのアクセス権がないため、割り当てられません。"
+    forbidden_group_assignee_cant_see_topic: "@%{group} の一部のメンバーにこのトピックへのアクセス権がないため、割り当てられません。"
     flag_assigned: "申し訳ありませんが、その通報のトピックは別のユーザーに割り当てられています"
     flag_unclaimed: "通報に対応する前にそのトピックを引き受ける必要があります"
     topic_assigned_excerpt: "あなたにトピック「%{title}」を割り当てました"
     reminders_frequency:
-      never: "追跡しない"
-      daily: "日ごと"
-      weekly: "週ごと"
-      monthly: "月ごと"
-      quarterly: "3 か月ごと"
+      never: "通知しない"
+      daily: "毎日"
+      weekly: "毎週"
+      monthly: "毎月"
+      quarterly: "3 か月ごとに"
   assign_mailer:
-    title: "メーラーの割り当て"
+    title: "割り当てメール"
     subject_template: "[%{email_prefix}] %{assignee_name} があなたを「%{topic_title}」に割り当てました！"
     text_body_template: |
       %{assignee_name} があなたをディスカッションに**割り当て**ました
@@ -63,7 +63,7 @@ ja:
       %{newest_assignments}
       %{oldest_assignments}
 
-      これは、割り当てられたトピックが 2 件以上ある場合に、%{frequency}に送信されるリマインダーです。
+      これは、割り当てられたトピックが 2 件以上ある場合に、%{frequency}送信されるリマインダーです。
     newest: |
       ### 最新
       %{topic_0}

@@ -62,6 +62,8 @@ he:
       assign_post_modal:
         title: "הקצאת פוסט"
         description: "נא להקליד את שם המשתמש להקצאת הפוסט"
+      assign_bulk_modal:
+        description: "נא להקליד את שם המשתמש להקצאת הנושאים האלו"
       claim:
         title: "דרישה"
         help: "הקצאת נושא לעצמך"

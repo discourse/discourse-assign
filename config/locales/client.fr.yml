@@ -93,7 +93,7 @@ fr:
     admin:
       web_hooks:
         assign_event:
-          name: "Attribuer un événement"
+          name: "Événement d'attribution"
           details: "Lorsqu'un utilisateur attribue ou annule l'attribution d'un sujet."
     search:
       advanced:
