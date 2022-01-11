@@ -15,16 +15,26 @@ fi:
     assign_other_regex: "Säännöllinen lauseke, jolla osoitetaan toiselle maininnan avulla. Esimerkiksi 'sinun listalle'."
     unassign_on_group_archive: "Kun ryhmä arkistoi yksityiskeskustelun, peru viestin osoitus (osoitetaan uudelleen, jos siirretään takaisin saapuneisiin)"
     unassign_on_close: "Peru ketjun osoitus kun ketju suljetaan"
+    reassign_on_open: "Kun ketju avataan, osoita aikaisemmin osoitetut käyttäjät/ryhmät uudelleen"
     assign_mailer: "Milloin lähetetään ilmoituksia osoituksista"
     remind_assigns: "Muistuta käyttäjiä odottavista tehtävistä"
     remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus"
     max_assigned_topics: "Käyttäjälle osoitettavien ketjujen maksimi määrä. "
+    assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaaa aiheita, ja heille voidaan osoittaa aiheita."
   discourse_assign:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
     already_claimed: "Ketju on jo omittu."
     already_assigned: "Ketju on jo osoitettu käyttäjälle %{username}"
     too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen maksimi määrän (%{max}). "
+    too_many_assigns_for_topic: "%{limit} osoituksen ketjukohtainen raja on saavutettu."
+    forbidden_assign_to: "Käyttäjää @%{username} ei voi osoittaa, koska hän ei kuulu sallittuihin osoitusryhmiin."
+    forbidden_assignee_not_pm_participant: "Käyttäjää @%{username} ei voi osoittaa, koska hänellä ei ole tämän yksityisviestin käyttöoikeutta. Voit antaa käyttäjälle @%{username} käyttöoikeuden kutsumalla hänet tähän yksityisviestiin."
+    forbidden_assignee_cant_see_topic: "Käyttäjää @%{username} ei voi osoittaa, koska hänellä ei ole tämän ketjun käyttöoikeutta."
+    group_already_assigned: "Ketju on jo osoitettu ryhmälle %{group}"
+    forbidden_group_assign_to: "Ryhmää @%{group} ei voi osoittaa, koska se ei kuulu sallittuihin osoitusryhmiin."
+    forbidden_group_assignee_not_pm_participant: "Ryhmää @%{group} ei voi osoittaa, koska kaikilla jäsenillä ei ole tämän yksityisviestin käyttöoikeutta."
+    forbidden_group_assignee_cant_see_topic: "Ryhmää @%{group} ei voi osoittaa, koska kaikilla jäsenillä ei ole tämän ketjun käyttöoikeutta."
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
     flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
     topic_assigned_excerpt: "osoitti sinulle ketjun '%{title}'"
@@ -64,3 +74,8 @@ fi:
       %{topic_0}
       %{topic_1}
       %{topic_2}
+  discourse_automation:
+    scriptables:
+      random_assign:
+        title: Satunnainen osoitus
+        no_one: "Ryhmän @%{group} jäsentä yritettiin osoittaa satunnaisesti, mutta kukaan ei ollut saatavilla."

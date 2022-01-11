@@ -62,6 +62,8 @@ zh_CN:
       assign_post_modal:
         title: "分配帖子"
         description: "输入您要将此帖子分配给的用户的名称"
+      assign_bulk_modal:
+        description: "输入您要将这些话题分配给的用户的名称"
       claim:
         title: "认领"
         help: "将话题分配给自己"
