@@ -62,6 +62,8 @@ de:
       assign_post_modal:
         title: "Beitrag zuordnen"
         description: "Gib den Namen des Benutzers ein, dem du diesen Beitrag zuordnen möchtest"
+      assign_bulk_modal:
+        description: "Gib den Namen des Benutzers ein, dem du diese Themen zuordnen möchtest"
       claim:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"

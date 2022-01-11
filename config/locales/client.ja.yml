@@ -62,6 +62,8 @@ ja:
       assign_post_modal:
         title: "投稿を割り当てる"
         description: "この投稿を割り当てるユーザーの名前を入力します"
+      assign_bulk_modal:
+        description: "これらのトピックを割り当てるユーザーの名前を入力します"
       claim:
         title: "引き受ける"
         help: "トピックを自分に割り当てる"

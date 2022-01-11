@@ -19,6 +19,8 @@ it:
       unassigned_group: "assegnazione a %{who} %{when} annullata"
       unassigned_from_post: "assegnazione a %{who} dal <a href='%{path}' data-auto-route='true'>messaggio</a> %{when} annullata"
       unassigned_group_from_post: "assegnazione a %{who} dal <a href='%{path}' data-auto-route='true'>messaggio</a> %{when} annullata"
+      reassigned: "Riassegnato a %{who} %{when}"
+      reassigned_group: "Riassegnato a %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Aggiungi il filtro 'non assegnato' alla categoria"
       cant_act: "Non puoi intervenire su segnalazioni assegnate ad altri utenti"
@@ -43,13 +45,25 @@ it:
       unassign_post:
         title: "Annulla assegnazione da messaggio"
         help: "Annulla assegnazione di %{username} da messaggio"
+      reassign:
+        title: "Riassegna"
+        title_w_ellipsis: "Riassegna a..."
+        to_self: "Riassegna a me"
+        to_self_help: "Riassegna argomento a me"
+        help: "Riassegna argomento a un altro utente"
+      reassign_modal:
+        title: "Riassegna argomento"
+        description: "Inserisci il nome dell'utente a cui desideri riassegnare questo argomento"
       assign_modal:
         title: "Assegna Argomento"
+        reassign_title: "Riassegna argomento"
         description: "Inserisci il nome dell'utente a cui desideri assegnare questo argomento"
         assign: "Assegna"
       assign_post_modal:
         title: "Assegna messaggio"
         description: "Inserisci il nome dell'utente a cui desideri assegnare questo messaggio"
+      assign_bulk_modal:
+        description: "Inserisci il nome dell'utente a cui desideri assegnare questi argomenti"
       claim:
         title: "rivendica"
         help: "Assegna l'argomento a te stesso"

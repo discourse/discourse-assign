@@ -12,23 +12,58 @@ fi:
         help: "Ketjut joita ei ole osoitettu"
     action_codes:
       assigned: "osoitti käyttäjälle %{who} %{when}"
+      assigned_group: "osoitti käyttäjälle %{who} %{when}"
+      assigned_to_post: "osoitti käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestin</a> %{when}"
+      assigned_group_to_post: "osoitti käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestin</a> %{when}"
       unassigned: "perui osoituksen käyttäjälle %{who} %{when}"
+      unassigned_group: "perui osoituksen käyttäjälle %{who} %{when}"
+      unassigned_from_post: "perui osoituksen käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestiin</a> %{when}"
+      unassigned_group_from_post: "perui osoituksen käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestiin</a> %{when}"
+      reassigned: "Osoitti uudelleen käyttäjälle %{who} %{when}"
+      reassigned_group: "Osoitti uudelleen käyttäjälle %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Lisää alueille osoittamattomat-suodatin"
       cant_act: "Et voi käsitellä lippua, joka on osoitettu toiselle käyttäjälle"
       cant_act_unclaimed: "Sinun täytyy omia ketju ennen kuin käsittelet lippuja."
+      topic_search_placeholder: "Hae ketjuja otsikon tai viestin sisällön perusteella"
+      sidebar_name_filter_placeholder: "Nimi/käyttäjänimi"
       assigned: "Osoitettu"
       group_everyone: "Kaikki"
       assigned_to: "Osoitettu käyttäjälle"
+      assigned_to_w_ellipsis: "Osoitettu käyttäjälle..."
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Peru osoitus"
+        title_w_ellipsis: "Peru osoitus..."
+        help: "Peru käyttäjän %{username} osoitus ketjusta"
       assign:
         title: "Osoita"
         help: "Osoita ketju käyttäjälle"
+      assign_post:
+        title: "Osoita viesti"
+      unassign_post:
+        title: "Peru osoitus viestistä"
+        help: "Peru käyttäjän %{username} osoitus viestistä"
+      reassign:
+        title: "Osoita uudelleen"
+        title_w_ellipsis: "Osoita uudelleen käyttäjälle..."
+        to_self: "Osoita uudelleen minulle"
+        to_self_help: "Osoita ketju uudelleen minulle"
+        help: "Osoita ketju uudelleen eri käyttäjälle"
+      reassign_modal:
+        title: "Osoita ketju uudelleen"
+        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa tämän ketjun uudelleen"
       assign_modal:
         title: "Osoita ketju"
+        reassign_title: "Osoita ketju uudelleen"
         description: "Syötä sen käyttäjän nimi, jolle haluat ketjun osoittaa"
         assign: "Osoita"
+      assign_post_modal:
+        title: "Osoita viesti"
+        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa tämän viestin"
+      assign_bulk_modal:
+        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa nämä ketjut"
       claim:
         title: "omi"
         help: "Osoita ketju itsellesi"
@@ -43,7 +78,53 @@ fi:
         weekly: "Viikoittain"
         monthly: "Kuukausittain"
         quarterly: "Vuosineljännettäin"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Osoita"
+              assignable_levels:
+                title: "Ketkä voivat osoittaa tämän ryhmän"
     user:
       messages:
         assigned_title: "Osoitettu (%{count})"
         assigned: "Osoitettu"
+      no_assignments_title: "Sinulla ei ole vielä osoituksia"
+      no_assignments_body: >
+        Sinulle osoitetut ketjut ja viestit luetellaan tässä. Saat myös ajoittain muistutusilmoituksia osoituksistasi, joita voit muuttaa <a href='%{preferencesUrl}'>käyttäjäasetuksissasi</a>. <br><br> Jos haluat osoittaa ketjun tai viestin itsellesi tai jollekulle toiselle, etsi osoituspainike %{icon} alaosasta.
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Osoitustapahtuma"
+          details: "Kun käyttäjä osoittaa ketjun tai peruu ketjun osoituksen."
+    search:
+      advanced:
+        in:
+          assigned: "ovat osoitettu"
+          unassigned: "ovat osoittamattomia"
+        assigned:
+          label: "Osoitettu käyttäjälle"
+    topics:
+      bulk:
+        unassign: "Peru ketjujen osoitus"
+        assign: "Osoita ketjut"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            assignees_group:
+              label: Osoitettujen ryhmä
+            minimum_time_between_assignments:
+              label: Vähimmäismäärä tunteja osoitusten välillä
+            min_recently_assigned_days:
+              label: Hiljattain osoitettujen päivien vähimmäismäärä
+              description: Oletusarvo on 14 päivää.
+            max_recently_assigned_days:
+              label: Hiljattain osoitettujen päivien enimmäismäärä
+              description: Ensimmäinen yritys sulkea pois käyttäjiä, jotka on osoitettu viimeisten n päivän aikana. Jos käyttäjiä ei ole jäljellä, käytetään `min_recently_assigned_days`-asetusta. Oletusarvo on 180 päivää.
+            assigned_topic:
+              label: Osoitetun ketjun tunnus
+            in_working_hours:
+              label: Käyttäjät työaikana
+    notification_reason:
+      user: "Näet uusien vastausten määrän, koska tämä ketju on osoitettu sinulle."
