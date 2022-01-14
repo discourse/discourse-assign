@@ -63,7 +63,7 @@ class PendingAssignsReminder
     Topic
       .joins(:assignment)
       .select(:slug, :id, :title, :fancy_title, 'assignments.created_at AS assigned_at')
-      .where("assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User' AND assignments.active = ?", user.id, true)
+      .where("assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User' AND assignments.active", user.id)
       .merge(secure)
       .order("assignments.created_at #{order}")
       .limit(3)
