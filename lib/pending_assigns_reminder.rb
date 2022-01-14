@@ -54,7 +54,7 @@ class PendingAssignsReminder
   end
 
   def assigned_count_for(user)
-    Assignment.joins_with_topics.where(assigned_to_id: user.id, assigned_to_type: 'User').count
+    Assignment.joins_with_topics.where(assigned_to_id: user.id, assigned_to_type: 'User', active: true).count
   end
 
   def assigned_topics(user, order:)
@@ -63,7 +63,7 @@ class PendingAssignsReminder
     Topic
       .joins(:assignment)
       .select(:slug, :id, :title, :fancy_title, 'assignments.created_at AS assigned_at')
-      .where("assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User'", user.id)
+      .where("assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User' AND assignments.active", user.id)
       .merge(secure)
       .order("assignments.created_at #{order}")
       .limit(3)
