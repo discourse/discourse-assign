@@ -21,6 +21,7 @@
       {{#each assignSuggestions as |user|}}
         <a href {{action "assignUser" user.username }}>
           {{avatar user imageSize="small"}}
+          {{decorate-username-selector user.username}}
         </a>
       {{/each}}
     </div>
