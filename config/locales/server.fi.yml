@@ -9,24 +9,24 @@ fi:
     assign_enabled: "Ota osoituslisäosa käyttöön"
     assigns_public: "Salli tavallisen kansan nähdä ketjujen osoitukset"
     assigns_user_url_path: "Polku, joka näyttää kaikki käyttäjälle osoitetut (käytä: {username} käyttäjänimen paikalla)"
-    assigns_by_staff_mention: "Jos henkilökunnan jäsen mainitsee toisen henkilökuntalaisen, ketju osoitetaan automaattisesti"
+    assigns_by_staff_mention: "Jos henkilökunnan jäsen mainitsee toisen henkilökunnan jäsenen, ketju osoitetaan automaattisesti"
     unassign_creates_tracking_post: "Jos perut ketjun osoituksen, kuiskaus tai pieni merkintä luodaan pitämään kirjaa muutoksesta"
     assign_self_regex: "Säännöllinen lauseke, jolla osoitetaan itselle. Esimerkiksi 'minun listalle'"
     assign_other_regex: "Säännöllinen lauseke, jolla osoitetaan toiselle maininnan avulla. Esimerkiksi 'sinun listalle'."
     unassign_on_group_archive: "Kun ryhmä arkistoi yksityiskeskustelun, peru viestin osoitus (osoitetaan uudelleen, jos siirretään takaisin saapuneisiin)"
-    unassign_on_close: "Peru ketjun osoitus kun ketju suljetaan"
+    unassign_on_close: "Peru ketjun osoitus, kun ketju suljetaan"
     reassign_on_open: "Kun ketju avataan, osoita aikaisemmin osoitetut käyttäjät/ryhmät uudelleen"
     assign_mailer: "Milloin lähetetään ilmoituksia osoituksista"
-    remind_assigns: "Muistuta käyttäjiä odottavista tehtävistä"
-    remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus"
-    max_assigned_topics: "Käyttäjälle osoitettavien ketjujen maksimi määrä. "
-    assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaaa aiheita, ja heille voidaan osoittaa aiheita."
+    remind_assigns: "Muistuta käyttäjiä odottavista osoituksista."
+    remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus."
+    max_assigned_topics: "Käyttäjälle osoitettavien ketjujen enimmäismäärä."
+    assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaa aiheita, ja heille voidaan osoittaa aiheita."
   discourse_assign:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
     already_claimed: "Ketju on jo omittu."
     already_assigned: "Ketju on jo osoitettu käyttäjälle %{username}"
-    too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen maksimi määrän (%{max}). "
+    too_many_assigns: "@%{username} on jo saavuttanut osoitettujen ketjujen enimmäismäärän (%{max})."
     too_many_assigns_for_topic: "%{limit} osoituksen ketjukohtainen raja on saavutettu."
     forbidden_assign_to: "Käyttäjää @%{username} ei voi osoittaa, koska hän ei kuulu sallittuihin osoitusryhmiin."
     forbidden_assignee_not_pm_participant: "Käyttäjää @%{username} ei voi osoittaa, koska hänellä ei ole tämän yksityisviestin käyttöoikeutta. Voit antaa käyttäjälle @%{username} käyttöoikeuden kutsumalla hänet tähän yksityisviestiin."
@@ -35,9 +35,9 @@ fi:
     forbidden_group_assign_to: "Ryhmää @%{group} ei voi osoittaa, koska se ei kuulu sallittuihin osoitusryhmiin."
     forbidden_group_assignee_not_pm_participant: "Ryhmää @%{group} ei voi osoittaa, koska kaikilla jäsenillä ei ole tämän yksityisviestin käyttöoikeutta."
     forbidden_group_assignee_cant_see_topic: "Ryhmää @%{group} ei voi osoittaa, koska kaikilla jäsenillä ei ole tämän ketjun käyttöoikeutta."
-    flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle"
-    flag_unclaimed: "Ketju täytyy omia jotta voi käsitellä lipun"
-    topic_assigned_excerpt: "osoitti sinulle ketjun '%{title}'"
+    flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle käyttäjälle"
+    flag_unclaimed: "Ketju täytyy omia ennen lipun käsittelyä"
+    topic_assigned_excerpt: "osoitti sinulle ketjun \"%{title}\""
     reminders_frequency:
       never: "ei koskaan"
       daily: "päivittäin"
@@ -46,9 +46,9 @@ fi:
       quarterly: "vuosineljännettäin"
   assign_mailer:
     title: "Osoitus"
-    subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun '%{topic_title}'!"
+    subject_template: "[%{email_prefix}] %{assignee_name} osoitti sinulle ketjun \"%{topic_title}\"!"
     text_body_template: |
-      Hey, %{assignee_name} **osoitti** sinulle keskustelun
+      Hei, %{assignee_name} **osoitti** sinulle keskustelun
       > **%{topic_title}**
       >
       > %{topic_excerpt}
@@ -56,14 +56,14 @@ fi:
       Jos olet kiinnostunut, klikkaa linkkiä alla:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
-    title: "Sinulla on %{pending_assignments} odottavia tehtäviä"
+    title: "Sinulla on %{pending_assignments} odottavaa tehtävää"
     body: |
       Sinulla on [%{pending_assignments} odottavaa tehtävää] (%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}
 
-      Tämä muistutus lähetetään%{frequency} jos sinulla on useampi kuin yksi osoitettu ketju.
+      Tämä muistutus lähetetään%{frequency}, jos sinulla on useampi kuin yksi osoitettu ketju.
     newest: |
       ### Uusin
       %{topic_0}

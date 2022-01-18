@@ -8,17 +8,17 @@ fr:
   js:
     filters:
       unassigned:
-        title: "Non attribués"
+        title: "Désattribué"
         help: "Sujets qui ne sont pas attribués"
     action_codes:
       assigned: "a attribué %{who} le %{when}"
       assigned_group: "a attribué %{who} le %{when}"
-      assigned_to_post: "a attribué %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
-      assigned_group_to_post: "a attribué %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
+      assigned_to_post: "a attribué %{who} à la <a href='%{path}'>publication</a> %{when}"
+      assigned_group_to_post: "a attribué %{who} à la <a href='%{path}'>publication</a> %{when}"
       unassigned: "a annulé l'attribution de %{who} le %{when}"
       unassigned_group: "a annulé l'attribution de %{who} le %{when}"
-      unassigned_from_post: "a annulé l'attribution de %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
-      unassigned_group_from_post: "a annulé l'attribution de %{who} au <a href='%{path}' data-auto-route='true'>message</a> %{when}"
+      unassigned_from_post: "a annulé l'attribution de %{who} à la <a href='%{path}'>publication</a> %{when}"
+      unassigned_group_from_post: "a annulé l'attribution de %{who} à la <a href='%{path}'>publication</a> %{when}"
       reassigned: "Réattribution à %{who} le %{when}"
       reassigned_group: "Réattribution à %{who} le %{when}"
     discourse_assign:

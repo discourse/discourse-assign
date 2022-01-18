@@ -9,16 +9,12 @@ fi:
     filters:
       unassigned:
         title: "Osoittamattomat"
-        help: "Ketjut joita ei ole osoitettu"
+        help: "Ketjut, joita ei ole osoitettu"
     action_codes:
       assigned: "osoitti käyttäjälle %{who} %{when}"
       assigned_group: "osoitti käyttäjälle %{who} %{when}"
-      assigned_to_post: "osoitti käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestin</a> %{when}"
-      assigned_group_to_post: "osoitti käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestin</a> %{when}"
       unassigned: "perui osoituksen käyttäjälle %{who} %{when}"
       unassigned_group: "perui osoituksen käyttäjälle %{who} %{when}"
-      unassigned_from_post: "perui osoituksen käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestiin</a> %{when}"
-      unassigned_group_from_post: "perui osoituksen käyttäjälle %{who} <a href='%{path}' data-auto-route='true'>viestiin</a> %{when}"
       reassigned: "Osoitti uudelleen käyttäjälle %{who} %{when}"
       reassigned_group: "Osoitti uudelleen käyttäjälle %{who} %{when}"
     discourse_assign:
@@ -57,7 +53,7 @@ fi:
       assign_modal:
         title: "Osoita ketju"
         reassign_title: "Osoita ketju uudelleen"
-        description: "Syötä sen käyttäjän nimi, jolle haluat ketjun osoittaa"
+        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa ketjun"
         assign: "Osoita"
       assign_post_modal:
         title: "Osoita viesti"
@@ -121,7 +117,7 @@ fi:
               description: Oletusarvo on 14 päivää.
             max_recently_assigned_days:
               label: Hiljattain osoitettujen päivien enimmäismäärä
-              description: Ensimmäinen yritys sulkea pois käyttäjiä, jotka on osoitettu viimeisten n päivän aikana. Jos käyttäjiä ei ole jäljellä, käytetään `min_recently_assigned_days`-asetusta. Oletusarvo on 180 päivää.
+              description: Ensimmäinen yritys sulkea pois käyttäjiä, jotka on osoitettu viimeisten n:n päivän aikana. Jos käyttäjiä ei ole jäljellä, käytetään `min_recently_assigned_days`-asetusta. Oletusarvo on 180 päivää.
             assigned_topic:
               label: Osoitetun ketjun tunnus
             in_working_hours:

@@ -13,12 +13,12 @@ de:
     action_codes:
       assigned: "%{who} zugeordnet %{when}"
       assigned_group: "%{who} zugeordnet %{when}"
-      assigned_to_post: "%{who} zugeordnet zu <a href='%{path}' data-auto-route='true'>Beitrag</a> %{when}"
-      assigned_group_to_post: "%{who} zugeordnet zu <a href='%{path}' data-auto-route='true'>Beitrag</a> %{when}"
+      assigned_to_post: "%{who} zu <a href='%{path}'>Beitrag</a> zugeordnet %{when}"
+      assigned_group_to_post: "%{who} zu <a href='%{path}'>Beitrag</a> zugeordnet %{when}"
       unassigned: "Zuordnung von %{who} aufgehoben %{when}"
       unassigned_group: "Zuordnung von %{who} aufgehoben %{when}"
-      unassigned_from_post: "Zuordnung von %{who} zu <a href='%{path}' data-auto-route='true'>Beitrag</a> aufgehoben %{when}"
-      unassigned_group_from_post: "Zuordnung von %{who} zu <a href='%{path}' data-auto-route='true'>Beitrag</a> aufgehoben %{when}"
+      unassigned_from_post: "Zuordnung von %{who} zu <a href='%{path}'>Beitrag</a> aufgehoben %{when}"
+      unassigned_group_from_post: "Zuordnung von %{who} zu <a href='%{path}'>Beitrag</a> aufgehoben %{when}"
       reassigned: "%{who} %{when} erneut zugeordnet"
       reassigned_group: "%{who} %{when} erneut zugeordnet"
     discourse_assign:

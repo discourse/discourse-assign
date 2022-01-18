@@ -13,7 +13,10 @@ hu:
       never: "soha"
       daily: "naponta"
       weekly: "hetente"
+      monthly: "havi"
+      quarterly: "negyedéves"
   pending_assigns_reminder:
+    title: "%{pending_assignments} függőben lévő feladata van"
     newest: |
       ### Legújabb
       %{topic_0}

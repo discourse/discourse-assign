@@ -13,12 +13,12 @@ ar:
     action_codes:
       assigned: "تم تعيين %{who} في %{when}"
       assigned_group: "تم تعيين %{who} في %{when}"
-      assigned_to_post: "تم تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
-      assigned_group_to_post: "تم تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
+      assigned_to_post: "تم تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
+      assigned_group_to_post: "تم تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
       unassigned: "تم إلغاء تعيين %{who} في %{when}"
       unassigned_group: "تم إلغاء تعيين %{who} في %{when}"
-      unassigned_from_post: "تم إلغاء تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
-      unassigned_group_from_post: "تم إلغاء تعيين <a href='%{path}' data-auto-route='true'>المنشور</a> إلى %{who} في %{when}"
+      unassigned_from_post: "تم إلغاء تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
+      unassigned_group_from_post: "تم إلغاء تعيين %{who} إلى <a href='%{path}'>المنشور</a> في %{when}"
       reassigned: "تمت إعادة تعيين %{who} في %{when}"
       reassigned_group: "تمت إعادة تعيين %{who} في %{when}"
     discourse_assign:

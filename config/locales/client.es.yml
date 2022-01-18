@@ -13,12 +13,12 @@ es:
     action_codes:
       assigned: "asignó a %{who} %{when}"
       assigned_group: "asignó a %{who} %{when}"
-      assigned_to_post: "asignó a %{who} a <a href='%{path}' data-auto-route='true'>publicación</a> %{when}"
-      assigned_group_to_post: "asignó a %{who} a <a href='%{path}' data-auto-route='true'>publicación</a> %{when}"
+      assigned_to_post: "asignó a %{who} a la <a href='%{path}'>publicación</a> %{when}"
+      assigned_group_to_post: "asignó a %{who} a la <a href='%{path}'>publicación</a> %{when}"
       unassigned: "anuló la asignación de %{who} %{when}"
       unassigned_group: "anuló la asignación de %{who} %{when}"
-      unassigned_from_post: "anuló la asignación de %{who} de <a href='%{path}' data-auto-route='true'>publicación</a> %{when}"
-      unassigned_group_from_post: "anuló la asignación de %{who} de <a href='%{path}' data-auto-route='true'>publicación</a> %{when}"
+      unassigned_from_post: "anuló la asignación de %{who} de <a href='%{path}'>publicación</a> %{when}"
+      unassigned_group_from_post: "anuló la asignación de %{who} de <a href='%{path}'>publicación</a> %{when}"
       reassigned: "Reasignó a %{who} %{when}"
       reassigned_group: "Reasignó a %{who} %{when}"
     discourse_assign:
