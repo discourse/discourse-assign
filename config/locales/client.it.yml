@@ -13,12 +13,12 @@ it:
     action_codes:
       assigned: "assegnato a %{who} %{when}"
       assigned_group: "assegnato a %{who} %{when}"
-      assigned_to_post: "assegnato a %{who} il <a href='%{path}' data-auto-route='true'>messaggio</a> %{when}"
-      assigned_group_to_post: "assegnato a %{who} nel <a href='%{path}' data-auto-route='true'>messaggio</a> %{when}"
+      assigned_to_post: "assegnato %{who} al <a href='%{path}'>messaggio</a> %{when}"
+      assigned_group_to_post: "assegnato %{who} al <a href='%{path}'>messaggio</a> %{when}"
       unassigned: "non assegnato a %{who} %{when}"
       unassigned_group: "assegnazione a %{who} %{when} annullata"
-      unassigned_from_post: "assegnazione a %{who} dal <a href='%{path}' data-auto-route='true'>messaggio</a> %{when} annullata"
-      unassigned_group_from_post: "assegnazione a %{who} dal <a href='%{path}' data-auto-route='true'>messaggio</a> %{when} annullata"
+      unassigned_from_post: "assegnazione a %{who} del <a href='%{path}' data-auto-route='true'>messaggio</a> annullata %{when}"
+      unassigned_group_from_post: "assegnazione a %{who} del <a href='%{path}' data-auto-route='true'>messaggio</a> annullata %{when}"
       reassigned: "Riassegnato a %{who} %{when}"
       reassigned_group: "Riassegnato a %{who} %{when}"
     discourse_assign:

@@ -13,12 +13,12 @@ he:
     action_codes:
       assigned: "מוקצה לטובת %{who} %{when}"
       assigned_group: "מוקצה לטובת %{who} %{when}"
-      assigned_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
-      assigned_group_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
+      assigned_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}'>פוסט</a> ב־%{when}"
+      assigned_group_to_post: "בוצעה הקצאה של %{who} ל<a href='%{path}'>פוסט</a> ב־%{when}"
       unassigned: "הוסרה ההקצאה של %{who} %{when}"
       unassigned_group: "הוסרה ההקצאה של %{who} %{when}"
-      unassigned_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
-      unassigned_group_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}' data-auto-route='true'>פוסט</a> %{when}"
+      unassigned_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}'>פוסט</a> ב־%{when}"
+      unassigned_group_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}'>פוסט</a> ב־%{when}"
       reassigned: "הוקצה מחדש לטובת %{who} %{when}"
       reassigned_group: "הוקצה מחדש לטובת %{who} %{when}"
     discourse_assign:

@@ -8,17 +8,17 @@ zh_CN:
   js:
     filters:
       unassigned:
-        title: "未分配"
+        title: "已取消分配"
         help: "未分配的话题"
     action_codes:
       assigned: "于 %{when}分配给 %{who}"
       assigned_group: "于 %{when}分配给 %{who}"
-      assigned_to_post: "于 %{when}将 %{who} 分配给<a href='%{path}' data-auto-route='true'>帖子</a>"
-      assigned_group_to_post: "于 %{when}将 %{who} 分配给<a href='%{path}' data-auto-route='true'>帖子</a>"
+      assigned_to_post: "于 %{when}将 %{who} 分配到<a href='%{path}'>帖子</a>"
+      assigned_group_to_post: "于 %{when}将 %{who} 分配到<a href='%{path}'>帖子</a>"
       unassigned: "于 %{when}取消分配 %{who}"
       unassigned_group: "于 %{when}取消分配 %{who}"
-      unassigned_from_post: "于 %{when}从<a href='%{path}' data-auto-route='true'>帖子</a>中取消分配 %{who}"
-      unassigned_group_from_post: "于 %{when}从<a href='%{path}' data-auto-route='true'>帖子</a>中取消分配 %{who}"
+      unassigned_from_post: "于 %{when}将 %{who} 从<a href='%{path}'>帖子</a>中取消分配"
+      unassigned_group_from_post: "于 %{when}将 %{who} 从<a href='%{path}'>帖子</a>中取消分配"
       reassigned: "于 %{when}重新分配 %{who}"
       reassigned_group: "于 %{when}重新分配 %{who}"
     discourse_assign:

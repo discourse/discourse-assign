@@ -13,12 +13,12 @@ sv:
     action_codes:
       assigned: "tilldelat %{who} %{when}"
       assigned_group: "tilldelat %{who} %{when}"
-      assigned_to_post: "tilldelade %{who} till <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
-      assigned_group_to_post: "tilldelade %{who} till <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
+      assigned_to_post: "tilldelat %{who} för <a href='%{path}'>inlägg</a> %{when}"
+      assigned_group_to_post: "tilldelat %{who} för <a href='%{path}'>inlägg</a> %{when}"
       unassigned: "otilldelat %{who} %{when}"
       unassigned_group: "otilldelat %{who} %{when}"
-      unassigned_from_post: "otilldelad %{who} från <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
-      unassigned_group_from_post: "otilldelad %{who} från <a href='%{path}' data-auto-route='true'>inlägg</a> %{when}"
+      unassigned_from_post: "otilldelat %{who} från <a href='%{path}'>inlägg</a> %{when}"
+      unassigned_group_from_post: "otilldelat %{who} från <a href='%{path}'>inlägg</a> %{when}"
       reassigned: "Omtilldelad %{who} %{when}"
       reassigned_group: "Omtilldelad %{who} %{when}"
     discourse_assign:
