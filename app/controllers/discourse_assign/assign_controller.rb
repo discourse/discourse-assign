@@ -81,7 +81,7 @@ module DiscourseAssign
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
-      topic_assignments = Assignment.where(target_id: topics.map(&:id), target_type: 'Topic').pluck(:target_id, :assigned_to_id).to_h
+      topic_assignments = Assignment.where(target_id: topics.map(&:id), target_type: 'Topic', active: true).pluck(:target_id, :assigned_to_id).to_h
 
       users = User
         .where("users.id IN (?)", topic_assignments.values.uniq)

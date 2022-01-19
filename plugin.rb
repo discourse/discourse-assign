@@ -323,12 +323,12 @@ after_initialize do
       SELECT topic_id FROM assignments
       LEFT JOIN group_users ON group_users.user_id = :user_id
       WHERE
-        assigned_to_id = :user_id AND assigned_to_type = 'User' AND active
+        (assigned_to_id = :user_id AND assigned_to_type = 'User' AND active)
     SQL
 
     if @options[:filter] != :direct
       topic_ids_sql << <<~SQL
-        OR assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group'
+        OR (assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group' AND active)
       SQL
     end
 
@@ -822,7 +822,7 @@ after_initialize do
     if @guardian.can_assign?
       posts.where(<<~SQL)
         topics.id IN (
-          SELECT a.topic_id FROM assignments a
+          SELECT a.topic_id FROM assignments a WHERE a.active
         )
       SQL
     end
@@ -832,7 +832,7 @@ after_initialize do
     if @guardian.can_assign?
       posts.where(<<~SQL)
         topics.id NOT IN (
-          SELECT a.topic_id FROM assignments a
+          SELECT a.topic_id FROM assignments a WHERE a.active
         )
       SQL
     end
@@ -843,13 +843,13 @@ after_initialize do
       if user_id = User.find_by_username(match)&.id
         posts.where(<<~SQL, user_id)
           topics.id IN (
-            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User'
+            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active
           )
         SQL
       elsif group_id = Group.find_by_name(match)&.id
         posts.where(<<~SQL, group_id)
           topics.id IN (
-            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group'
+            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active
           )
         SQL
       end

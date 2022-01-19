@@ -20,6 +20,7 @@ describe Search do
     let(:post3) { Fabricate(:post) }
     let(:post4) { Fabricate(:post) }
     let(:post5) { Fabricate(:post, topic: post4.topic) }
+    let(:post6) { Fabricate(:post) }
 
     before do
       add_to_assign_allowed_group(user)
@@ -29,6 +30,7 @@ describe Search do
       Assigner.new(post2.topic, user).assign(user2)
       Assigner.new(post3.topic, user).assign(user)
       Assigner.new(post5, user).assign(user)
+      Assignment.create!(assigned_to: user, assigned_by_user: user, target: post6, topic_id: post6.topic.id, active: false)
     end
 
     it 'can find by status' do
@@ -36,7 +38,7 @@ describe Search do
 
       Assigner.new(post3.topic, user).unassign
 
-      expect(Search.execute('in:unassigned', guardian: Guardian.new(user)).posts.length).to eq(1)
+      expect(Search.execute('in:unassigned', guardian: Guardian.new(user)).posts.length).to eq(2)
       expect(Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length).to eq(2)
     end
 
