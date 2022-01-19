@@ -38,6 +38,14 @@ describe TopicQuery do
       expect(assigned_messages).to contain_exactly(private_message, topic, group_topic)
     end
 
+    it 'Excludes inactive assignments' do
+      Assignment.update_all(active: false)
+
+      assigned_messages = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
+
+      expect(assigned_messages).to eq([])
+    end
+
     it 'Excludes topics and PMs not assigned to user' do
       assigned_messages = TopicQuery.new(user2, { page: 0 }).list_messages_assigned(user2).topics
 
