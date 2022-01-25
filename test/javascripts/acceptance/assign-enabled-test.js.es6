@@ -54,7 +54,9 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
 });
 
 acceptance("Discourse Assign | Assign desktop", function (needs) {
-  needs.user();
+  needs.user({
+    can_assign: true,
+  });
   needs.settings({ assign_enabled: true });
   needs.hooks.beforeEach(() => clearTopicFooterButtons());
 
@@ -81,7 +83,6 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     });
   });
   test("Post contains hidden assign button", async (assert) => {
-    updateCurrentUser({ can_assign: true });
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
@@ -89,6 +90,7 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
       "assign to post button is hidden"
     );
     await click("#post_2 button.show-more-actions");
+
     assert.ok(
       exists("#post_2 .extra-buttons .d-icon-user-plus"),
       "assign to post button exists"
@@ -98,7 +100,6 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
   });
 
   test("Footer dropdown contains button", async (assert) => {
-    updateCurrentUser({ can_assign: true });
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
