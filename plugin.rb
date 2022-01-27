@@ -345,15 +345,14 @@ after_initialize do
     topic_ids_sql = +<<~SQL
       SELECT topic_id FROM assignments
       WHERE (
-        assigned_to_id = :group_id AND assigned_to_type = 'Group'
+        assigned_to_id = :group_id AND assigned_to_type = 'Group' AND active
       )
-      AND active
     SQL
 
     if @options[:filter] != :direct
       topic_ids_sql << <<~SQL
         OR (
-          assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND assigned_to_type = 'User'
+          assigned_to_id IN (SELECT user_id from group_users where group_id = :group_id) AND assigned_to_type = 'User' AND active
         )
       SQL
     end
