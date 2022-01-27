@@ -71,7 +71,7 @@ describe ListController do
       Assignment.where(assigned_to: user, target: topic1).update_all(active: false)
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to eq([])
+      expect(response.parsed_body['topic_list']['topics']).to be_empty
     end
 
     it 'returns empty user-assigned-topics-list for users not in the assigned_allowed_group' do
