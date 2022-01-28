@@ -67,6 +67,13 @@ describe ListController do
       expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['assigned_to_user']['id'] }).to match_array([user.id])
     end
 
+    it 'returns user-assigned-topics-list of users in the assigned_allowed_group and doesnt include inactive topics' do
+      Assignment.where(assigned_to: user, target: topic1).update_all(active: false)
+
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
+      expect(response.parsed_body['topic_list']['topics']).to be_empty
+    end
+
     it 'returns empty user-assigned-topics-list for users not in the assigned_allowed_group' do
       ids = []
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"

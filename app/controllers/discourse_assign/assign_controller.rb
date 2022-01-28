@@ -118,7 +118,7 @@ module DiscourseAssign
         .joins("LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id AND a.assigned_to_type = 'User'")
         .joins("LEFT OUTER JOIN topics t ON t.id = a.target_id AND a.target_type = 'Topic'")
         .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
-        .where("a.assigned_to_id IS NOT NULL")
+        .where("a.assigned_to_id IS NOT NULL AND a.active")
         .order('COUNT(users.id) DESC')
         .group('users.id')
         .select('users.*, COUNT(users.id) as "assignments_count"')
@@ -134,7 +134,7 @@ module DiscourseAssign
       group_assignments = Topic
         .joins("JOIN assignments a ON a.topic_id = topics.id")
         .where(<<~SQL, group_id: group.id)
-          a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group'
+          a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group' AND a.active
         SQL
         .pluck(:topic_id)
 
@@ -143,6 +143,7 @@ module DiscourseAssign
         .joins("JOIN group_users ON group_users.user_id = a.assigned_to_id ")
         .where("group_users.group_id = ?", group.id)
         .where("a.assigned_to_type = 'User'")
+        .where("a.active")
         .pluck(:topic_id)
 
       render json: {
