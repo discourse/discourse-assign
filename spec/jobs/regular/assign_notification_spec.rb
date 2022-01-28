@@ -79,13 +79,13 @@ RSpec.describe Jobs::AssignNotification do
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
         end
         expect(messages.length).to eq(1)
-        expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
+        expect(messages.first.data[:excerpt]).to eq("assigned to #{group.name} the topic '#{topic.title}'")
 
         messages = MessageBus.track_publish("/notification-alert/#{user3.id}") do
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
         end
         expect(messages.length).to eq(1)
-        expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
+        expect(messages.first.data[:excerpt]).to eq("assigned to #{group.name} the topic '#{topic.title}'")
 
         messages = MessageBus.track_publish("/notification-alert/#{user4.id}") do
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
