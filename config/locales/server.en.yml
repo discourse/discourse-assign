@@ -32,6 +32,7 @@ en:
     flag_assigned: "Sorry, that flag's topic is assigned to another user"
     flag_unclaimed: "You must claim that topic before acting on the flag"
     topic_assigned_excerpt: "assigned you the topic '%{title}'"
+    topic_group_assigned_excerpt: "assigned to %{group} the topic '%{title}'"
     reminders_frequency:
       never: "never"
       daily: "daily"

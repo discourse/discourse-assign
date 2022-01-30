@@ -6,7 +6,7 @@ RSpec.describe Jobs::AssignNotification do
   describe '#execute' do
     fab!(:user1) { Fabricate(:user, last_seen_at: 1.day.ago) }
     fab!(:user2) { Fabricate(:user, last_seen_at: 1.day.ago) }
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic) { Fabricate(:topic, title: 'Basic topic title') }
     fab!(:post) { Fabricate(:post, topic: topic) }
     fab!(:pm_post) { Fabricate(:private_message_post) }
     fab!(:pm) { pm_post.topic }
@@ -33,7 +33,7 @@ RSpec.describe Jobs::AssignNotification do
         end
 
         expect(messages.length).to eq(1)
-        expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
+        expect(messages.first.data[:excerpt]).to eq("assigned you the topic 'Basic topic title'")
       end
 
       it 'should publish the right message when private message' do
@@ -65,7 +65,7 @@ RSpec.describe Jobs::AssignNotification do
     context 'Group' do
       fab!(:user3) { Fabricate(:user, last_seen_at: 1.day.ago) }
       fab!(:user4) { Fabricate(:user, suspended_till: 1.year.from_now) }
-      fab!(:group) { Fabricate(:group) }
+      fab!(:group) { Fabricate(:group, name: 'Developers') }
       let(:assignment) { Assignment.create!(topic: topic, assigned_by_user: user1, assigned_to: group) }
 
       before do
@@ -79,13 +79,13 @@ RSpec.describe Jobs::AssignNotification do
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
         end
         expect(messages.length).to eq(1)
-        expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
+        expect(messages.first.data[:excerpt]).to eq("assigned to Developers the topic 'Basic topic title'")
 
         messages = MessageBus.track_publish("/notification-alert/#{user3.id}") do
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
         end
         expect(messages.length).to eq(1)
-        expect(messages.first.data[:excerpt]).to eq("assigned you the topic '#{topic.title}'")
+        expect(messages.first.data[:excerpt]).to eq("assigned to Developers the topic 'Basic topic title'")
 
         messages = MessageBus.track_publish("/notification-alert/#{user4.id}") do
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })

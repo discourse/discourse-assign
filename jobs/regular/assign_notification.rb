@@ -21,14 +21,18 @@ module Jobs
 
         next if assigned_by == user
 
+        assigned_to_user = args[:assigned_to_type] == "User"
+
         PostAlerter.new(post).create_notification_alert(
           user: user,
           post: post,
           username: assigned_by.username,
           notification_type: Notification.types[:custom],
-          excerpt: I18n.t(
-            "discourse_assign.topic_assigned_excerpt",
+          excerpt:
+          I18n.t(
+            (assigned_to_user ? "discourse_assign.topic_assigned_excerpt" : "discourse_assign.topic_group_assigned_excerpt"),
             title: topic.title,
+            group: assigned_to.name,
             locale: user.effective_locale
           )
         )
@@ -41,8 +45,8 @@ module Jobs
           post_number: post.post_number,
           high_priority: true,
           data: {
-            message: args[:assigned_to_type] == "User" ? 'discourse_assign.assign_notification' : 'discourse_assign.assign_group_notification',
-            display_username: args[:assigned_to_type] == "User" ? assigned_by.username : assigned_to.name,
+            message: assigned_to_user ? 'discourse_assign.assign_notification' : 'discourse_assign.assign_group_notification',
+            display_username: assigned_to_user ? assigned_by.username : assigned_to.name,
             topic_title: topic.title
           }.to_json
         )
