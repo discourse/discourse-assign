@@ -138,7 +138,7 @@ class ::Assigner
     assigned_total = Assignment
       .joins_with_topics
       .where(topics: { deleted_at: nil })
-      .where(assigned_to_id: assign_to.id)
+      .where(assigned_to_id: assign_to.id, active: true)
       .count
 
     assigned_total < SiteSetting.max_assigned_topics
