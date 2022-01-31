@@ -160,6 +160,20 @@ RSpec.describe Assigner do
       expect(third_assign[:success]).to eq(true)
     end
 
+    it "doesn't count inactive assigns when enforcing the limit" do
+      SiteSetting.max_assigned_topics = 1
+      SiteSetting.unassign_on_close = true
+      another_post = Fabricate(:post)
+
+      first_assign = assigner.assign(moderator)
+      topic.update_status("closed", true, Discourse.system_user)
+
+      second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
+
+      expect(first_assign[:success]).to eq(true)
+      expect(second_assign[:success]).to eq(true)
+    end
+
     fab!(:admin) { Fabricate(:admin) }
 
     it 'fails to assign when the assigned user cannot view the pm' do
