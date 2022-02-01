@@ -59,3 +59,9 @@ pl_PL:
       web_hooks:
         assign_event:
           name: "Przypisz wydarzenie"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            min_recently_assigned_days:
+              description: Domyślnie 14 dni.
