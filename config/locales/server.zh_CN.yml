@@ -38,6 +38,7 @@ zh_CN:
     flag_assigned: "抱歉，该举报的话题已被分配给其他用户"
     flag_unclaimed: "在对举报采取行动之前，您必须先认领该话题。"
     topic_assigned_excerpt: "向您分配了话题 '%{title}'"
+    topic_group_assigned_excerpt: "向 %{group} 分配了话题 '%{title}'"
     reminders_frequency:
       never: "永不"
       daily: "每天"
