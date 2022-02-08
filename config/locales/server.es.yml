@@ -38,6 +38,7 @@ es:
     flag_assigned: "Lo sentimos, el tema de esa denuncia está asignado a otro usuario."
     flag_unclaimed: "Debes reclamar este tema antes de actuar sobre la denuncia"
     topic_assigned_excerpt: "te asignó el tema «%{title}»"
+    topic_group_assigned_excerpt: "asignó a %{group} el tema «%{title}»"
     reminders_frequency:
       never: "nunca"
       daily: "diariamente"

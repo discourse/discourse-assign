@@ -38,6 +38,7 @@ de:
     flag_assigned: "Entschuldige, das Thema dieser Meldung ist einem anderen Benutzer zugeordnet"
     flag_unclaimed: "Du musst dieses Thema übernehmen, bevor du die Meldung behandeln kannst"
     topic_assigned_excerpt: "hat dir das Thema „%{title}“ zugeordnet"
+    topic_group_assigned_excerpt: "hat %{group} das Thema „%{title}“ zugeordnet"
     reminders_frequency:
       never: "nie"
       daily: "täglich"
