@@ -138,13 +138,10 @@ module DiscourseAssign
         SQL
         .pluck(:topic_id)
 
-      assignments = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id")
-        .joins("JOIN group_users ON group_users.user_id = a.assigned_to_id ")
-        .where("group_users.group_id = ?", group.id)
-        .where("a.assigned_to_type = 'User'")
-        .where("a.active")
-        .pluck(:topic_id)
+      assignments = TopicQuery
+        .new(current_user)
+        .group_topics_assigned_results(group)
+        .pluck('topics.id')
 
       render json: {
         members: serialize_data(members, GroupUserAssignedSerializer),
