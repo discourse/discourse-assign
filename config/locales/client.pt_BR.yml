@@ -13,8 +13,12 @@ pt_BR:
     action_codes:
       assigned: "atribuiu a %{who} %{when}"
       assigned_group: "atribuiu %{who} %{when}"
+      assigned_to_post: "atribuiu %{who} a <a href='%{path}'>postagem</a> %{when}"
+      assigned_group_to_post: "atribuiu %{who} a <a href='%{path}'>postagem</a> %{when}"
       unassigned: "removeu atribuição de %{who} %{when}"
       unassigned_group: "removeu atribuição de %{who} %{when}"
+      unassigned_from_post: "cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
+      unassigned_group_from_post: "cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
       reassigned: "reatribuiu %{who} %{when}"
       reassigned_group: "reatribuiu %{who} %{when}"
     discourse_assign:
