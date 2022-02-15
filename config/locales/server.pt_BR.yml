@@ -38,6 +38,7 @@ pt_BR:
     flag_assigned: "Desculpe, aquele tópico da sinalização está designado à outro usuário"
     flag_unclaimed: "Você precisa reivindicar aquele tópico antes de atuar na sinalização"
     topic_assigned_excerpt: "Você foi atribuído(a) ao tópico \"%{title}\""
+    topic_group_assigned_excerpt: "atribuiu %{group} ao tópico '%{title}'"
     reminders_frequency:
       never: "nunca"
       daily: "diariamente"
