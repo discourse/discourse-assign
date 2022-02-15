@@ -339,8 +339,8 @@ after_initialize do
     create_list(:assigned, { unordered: true }, list)
   end
 
-  add_to_class(:topic_query, :list_group_topics_assigned) do |group|
-    list = default_results(include_pms: true)
+  add_to_class(:topic_query, :group_topics_assigned_results) do |group|
+    list = default_results(include_all_pms: true)
 
     topic_ids_sql = +<<~SQL
       SELECT topic_id FROM assignments
@@ -360,8 +360,10 @@ after_initialize do
     sql = "topics.id IN (#{topic_ids_sql})"
 
     list = list.where(sql, group_id: group.id).includes(:allowed_users)
+  end
 
-    create_list(:assigned, { unordered: true }, list)
+  add_to_class(:topic_query, :list_group_topics_assigned) do |group|
+    create_list(:assigned, { unordered: true }, group_topics_assigned_results(group))
   end
 
   add_to_class(:topic_query, :list_private_messages_assigned) do |user|
