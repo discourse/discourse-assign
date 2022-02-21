@@ -1,4 +1,4 @@
-## Assign Plugin 
+# Assign Plugin 
 
 Allows you to assign topics and individual posts (both private and public) to a user or group.
 
