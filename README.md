@@ -1,5 +1,5 @@
-## Documentation
+# Assign Plugin 
 
-Official documentation is at:
+Allows you to assign topics and individual posts (both private and public) to a user or group.
 
-https://meta.discourse.org/t/discourse-assign/58044
+For more information, please see: https://meta.discourse.org/t/discourse-assign/58044
