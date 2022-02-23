@@ -9,16 +9,6 @@ RSpec.describe Assigner do
   let(:pm_post) { Fabricate(:private_message_post) }
   let(:pm) { pm_post.topic }
 
-  # TODO later remove that stuff
-  def assert_publish_topic_state(topic, user)
-    message = MessageBus.track_publish("/private-messages/assigned") do
-      yield
-    end.first
-
-    expect(message.data[:topic_id]).to eq(topic.id)
-    expect(message.user_ids).to eq([user.id])
-  end
-
   context "assigning and unassigning" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
@@ -118,8 +108,8 @@ RSpec.describe Assigner do
       expect(assigned_to?(another_mod)).to eq(true)
     end
 
-    def assigned_to?(asignee)
-      assigner.assign(asignee).fetch(:success)
+    def assigned_to?(assignee)
+      assigner.assign(assignee).fetch(:success)
     end
 
     it "doesn't assign if the user has too many assigned topics" do
