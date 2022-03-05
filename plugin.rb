@@ -5,6 +5,7 @@
 # version: 1.0.0
 # authors: Sam Saffron
 # url: https://github.com/discourse/discourse-assign
+# transpile_js: true
 
 enabled_site_setting :assign_enabled
 
