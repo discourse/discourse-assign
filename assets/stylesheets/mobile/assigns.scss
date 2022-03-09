@@ -6,8 +6,31 @@
 }
 
 .assigned-topic-list-item {
+  .topic-list-data {
+    max-width: unset;
+  }
   .pull-right .num.activity {
     margin-right: 0.5em;
+  }
+  .topic-item-stats {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+    "left-top right-top"
+    "left-bottom right-bottom";
+    .discourse-tags {
+      grid-area: left-top;
+      max-width: unset;
+    }
+    .topic-list-num {
+      grid-area: right-bottom;
+      display: flex;
+      justify-content: end;
+    }
+    .category {
+      grid-area: left-bottom;
+    }
   }
 }
 

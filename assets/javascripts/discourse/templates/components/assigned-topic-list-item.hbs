@@ -6,11 +6,11 @@
   at the end of the link, preventing it from line wrapping onto its own line.
 --}}
 {{#if bulkSelectEnabled}}
-  <td class="bulk-select topic-list-data">
+  <div class="bulk-select topic-list-data">
     <input type="checkbox" class="bulk-select">
-  </td>
+  </div>
 {{/if}}
-<td class="main-link clearfix topic-list-data" colspan="1">
+<div class="main-link clearfix topic-list-data" colspan="1">
   <span class="link-top-line">
     {{~raw "topic-status" topic=topic}}
     {{~#if isPrivateMessage}}
@@ -36,7 +36,7 @@
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
   {{/if}}
-</td>
+</div>
 
 {{#if showPosters}}
   {{raw "list/posters-column" posters=topic.featuredUsers}}
@@ -44,9 +44,9 @@
 
 {{raw "list/posts-count-column" topic=topic}}
 
-<td class="num views {{topic.viewsHeat}} topic-list-data">{{number topic.views numberKey="views_long"}}</td>
-{{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="td"}}
-<td class="topic-list-data">
+<div class="num views {{topic.viewsHeat}} topic-list-data">{{number topic.views numberKey="views_long"}}</div>
+{{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="div"}}
+<div class="topic-list-data">
   {{#if topic.assigned_to_user}}
     {{assign-actions-dropdown
       topic=topic
@@ -68,4 +68,4 @@
       unassign=unassign
     }}
   {{/if}}
-</td>
+</div>
