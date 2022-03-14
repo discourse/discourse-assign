@@ -97,6 +97,10 @@ class RandomAssignUtils
       ).create!
 
       result = Assigner.new(post, Discourse.system_user).assign(assign_to)
+
+      if !result[:success]
+        PostDestroyer.new(Discourse.system_user, post).destroy
+      end
     else
       result = Assigner.new(topic, Discourse.system_user).assign(assign_to)
     end
