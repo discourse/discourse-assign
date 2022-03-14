@@ -1,6 +1,114 @@
 # frozen_string_literal: true
 
 class RandomAssignUtils
+  def self.raise_error(automation, message)
+    raise("[discourse-automation id=#{automation.id}] #{message}.")
+  end
+
+  def self.log_info(automation, message)
+    Rails.logger.info("[discourse-automation id=#{automation.id}] #{message}.")
+  end
+
+  def self.automation_script!(context, fields, automation)
+    unless SiteSetting.assign_enabled?
+      raise_error(automation, "discourse-assign is not enabled")
+    end
+
+    unless topic_id = fields.dig('assigned_topic', 'value')
+      raise_error(automation, "`assigned_topic` not provided")
+    end
+
+    unless topic = Topic.find_by(id: topic_id)
+      raise_error(automation, "Topic(#{topic_id}) not found")
+    end
+
+    min_hours = fields.dig('minimum_time_between_assignments', 'value').presence
+    if min_hours && TopicCustomField
+        .where(name: 'assigned_to_id', topic_id: topic_id)
+        .where('created_at < ?', min_hours.to_i.hours.ago)
+        .exists?
+      log_info(automation, "Topic(#{topic_id}) has already been assigned recently")
+      return
+    end
+
+    unless group_id = fields.dig('assignees_group', 'value')
+      raise_error(automation, "`assignees_group` not provided")
+    end
+
+    unless group = Group.find_by(id: group_id)
+      raise_error(automation, "Group(#{group_id}) not found")
+    end
+
+    users_on_holiday = Set.new(
+      User
+        .where(id:
+          UserCustomField
+          .where(name: 'on_holiday', value: 't')
+          .select(:user_id)
+        ).pluck(:id)
+    )
+
+    group_users_ids = group
+      .group_users
+      .joins(:user)
+      .pluck('users.id')
+      .reject { |user_id| users_on_holiday.include?(user_id) }
+
+    if group_users_ids.empty?
+      RandomAssignUtils.no_one!(topic_id, group.name)
+      return
+    end
+
+    max_recently_assigned_days = (fields.dig('max_recently_assigned_days', 'value').presence || 180).to_i.days.ago
+    last_assignees_ids = RandomAssignUtils.recently_assigned_users_ids(topic_id, max_recently_assigned_days)
+    users_ids = group_users_ids - last_assignees_ids
+    if users_ids.blank?
+      min_recently_assigned_days = (fields.dig('min_recently_assigned_days', 'value').presence || 14).to_i.days.ago
+      recently_assigned_users_ids = RandomAssignUtils.recently_assigned_users_ids(topic_id, min_recently_assigned_days)
+      users_ids = group_users_ids - recently_assigned_users_ids
+    end
+
+    if users_ids.blank?
+      RandomAssignUtils.no_one!(topic_id, group.name)
+      return
+    end
+
+    if fields.dig('in_working_hours', 'value')
+      assign_to_user_id = users_ids.shuffle.find do |user_id|
+        RandomAssignUtils.in_working_hours?(user_id)
+      end
+    end
+
+    assign_to_user_id ||= users_ids.sample
+    if assign_to_user_id.blank?
+      RandomAssignUtils.no_one!(topic_id, group.name)
+      return
+    end
+
+    assign_to = User.find(assign_to_user_id)
+    result = nil
+    if raw = fields.dig('post_template', 'value').presence
+      post = PostCreator.new(
+        Discourse.system_user,
+        raw: raw,
+        skip_validations: true,
+        topic_id: topic.id
+      ).create!
+
+      result = Assigner.new(post, Discourse.system_user).assign(assign_to)
+
+      if !result[:success]
+        PostDestroyer.new(Discourse.system_user, post).destroy
+      end
+    else
+      result = Assigner.new(topic, Discourse.system_user).assign(assign_to)
+    end
+
+    if !result[:success]
+      RandomAssignUtils.no_one!(topic_id, group.name)
+    end
+  end
+
   def self.recently_assigned_users_ids(topic_id, from)
     posts = Post
       .joins(:user)
