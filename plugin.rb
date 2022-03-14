@@ -870,7 +870,7 @@ after_initialize do
       triggerables %i[point_in_time recurring]
 
       script do |context, fields, automation|
-        RandomAssignUtils.automation_script(context, fields, automation)
+        RandomAssignUtils.automation_script!(context, fields, automation)
       end
     end
   end
