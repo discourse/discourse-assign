@@ -44,7 +44,7 @@ class RandomAssignUtils
         .where(id:
           UserCustomField
           .where(name: 'on_holiday', value: 't')
-          .pluck(:user_id)
+          .select(:user_id)
         ).pluck(:id)
     )
 
