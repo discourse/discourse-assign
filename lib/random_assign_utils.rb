@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RandomAssignUtils
-  def self.log_error(automation, message)
+  def self.raise_error(automation, message)
     raise("[discourse-automation id=#{automation.id}] #{message}.")
   end
 
@@ -11,15 +11,15 @@ class RandomAssignUtils
 
   def self.automation_script!(context, fields, automation)
     unless SiteSetting.assign_enabled?
-      log_error(automation, "discourse-assign is not enabled")
+      raise_error(automation, "discourse-assign is not enabled")
     end
 
     unless topic_id = fields.dig('assigned_topic', 'value')
-      log_error(automation, "`assigned_topic` not provided")
+      raise_error(automation, "`assigned_topic` not provided")
     end
 
     unless topic = Topic.find_by(id: topic_id)
-      log_error(automation, "Topic(#{topic_id}) not found")
+      raise_error(automation, "Topic(#{topic_id}) not found")
     end
 
     min_hours = fields.dig('minimum_time_between_assignments', 'value').presence
@@ -32,11 +32,11 @@ class RandomAssignUtils
     end
 
     unless group_id = fields.dig('assignees_group', 'value')
-      log_error(automation, "`assignees_group` not provided")
+      raise_error(automation, "`assignees_group` not provided")
     end
 
     unless group = Group.find_by(id: group_id)
-      log_error(automation, "Group(#{group_id}) not found")
+      raise_error(automation, "Group(#{group_id}) not found")
     end
 
     users_on_holiday = Set.new(
