@@ -59,13 +59,12 @@ class RandomAssignUtils
       return
     end
 
-    last_assignees_ids = RandomAssignUtils.recently_assigned_users_ids(
-      topic_id,
-      (fields.dig('max_recently_assigned_days', 'value').presence || 180).to_i.days.ago
-    )
+    max_recently_assigned_days = (fields.dig('max_recently_assigned_days', 'value').presence || 180).to_i.days.ago
+    last_assignees_ids = RandomAssignUtils.recently_assigned_users_ids(topic_id, max_recently_assigned_days)
     users_ids = group_users_ids - last_assignees_ids
     if users_ids.blank?
-      recently_assigned_users_ids = RandomAssignUtils.recently_assigned_users_ids(topic_id, (fields.dig('min_recently_assigned_days', 'value').presence || 14).to_i.days.ago)
+      min_recently_assigned_days = (fields.dig('min_recently_assigned_days', 'value').presence || 14).to_i.days.ago
+      recently_assigned_users_ids = RandomAssignUtils.recently_assigned_users_ids(topic_id, min_recently_assigned_days)
       users_ids = group_users_ids - recently_assigned_users_ids
     end
 
