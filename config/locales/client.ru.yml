@@ -112,6 +112,9 @@ ru:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Шаблон сообщения
+              description: При заполнении будет создано сообщение на основе этого шаблона и этому сообщению будет назначен пользователь.
             assignees_group:
               label: Группа назначенных
             minimum_time_between_assignments:
