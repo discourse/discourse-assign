@@ -112,6 +112,9 @@ he:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: תבנית פוסט
+              description: אם ימולא, יווצר פוסט עם התבנית הזאת ויוקצה אליו משתמש במקום הנושא.
             assignees_group:
               label: קבוצת מוקצים
             minimum_time_between_assignments:
