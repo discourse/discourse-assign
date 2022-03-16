@@ -27,7 +27,7 @@ module Jobs
           user: user,
           post: post,
           username: assigned_by.username,
-          notification_type: Notification.types[:custom],
+          notification_type: Notification.types[:assigned] || Notification.types[:custom],
           excerpt:
           I18n.t(
             (assigned_to_user ? "discourse_assign.topic_assigned_excerpt" : "discourse_assign.topic_group_assigned_excerpt"),
@@ -39,7 +39,7 @@ module Jobs
 
         next if args[:silent]
         Notification.create!(
-          notification_type: Notification.types[:custom],
+          notification_type: Notification.types[:assigned] || Notification.types[:custom],
           user_id: user.id,
           topic_id: topic.id,
           post_number: post.post_number,
