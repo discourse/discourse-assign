@@ -128,5 +128,6 @@ en:
     notification_reason:
       user: "You will see a count of new replies because this topic was assigned to you."
     notifications:
+      assigned: "<span>%{username}</span> %{description}"
       popup:
         assigned: "%{username} assigned you"
