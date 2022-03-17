@@ -74,3 +74,6 @@ en:
       random_assign:
         title: Random assign
         no_one: "Attempted randomly assign a member of @%{group}, but no one was available."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} assigned you"
