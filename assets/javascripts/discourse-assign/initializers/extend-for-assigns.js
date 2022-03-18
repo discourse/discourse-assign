@@ -838,7 +838,7 @@ function initialize(api) {
   });
 
   api.replaceIcon(
-    "notification.discourse_assign.assign_notification",
+    "notification.assigned",
     "user-plus"
   );
 
