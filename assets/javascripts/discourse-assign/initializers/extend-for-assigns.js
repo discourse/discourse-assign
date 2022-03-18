@@ -837,10 +837,7 @@ function initialize(api) {
     }
   });
 
-  api.replaceIcon(
-    "notification.assigned",
-    "user-plus"
-  );
+  api.replaceIcon("notification.assigned", "user-plus");
 
   api.replaceIcon(
     "notification.discourse_assign.assign_group_notification",
