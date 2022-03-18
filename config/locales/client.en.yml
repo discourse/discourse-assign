@@ -131,3 +131,5 @@ en:
       assigned: "<span>%{username}</span> %{description}"
       popup:
         assigned: "%{username} assigned you"
+      titles:
+        assigned: "Assigned"
