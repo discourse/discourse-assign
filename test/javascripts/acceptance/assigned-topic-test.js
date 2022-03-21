@@ -164,7 +164,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
 
     debugger;
 
-    let notification = query("section.user-content ul.notifications li.item.notification")[0];
+    let notification = query("section.user-content ul.notifications li.item.notification");
 
     assert.equal(
       notification.children[0].classList,
