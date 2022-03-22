@@ -857,87 +857,20 @@ after_initialize do
     require 'random_assign_utils'
 
     add_automation_scriptable('random_assign') do
-      field :assignees_group, component: :group
-      field :assigned_topic, component: :text
+      field :assignees_group, component: :group, required: true
+      field :assigned_topic, component: :text, required: true
       field :minimum_time_between_assignments, component: :text
       field :max_recently_assigned_days, component: :text
       field :min_recently_assigned_days, component: :text
       field :in_working_hours, component: :boolean
+      field :post_template, component: :post
 
       version 1
 
       triggerables %i[point_in_time recurring]
 
       script do |context, fields, automation|
-        unless SiteSetting.assign_enabled?
-          Rails.logger.warn("[discourse-automation id=#{automation.id}] discourse-assign is not enabled.")
-          next
-        end
-
-        next unless topic_id = fields.dig('assigned_topic', 'value')
-        next unless topic = Topic.find_by(id: topic_id)
-
-        next unless group_id = fields.dig('assignees_group', 'value')
-        next unless group = Group.find_by(id: group_id)
-
-        min_hours = fields.dig('minimum_time_between_assignments', 'value').presence
-        if min_hours && TopicCustomField
-            .where(name: 'assigned_to_id', topic_id: topic_id)
-            .where('created_at < ?', min_hours.to_i.hours.ago)
-            .exists?
-          next
-        end
-
-        users_on_holiday = Set.new(
-          User
-            .where(id:
-              UserCustomField
-              .where(name: 'on_holiday', value: 't')
-              .pluck(:user_id)
-            ).pluck(:id)
-        )
-
-        group_users_ids = group
-          .group_users
-          .joins(:user)
-          .pluck('users.id')
-          .reject { |user_id| users_on_holiday.include?(user_id) }
-
-        if group_users_ids.empty?
-          RandomAssignUtils.no_one!(topic_id, group.name)
-          next
-        end
-
-        last_assignees_ids = RandomAssignUtils.recently_assigned_users_ids(
-          topic_id,
-          (fields.dig('max_recently_assigned_days', 'value').presence || 180).to_i.days.ago
-        )
-
-        users_ids = group_users_ids - last_assignees_ids
-        if users_ids.blank?
-          recently_assigned_users_ids = RandomAssignUtils.recently_assigned_users_ids(topic_id, (fields.dig('min_recently_assigned_days', 'value').presence || 14).to_i.days.ago)
-          users_ids = group_users_ids - recently_assigned_users_ids
-        end
-
-        if users_ids.blank?
-          RandomAssignUtils.no_one!(topic_id, group.name)
-          next
-        end
-
-        if fields.dig('in_working_hours', 'value')
-          assign_to_user_id = users_ids.shuffle.find do |user_id|
-            RandomAssignUtils.in_working_hours?(user_id)
-          end
-        end
-
-        assign_to_user_id ||= users_ids.sample
-        if assign_to_user_id.blank?
-          RandomAssignUtils.no_one!(topic_id, group.name)
-          next
-        end
-
-        assign_to = User.find_by(id: assign_to_user_id)
-        assign_to && Assigner.new(topic, Discourse.system_user).assign(assign_to)
+        RandomAssignUtils.automation_script!(context, fields, automation)
       end
     end
   end

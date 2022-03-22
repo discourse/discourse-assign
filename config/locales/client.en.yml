@@ -108,6 +108,9 @@ en:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Post template
+              description: If filled, a post with this template will be created and a user assigned to it instead of the topic.
             assignees_group:
               label: Assignees Group
             minimum_time_between_assignments:
@@ -124,3 +127,9 @@ en:
               label: Users in working hours
     notification_reason:
       user: "You will see a count of new replies because this topic was assigned to you."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} assigned you"
+      titles:
+        assigned: "Assigned"

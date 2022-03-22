@@ -69,3 +69,10 @@ da:
       bulk:
         unassign: "Fjern tildeling af emner"
         assign: "Tildel emner"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Indlæg skabelon
+              description: Hvis den udfyldes, oprettes et indlæg med denne skabelon, og der tildeles en bruger til det i stedet for emnet.

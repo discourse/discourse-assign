@@ -112,6 +112,9 @@ he:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: תבנית פוסט
+              description: אם ימולא, יווצר פוסט עם התבנית הזאת ויוקצה אליו משתמש במקום הנושא.
             assignees_group:
               label: קבוצת מוקצים
             minimum_time_between_assignments:
@@ -128,3 +131,9 @@ he:
               label: משתמשים בשעות עבודה
     notification_reason:
       user: "תופיע ספירה של תגובות חדשות כיוון שהנושא הזה הוקצה אליך."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "הוקצה אליך על ידי %{username}"
+      titles:
+        assigned: "מוקצה"

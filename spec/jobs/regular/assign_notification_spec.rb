@@ -47,7 +47,7 @@ RSpec.describe Jobs::AssignNotification do
 
       it 'sends a high priority notification to the assignee' do
         Notification.expects(:create!).with(
-          notification_type: Notification.types[:custom],
+          notification_type: Notification.types[:assigned] || Notification.types[:custom],
           user_id: user2.id,
           topic_id: topic.id,
           post_number: 1,
@@ -96,7 +96,7 @@ RSpec.describe Jobs::AssignNotification do
       it 'sends a high priority notification to all group members' do
         [user2, user3, user4].each do |user|
           Notification.expects(:create!).with(
-            notification_type: Notification.types[:custom],
+            notification_type: Notification.types[:assigned] || Notification.types[:custom],
             user_id: user.id,
             topic_id: topic.id,
             post_number: 1,

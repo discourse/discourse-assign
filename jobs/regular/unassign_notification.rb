@@ -14,7 +14,7 @@ module Jobs
         Assigner.publish_topic_tracking_state(topic, user.id)
 
         Notification.where(
-          notification_type: Notification.types[:custom],
+          notification_type: Notification.types[:assigned] || Notification.types[:custom],
           user_id: user.id,
           topic_id: topic.id,
         ).where("data like '%discourse_assign.assign_notification%' OR data like '%discourse_assign.assign_group_notification%'").destroy_all

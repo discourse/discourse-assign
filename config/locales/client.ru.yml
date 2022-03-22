@@ -112,6 +112,9 @@ ru:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Шаблон сообщения
+              description: При заполнении будет создано сообщение на основе этого шаблона и этому сообщению будет назначен пользователь.
             assignees_group:
               label: Группа назначенных
             minimum_time_between_assignments:
@@ -128,3 +131,9 @@ ru:
               label: В рабочее время
     notification_reason:
       user: "Вы увидите количество новых ответов, поскольку эта тема была назначена вам."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "Пользователь %{username} назначил вас"
+      titles:
+        assigned: "Назначение"
