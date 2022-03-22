@@ -43,9 +43,10 @@ function assignCurrentUserToTopic(needs) {
       return helper.response(topic);
     });
 
-    server.get("/notifications?username=eviltrout&filter=all", () => {
-      const notifications = NotificationFixture["/assign/notifications/eviltrout"];
-      return helper.response(notifications);
+    server.get("/notifications", () => {
+      return helper.response(
+        NotificationFixture["/assign/notifications/eviltrout"]
+      );
     });
   });
 }
@@ -162,22 +163,23 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
 
     await visit("/u/eviltrout/notifications");
 
-    debugger;
-
-    let notification = query("section.user-content ul.notifications li.item.notification");
+    const notification = query(
+      "section.user-content ul.notifications li.item.notification"
+    );
 
     assert.equal(
       notification.children[0].classList,
       "assigned",
       "with correct assigned class"
     );
+
     assert.equal(
-      notification.querySelector('a').title,
-      I18n.t("notifications.title.assigned"),
+      notification.querySelector("a").title,
+      I18n.t("notifications.titles.assigned"),
       "with correct title"
     );
     assert.equal(
-      notification.querySelector('svg use').href['baseVal'],
+      notification.querySelector("svg use").href["baseVal"],
       "#user-plus",
       "with correct icon"
     );
