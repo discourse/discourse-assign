@@ -19,6 +19,8 @@
     grid-template-areas:
       "left-top right-top"
       "left-bottom right-bottom";
+    grid-column-start: 1;
+    grid-column-end: 3;
     .discourse-tags {
       grid-area: left-top;
       max-width: unset;
@@ -32,6 +34,11 @@
       grid-area: left-bottom;
     }
   }
+}
+
+.assigned-topic-list-item .topic-list-data {
+  display: grid;
+  grid-template-columns: 1fr 37px; // 37px is size of button
 }
 
 .select-kit-row[data-value="unassign-mobile-header"] {

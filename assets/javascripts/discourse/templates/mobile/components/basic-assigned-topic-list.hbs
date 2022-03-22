@@ -8,8 +8,8 @@
   {{/if}}
 
   {{#if topics}}
-    <table class="topic-list">
-      <tbody class="topic-list-body">
+    <table class="topic-list assigned-topic-list">
+      <tbody class="topic-list-body assigned-topic-list-body">
         {{#each topics as |t|}}
           {{assigned-topic-list-item
             topic=t
