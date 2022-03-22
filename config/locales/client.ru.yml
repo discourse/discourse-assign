@@ -131,3 +131,9 @@ ru:
               label: В рабочее время
     notification_reason:
       user: "Вы увидите количество новых ответов, поскольку эта тема была назначена вам."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "Пользователь %{username} назначил вас"
+      titles:
+        assigned: "Назначение"

@@ -17,3 +17,5 @@ fa_IR:
         weekly: "هفتگی"
         monthly: "ماهانه"
         quarterly: "فصلی"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"

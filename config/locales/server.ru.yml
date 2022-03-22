@@ -74,3 +74,6 @@ ru:
       random_assign:
         title: Случайное назначение
         no_one: "Нет доступных пользователей при попытке назначить случайного пользователя из группы @%{group}."
+  discourse_push_notifications:
+    popup:
+      assigned: "Пользователь @%{username} назначил вас"

@@ -131,3 +131,9 @@ he:
               label: משתמשים בשעות עבודה
     notification_reason:
       user: "תופיע ספירה של תגובות חדשות כיוון שהנושא הזה הוקצה אליך."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "הוקצה אליך על ידי %{username}"
+      titles:
+        assigned: "מוקצה"
