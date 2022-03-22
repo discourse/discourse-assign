@@ -1,5 +1,5 @@
 {{#unless skipHeader}}
-  <thead class="topic-list-header">
+  <thead class="topic-list-header assigned-topic-list-header">
     {{raw "topic-list-header"
       canBulkSelect=canBulkSelect
       canDoBulkActions=canDoBulkActions
@@ -17,7 +17,7 @@
   </thead>
 {{/unless}}
 
-<tbody class="topic-list-body">
+<tbody class="topic-list-body assigned-topic-list-body">
   {{#each filteredTopics as |topic|}}
     {{assigned-topic-list-item
       topic=topic
