@@ -112,11 +112,15 @@ pl_PL:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Szablon postu
             minimum_time_between_assignments:
               label: Minimalna liczba godzin pomiędzy przypisaniami
             min_recently_assigned_days:
+              label: Minim. ostatnio przypisane dni
               description: Domyślnie 14 dni.
             max_recently_assigned_days:
+              label: Maks. ostatnio przypisane dni
               description: Pierwsza próba wykluczenia użytkowników przypisanych w ciągu ostatnich `n` dni. Jeśli nie zostanie żaden użytkownik, powraca do `min_recently_assigned_days`. Domyślnie 180 dni.
             assigned_topic:
               label: Przypisany ID tematu
@@ -124,3 +128,8 @@ pl_PL:
               label: Użytkownicy w godzinach pracy
     notification_reason:
       user: "Zobaczysz liczbę nowych odpowiedzi, ponieważ ten temat został do Ciebie przypisany."
+    notifications:
+      popup:
+        assigned: "%{username} przypisał Ciebie"
+      titles:
+        assigned: "Przypisany"
