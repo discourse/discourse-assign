@@ -12,7 +12,15 @@ ur:
         help: "عنوانات جو تفویض نہیں کیے گئے ہیں"
     action_codes:
       assigned: "تفویض %{who} %{when}"
+      assigned_group: "تفویض کردہ %{who} %{when}"
+      assigned_to_post: "تفویض کردہ %{who} سے <a href='%{path}'>پوسٹ</a> %{when}"
+      assigned_group_to_post: "تفویض کردہ %{who} سے <a href='%{path}'>پوسٹ</a> %{when}"
       unassigned: "غیر تفویض %{who} %{when}"
+      unassigned_group: "غیر تفویض کردہ %{who} %{when}"
+      unassigned_from_post: "<a href='%{path}'>پوسٹ</a> %{when}سے %{who} کو غیر تفویض کیا گیا۔"
+      unassigned_group_from_post: "<a href='%{path}'>پوسٹ</a> %{when}سے %{who} کو غیر تفویض کیا گیا۔"
+      reassigned: "%{who} %{when}دوبارہ تفویض کیا گیا۔"
+      reassigned_group: "%{who} %{when}دوبارہ تفویض کیا گیا۔"
     discourse_assign:
       add_unassigned_filter: "زمرے میں 'غیر تفویض' فلٹر شامل کریں"
       cant_act: "آپ دوسرے صارفین کو اسائین کردہ فلیگ پر کاروائی نہیں کر سکتے"
@@ -22,16 +30,40 @@ ur:
       assigned: "اسائین کردہ"
       group_everyone: "ہر کوئی"
       assigned_to: "جس کو اسائین کیا گیا"
+      assigned_to_w_ellipsis: "کو تفویض..."
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "غیر اسائین کریں"
+        title_w_ellipsis: "غیر تفویض کریں..."
         help: "موضوع سے %{username} کو غیر متعین کریں"
       assign:
         title: "اسائین کریں"
         help: "صارف کو ٹاپک اسائین کریں"
+      assign_post:
+        title: "پوسٹ تفویض کریں"
+      unassign_post:
+        title: "پوسٹ سے غیر تفویض"
+        help: "پوسٹ سے %{username} غیر تفویض کریں"
+      reassign:
+        title: "دوبارہ تفویض"
+        title_w_ellipsis: "کو دوبارہ تفویض کریں..."
+        to_self: "مجھے دوبارہ تفویض کریں"
+        to_self_help: "مجھے موضوع دوبارہ تفویض کریں"
+        help: "کسی مختلف صارف کو موضوع دوبارہ تفویض کریں"
+      reassign_modal:
+        title: "موضوع دوبارہ تفویض کریں"
+        description: "اس صارف کا نام درج کریں جسے آپ اس موضوع کو دوبارہ تفویض کرنا چاہتے ہیں"
       assign_modal:
         title: "ٹاپک اسائین کریں"
+        reassign_title: "موضوع دوبارہ تفویض کریں"
         description: "اس صارف کا نام درج کریں جسے آپ اس موضوع کو تفویض کرنا چاہتے ہیں"
         assign: "اسائین کریں"
+      assign_post_modal:
+        title: "پوسٹ تفویض کریں"
+        description: "اس صارف کا نام درج کریں جسے آپ اس پوسٹ کو تفویض کرنا چاہتے ہیں"
+      assign_bulk_modal:
+        description: "اس صارف کا نام درج کریں جسے آپ یہ عنوانات تفویض کرنا چاہتے ہیں"
       claim:
         title: "کلیم کریں"
         help: "اپنے آپ کو ٹاپک اسائین کریں"
@@ -46,6 +78,13 @@ ur:
         weekly: "ہفتہ وار"
         monthly: "ماہانہ"
         quarterly: "سہ ماہی"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "تفویض"
+              assignable_levels:
+                title: "کون اس گروپ کو تفویض کر سکتا ہے"
     user:
       messages:
         assigned_title: "اسائین کردہ (%{count})"
@@ -69,3 +108,17 @@ ur:
       bulk:
         unassign: "موضوعات کو غیر تفویض کریں"
         assign: "موضوعات تفویض کریں"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: پوسٹ کا سانچہ
+              description: اگر پُر ہو جائے تو اس سانچے کے ساتھ ایک پوسٹ بنائی جائے گی اور موضوع کی بجائے اس کے لیے ایک صارف تفویض کیا جائے گا۔
+            assignees_group:
+              label: تفویض کا روں کاگروپ
+            minimum_time_between_assignments:
+              label: اسائنمنٹس کے درمیان کم از کم گھنٹے
+    notifications:
+      titles:
+        assigned: "تفویض کردہ"
