@@ -29,4 +29,10 @@ RSpec.describe PostSerializer do
     expect(serializer.as_json[:post][:assigned_to_group].id).to eq(assign_allowed_group.id)
     expect(serializer.as_json[:post][:assigned_to_user]).to be nil
   end
+
+  it "includes priority in serializer" do
+    Assigner.new(post, user).assign(user, priority: 1)
+    serializer = PostSerializer.new(post, scope: guardian)
+    expect(serializer.as_json[:post][:assignment_priority]).to eq(1)
+  end
 end

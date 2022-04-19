@@ -8,6 +8,13 @@ class Assignment < ActiveRecord::Base
   belongs_to :assigned_by_user, class_name: "User"
   belongs_to :target, polymorphic: true
 
+  enum priority: {
+    low: 4,
+    medium: 3,
+    high: 2,
+    urgent: 1,
+  }, _prefix: true
+
   scope :joins_with_topics, -> { joins("INNER JOIN topics ON topics.id = assignments.target_id AND assignments.target_type = 'Topic' AND topics.deleted_at IS NULL") }
 
   def self.valid_type?(type)
@@ -37,6 +44,7 @@ end
 #  target_id           :integer          not null
 #  target_type         :string           not null
 #  active              :boolean          default(TRUE)
+#  priority            :integer
 #
 # Indexes
 #

@@ -199,7 +199,7 @@ class ::Assigner
     end
   end
 
-  def assign(assign_to, silent: false)
+  def assign(assign_to, priority: nil, silent: false)
     type = assign_to.is_a?(User) ? "User" : "Group"
 
     forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
@@ -211,7 +211,7 @@ class ::Assigner
 
     @target.assignment&.destroy!
 
-    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
+    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id, priority: priority)
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
