@@ -112,6 +112,9 @@ sv:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Inläggsmall
+              description: Om den fylls i skapas ett inlägg med den här mallen och en användare tilldelas inlägget istället för ämnet.
             assignees_group:
               label: Tilldelade-grupp
             minimum_time_between_assignments:
@@ -128,3 +131,9 @@ sv:
               label: Användare under arbetstid
     notification_reason:
       user: "Du kommer att se en räknare för nya svar eftersom detta ämne tilldelades dig."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} tilldelade dig"
+      titles:
+        assigned: "Tilldelad"
