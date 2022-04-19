@@ -47,12 +47,13 @@ en:
         help: "Reassign Topic to a different user"
       reassign_modal:
         title: "Reassign Topic"
-        description: "Enter the name of the user you'd like to Reassign this topic"
+        description: "Enter the name of the user you'd like to reassign this topic"
       assign_modal:
         title: "Assign Topic"
         reassign_title: "Reassign Topic"
         description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
+        priority_label: Set a priority (Optional)
       assign_post_modal:
         title: "Assign Post"
         description: "Enter the name of the user you'd like to assign this post"
@@ -79,6 +80,12 @@ en:
               assign: "Assign"
               assignable_levels:
                 title: "Who can assign this group"
+      priorities:
+        none: None
+        low: Low
+        medium: Medium
+        high: High
+        urgent: Urgent
     user:
       messages:
         assigned_title: "Assigned (%{count})"

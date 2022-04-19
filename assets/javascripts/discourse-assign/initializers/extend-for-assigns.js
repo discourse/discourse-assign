@@ -23,6 +23,7 @@ const DEPENDENT_KEYS = [
   "topic.assigned_to_group",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
+  "topic.assignment_priority",
 ];
 
 function titleForState(name) {

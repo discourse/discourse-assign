@@ -25,6 +25,17 @@
         </a>
       {{/each}}
     </div>
+    <label>{{i18n "discourse_assign.assign_modal.priority_label"}}</label>
+    {{combo-box
+      name="assign-priority"
+      content=priorities
+      value=model.priority
+      valueProperty="value"
+      onChange=(action "assignPriority")
+      options=(hash
+        none="discourse_assign.priorities.none"
+      )
+    }}
   </div>
 {{/d-modal-body}}
 

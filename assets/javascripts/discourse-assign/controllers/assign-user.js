@@ -1,10 +1,18 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { not, or } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { not, or } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
-import { action } from "@ember/object";
+import I18n from "I18n";
+
+const PRIORITIES = [
+  { name: I18n.t("discourse_assign.priorities.low"), value: 4 },
+  { name: I18n.t("discourse_assign.priorities.medium"), value: 3 },
+  { name: I18n.t("discourse_assign.priorities.high"), value: 2 },
+  { name: I18n.t("discourse_assign.priorities.urgent"), value: 1 },
+];
 
 export default Controller.extend({
   topicBulkActions: controller(),
@@ -13,6 +21,7 @@ export default Controller.extend({
   taskActions: service(),
   autofocus: not("capabilities.touch"),
   assigneeName: or("model.username", "model.group_name"),
+  priorities: PRIORITIES,
 
   init() {
     this._super(...arguments);
@@ -63,7 +72,6 @@ export default Controller.extend({
     }
 
     this.send("closeModal");
-
     return ajax(path, {
       type: "PUT",
       data: {
@@ -71,6 +79,7 @@ export default Controller.extend({
         group_name: this.get("model.group_name"),
         target_id: this.get("model.target.id"),
         target_type: this.get("model.targetType"),
+        priority: this.get("model.priority"),
       },
     })
       .then(() => {
@@ -99,14 +108,15 @@ export default Controller.extend({
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
     }
-
-    if (name) {
-      return this.assign();
-    }
   },
 
   @action
   assignUsername(selected) {
     this.assignUser(selected.firstObject);
+  },
+
+  @action
+  assignPriority(priority) {
+    this.set("model.priority", priority);
   },
 });
