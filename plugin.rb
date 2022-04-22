@@ -661,7 +661,7 @@ after_initialize do
         results.joins(<<~SQL
           INNER JOIN posts p ON p.id = target_id
           INNER JOIN topics t ON t.id = p.topic_id
-          INNER JOIN assignments a ON a.topic_id = t.id AND a.assigned_to_type == 'User'
+          INNER JOIN assignments a ON a.topic_id = t.id AND a.assigned_to_type = 'User'
           INNER JOIN users u ON u.id = a.assigned_to_id
         SQL
         )
