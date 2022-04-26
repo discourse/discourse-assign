@@ -78,6 +78,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     assign_enabled: true,
     tagging_enabled: true,
     assigns_user_url_path: "/",
+    assigns_public: true,
   });
 
   assignCurrentUserToTopic(needs);
@@ -124,7 +125,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     );
   });
 
-  test("Public user cannot see footer button", async (assert) => {
+  test("User without assign ability cannot see footer button", async (assert) => {
     updateCurrentUser({ can_assign: false, admin: false, moderator: false });
     await visit("/t/assignment-topic/45");
 
