@@ -2,7 +2,7 @@
 
 # name: discourse-assign
 # about: Assign users to topics
-# version: 1.0.0
+# version: 1.0.1
 # authors: Sam Saffron
 # url: https://github.com/discourse/discourse-assign
 # transpile_js: true
@@ -583,7 +583,7 @@ after_initialize do
 
   # UserBookmarkSerializer
   add_to_serializer(:user_bookmark, :assigned_to_user, false) do
-    topic.assigned_to
+    BasicUserSerializer.new(topic.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:basic_user, :assign_icon) do
@@ -607,7 +607,7 @@ after_initialize do
   end
 
   add_to_serializer(:user_bookmark, :assigned_to_group, false) do
-    topic.assigned_to
+    BasicGroupSerializer.new(topic.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:user_bookmark, 'include_assigned_to_group?') do
@@ -616,7 +616,7 @@ after_initialize do
 
   # PostSerializer
   add_to_serializer(:post, :assigned_to_user) do
-    object.assignment&.assigned_to
+    BasicUserSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:post, 'include_assigned_to_user?') do
@@ -624,7 +624,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :assigned_to_group, false) do
-    object.assignment&.assigned_to
+    BasicGroupSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:post, 'include_assigned_to_group?') do
