@@ -3,7 +3,7 @@
 require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
-RSpec.describe PostSerializer do
+describe PostSerializer do
   fab!(:user) { Fabricate(:user) }
   fab!(:topic) { Fabricate(:topic) }
   fab!(:post) { Fabricate(:post, topic: topic) }
@@ -19,14 +19,18 @@ RSpec.describe PostSerializer do
   it "includes assigned user in serializer" do
     Assigner.new(post, user).assign(user)
     serializer = PostSerializer.new(post, scope: guardian)
-    expect(serializer.as_json[:post][:assigned_to_user].id).to eq(user.id)
-    expect(serializer.as_json[:post][:assigned_to_group]).to be nil
+    post = serializer.as_json[:post]
+    expect(post[:assigned_to_user][:id]).to eq(user.id)
+    expect(post[:assigned_to_user][:assign_icon]).to eq("user-plus")
+    expect(post[:assigned_to_group]).to be(nil)
   end
 
   it "includes assigned group in serializer" do
     Assigner.new(post, user).assign(assign_allowed_group)
     serializer = PostSerializer.new(post, scope: guardian)
-    expect(serializer.as_json[:post][:assigned_to_group].id).to eq(assign_allowed_group.id)
-    expect(serializer.as_json[:post][:assigned_to_user]).to be nil
+    post = serializer.as_json[:post]
+    expect(post[:assigned_to_group][:id]).to eq(assign_allowed_group.id)
+    expect(post[:assigned_to_group][:assign_icon]).to eq("group-plus")
+    expect(post[:assigned_to_user]).to be(nil)
   end
 end
