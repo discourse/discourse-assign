@@ -130,7 +130,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
 
     assert.notOk(
       exists("#topic-footer-dropdown-reassign"),
-      "shows reassign dropdown at the bottom of the topic"
+      "does not show reassign dropdown at the bottom of the topic"
     );
   });
 });
