@@ -78,6 +78,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     assign_enabled: true,
     tagging_enabled: true,
     assigns_user_url_path: "/",
+    assigns_public: true,
   });
 
   assignCurrentUserToTopic(needs);
@@ -121,6 +122,16 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     assert.ok(
       exists("#topic-footer-dropdown-reassign"),
       "shows reassign dropdown at the bottom of the topic"
+    );
+  });
+
+  test("User without assign ability cannot see footer button", async (assert) => {
+    updateCurrentUser({ can_assign: false, admin: false, moderator: false });
+    await visit("/t/assignment-topic/45");
+
+    assert.notOk(
+      exists("#topic-footer-dropdown-reassign"),
+      "does not show reassign dropdown at the bottom of the topic"
     );
   });
 });
