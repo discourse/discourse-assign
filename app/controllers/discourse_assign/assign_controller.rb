@@ -48,6 +48,7 @@ module DiscourseAssign
       target_type = params.require(:target_type)
       username = params.permit(:username)['username']
       group_name = params.permit(:group_name)['group_name']
+      priority = (params.permit(:priority)['priority'])&.to_i
 
       assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
 
@@ -56,7 +57,7 @@ module DiscourseAssign
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound unless target
 
-      assign = Assigner.new(target, current_user).assign(assign_to)
+      assign = Assigner.new(target, current_user).assign(assign_to, priority: priority)
 
       if assign[:success]
         render json: success_json

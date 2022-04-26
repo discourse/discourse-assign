@@ -43,6 +43,12 @@ RSpec.describe Assigner do
         .to eq(TopicUser.notification_levels[:tracking])
     end
 
+    it "can assign with priority" do
+      assigner.assign(moderator, priority: 2)
+
+      expect(topic.assignment.priority_high?).to eq true
+    end
+
     it 'does not update notification level if already watching' do
       TopicUser.change(moderator.id, topic.id,
         notification_level: TopicUser.notification_levels[:watching]

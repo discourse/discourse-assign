@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
 require_relative '../support/assign_allowed_group'
 
 RSpec.describe DiscourseAssign::AssignController do
@@ -114,6 +113,15 @@ RSpec.describe DiscourseAssign::AssignController do
 
       expect(response.status).to eq(200)
       expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
+    end
+
+    it 'assigns topic with priority to a user' do
+      put '/assign/assign.json', params: {
+        target_id: post.topic_id, target_type: 'Topic', username: user2.username, priority: 4
+      }
+
+      topicPriority = post.topic.reload.assignment.priority
+      expect(Assignment.priorities[topicPriority]).to eq(4)
     end
 
     it 'assigns topic to a group' do

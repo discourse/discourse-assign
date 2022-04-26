@@ -38,6 +38,7 @@ export default Service.extend({
         group_name: target.assigned_to_group?.name,
         target,
         targetType: options.targetType,
+        priority: target.assignment_priority,
       },
     });
   },
