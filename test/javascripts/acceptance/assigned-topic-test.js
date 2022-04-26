@@ -123,6 +123,16 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "shows reassign dropdown at the bottom of the topic"
     );
   });
+
+  test("Public user cannot see footer button", async (assert) => {
+    updateCurrentUser({ can_assign: false, admin: false, moderator: false });
+    await visit("/t/assignment-topic/45");
+
+    assert.notOk(
+      exists("#topic-footer-dropdown-reassign"),
+      "shows reassign dropdown at the bottom of the topic"
+    );
+  });
 });
 
 acceptance("Discourse Assign | Re-assign topic", function (needs) {

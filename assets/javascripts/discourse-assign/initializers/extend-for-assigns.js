@@ -174,7 +174,11 @@ function registerTopicFooterButtons(api) {
     },
 
     displayed() {
-      return !this.site.mobileView && this.topic.isAssigned();
+      return (
+        this.get("currentUser.can_assign") &&
+        !this.site.mobileView &&
+        this.topic.isAssigned()
+      );
     },
   });
 
