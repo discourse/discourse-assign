@@ -938,9 +938,7 @@ export default {
     withPluginApi("0.12.2", (api) => {
       api.addGroupPostSmallActionCode("assigned_group");
       api.addGroupPostSmallActionCode("unassigned_group");
-      api.addGroupPostSmallActionCode("assigned_to_post");
       api.addGroupPostSmallActionCode("assigned_group_to_post");
-      api.addGroupPostSmallActionCode("unassigned_from_post");
       api.addGroupPostSmallActionCode("unassigned_group_from_post");
     });
     withPluginApi("0.12.3", (api) => {
