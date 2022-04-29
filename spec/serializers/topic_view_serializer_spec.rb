@@ -35,4 +35,10 @@ RSpec.describe TopicViewSerializer do
     serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
     expect(serializer.as_json[:topic_view][:assignment_note]).to eq("note me down")
   end
+
+  it "includes indirectly_assigned_to notes in serializer" do
+    Assigner.new(post, user).assign(user, note: "note me down")
+    serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
+    expect(serializer.as_json[:topic_view][:indirectly_assigned_to][post.id][:assignment_note]).to eq("note me down")
+  end
 end

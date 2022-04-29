@@ -20,12 +20,14 @@ function assignCurrentUserToTopic(needs) {
         avatar_template:
           "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
       };
+      topic["assignment_note"] = "Shark Doododooo";
       topic["indirectly_assigned_to"] = {
         2: {
           assigned_to: {
             name: "Developers",
           },
           post_number: 2,
+          assignment_note: "doodoloo",
         },
       };
       return helper.response(topic);
@@ -98,6 +100,16 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "shows assignment and indirect assignments in the first post"
     );
     assert.ok(exists("#post_1 .assigned-to svg.d-icon-user-plus"));
+    assert.equal(
+      query(".discourse-tags .assigned-to[href='/t/28830'] span").title,
+      "Shark Doododooo",
+      "shows topic assign notes"
+    );
+    assert.equal(
+      query(".discourse-tags .assigned-to[href='/p/2'] span").title,
+      "doodoloo",
+      "shows indirect assign notes"
+    );
     assert.ok(
       exists("#topic-footer-dropdown-reassign"),
       "shows reassign dropdown at the bottom of the topic"

@@ -586,9 +586,18 @@ function initialize(api) {
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
   api.addTagsHtmlCallback((topic, params = {}) => {
-    const [assignedToUser, assignedToGroup] = Object.values(
-      topic.getProperties("assigned_to_user", "assigned_to_group")
+    const [assignedToUser, assignedToGroup, topicNote] = Object.values(
+      topic.getProperties(
+        "assigned_to_user",
+        "assigned_to_group",
+        "assignment_note"
+      )
     );
+
+    const topicAssignee = {
+      assignee: assignedToUser || assignedToGroup,
+      note: topicNote,
+    };
 
     let assignedToIndirectly;
     if (topic.get("indirectly_assigned_to")) {
@@ -603,17 +612,18 @@ function initialize(api) {
     }
     const assignedTo = []
       .concat(
-        assignedToUser,
-        assignedToGroup,
-        assignedToIndirectly.map((assigned) => assigned.assigned_to)
+        topicAssignee,
+        assignedToIndirectly.map((assigned) => ({
+          assignee: assigned.assigned_to,
+          note: assigned.assignment_note,
+        }))
       )
-      .filter((element) => element)
-      .flat()
-      .uniqBy((assignee) => assignee.assign_path);
+      .filter(({ assignee }) => assignee)
+      .flat();
 
     if (assignedTo) {
       return assignedTo
-        .map((assignee) => {
+        .map(({ assignee, note }) => {
           let assignedPath;
           if (assignee.assignedToPostId) {
             assignedPath = `/p/${assignee.assignedToPostId}`;
@@ -629,7 +639,7 @@ function initialize(api) {
               : "";
           return `<${tagName} class="assigned-to discourse-tag simple" ${href}>
         ${icon}
-        <span>${name}</span>
+        <span title="${note}">${name}</span>
       </${tagName}>`;
         })
         .join("");
@@ -769,7 +779,7 @@ function initialize(api) {
           }
           const target = post || topic;
 
-          target.set("assignment_note", null);
+          target.set("assignment_note", data.assignment_note);
           if (data.assigned_type === "User") {
             target.set(
               "assigned_to_user_id",
