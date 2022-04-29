@@ -43,6 +43,33 @@ RSpec.describe Assigner do
         .to eq(TopicUser.notification_levels[:tracking])
     end
 
+    it "publishes topic assignment after assign and unassign" do
+      messages = MessageBus.track_publish('/staff/topic-assignment') do
+        assigner = described_class.new(topic, moderator_2)
+        assigner.assign(moderator)
+        assigner.unassign
+      end
+
+      expect(messages[0].channel).to eq "/staff/topic-assignment"
+      expect(messages[0].data).to include({
+        type: "assigned",
+        topic_id: topic.id,
+        post_id: false,
+        post_number: false,
+        assigned_type: "User",
+        assigned_to: BasicUserSerializer.new(moderator, scope: Guardian.new, root: false).as_json,
+      })
+
+      expect(messages[1].channel).to eq "/staff/topic-assignment"
+      expect(messages[1].data).to include({
+        type: "unassigned",
+        topic_id: topic.id,
+        post_id: false,
+        post_number: false,
+        assigned_type: "User",
+      })
+    end
+
     it 'does not update notification level if already watching' do
       TopicUser.change(moderator.id, topic.id,
         notification_level: TopicUser.notification_levels[:watching]
