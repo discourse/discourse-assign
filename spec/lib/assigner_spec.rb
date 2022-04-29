@@ -199,6 +199,25 @@ RSpec.describe Assigner do
 
     fab!(:admin) { Fabricate(:admin) }
 
+    it 'fails to assign when the assigned user and note is the same' do
+      assigner = described_class.new(topic, admin)
+      assigner.assign(moderator, note: "note me down")
+
+      assign = assigner.assign(moderator, note: "note me down")
+
+      expect(assign[:success]).to eq(false)
+      expect(assign[:reason]).to eq(:already_assigned)
+    end
+
+    it 'allows assign when the assigned user is same but note is different' do
+      assigner = described_class.new(topic, admin)
+      assigner.assign(moderator, note: "note me down")
+
+      assign = assigner.assign(moderator, note: "note me down again")
+
+      expect(assign[:success]).to eq(true)
+    end
+
     it 'fails to assign when the assigned user cannot view the pm' do
       assign = described_class.new(pm, admin).assign(moderator)
 
