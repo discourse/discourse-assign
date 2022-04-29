@@ -29,4 +29,10 @@ RSpec.describe TopicViewSerializer do
     expect(serializer.as_json[:topic_view][:assigned_to_group][:name]).to eq(assign_allowed_group.name)
     expect(serializer.as_json[:topic_view][:assigned_to_user]).to be nil
   end
+
+  it "includes note in serializer" do
+    Assigner.new(topic, user).assign(user, note: "note me down")
+    serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
+    expect(serializer.as_json[:topic_view][:assignment_note]).to eq("note me down")
+  end
 end

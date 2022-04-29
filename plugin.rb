@@ -484,6 +484,14 @@ after_initialize do
     (SiteSetting.assigns_public || scope.can_assign?) && object.topic.indirectly_assigned_to.present?
   end
 
+  add_to_serializer(:topic_view, :assignment_note, false) do
+    object.topic.assignment.note
+  end
+
+  add_to_serializer(:topic_view, :include_assignment_note?, false) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assignment.present?
+  end
+
   # SuggestedTopic serializer
   add_to_serializer(:suggested_topic, :assigned_to_user, false) do
     DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
@@ -629,6 +637,14 @@ after_initialize do
 
   add_to_serializer(:post, 'include_assigned_to_group?') do
     (SiteSetting.assigns_public || scope.can_assign?) && object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
+  end
+
+  add_to_serializer(:post, :assignment_note, false) do
+    object.assignment.note
+  end
+
+  add_to_serializer(:post, :include_assignment_note?, false) do
+    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment.present?
   end
 
   # CurrentUser serializer

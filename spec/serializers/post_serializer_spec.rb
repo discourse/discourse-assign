@@ -33,4 +33,10 @@ describe PostSerializer do
     expect(post[:assigned_to_group][:assign_icon]).to eq("group-plus")
     expect(post[:assigned_to_user]).to be(nil)
   end
+
+  it "includes note in serializer" do
+    Assigner.new(post, user).assign(user, note: "tomtom best")
+    serializer = PostSerializer.new(post, scope: guardian)
+    expect(serializer.as_json[:post][:assignment_note]).to eq("tomtom best")
+  end
 end

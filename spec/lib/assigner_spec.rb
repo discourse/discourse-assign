@@ -43,6 +43,12 @@ RSpec.describe Assigner do
         .to eq(TopicUser.notification_levels[:tracking])
     end
 
+    it "can assign with note" do
+      assigner.assign(moderator, note: "tomtom best mom")
+
+      expect(topic.assignment.note).to eq "tomtom best mom"
+    end
+
     it "publishes topic assignment after assign and unassign" do
       messages = MessageBus.track_publish('/staff/topic-assignment') do
         assigner = described_class.new(topic, moderator_2)
