@@ -430,4 +430,3 @@ class ::Assigner
       end
   end
 end
-
