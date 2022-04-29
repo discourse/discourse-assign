@@ -768,6 +768,8 @@ function initialize(api) {
             post = topic.postStream.posts.find((p) => p.id === data.post_id);
           }
           const target = post || topic;
+
+          target.set("assignment_note", null);
           if (data.assigned_type === "User") {
             target.set(
               "assigned_to_user_id",
