@@ -47,13 +47,17 @@ describe Search do
       result = Search.execute('in:assigned', guardian: guardian)
       serializer = GroupedSearchResultSerializer.new(result, scope: guardian)
       indirectly_assigned_to = serializer.as_json[:topics].find { |topic| topic[:id] == post5.topic.id }[:indirectly_assigned_to]
-      expect(indirectly_assigned_to).to eq(post5.id => { assigned_to: {
-        assign_icon: "user-plus",
-        assign_path: "/u/#{user.username}/activity/assigned",
-        avatar_template: user.avatar_template,
-        name: user.name,
-        username: user.username
-      }, post_number: post5.post_number })
+      expect(indirectly_assigned_to).to eq(post5.id => {
+        assigned_to: {
+          assign_icon: "user-plus",
+          assign_path: "/u/#{user.username}/activity/assigned",
+          avatar_template: user.avatar_template,
+          name: user.name,
+          username: user.username,
+        },
+        post_number: post5.post_number,
+        assignment_note: nil,
+      })
     end
   end
 end

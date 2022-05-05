@@ -52,7 +52,7 @@ RSpec.describe Assigner do
     it "publishes topic assignment after assign and unassign" do
       messages = MessageBus.track_publish('/staff/topic-assignment') do
         assigner = described_class.new(topic, moderator_2)
-        assigner.assign(moderator)
+        assigner.assign(moderator, note: "tomtom best mom")
         assigner.unassign
       end
 
@@ -64,6 +64,7 @@ RSpec.describe Assigner do
         post_number: false,
         assigned_type: "User",
         assigned_to: BasicUserSerializer.new(moderator, scope: Guardian.new, root: false).as_json,
+        assignment_note: "tomtom best mom"
       })
 
       expect(messages[1].channel).to eq "/staff/topic-assignment"
@@ -73,6 +74,7 @@ RSpec.describe Assigner do
         post_id: false,
         post_number: false,
         assigned_type: "User",
+        assignment_note: nil
       })
     end
 

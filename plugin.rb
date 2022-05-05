@@ -430,7 +430,7 @@ after_initialize do
   add_to_class(:topic, :indirectly_assigned_to) do
     return @indirectly_assigned_to if defined?(@indirectly_assigned_to)
     @indirectly_assigned_to = Assignment.where(topic_id: id, target_type: "Post", active: true).includes(:target).inject({}) do |acc, assignment|
-      acc[assignment.target_id] = { assigned_to: assignment.assigned_to, post_number: assignment.target.post_number } if assignment.target
+      acc[assignment.target_id] = { assigned_to: assignment.assigned_to, post_number: assignment.target.post_number, assignment_note: assignment.note } if assignment.target
       acc
     end
   end

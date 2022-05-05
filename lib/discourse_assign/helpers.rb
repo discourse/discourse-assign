@@ -30,12 +30,13 @@ module DiscourseAssign
     def self.build_indirectly_assigned_to(post_assignments, topic)
       post_assignments.map do |post_id, assigned_map|
         assigned_to = assigned_map[:assigned_to]
+        note = assigned_map[:assignment_note]
         post_number = assigned_map[:post_number]
 
         if (assigned_to.is_a?(User))
-          [post_id, { assigned_to: build_assigned_to_user(assigned_to, topic), post_number: post_number }]
+          [post_id, { assigned_to: build_assigned_to_user(assigned_to, topic), post_number: post_number, assignment_note: note }]
         elsif assigned_to.is_a?(Group)
-          [post_id, { assigned_to: build_assigned_to_group(assigned_to, topic), post_number: post_number }]
+          [post_id, { assigned_to: build_assigned_to_group(assigned_to, topic), post_number: post_number, assignment_note: note }]
         end
       end.to_h
     end

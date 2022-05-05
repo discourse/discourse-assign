@@ -209,6 +209,8 @@ class ::Assigner
     action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
     action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
 
+    silent = silent || no_assignee_change?(assign_to)
+
     @target.assignment&.destroy!
 
     assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id, note: note)
@@ -233,7 +235,8 @@ class ::Assigner
         post_id: post_target? && @target.id,
         post_number: post_target? && @target.post_number,
         assigned_type: type,
-        assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json
+        assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json,
+        assignment_note: note,
       },
       user_ids: allowed_user_ids
     )
@@ -385,7 +388,8 @@ class ::Assigner
           topic_id: topic.id,
           post_id: post_target? && @target.id,
           post_number: post_target? && @target.post_number,
-          assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group"
+          assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
+          assignment_note: nil,
         },
         user_ids: allowed_user_ids
       )
@@ -428,5 +432,9 @@ class ::Assigner
           assignment.assigned_to_type == type &&
           assignment&.note == note
       end
+  end
+
+  def no_assignee_change?(assignee)
+    @target.assignment&.assigned_to_id == assignee.id
   end
 end
