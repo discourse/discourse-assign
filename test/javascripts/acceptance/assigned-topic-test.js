@@ -27,7 +27,7 @@ function assignCurrentUserToTopic(needs) {
             name: "Developers",
           },
           post_number: 2,
-          assignment_note: "doodoloo",
+          assignment_note: '<script>alert("xss")</script>',
         },
       };
       return helper.response(topic);
@@ -107,7 +107,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     );
     assert.equal(
       query(".discourse-tags .assigned-to[href='/p/2'] span").title,
-      "doodoloo",
+      '<script>alert("xss")</script>',
       "shows indirect assign notes"
     );
     assert.ok(

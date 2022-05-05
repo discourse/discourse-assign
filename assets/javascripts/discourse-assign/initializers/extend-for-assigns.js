@@ -2,6 +2,7 @@ import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
+import { escapeExpression } from "discourse/lib/utilities";
 import { h } from "virtual-dom";
 import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
@@ -639,7 +640,7 @@ function initialize(api) {
               : "";
           return `<${tagName} class="assigned-to discourse-tag simple" ${href}>
         ${icon}
-        <span title="${note}">${name}</span>
+        <span title="${escapeExpression(note)}">${name}</span>
       </${tagName}>`;
         })
         .join("");
