@@ -37,6 +37,7 @@ end
 #  target_id           :integer          not null
 #  target_type         :string           not null
 #  active              :boolean          default(TRUE)
+#  note                :string
 #
 # Indexes
 #

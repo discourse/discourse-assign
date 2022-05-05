@@ -1,10 +1,10 @@
 import Controller, { inject as controller } from "@ember/controller";
+import { action } from "@ember/object";
+import { not, or } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { not, or } from "@ember/object/computed";
-import { isEmpty } from "@ember/utils";
-import { action } from "@ember/object";
 
 export default Controller.extend({
   topicBulkActions: controller(),
@@ -71,6 +71,7 @@ export default Controller.extend({
         group_name: this.get("model.group_name"),
         target_id: this.get("model.target.id"),
         target_type: this.get("model.targetType"),
+        note: this.get("model.note"),
       },
     })
       .then(() => {
@@ -98,10 +99,6 @@ export default Controller.extend({
         "model.group_name": null,
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
-    }
-
-    if (name) {
-      return this.assign();
     }
   },
 

@@ -116,6 +116,14 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
     end
 
+    it 'assigns topic with note to a user' do
+      put '/assign/assign.json', params: {
+        target_id: post.topic_id, target_type: 'Topic', username: user2.username, note: "do dis pls"
+      }
+
+      expect(post.topic.reload.assignment.note).to eq("do dis pls")
+    end
+
     it 'assigns topic to a group' do
       put '/assign/assign.json', params: {
         target_id: post.topic_id, target_type: 'Topic', group_name: assign_allowed_group.name

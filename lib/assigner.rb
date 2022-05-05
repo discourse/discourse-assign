@@ -180,7 +180,7 @@ class ::Assigner
     topic.posts.where(post_number: 1).first
   end
 
-  def forbidden_reasons(assign_to:, type:)
+  def forbidden_reasons(assign_to:, type:, note:)
     case
     when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
       topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
@@ -188,9 +188,9 @@ class ::Assigner
       topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-    when topic.assignment&.assigned_to_id == assign_to.id && topic.assignment&.assigned_to_type == type && topic.assignment.active == true
+    when topic_same_assignee_and_note(assign_to, type, note)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when @target.is_a?(Topic) && Assignment.where(topic_id: topic.id, target_type: "Post", active: true).any? { |assignment| assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type }
+    when post_same_assignee_and_note(assign_to, type, note)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
       :too_many_assigns_for_topic
@@ -199,10 +199,10 @@ class ::Assigner
     end
   end
 
-  def assign(assign_to, silent: false)
+  def assign(assign_to, note: nil, silent: false)
     type = assign_to.is_a?(User) ? "User" : "Group"
 
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type)
+    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type, note: note)
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
     action_code = {}
@@ -211,7 +211,7 @@ class ::Assigner
 
     @target.assignment&.destroy!
 
-    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id)
+    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id, note: note)
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
@@ -412,5 +412,21 @@ class ::Assigner
       end
     return "unassigned#{suffix}" if assignment.assigned_to_user?
     return "unassigned_group#{suffix}" if assignment.assigned_to_group?
+  end
+
+  def topic_same_assignee_and_note(assign_to, type, note)
+    topic.assignment&.assigned_to_id == assign_to.id &&
+      topic.assignment&.assigned_to_type == type &&
+      topic.assignment.active == true &&
+      topic.assignment&.note == note
+  end
+
+  def post_same_assignee_and_note(assign_to, type, note)
+    @target.is_a?(Topic) &&
+      Assignment.where(topic_id: topic.id, target_type: "Post", active: true).any? do |assignment|
+        assignment.assigned_to_id == assign_to.id &&
+          assignment.assigned_to_type == type &&
+          assignment&.note == note
+      end
   end
 end

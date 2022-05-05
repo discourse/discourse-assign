@@ -43,6 +43,12 @@ RSpec.describe Assigner do
         .to eq(TopicUser.notification_levels[:tracking])
     end
 
+    it "can assign with note" do
+      assigner.assign(moderator, note: "tomtom best mom")
+
+      expect(topic.assignment.note).to eq "tomtom best mom"
+    end
+
     it "publishes topic assignment after assign and unassign" do
       messages = MessageBus.track_publish('/staff/topic-assignment') do
         assigner = described_class.new(topic, moderator_2)
@@ -139,86 +145,107 @@ RSpec.describe Assigner do
       assigner.assign(assignee).fetch(:success)
     end
 
-    it "doesn't assign if the user has too many assigned topics" do
-      SiteSetting.max_assigned_topics = 1
-      another_post = Fabricate.build(:post)
-      assigner.assign(moderator)
-
-      second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
-
-      expect(second_assign[:success]).to eq(false)
-      expect(second_assign[:reason]).to eq(:too_many_assigns)
-    end
-
-    it "doesn't enforce the limit when self-assigning" do
-      SiteSetting.max_assigned_topics = 1
-      another_post = Fabricate(:post)
-      assigner.assign(moderator)
-
-      second_assign = described_class.new(another_post.topic, moderator).assign(moderator)
-
-      expect(second_assign[:success]).to eq(true)
-    end
-
-    it "doesn't count self-assigns when enforcing the limit" do
-      SiteSetting.max_assigned_topics = 1
-      another_post = Fabricate(:post)
-
-      first_assign = assigner.assign(moderator)
-
-      # reached limit so stop
-      second_assign = described_class.new(Fabricate(:topic), moderator_2).assign(moderator)
-
-      # self assign has a bypass
-      third_assign = described_class.new(another_post.topic, moderator).assign(moderator)
-
-      expect(first_assign[:success]).to eq(true)
-      expect(second_assign[:success]).to eq(false)
-      expect(third_assign[:success]).to eq(true)
-    end
-
-    it "doesn't count inactive assigns when enforcing the limit" do
-      SiteSetting.max_assigned_topics = 1
-      SiteSetting.unassign_on_close = true
-      another_post = Fabricate(:post)
-
-      first_assign = assigner.assign(moderator)
-      topic.update_status("closed", true, Discourse.system_user)
-
-      second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
-
-      expect(first_assign[:success]).to eq(true)
-      expect(second_assign[:success]).to eq(true)
-    end
-
     fab!(:admin) { Fabricate(:admin) }
 
-    it 'fails to assign when the assigned user cannot view the pm' do
-      assign = described_class.new(pm, admin).assign(moderator)
+    context "forbidden reasons" do
+      it "doesn't assign if the user has too many assigned topics" do
+        SiteSetting.max_assigned_topics = 1
+        another_post = Fabricate.build(:post)
+        assigner.assign(moderator)
 
-      expect(assign[:success]).to eq(false)
-      expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
-    end
+        second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
 
-    it 'fails to assign when not all group members has access to pm' do
-      assign = described_class.new(pm, admin).assign(moderator.groups.first)
+        expect(second_assign[:success]).to eq(false)
+        expect(second_assign[:reason]).to eq(:too_many_assigns)
+      end
 
-      expect(assign[:success]).to eq(false)
-      expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
-    end
+      it "doesn't enforce the limit when self-assigning" do
+        SiteSetting.max_assigned_topics = 1
+        another_post = Fabricate(:post)
+        assigner.assign(moderator)
 
-    it 'fails to assign when the assigned user cannot view the topic' do
-      assign = described_class.new(secure_topic, admin).assign(moderator)
+        second_assign = described_class.new(another_post.topic, moderator).assign(moderator)
 
-      expect(assign[:success]).to eq(false)
-      expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
-    end
+        expect(second_assign[:success]).to eq(true)
+      end
 
-    it 'fails to assign when the not all group members can view the topic' do
-      assign = described_class.new(secure_topic, admin).assign(moderator.groups.first)
+      it "doesn't count self-assigns when enforcing the limit" do
+        SiteSetting.max_assigned_topics = 1
+        another_post = Fabricate(:post)
 
-      expect(assign[:success]).to eq(false)
-      expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
+        first_assign = assigner.assign(moderator)
+
+        # reached limit so stop
+        second_assign = described_class.new(Fabricate(:topic), moderator_2).assign(moderator)
+
+        # self assign has a bypass
+        third_assign = described_class.new(another_post.topic, moderator).assign(moderator)
+
+        expect(first_assign[:success]).to eq(true)
+        expect(second_assign[:success]).to eq(false)
+        expect(third_assign[:success]).to eq(true)
+      end
+
+      it "doesn't count inactive assigns when enforcing the limit" do
+        SiteSetting.max_assigned_topics = 1
+        SiteSetting.unassign_on_close = true
+        another_post = Fabricate(:post)
+
+        first_assign = assigner.assign(moderator)
+        topic.update_status("closed", true, Discourse.system_user)
+
+        second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
+
+        expect(first_assign[:success]).to eq(true)
+        expect(second_assign[:success]).to eq(true)
+      end
+
+      it 'fails to assign when the assigned user and note is the same' do
+        assigner = described_class.new(topic, admin)
+        assigner.assign(moderator, note: "note me down")
+
+        assign = assigner.assign(moderator, note: "note me down")
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:already_assigned)
+      end
+
+      it 'allows assign when the assigned user is same but note is different' do
+        assigner = described_class.new(topic, admin)
+        assigner.assign(moderator, note: "note me down")
+
+        assign = assigner.assign(moderator, note: "note me down again")
+
+        expect(assign[:success]).to eq(true)
+      end
+
+      it 'fails to assign when the assigned user cannot view the pm' do
+        assign = described_class.new(pm, admin).assign(moderator)
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
+      end
+
+      it 'fails to assign when not all group members has access to pm' do
+        assign = described_class.new(pm, admin).assign(moderator.groups.first)
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
+      end
+
+      it 'fails to assign when the assigned user cannot view the topic' do
+        assign = described_class.new(secure_topic, admin).assign(moderator)
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
+      end
+
+      it 'fails to assign when the not all group members can view the topic' do
+        assign = described_class.new(secure_topic, admin).assign(moderator.groups.first)
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
+      end
     end
 
     it "assigns the PM to the moderator when it's included in the list of allowed users" do

@@ -53,6 +53,7 @@ en:
         reassign_title: "Reassign Topic"
         description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
+        note_label: Note
       assign_post_modal:
         title: "Assign Post"
         description: "Enter the name of the user you'd like to assign this post"
