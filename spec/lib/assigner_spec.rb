@@ -49,6 +49,11 @@ RSpec.describe Assigner do
       expect(topic.assignment.note).to eq "tomtom best mom"
     end
 
+    it "assign with note adds moderator post with note" do
+      expect { assigner.assign(moderator, note: "tomtom best mom") }.to change { topic.posts.count }.by(1)
+      expect(topic.posts.last.raw).to eq "tomtom best mom"
+    end
+
     it "publishes topic assignment after assign and unassign" do
       messages = MessageBus.track_publish('/staff/topic-assignment') do
         assigner = described_class.new(topic, moderator_2)

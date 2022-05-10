@@ -258,7 +258,7 @@ class ::Assigner
 
       topic.add_moderator_post(
         @assigned_by,
-        nil,
+        note,
         bump: false,
         post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
         action_code: moderator_post_assign_action_code(assignment, action_code),
