@@ -47,7 +47,6 @@ es:
         help: "Anular la asignación de %{username} de la publicación"
       reassign:
         title: "Reasignar"
-        title_w_ellipsis: "Reasignar a..."
         to_self: "Reasignar a mí"
         to_self_help: "Reasignar tema a mí"
         help: "Reasignar tema a un usuario distinto"

@@ -47,7 +47,6 @@ fi:
         help: "Peru käyttäjän %{username} osoitus viestistä"
       reassign:
         title: "Osoita uudelleen"
-        title_w_ellipsis: "Osoita uudelleen käyttäjälle..."
         to_self: "Osoita uudelleen minulle"
         to_self_help: "Osoita ketju uudelleen minulle"
         help: "Osoita ketju uudelleen eri käyttäjälle"

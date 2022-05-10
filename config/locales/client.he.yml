@@ -47,7 +47,6 @@ he:
         help: "לבטל את הקצאת %{username} מהפוסט"
       reassign:
         title: "הקצאה מחדש"
-        title_w_ellipsis: "הקצאה מחדש לטובת…"
         to_self: "הקצאה מחדש אלי"
         to_self_help: "הקצאת נושא אלי מחדש"
         help: "הקצאת נושא מחדש למשתמש אחר"
@@ -59,6 +58,7 @@ he:
         reassign_title: "הקצאת נושא מחדש"
         description: "נא להקליד את שם המשתמש להקצאת הנושא"
         assign: "הקצאה"
+        note_label: הערה
       assign_post_modal:
         title: "הקצאת פוסט"
         description: "נא להקליד את שם המשתמש להקצאת הפוסט"

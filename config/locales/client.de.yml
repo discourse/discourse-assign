@@ -47,7 +47,6 @@ de:
         help: "Zuordnung von %{username} zu Beitrag aufheben"
       reassign:
         title: "Neu zuordnen"
-        title_w_ellipsis: "Neu zuordnen zu …"
         to_self: "Mir neu zuordnen"
         to_self_help: "Thema mir neu zuordnen"
         help: "Thema einem anderen Benutzer neu zuordnen"

@@ -47,7 +47,6 @@ fr:
         help: "Annuler l'attribution de %{username} au message"
       reassign:
         title: "Réattribuer"
-        title_w_ellipsis: "Réattribuer à…"
         to_self: "Réattribuer à moi"
         to_self_help: "Me réattribuer le sujet"
         help: "Réattribuer le sujet à un autre utilisateur"
