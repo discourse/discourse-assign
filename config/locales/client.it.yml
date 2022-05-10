@@ -47,7 +47,6 @@ it:
         help: "Annulla assegnazione di %{username} da messaggio"
       reassign:
         title: "Riassegna"
-        title_w_ellipsis: "Riassegna a..."
         to_self: "Riassegna a me"
         to_self_help: "Riassegna argomento a me"
         help: "Riassegna argomento a un altro utente"

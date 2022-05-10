@@ -47,7 +47,6 @@ zh_CN:
         help: "从帖子中取消分配 %{username}"
       reassign:
         title: "重新分配"
-        title_w_ellipsis: "重新分配给…"
         to_self: "重新分配给我"
         to_self_help: "将话题重新分配给我"
         help: "将话题重新分配给其他用户"

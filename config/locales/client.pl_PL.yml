@@ -47,7 +47,6 @@ pl_PL:
         help: "Cofnij przypisanie %{username} z posta"
       reassign:
         title: "Przypisz ponownie"
-        title_w_ellipsis: "Przypisz ponownie do..."
         to_self: "Przypisz ponownie do mnie"
         to_self_help: "Przypisz ponownie temat do mnie"
         help: "Przypisz ponownie temat do innego użytkownika"

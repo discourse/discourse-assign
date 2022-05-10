@@ -47,7 +47,6 @@ sv:
         help: "Ta bort tilldelning %{username} från inlägg"
       reassign:
         title: "Tilldela om"
-        title_w_ellipsis: "Omtilldela till..."
         to_self: "Omtilldela till mig"
         to_self_help: "Omtilldela ämne till mig"
         help: "Omtilldela ämne till en annan användare"

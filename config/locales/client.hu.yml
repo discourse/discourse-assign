@@ -47,7 +47,6 @@ hu:
         help: "%{username} elvétele a bejegyzéstől"
       reassign:
         title: "Átadás"
-        title_w_ellipsis: "Átadás…"
         to_self: "Átvétel"
         to_self_help: "Téma átvétele"
         help: "Téma átadása egy másik felhasználónak"

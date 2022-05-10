@@ -47,7 +47,6 @@ ja:
         help: "投稿から %{username} の割り当てを解除する"
       reassign:
         title: "再割り当てする"
-        title_w_ellipsis: "再割り当て先..."
         to_self: "自分に再割り当てする"
         to_self_help: "トピックを自分に再割り当てする"
         help: "トピックを別のユーザーに再割り当てする"
