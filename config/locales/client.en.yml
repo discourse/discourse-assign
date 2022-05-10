@@ -41,7 +41,7 @@ en:
         help: "Unassign %{username} from Post"
       reassign:
         title: "Reassign"
-        title_w_ellipsis: "Reassign to..."
+        title_w_ellipsis: "Edit assignment..."
         to_self: "Reassign to me"
         to_self_help: "Reassign Topic to me"
         help: "Reassign Topic to a different user"
