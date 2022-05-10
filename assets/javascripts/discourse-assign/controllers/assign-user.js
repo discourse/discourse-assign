@@ -100,6 +100,10 @@ export default Controller.extend({
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
     }
+
+    if (name) {
+      return this.assign();
+    }
   },
 
   @action
