@@ -19,6 +19,9 @@ export default Controller.extend({
     this.allowedGroups = [];
 
     ajax("/assign/suggestions").then((data) => {
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
       this.set("assignSuggestions", data.suggestions);
       this.set("allowedGroups", data.assign_allowed_on_groups);
       this.set("allowedGroupsForAssignment", data.assign_allowed_for_groups);
@@ -99,6 +102,10 @@ export default Controller.extend({
         "model.group_name": null,
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
+    }
+
+    if (name) {
+      return this.assign();
     }
   },
 
