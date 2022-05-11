@@ -29,7 +29,7 @@ RSpec.describe Jobs::AssignNotification do
 
       it 'sends notification alert' do
         messages = MessageBus.track_publish("/notification-alert/#{user2.id}") do
-          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, silent: false })
+          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, skip_small_action_post: false })
         end
 
         expect(messages.length).to eq(1)
@@ -41,7 +41,7 @@ RSpec.describe Jobs::AssignNotification do
         assign_allowed_group.add(user)
 
         assert_publish_topic_state(pm, user) do
-          described_class.new.execute({ topic_id: pm.id, post_id: pm_post.id, assigned_to_id: pm.allowed_users.first.id, assigned_to_type: 'User', assigned_by_id: user1.id, silent: false })
+          described_class.new.execute({ topic_id: pm.id, post_id: pm_post.id, assigned_to_id: pm.allowed_users.first.id, assigned_to_type: 'User', assigned_by_id: user1.id, skip_small_action_post: false })
         end
       end
 
@@ -58,7 +58,7 @@ RSpec.describe Jobs::AssignNotification do
             topic_title: topic.title
           }.to_json
         )
-        described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, silent: false })
+        described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, skip_small_action_post: false })
       end
     end
 
@@ -76,19 +76,19 @@ RSpec.describe Jobs::AssignNotification do
 
       it 'sends notification alert to all group members' do
         messages = MessageBus.track_publish("/notification-alert/#{user2.id}") do
-          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
+          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, skip_small_action_post: false })
         end
         expect(messages.length).to eq(1)
         expect(messages.first.data[:excerpt]).to eq("assigned to Developers the topic 'Basic topic title'")
 
         messages = MessageBus.track_publish("/notification-alert/#{user3.id}") do
-          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
+          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, skip_small_action_post: false })
         end
         expect(messages.length).to eq(1)
         expect(messages.first.data[:excerpt]).to eq("assigned to Developers the topic 'Basic topic title'")
 
         messages = MessageBus.track_publish("/notification-alert/#{user4.id}") do
-          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
+          described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, skip_small_action_post: false })
         end
         expect(messages.length).to eq(0)
       end
@@ -109,7 +109,7 @@ RSpec.describe Jobs::AssignNotification do
           )
         end
 
-        described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
+        described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, skip_small_action_post: false })
       end
     end
   end

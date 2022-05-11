@@ -27,7 +27,7 @@ RSpec.describe Jobs::UnassignNotification do
 
     context 'User' do
       it 'deletes notifications' do
-        Jobs::AssignNotification.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, silent: false })
+        Jobs::AssignNotification.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User', assigned_by_id: user1.id, skip_small_action_post: false })
 
         expect {
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: user2.id, assigned_to_type: 'User' })
@@ -55,7 +55,7 @@ RSpec.describe Jobs::UnassignNotification do
       end
 
       it 'deletes notifications' do
-        Jobs::AssignNotification.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, silent: false })
+        Jobs::AssignNotification.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group', assigned_by_id: user1.id, skip_small_action_post: false })
 
         expect {
           described_class.new.execute({ topic_id: topic.id, post_id: post.id, assigned_to_id: group.id, assigned_to_type: 'Group' })
