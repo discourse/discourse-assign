@@ -147,8 +147,6 @@ RSpec.describe Assigner do
       assigner.assign(assignee).fetch(:success)
     end
 
-    fab!(:admin) { Fabricate(:admin) }
-
     context "forbidden reasons" do
       it "doesn't assign if the user has too many assigned topics" do
         SiteSetting.max_assigned_topics = 1
@@ -203,7 +201,7 @@ RSpec.describe Assigner do
       end
 
       it 'fails to assign when the assigned user and note is the same' do
-        assigner = described_class.new(topic, admin)
+        assigner = described_class.new(topic, moderator_2)
         assigner.assign(moderator, note: "note me down")
 
         assign = assigner.assign(moderator, note: "note me down")
@@ -213,7 +211,7 @@ RSpec.describe Assigner do
       end
 
       it 'allows assign when the assigned user is same but note is different' do
-        assigner = described_class.new(topic, admin)
+        assigner = described_class.new(topic, moderator_2)
         assigner.assign(moderator, note: "note me down")
 
         assign = assigner.assign(moderator, note: "note me down again")
@@ -222,28 +220,28 @@ RSpec.describe Assigner do
       end
 
       it 'fails to assign when the assigned user cannot view the pm' do
-        assign = described_class.new(pm, admin).assign(moderator)
+        assign = described_class.new(pm, moderator_2).assign(moderator)
 
         expect(assign[:success]).to eq(false)
         expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
       end
 
       it 'fails to assign when not all group members has access to pm' do
-        assign = described_class.new(pm, admin).assign(moderator.groups.first)
+        assign = described_class.new(pm, moderator_2).assign(moderator.groups.first)
 
         expect(assign[:success]).to eq(false)
         expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
       end
 
       it 'fails to assign when the assigned user cannot view the topic' do
-        assign = described_class.new(secure_topic, admin).assign(moderator)
+        assign = described_class.new(secure_topic, moderator_2).assign(moderator)
 
         expect(assign[:success]).to eq(false)
         expect(assign[:reason]).to eq(:forbidden_assignee_cant_see_topic)
       end
 
       it 'fails to assign when the not all group members can view the topic' do
-        assign = described_class.new(secure_topic, admin).assign(moderator.groups.first)
+        assign = described_class.new(secure_topic, moderator_2).assign(moderator.groups.first)
 
         expect(assign[:success]).to eq(false)
         expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
@@ -253,7 +251,7 @@ RSpec.describe Assigner do
     it "assigns the PM to the moderator when it's included in the list of allowed users" do
       pm.allowed_users << moderator
 
-      assign = described_class.new(pm, admin).assign(moderator)
+      assign = described_class.new(pm, moderator_2).assign(moderator)
 
       expect(assign[:success]).to eq(true)
     end
@@ -261,7 +259,7 @@ RSpec.describe Assigner do
     it "assigns the PM to the moderator when it's a member of an allowed group" do
       pm.allowed_groups << assign_allowed_group
 
-      assign = described_class.new(pm, admin).assign(moderator)
+      assign = described_class.new(pm, moderator_2).assign(moderator)
 
       expect(assign[:success]).to eq(true)
     end

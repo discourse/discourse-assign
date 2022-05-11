@@ -69,9 +69,9 @@ class ::Assigner
       if is_last_staff_post?(post)
         assigner = new(post.topic, post.user)
         if assign_other
-          assigner.assign(assign_other, silent: true)
+          assigner.assign(assign_other, skip_small_action_post: true)
         elsif assign_self
-          assigner.assign(assign_self, silent: true)
+          assigner.assign(assign_self, skip_small_action_post: true)
         end
       end
     end
@@ -199,47 +199,33 @@ class ::Assigner
     end
   end
 
-  def assign(assign_to, note: nil, silent: false)
-    type = assign_to.is_a?(User) ? "User" : "Group"
+  def assign(assign_to, note: nil, skip_small_action_post: false)
+    assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: type, note: note)
+    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note)
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
     action_code = {}
     action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
     action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
 
-    silent = silent || no_assignee_change?(assign_to)
+    skip_small_action_post = skip_small_action_post || no_assignee_change?(assign_to)
 
     @target.assignment&.destroy!
 
-    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id, note: note)
+    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: assigned_to_type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id, note: note)
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
-
-    serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
 
     Jobs.enqueue(:assign_notification,
                  topic_id: topic.id,
                  post_id: topic_target? ? first_post.id : @target.id,
                  assigned_to_id: assign_to.id,
-                 assigned_to_type: type,
+                 assigned_to_type: assigned_to_type,
                  assigned_by_id: @assigned_by.id,
-                 silent: silent)
+                 skip_small_action_post: skip_small_action_post)
 
-    MessageBus.publish(
-      "/staff/topic-assignment",
-      {
-        type: "assigned",
-        topic_id: topic.id,
-        post_id: post_target? && @target.id,
-        post_number: post_target? && @target.post_number,
-        assigned_type: type,
-        assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json,
-        assignment_note: note,
-      },
-      user_ids: allowed_user_ids
-    )
+    publish_assignment(assignment, assign_to, note)
 
     if assignment.assigned_to_user?
       if !TopicUser.exists?(
@@ -262,7 +248,8 @@ class ::Assigner
         end
       end
     end
-    if !silent
+
+    unless skip_small_action_post
       custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
 
       if post_target?
@@ -281,9 +268,9 @@ class ::Assigner
 
     # Create a webhook event
     if WebHook.active_web_hooks(:assign).exists?
-      type = :assigned
+      assigned_to_type = :assigned
       payload = {
-        type: type,
+        type: assigned_to_type,
         topic_id: topic.id,
         topic_title: topic.title,
         assigned_by_id: @assigned_by.id,
@@ -300,7 +287,7 @@ class ::Assigner
           assigned_to_group_name: assign_to.name,
         })
       end
-      WebHook.enqueue_assign_hooks(type, payload.to_json)
+      WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
     end
 
     { success: true }
@@ -397,6 +384,23 @@ class ::Assigner
   end
 
   private
+
+  def publish_assignment(assignment, assign_to, note)
+    serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
+    MessageBus.publish(
+      "/staff/topic-assignment",
+      {
+        type: "assigned",
+        topic_id: topic.id,
+        post_id: post_target? && @target.id,
+        post_number: post_target? && @target.post_number,
+        assigned_type: assignment.assigned_to_type,
+        assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json,
+        assignment_note: note,
+      },
+      user_ids: allowed_user_ids
+    )
+  end
 
   def moderator_post_assign_action_code(assignment, action_code)
     if assignment.target.is_a?(Post)
