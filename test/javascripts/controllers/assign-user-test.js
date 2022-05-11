@@ -2,14 +2,12 @@ import EmberObject from "@ember/object";
 import pretender from "discourse/tests/helpers/create-pretender";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
+import { Promise } from "rsvp";
 
-discourseModule("Unit | Controller | assign-user", function (hooks) {
-  hooks.beforeEach(function () {});
-
+discourseModule("Unit | Controller | assign-user", function () {
   test("doesn't set suggestions and fails gracefully if controller is destroyed", function (assert) {
     let resolveSuggestions;
     pretender.get("/assign/suggestions", () => {
-      // eslint-disable-next-line no-restricted-globals
       return new Promise((resolve) => {
         resolveSuggestions = resolve;
       });
