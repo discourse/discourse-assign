@@ -8,7 +8,7 @@ module Jobs
       raise Discourse::InvalidParameters.new(:assigned_to_id) if args[:assigned_to_id].nil?
       raise Discourse::InvalidParameters.new(:assigned_to_type) if args[:assigned_to_type].nil?
       raise Discourse::InvalidParameters.new(:assigned_by_id) if args[:assigned_by_id].nil?
-      raise Discourse::InvalidParameters.new(:silent) if args[:silent].nil?
+      raise Discourse::InvalidParameters.new(:skip_small_action_post) if args[:skip_small_action_post].nil?
 
       topic = Topic.find(args[:topic_id])
       post = Post.find(args[:post_id])
@@ -37,7 +37,7 @@ module Jobs
           )
         )
 
-        next if args[:silent]
+        next if args[:skip_small_action_post]
         Notification.create!(
           notification_type: Notification.types[:assigned] || Notification.types[:custom],
           user_id: user.id,

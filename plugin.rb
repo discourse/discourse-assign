@@ -816,7 +816,7 @@ after_initialize do
                    assigned_to_id: assignment.assigned_to_id,
                    assigned_to_type: assignment.assigned_to_type,
                    assigned_by_id: assignment.assigned_by_user_id,
-                   silent: true)
+                   skip_small_action_post: true)
     end
   end
 
