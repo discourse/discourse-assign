@@ -15,6 +15,7 @@ en:
       unassigned_group_from_post: "unassigned %{who} from <a href='%{path}'>post</a> %{when}"
       reassigned: "Reassigned %{who} %{when}"
       reassigned_group: "Reassigned %{who} %{when}"
+      note_change: "changed assignment note for %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"

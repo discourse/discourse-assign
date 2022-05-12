@@ -199,11 +199,33 @@ class ::Assigner
     end
   end
 
+  def update_note(assign_to, note, skip_small_action_post: false)
+    @target.assignment.update!(note: note)
+
+    queue_notification(assign_to, skip_small_action_post)
+
+    assignment = @target.assignment
+    publish_assignment(assignment, assign_to, note)
+
+    # email is skipped, for now
+
+    unless skip_small_action_post
+      action_code = "note_change"
+      add_small_action_post(action_code, assign_to, note)
+    end
+
+    { success: true }
+  end
+
   def assign(assign_to, note: nil, skip_small_action_post: false)
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
     forbidden_reason = forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note)
     return { success: false, reason: forbidden_reason } if forbidden_reason
+
+    if no_assignee_change?(assign_to)
+      return update_note(assign_to, note, skip_small_action_post: skip_small_action_post)
+    end
 
     action_code = {}
     action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
@@ -217,13 +239,7 @@ class ::Assigner
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
-    Jobs.enqueue(:assign_notification,
-                 topic_id: topic.id,
-                 post_id: topic_target? ? first_post.id : @target.id,
-                 assigned_to_id: assign_to.id,
-                 assigned_to_type: assigned_to_type,
-                 assigned_by_id: @assigned_by.id,
-                 skip_small_action_post: skip_small_action_post)
+    queue_notification(assign_to, skip_small_action_post)
 
     publish_assignment(assignment, assign_to, note)
 
@@ -250,20 +266,8 @@ class ::Assigner
     end
 
     unless skip_small_action_post
-      custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
-
-      if post_target?
-        custom_fields.merge!({ "action_code_path" => "/p/#{@target.id}", "action_code_post_id" => @target.id })
-      end
-
-      topic.add_moderator_post(
-        @assigned_by,
-        note,
-        bump: false,
-        post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
-        action_code: moderator_post_assign_action_code(assignment, action_code),
-        custom_fields: custom_fields
-      )
+      post_action_code = moderator_post_assign_action_code(assignment, action_code)
+      add_small_action_post(post_action_code, assign_to, note)
     end
 
     # Create a webhook event
@@ -384,6 +388,33 @@ class ::Assigner
   end
 
   private
+
+  def queue_notification(assign_to, skip_small_action_post)
+    Jobs.enqueue(:assign_notification,
+      topic_id: topic.id,
+      post_id: topic_target? ? first_post.id : @target.id,
+      assigned_to_id: assign_to.id,
+      assigned_to_type: assign_to.is_a?(User) ? "User" : "Group",
+      assigned_by_id: @assigned_by.id,
+      skip_small_action_post: skip_small_action_post)
+  end
+
+  def add_small_action_post(action_code, assign_to, note)
+    custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
+
+    if post_target?
+      custom_fields.merge!({ "action_code_path" => "/p/#{@target.id}", "action_code_post_id" => @target.id })
+    end
+
+    topic.add_moderator_post(
+      @assigned_by,
+      note,
+      bump: false,
+      post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
+      action_code: action_code,
+      custom_fields: custom_fields
+    )
+  end
 
   def publish_assignment(assignment, assign_to, note)
     serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
