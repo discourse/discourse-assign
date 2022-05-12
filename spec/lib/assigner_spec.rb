@@ -49,6 +49,11 @@ RSpec.describe Assigner do
       expect(topic.assignment.note).to eq "tomtom best mom"
     end
 
+    it "assign with note adds moderator post with note" do
+      expect { assigner.assign(moderator, note: "tomtom best mom") }.to change { topic.posts.count }.by(1)
+      expect(topic.posts.last.raw).to eq "tomtom best mom"
+    end
+
     it "publishes topic assignment after assign and unassign" do
       messages = MessageBus.track_publish('/staff/topic-assignment') do
         assigner = described_class.new(topic, moderator_2)
@@ -268,6 +273,61 @@ RSpec.describe Assigner do
       expect do
         described_class.new(secure_category, moderator).assign(moderator)
       end.to raise_error(Discourse::InvalidAccess)
+    end
+
+    describe "updating notes" do
+      it "does not recreate assignment if no assignee change" do
+        assigner.assign(moderator)
+
+        expect do
+          assigner.assign(moderator, note: "new notes!")
+        end.to_not change { Assignment.last.id }
+      end
+
+      it "updates notes" do
+        assigner.assign(moderator)
+
+        assigner.assign(moderator, note: "new notes!")
+
+        expect(Assignment.last.note).to eq "new notes!"
+      end
+
+      it "queues notification" do
+        assigner.assign(moderator)
+
+        expect_enqueued_with(job: :assign_notification) do
+          assigner.assign(moderator, note: "new notes!")
+        end
+      end
+
+      it "publishes topic assignment with note" do
+        assigner.assign(moderator)
+
+        messages = MessageBus.track_publish('/staff/topic-assignment') do
+          assigner = described_class.new(topic, moderator_2)
+          assigner.assign(moderator, note: "new notes!")
+        end
+
+        expect(messages[0].channel).to eq "/staff/topic-assignment"
+        expect(messages[0].data).to include({
+          type: "assigned",
+          topic_id: topic.id,
+          post_id: false,
+          post_number: false,
+          assigned_type: "User",
+          assigned_to: BasicUserSerializer.new(moderator, scope: Guardian.new, root: false).as_json,
+          assignment_note: "new notes!"
+        })
+      end
+
+      it "adds a note_change small action post" do
+        assigner.assign(moderator)
+
+        assigner.assign(moderator, note: "new notes!")
+
+        small_action_post = topic.posts.last
+        expect(small_action_post.action_code).to eq "note_change"
+      end
     end
   end
 
