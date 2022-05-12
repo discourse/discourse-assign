@@ -90,6 +90,24 @@ export default Controller.extend({
       return;
     }
 
+    this.setGroupOrUser(name);
+
+    if (name) {
+      return this.assign();
+    }
+  },
+
+  @action
+  assignUsername(selected) {
+    if (this.isBulkAction) {
+      this.bulkAction(selected.firstObject);
+      return;
+    }
+
+    this.setGroupOrUser(selected.firstObject);
+  },
+
+  setGroupOrUser(name) {
     if (this.allowedGroupsForAssignment.includes(name)) {
       this.setProperties({
         "model.username": null,
@@ -103,14 +121,5 @@ export default Controller.extend({
         "model.allowedGroups": this.taskActions.allowedGroups,
       });
     }
-
-    if (name) {
-      return this.assign();
-    }
-  },
-
-  @action
-  assignUsername(selected) {
-    this.assignUser(selected.firstObject);
   },
 });
