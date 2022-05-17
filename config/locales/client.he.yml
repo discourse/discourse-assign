@@ -21,6 +21,7 @@ he:
       unassigned_group_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}'>פוסט</a> ב־%{when}"
       reassigned: "הוקצה מחדש לטובת %{who} %{when}"
       reassigned_group: "הוקצה מחדש לטובת %{who} %{when}"
+      note_change: "הערת ההקצאה של %{who} נערכה ב־%{when}"
     discourse_assign:
       add_unassigned_filter: "הוספת מסנן ‚ללא הקצאה’ לקטגוריה"
       cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
@@ -47,6 +48,7 @@ he:
         help: "לבטל את הקצאת %{username} מהפוסט"
       reassign:
         title: "הקצאה מחדש"
+        title_w_ellipsis: "עריכת הקצאה…"
         to_self: "הקצאה מחדש אלי"
         to_self_help: "הקצאת נושא אלי מחדש"
         help: "הקצאת נושא מחדש למשתמש אחר"
