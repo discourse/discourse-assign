@@ -21,6 +21,7 @@ ru:
       unassigned_group_from_post: "снял(а) ответственного %{who} с <a href='%{path}'>этого сообщения</a> %{when}"
       reassigned: "Переназначено: %{who} %{when}"
       reassigned_group: "Переназначено: %{who} %{when}"
+      note_change: "Изменено примечание назначения для %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Добавить в раздел фильтр 'Неназначенные'"
       cant_act: "Вы не можете работать с жалобами, назначенными другому сотруднику"
@@ -47,6 +48,7 @@ ru:
         help: "Убрать пользователя %{username} из ответственных за сообщение"
       reassign:
         title: "Переназначить"
+        title_w_ellipsis: "Изменить назначение..."
         to_self: "Переназначить мне"
         to_self_help: "Переназначить тему мне"
         help: "Переназначить тему другому пользователю"
