@@ -188,24 +188,14 @@ after_initialize do
 
   BookmarkQuery.on_preload do |bookmarks, bookmark_query|
     if SiteSetting.assign_enabled?
-      if SiteSetting.use_polymorphic_bookmarks
-        topics = Bookmark.select_type(bookmarks, "Topic").map(&:bookmarkable).concat(
-          Bookmark.select_type(bookmarks, "Post").map { |bm| bm.bookmarkable.topic }
-        ).uniq
-        assignments = Assignment.strict_loading.where(topic_id: topics).includes(:assigned_to).index_by(&:topic_id)
+      topics = Bookmark.select_type(bookmarks, "Topic").map(&:bookmarkable).concat(
+        Bookmark.select_type(bookmarks, "Post").map { |bm| bm.bookmarkable.topic }
+      ).uniq
+      assignments = Assignment.strict_loading.where(topic_id: topics).includes(:assigned_to).index_by(&:topic_id)
 
-        topics.each do |topic|
-          assigned_to = assignments[topic.id]&.assigned_to
-          topic.preload_assigned_to(assigned_to)
-        end
-      else
-        topics = bookmarks.map(&:topic)
-        assignments = Assignment.strict_loading.where(topic_id: topics).includes(:assigned_to).index_by(&:topic_id)
-
-        topics.each do |topic|
-          assigned_to = assignments[topic.id]&.assigned_to
-          topic.preload_assigned_to(assigned_to)
-        end
+      topics.each do |topic|
+        assigned_to = assignments[topic.id]&.assigned_to
+        topic.preload_assigned_to(assigned_to)
       end
     end
   end
@@ -601,52 +591,32 @@ after_initialize do
 
   register_permitted_bulk_action_parameter :username
 
-  # UserBookmarkSerializer
-  add_to_serializer(:user_bookmark, :assigned_to_user, false) do
-    BasicUserSerializer.new(topic.assigned_to, scope: scope, root: false).as_json
+  add_to_class(:user_bookmark_base_serializer, :assigned_to) do
+    @assigned_to ||= bookmarkable_type == "Topic" ? bookmarkable.assigned_to : bookmarkable.topic.assigned_to
   end
 
-  add_to_serializer(:user_bookmark, 'include_assigned_to_user?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(User)
+  add_to_class(:user_bookmark_base_serializer, :can_have_assignment?) do
+    ["Post", "Topic"].include?(bookmarkable_type)
   end
 
-  add_to_serializer(:user_bookmark, :assigned_to_group, false) do
-    BasicGroupSerializer.new(topic.assigned_to, scope: scope, root: false).as_json
+  add_to_serializer(:user_bookmark_base, :assigned_to_user, false) do
+    return if !can_have_assignment?
+    BasicUserSerializer.new(assigned_to, scope: scope, root: false).as_json
   end
 
-  add_to_serializer(:user_bookmark, 'include_assigned_to_group?') do
-    (SiteSetting.assigns_public || scope.can_assign?) && topic.assigned_to&.is_a?(Group)
+  add_to_serializer(:user_bookmark_base, 'include_assigned_to_user?') do
+    return false if !can_have_assignment?
+    (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(User)
   end
 
-  if SiteSetting.use_polymorphic_bookmarks
-    # UserBookmarkBaseSerializer
-    add_to_class(:user_bookmark_base_serializer, :assigned_to) do
-      @assigned_to ||= bookmarkable_type == "Topic" ? bookmarkable.assigned_to : bookmarkable.topic.assigned_to
-    end
+  add_to_serializer(:user_bookmark_base, :assigned_to_group, false) do
+    return if !can_have_assignment?
+    BasicGroupSerializer.new(assigned_to, scope: scope, root: false).as_json
+  end
 
-    add_to_class(:user_bookmark_base_serializer, :can_have_assignment?) do
-      ["Post", "Topic"].include?(bookmarkable_type)
-    end
-
-    add_to_serializer(:user_bookmark_base, :assigned_to_user, false) do
-      return if !can_have_assignment?
-      BasicUserSerializer.new(assigned_to, scope: scope, root: false).as_json
-    end
-
-    add_to_serializer(:user_bookmark_base, 'include_assigned_to_user?') do
-      return false if !can_have_assignment?
-      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(User)
-    end
-
-    add_to_serializer(:user_bookmark_base, :assigned_to_group, false) do
-      return if !can_have_assignment?
-      BasicGroupSerializer.new(assigned_to, scope: scope, root: false).as_json
-    end
-
-    add_to_serializer(:user_bookmark_base, 'include_assigned_to_group?') do
-      return false if !can_have_assignment?
-      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(Group)
-    end
+  add_to_serializer(:user_bookmark_base, 'include_assigned_to_group?') do
+    return false if !can_have_assignment?
+    (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(Group)
   end
 
   add_to_serializer(:basic_user, :assign_icon) do
