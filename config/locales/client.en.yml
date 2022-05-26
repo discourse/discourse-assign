@@ -135,3 +135,6 @@ en:
         assigned: "%{username} assigned you"
       titles:
         assigned: "Assigned"
+    sidebar:
+      assigned_link_title: "Topics assigned to you"
+      assigned_link_text: "Assigned"
