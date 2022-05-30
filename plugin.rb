@@ -155,10 +155,20 @@ after_initialize do
 
   add_class_method(:user, :assign_allowed) do
     allowed_groups = SiteSetting.assign_allowed_on_groups.split('|')
-    where("users.admin OR users.id IN (
-      SELECT user_id FROM group_users
-      INNER JOIN groups ON group_users.group_id = groups.id
-      WHERE groups.id IN (?)
+
+    # The UNION against admin users is necessary because bot users like the system user are given the admin status but
+    # are not added into the admin group.
+    where("users.id IN (
+      SELECT
+        user_id
+      FROM group_users
+      WHERE group_users.group_id IN (?)
+
+      UNION
+
+      SELECT id
+      FROM users
+      WHERE users.admin
     )", allowed_groups)
   end
 
