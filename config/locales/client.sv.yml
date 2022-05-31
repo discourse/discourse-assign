@@ -21,6 +21,7 @@ sv:
       unassigned_group_from_post: "otilldelat %{who} från <a href='%{path}'>inlägg</a> %{when}"
       reassigned: "Omtilldelad %{who} %{when}"
       reassigned_group: "Omtilldelad %{who} %{when}"
+      note_change: "ändrade tilldelningsanteckning för %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Lägg till 'otilldelat' som en filterkategori"
       cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
@@ -47,6 +48,7 @@ sv:
         help: "Ta bort tilldelning %{username} från inlägg"
       reassign:
         title: "Tilldela om"
+        title_w_ellipsis: "Redigera uppgift..."
         to_self: "Omtilldela till mig"
         to_self_help: "Omtilldela ämne till mig"
         help: "Omtilldela ämne till en annan användare"
@@ -58,6 +60,7 @@ sv:
         reassign_title: "Tilldela om ämne"
         description: "Ange namn på den användare som du vill tilldela detta ämne."
         assign: "Tilldela"
+        note_label: Anteckning
       assign_post_modal:
         title: "Tilldela inlägg"
         description: "Ange namn på den användare som du vill tilldela detta ämne"
@@ -136,3 +139,6 @@ sv:
         assigned: "%{username} tilldelade dig"
       titles:
         assigned: "Tilldelad"
+    sidebar:
+      assigned_link_title: "Ämnen som tilldelats dig"
+      assigned_link_text: "Tilldelad"

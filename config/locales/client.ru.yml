@@ -139,3 +139,6 @@ ru:
         assigned: "Пользователь %{username} назначил вас"
       titles:
         assigned: "Назначение"
+    sidebar:
+      assigned_link_title: "Темы, назначенные вам"
+      assigned_link_text: "Назначенные"
