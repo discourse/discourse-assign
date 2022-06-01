@@ -8,6 +8,7 @@ import { action } from "@ember/object";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 export default UserTopicsList.extend({
   user: controller(),
@@ -29,10 +30,12 @@ export default UserTopicsList.extend({
 
   @discourseComputed
   emptyStateBody() {
-    return I18n.t("user.no_assignments_body", {
-      preferencesUrl: getURL("/my/preferences/notifications"),
-      icon: iconHTML("user-plus"),
-    }).htmlSafe();
+    return htmlSafe(
+      I18n.t("user.no_assignments_body", {
+        preferencesUrl: getURL("/my/preferences/notifications"),
+        icon: iconHTML("user-plus"),
+      })
+    );
   },
 
   refreshModel() {

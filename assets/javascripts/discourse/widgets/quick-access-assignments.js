@@ -9,6 +9,7 @@ import getURL from "discourse-common/lib/get-url";
 import { postUrl } from "discourse/lib/utilities";
 import { h } from "virtual-dom";
 import I18n from "I18n";
+import { htmlSafe } from "@ember/template";
 
 const ICON = "user-plus";
 const GROUP_ICON = "group-plus";
@@ -22,10 +23,12 @@ createWidget("no-quick-access-assignments", {
         new RawHtml({
           html:
             "<p>" +
-            I18n.t("user.no_assignments_body", {
-              preferencesUrl: getURL("/my/preferences/notifications"),
-              icon: iconHTML(ICON),
-            }).htmlSafe() +
+            htmlSafe(
+              I18n.t("user.no_assignments_body", {
+                preferencesUrl: getURL("/my/preferences/notifications"),
+                icon: iconHTML(ICON),
+              })
+            ) +
             "</p>",
         })
       ),
