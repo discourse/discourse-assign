@@ -112,7 +112,7 @@ class RandomAssignUtils
   def self.recently_assigned_users_ids(topic_id, from)
     posts = Post
       .joins(:user)
-      .where(topic_id: topic_id, action_code: ['assigned', 'reassigned'])
+      .where(topic_id: topic_id, action_code: ['assigned', 'reassigned', 'assigned_to_post'])
       .where('posts.created_at > ?', from)
       .order(created_at: :desc)
     usernames = Post.custom_fields_for_ids(posts, [:action_code_who]).map { |_, v| v['action_code_who'] }.uniq
