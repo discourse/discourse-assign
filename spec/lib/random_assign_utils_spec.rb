@@ -34,7 +34,7 @@ describe RandomAssignUtils do
 
       it 'creates post on the topic' do
         described_class.automation_script!({}, { 'assignees_group' => { 'value' => group_1.id }, 'assigned_topic' => { 'value' => topic_1.id } }, automation)
-        expect(topic_1.posts.first.raw).to match("Attempted randomly assign a member of @#{group_1.name}, but no one was available.")
+        expect(topic_1.posts.first.raw).to match("Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.")
       end
     end
 
@@ -50,7 +50,7 @@ describe RandomAssignUtils do
 
       it 'creates post on the topic' do
         described_class.automation_script!({}, { 'assignees_group' => { 'value' => group_1.id }, 'assigned_topic' => { 'value' => topic_1.id } }, automation)
-        expect(topic_1.posts.first.raw).to match("Attempted randomly assign a member of @#{group_1.name}, but no one was available.")
+        expect(topic_1.posts.first.raw).to match("Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.")
       end
     end
 
@@ -94,7 +94,7 @@ describe RandomAssignUtils do
 
       it 'creates post on the topic' do
         described_class.automation_script!({}, { 'in_working_hours' => { 'value' => true }, 'assignees_group' => { 'value' => group_1.id }, 'assigned_topic' => { 'value' => topic_1.id } }, automation)
-        expect(topic_1.posts.first.raw).to match("Attempted randomly assign a member of @#{group_1.name}, but no one was available.")
+        expect(topic_1.posts.first.raw).to match("Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.")
       end
     end
 
