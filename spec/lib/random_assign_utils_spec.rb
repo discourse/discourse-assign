@@ -165,11 +165,14 @@ describe RandomAssignUtils do
       let(:user_1) { Fabricate(:user, groups: [assign_allowed_group]) }
       let(:user_2) { Fabricate(:user, groups: [assign_allowed_group]) }
       let(:user_3) { Fabricate(:user, groups: [assign_allowed_group]) }
+      let(:user_4) { Fabricate(:user, groups: [assign_allowed_group]) }
+      let(:post_2) { Fabricate(:post, topic: post.topic) }
 
       it 'returns the recently assigned user ids' do
         freeze_time 1.months.ago do
           Assigner.new(post.topic, admin).assign(user_1)
           Assigner.new(post.topic, admin).assign(user_2)
+          Assigner.new(post_2, admin).assign(user_4)
         end
 
         freeze_time 3.months.ago do
@@ -178,7 +181,7 @@ describe RandomAssignUtils do
 
         assignees_ids = described_class.recently_assigned_users_ids(post.topic_id, 2.months.ago)
 
-        expect(assignees_ids).to contain_exactly(user_1.id, user_2.id)
+        expect(assignees_ids).to contain_exactly(user_1.id, user_2.id, user_4.id)
       end
     end
   end
