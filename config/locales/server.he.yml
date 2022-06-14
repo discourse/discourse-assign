@@ -78,7 +78,7 @@ he:
     scriptables:
       random_assign:
         title: הקצאה אקראית
-        no_one: "היה ניסיון אקראי להקצות אחד מחברי הקבוצה @%{group}, אך אף אחד מהם לא היה זמין."
+        no_one: "היה ניסיון להקצות אחד מחברי הקבוצה ‎`@%{group}`‎ באקראי, אך אף אחד מהם לא היה זמין."
   discourse_push_notifications:
     popup:
       assigned: "הוקצה אליך על ידי ‎@%{username}"

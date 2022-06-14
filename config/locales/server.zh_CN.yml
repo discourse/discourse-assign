@@ -79,4 +79,3 @@ zh_CN:
     scriptables:
       random_assign:
         title: 随机分配
-        no_one: "尝试随机分配 @%{group} 的成员，但没有人可用。"

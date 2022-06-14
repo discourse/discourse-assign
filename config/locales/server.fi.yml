@@ -79,4 +79,3 @@ fi:
     scriptables:
       random_assign:
         title: Satunnainen osoitus
-        no_one: "Ryhmän @%{group} jäsentä yritettiin osoittaa satunnaisesti, mutta kukaan ei ollut saatavilla."
