@@ -79,7 +79,7 @@ sv:
     scriptables:
       random_assign:
         title: Tilldela slumpmässigt
-        no_one: "Försökte slumpmässigt tilldela en medlem av @%{group}, men ingen var tillgänglig."
+        no_one: "Försökte slumpmässigt tilldela en medlem i `@%{group}`, men ingen var tillgänglig."
   discourse_push_notifications:
     popup:
       assigned: "@%{username} tilldelade dig"

@@ -31,4 +31,3 @@ hu:
     scriptables:
       random_assign:
         title: Véletlenszerű kiosztás
-        no_one: "Megpróbálta véletlenszerűen hozzárendelni a(z) @%{group} egyik tagját, de senki sem volt elérhető."

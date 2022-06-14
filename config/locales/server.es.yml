@@ -79,4 +79,3 @@ es:
     scriptables:
       random_assign:
         title: Asignación aleatoria
-        no_one: "Se intentó asignar aleatoriamente un miembro de @%{group}, pero no había nadie disponible."

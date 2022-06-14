@@ -79,4 +79,3 @@ ja:
     scriptables:
       random_assign:
         title: ランダム割り当て
-        no_one: "@%{group} のメンバーをランダムに割り当てようとしましたが、割り当て可能なメンバーがいませんでした。"

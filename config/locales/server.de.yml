@@ -79,4 +79,3 @@ de:
     scriptables:
       random_assign:
         title: Zufällig zuordnen
-        no_one: "Es wurde versucht, ein Mitglied von @%{group} zufällig zuzuordnen, aber es war niemand verfügbar."
