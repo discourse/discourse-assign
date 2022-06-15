@@ -160,7 +160,12 @@ class ::Assigner
     @post_target ||= @target.is_a?(Post)
   end
 
+  def private_message_allowed_user_ids
+    @private_message_allowed_user_ids ||= topic.all_allowed_users.map(&:id)
+  end
+
   def can_assignee_see_target?(assignee)
+    return false if (topic_target? || post_target?) && topic.private_message? && !private_message_allowed_user_ids.include?(assignee.id)
     return Guardian.new(assignee).can_see_topic?(@target) if topic_target?
     return Guardian.new(assignee).can_see_post?(@target) if post_target?
 

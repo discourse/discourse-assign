@@ -16,6 +16,7 @@ RSpec.describe Assigner do
     let(:secure_topic) { Fabricate(:post).topic.tap { |t| t.update(category: secure_category) } }
     let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
     let(:moderator_2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:admin) { Fabricate(:admin) }
     let(:assigner) { described_class.new(topic, moderator_2) }
     let(:assigner_self) { described_class.new(topic, moderator) }
 
@@ -231,8 +232,21 @@ RSpec.describe Assigner do
         expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
       end
 
+      it 'fails to assign when the assigned admin cannot view the pm' do
+        assign = described_class.new(pm, moderator_2).assign(admin)
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:forbidden_assignee_not_pm_participant)
+      end
+
       it 'fails to assign when not all group members has access to pm' do
         assign = described_class.new(pm, moderator_2).assign(moderator.groups.first)
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)
+
+        # even when admin
+        assign = described_class.new(pm, moderator_2).assign(admin.groups.first)
 
         expect(assign[:success]).to eq(false)
         expect(assign[:reason]).to eq(:forbidden_group_assignee_not_pm_participant)

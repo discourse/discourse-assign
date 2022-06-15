@@ -24,6 +24,7 @@ describe TopicQuery do
       [user_pm, admin_pm, other_admin_pm].each do |topic|
         Fabricate(:post, topic: topic)
       end
+      Fabricate(:topic_allowed_user, user: admin, topic: user_pm)
 
       Assigner.new(user_pm, Discourse.system_user).assign(admin)
       Assigner.new(admin_pm, Discourse.system_user).assign(admin)
