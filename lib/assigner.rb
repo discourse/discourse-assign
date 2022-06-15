@@ -161,7 +161,7 @@ class ::Assigner
   end
 
   def private_message_allowed_user_ids
-    @private_message_allowed_user_ids ||= topic.all_allowed_users.map(&:id)
+    @private_message_allowed_user_ids ||= topic.all_allowed_users.pluck(:id)
   end
 
   def can_assignee_see_target?(assignee)
