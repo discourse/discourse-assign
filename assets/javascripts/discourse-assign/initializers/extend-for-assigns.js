@@ -577,6 +577,7 @@ function initialize(api) {
         "assigned_group_to_post",
         "unassigned_from_post",
         "unassigned_group_from_post",
+        "note_change",
       ].includes(transformed.actionCode)
     ) {
       transformed.isSmallAction = true;
