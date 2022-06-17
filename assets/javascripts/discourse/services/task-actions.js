@@ -49,7 +49,6 @@ export default Service.extend({
         username: user.username,
         target_id: target.id,
         target_type: targetType,
-        note: target.assignment_note,
       },
     });
   },

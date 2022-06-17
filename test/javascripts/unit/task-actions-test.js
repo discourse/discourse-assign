@@ -2,6 +2,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import * as showModal from "discourse/lib/show-modal";
+import pretender from "discourse/tests/helpers/create-pretender";
 
 discourseModule("Unit | Service | task-actions", function () {
   test("assign", function (assert) {
@@ -29,5 +30,23 @@ discourseModule("Unit | Service | task-actions", function () {
         targetType: "Topic",
       },
     });
+  });
+
+  test("reassignUserToTopic", async function (assert) {
+    const service = this.container.lookup("service:task-actions");
+    const target = { id: 1 };
+    const user = { username: "tomtom" };
+    let assignRequest;
+    pretender.put("/assign/assign", (request) => {
+      assignRequest = request;
+      return [200];
+    });
+
+    await service.reassignUserToTopic(user, target);
+
+    assert.strictEqual(
+      assignRequest.requestBody,
+      "username=tomtom&target_id=1&target_type=Topic"
+    );
   });
 });
