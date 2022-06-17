@@ -580,7 +580,7 @@ function initialize(api) {
       ].includes(transformed.actionCode)
     ) {
       transformed.isSmallAction = true;
-      transformed.canEdit = false;
+      transformed.canEdit = true;
     }
   });
 
