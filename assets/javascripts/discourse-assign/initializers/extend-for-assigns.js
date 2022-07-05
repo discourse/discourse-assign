@@ -649,7 +649,11 @@ function initialize(api) {
   });
 
   api.addUserMenuGlyph((widget) => {
-    if (widget.currentUser && widget.currentUser.can_assign) {
+    if (
+      widget.currentUser &&
+      widget.currentUser.can_assign &&
+      !widget.currentUser.experimental_sidebar_enabled
+    ) {
       const glyph = {
         label: "discourse_assign.assigned",
         className: "assigned",
