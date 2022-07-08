@@ -5,7 +5,6 @@ import {
   acceptance,
   exists,
   query,
-  updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -25,27 +24,6 @@ acceptance(
     });
   }
 );
-
-acceptance("Discourse Assign | Sidebar | User Menu", function (needs) {
-  needs.user({ experimental_sidebar_enabled: true, can_assign: true });
-  needs.settings({ assign_enabled: true });
-
-  test("assign user menu is not displayed when user has enabled sidebar", async function (assert) {
-    await visit("/");
-    await click(".header-dropdown-toggle.current-user");
-
-    assert.ok(!exists(".assigned.menu-link"));
-  });
-
-  test("assign user menu glyph is displayed when user has disabled sidebar", async function (assert) {
-    updateCurrentUser({ experimental_sidebar_enabled: false });
-
-    await visit("/");
-    await click(".header-dropdown-toggle.current-user");
-
-    assert.ok(exists(".assigned.menu-link"));
-  });
-});
 
 acceptance("Discourse Assign | Sidebar when user can assign", function (needs) {
   needs.user({ experimental_sidebar_enabled: true, can_assign: true });
