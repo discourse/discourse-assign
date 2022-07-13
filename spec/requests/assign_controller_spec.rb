@@ -392,4 +392,133 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(200)
     end
   end
+
+  describe "#user_menu_assigns" do
+    fab!(:unread_assigned_topic) { Fabricate(:post).topic }
+    fab!(:read_assigned_topic) { Fabricate(:post).topic }
+
+    fab!(:unread_assigned_post) { Fabricate(:post, topic: Fabricate(:post).topic) }
+    fab!(:read_assigned_post) { Fabricate(:post, topic: Fabricate(:post).topic) }
+
+    fab!(:read_assigned_post_in_same_topic) { Fabricate(:post, topic: Fabricate(:post).topic) }
+    fab!(:unread_assigned_post_in_same_topic) { Fabricate(:post, topic: read_assigned_post_in_same_topic.topic) }
+
+    fab!(:another_user_unread_assigned_topic) { Fabricate(:post).topic }
+    fab!(:another_user_read_assigned_topic) { Fabricate(:post).topic }
+
+    before do
+      Jobs.run_immediately!
+
+      [
+        unread_assigned_topic,
+        read_assigned_topic,
+        unread_assigned_post,
+        read_assigned_post,
+        unread_assigned_post_in_same_topic,
+        read_assigned_post_in_same_topic,
+      ].each do |target|
+        Assigner.new(target, normal_admin).assign(user)
+      end
+
+      Notification
+        .where(
+          notification_type: Notification.types[:assigned],
+          read: false,
+          user_id: user.id,
+          topic_id: [
+            read_assigned_topic.id,
+            read_assigned_post.topic.id,
+            read_assigned_post_in_same_topic.topic.id
+          ]
+        )
+        .where.not(
+          topic_id: read_assigned_post_in_same_topic.topic.id,
+          post_number: unread_assigned_post_in_same_topic.post_number
+        )
+        .update_all(read: true)
+
+      Assigner.new(another_user_read_assigned_topic, normal_admin).assign(user2)
+      Assigner.new(another_user_unread_assigned_topic, normal_admin).assign(user2)
+      Notification
+        .where(
+          notification_type: Notification.types[:assigned],
+          read: false,
+          user_id: user2.id,
+          topic_id: another_user_read_assigned_topic,
+        )
+        .update_all(read: true)
+    end
+
+    context "when logged out" do
+      it "responds with 403" do
+        get "/assign/user-menu-assigns.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when logged in" do
+      before do
+        sign_in(user)
+      end
+
+      it "responds with 403 if the current user can't assign" do
+        user.update!(admin: false)
+        user.group_users.where(group_id: default_allowed_group.id).destroy_all
+        get "/assign/user-menu-assigns.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "responds with 404 if the assign_enabled setting is disabled" do
+        SiteSetting.assign_enabled = false
+        get "/assign/user-menu-assigns.json"
+        expect(response.status).to eq(403)
+      end
+
+      it "sends an array of unread assigned notifications" do
+        get "/assign/user-menu-assigns.json"
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to contain_exactly(
+          [unread_assigned_topic.id, 1],
+          [unread_assigned_post.topic.id, unread_assigned_post.post_number],
+          [unread_assigned_post_in_same_topic.topic.id, unread_assigned_post_in_same_topic.post_number]
+        )
+      end
+
+      it "responds with an array of assigned topics that are not associated with any of the unread assigned notifications" do
+        get "/assign/user-menu-assigns.json"
+        expect(response.status).to eq(200)
+
+        topics = response.parsed_body["topics"]
+        expect(topics.map { |t| t["id"] }).to contain_exactly(
+          read_assigned_topic.id,
+          read_assigned_post.topic.id,
+          read_assigned_post_in_same_topic.topic.id,
+        )
+      end
+
+      it "fills up the remaining of the USER_MENU_LIMIT limit with assigned topics" do
+        stub_const(DiscourseAssign::AssignController, "USER_MENU_LIMIT", 3) do
+          get "/assign/user-menu-assigns.json"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(3)
+        topics = response.parsed_body["topics"]
+        expect(topics.size).to eq(0)
+
+        stub_const(DiscourseAssign::AssignController, "USER_MENU_LIMIT", 4) do
+          get "/assign/user-menu-assigns.json"
+        end
+        expect(response.status).to eq(200)
+
+        notifications = response.parsed_body["notifications"]
+        expect(notifications.size).to eq(3)
+        topics = response.parsed_body["topics"]
+        expect(topics.size).to eq(1)
+      end
+    end
+  end
 end
