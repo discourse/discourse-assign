@@ -4,7 +4,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
 discourseModule("Unit | Controller | assign-user", function () {
-  test("assigning a user via suggestions makes API call and closes the modal", function (assert) {
+  test("assigning a user via suggestions makes API call and closes the modal", async function (assert) {
     pretender.get("/assign/suggestions", () => {
       return [
         200,
@@ -16,6 +16,7 @@ discourseModule("Unit | Controller | assign-user", function () {
         },
       ];
     });
+
     pretender.put("/assign/assign", () => {
       return [200, { "Content-Type": "application/json" }, {}];
     });
@@ -32,12 +33,12 @@ discourseModule("Unit | Controller | assign-user", function () {
       modalClosed = true;
     });
 
-    controller.send("assignUser", "nat");
+    await controller.assignUser("nat");
 
     assert.strictEqual(modalClosed, true);
   });
 
-  test("assigning a user by selector does not close the modal", function (assert) {
+  test("assigning a user by selector does not close the modal", async function (assert) {
     pretender.get("/assign/suggestions", () => {
       return [
         200,
@@ -62,7 +63,7 @@ discourseModule("Unit | Controller | assign-user", function () {
       modalClosed = true;
     });
 
-    controller.send("assignUsername", "nat");
+    await controller.assignUsername("nat");
 
     assert.strictEqual(modalClosed, false);
   });
