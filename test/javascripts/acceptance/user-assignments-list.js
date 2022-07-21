@@ -37,8 +37,9 @@ acceptance(
     needs.user();
     needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
     needs.pretender((server, helper) => {
-      const assignments =
-        AssignedTopics["/topics/messages-assigned/eviltrout.json"];
+      const assignments = cloneJSON(
+        AssignedTopics["/topics/messages-assigned/eviltrout.json"]
+      );
       assignments.topic_list.topics = [];
       server.get("/topics/messages-assigned/eviltrout.json", () =>
         helper.response(assignments)
