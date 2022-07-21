@@ -6,6 +6,7 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
+import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
 
 acceptance(
