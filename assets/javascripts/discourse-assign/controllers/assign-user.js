@@ -35,7 +35,7 @@ export default Controller.extend({
   },
 
   bulkAction(username) {
-    this.topicBulkActions.performAndRefresh({
+    return this.topicBulkActions.performAndRefresh({
       type: "assign",
       username,
     });
@@ -44,8 +44,7 @@ export default Controller.extend({
   @action
   assign() {
     if (this.isBulkAction) {
-      this.bulkAction(this.model.username);
-      return;
+      return this.bulkAction(this.model.username);
     }
 
     let path = "/assign/assign";
@@ -86,8 +85,7 @@ export default Controller.extend({
   @action
   assignUser(name) {
     if (this.isBulkAction) {
-      this.bulkAction(name);
-      return;
+      return this.bulkAction(name);
     }
 
     this.setGroupOrUser(name);
@@ -100,8 +98,7 @@ export default Controller.extend({
   @action
   assignUsername(selected) {
     if (this.isBulkAction) {
-      this.bulkAction(selected.firstObject);
-      return;
+      return this.bulkAction(selected.firstObject);
     }
 
     this.setGroupOrUser(selected.firstObject);
