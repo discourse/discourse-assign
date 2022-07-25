@@ -3,12 +3,7 @@
 class AssignedTopicSerializer < BasicTopicSerializer
   include TopicTagsMixin
 
-  attributes :excerpt,
-             :category_id,
-             :created_at,
-             :updated_at,
-             :assigned_to_user,
-             :assigned_to_group
+  attributes :excerpt, :category_id, :created_at, :updated_at, :assigned_to_user, :assigned_to_group
 
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 

@@ -8,16 +8,28 @@ module Jobs
       raise Discourse::InvalidParameters.new(:assigned_to_type) if args[:assigned_to_type].nil?
 
       topic = Topic.find(args[:topic_id])
-      assigned_to_users = args[:assigned_to_type] == "User" ? [User.find(args[:assigned_to_id])] : Group.find(args[:assigned_to_id]).users
+      assigned_to_users =
+        (
+          if args[:assigned_to_type] == "User"
+            [User.find(args[:assigned_to_id])]
+          else
+            Group.find(args[:assigned_to_id]).users
+          end
+        )
 
       assigned_to_users.each do |user|
         Assigner.publish_topic_tracking_state(topic, user.id)
 
-        Notification.where(
-          notification_type: Notification.types[:assigned] || Notification.types[:custom],
-          user_id: user.id,
-          topic_id: topic.id,
-        ).where("data like '%discourse_assign.assign_notification%' OR data like '%discourse_assign.assign_group_notification%'").destroy_all
+        Notification
+          .where(
+            notification_type: Notification.types[:assigned] || Notification.types[:custom],
+            user_id: user.id,
+            topic_id: topic.id,
+          )
+          .where(
+            "data like '%discourse_assign.assign_notification%' OR data like '%discourse_assign.assign_group_notification%'",
+          )
+          .destroy_all
       end
     end
   end

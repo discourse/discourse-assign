@@ -8,19 +8,29 @@ describe Topic do
   let(:group) { Fabricate(:group) }
   let(:topic) { Fabricate(:topic) }
 
-  before do
-    SiteSetting.assign_enabled = true
-  end
+  before { SiteSetting.assign_enabled = true }
 
   describe "#assigned_to" do
     it "correctly points to a user" do
-      Assignment.create!(target_id: topic.id, target_type: "Topic", topic_id: topic.id, assigned_by_user: user1, assigned_to: user2)
+      Assignment.create!(
+        target_id: topic.id,
+        target_type: "Topic",
+        topic_id: topic.id,
+        assigned_by_user: user1,
+        assigned_to: user2,
+      )
 
       expect(topic.reload.assigned_to).to eq(user2)
     end
 
     it "correctly points to a group" do
-      Assignment.create!(target_id: topic.id, target_type: "Topic", topic_id: topic.id, assigned_by_user: user1, assigned_to: group)
+      Assignment.create!(
+        target_id: topic.id,
+        target_type: "Topic",
+        topic_id: topic.id,
+        assigned_by_user: user1,
+        assigned_to: group,
+      )
 
       expect(topic.reload.assigned_to).to eq(group)
     end

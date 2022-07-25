@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
-describe 'plugin' do
+describe "plugin" do
   before { SiteSetting.assign_enabled = true }
 
-  describe 'events' do
-    describe 'on user_removed_from_group' do
+  describe "events" do
+    describe "on user_removed_from_group" do
       before do
         @topic = Fabricate(:post).topic
         @user = Fabricate(:user)
@@ -14,7 +14,7 @@ describe 'plugin' do
         @group_a.add(@user)
       end
 
-      it 'unassigns the user' do
+      it "unassigns the user" do
         SiteSetting.assign_allowed_on_groups = @group_a.id.to_s
 
         Assigner.new(@topic, Discourse.system_user).assign(@user)
@@ -26,7 +26,7 @@ describe 'plugin' do
       it "doesn't unassign the user if it still has access through another group" do
         @group_b = Fabricate(:group)
         @group_b.add(@user)
-        SiteSetting.assign_allowed_on_groups = [@group_a.id.to_s, @group_b.id.to_s].join('|')
+        SiteSetting.assign_allowed_on_groups = [@group_a.id.to_s, @group_b.id.to_s].join("|")
 
         Assigner.new(@topic, Discourse.system_user).assign(@user)
         @group_a.remove(@user)

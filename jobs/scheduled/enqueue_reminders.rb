@@ -12,18 +12,22 @@ module Jobs
     private
 
     def skip_enqueue?
-      SiteSetting.remind_assigns_frequency.nil? || !SiteSetting.assign_enabled? || SiteSetting.assign_allowed_on_groups.blank?
+      SiteSetting.remind_assigns_frequency.nil? || !SiteSetting.assign_enabled? ||
+        SiteSetting.assign_allowed_on_groups.blank?
     end
 
     def allowed_group_ids
-      Group.assign_allowed_groups.pluck(:id).join(',')
+      Group.assign_allowed_groups.pluck(:id).join(",")
     end
 
     def user_ids
       global_frequency = SiteSetting.remind_assigns_frequency
-      frequency = ActiveRecord::Base.sanitize_sql("COALESCE(user_frequency.value, '#{global_frequency}')::INT")
+      frequency =
+        ActiveRecord::Base.sanitize_sql(
+          "COALESCE(user_frequency.value, '#{global_frequency}')::INT",
+        )
 
-      DB.query_single(<<~SQL
+      DB.query_single(<<~SQL)
         SELECT assignments.assigned_to_id
         FROM assignments
 
@@ -50,7 +54,6 @@ module Jobs
         GROUP BY assignments.assigned_to_id
         HAVING COUNT(assignments.assigned_to_id) > 1
       SQL
-      )
     end
   end
 end

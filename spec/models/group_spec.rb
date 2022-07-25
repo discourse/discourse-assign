@@ -1,21 +1,18 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require_relative '../support/assign_allowed_group'
+require "rails_helper"
+require_relative "../support/assign_allowed_group"
 
 RSpec.describe Group do
   let(:group) { Fabricate(:group) }
 
-  before do
-    SiteSetting.assign_enabled = true
-  end
+  before { SiteSetting.assign_enabled = true }
 
-  context 'Tracking changes that could affect the allow assign on groups site setting' do
-
-    let(:removed_group_setting) { '3|4' }
+  context "Tracking changes that could affect the allow assign on groups site setting" do
+    let(:removed_group_setting) { "3|4" }
     let(:group_attribute) { group.id }
 
-    it 'removes the group from the setting when the group gets destroyed' do
+    it "removes the group from the setting when the group gets destroyed" do
       SiteSetting.assign_allowed_on_groups = "#{group_attribute}|#{removed_group_setting}"
 
       group.destroy!
@@ -23,7 +20,7 @@ RSpec.describe Group do
       expect(SiteSetting.assign_allowed_on_groups).to eq removed_group_setting
     end
 
-    it 'removes the group from the setting when this is the last one on the list' do
+    it "removes the group from the setting when this is the last one on the list" do
       SiteSetting.assign_allowed_on_groups = "#{removed_group_setting}|#{group_attribute}"
 
       group.destroy!
@@ -31,7 +28,7 @@ RSpec.describe Group do
       expect(SiteSetting.assign_allowed_on_groups).to eq removed_group_setting
     end
 
-    it 'removes the group from the list when it is on the middle of the list' do
+    it "removes the group from the list when it is on the middle of the list" do
       allowed_groups = "3|#{group_attribute}|4"
       SiteSetting.assign_allowed_on_groups = allowed_groups
 
@@ -41,13 +38,13 @@ RSpec.describe Group do
     end
   end
 
-  context 'includes can_show_assigned_tab? method' do
+  context "includes can_show_assigned_tab? method" do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
     let(:user1) { Fabricate(:user) }
     let(:user2) { Fabricate(:user) }
 
-    include_context 'A group that is allowed to assign'
+    include_context "A group that is allowed to assign"
 
     before do
       add_to_assign_allowed_group(user)
@@ -55,7 +52,7 @@ RSpec.describe Group do
       add_to_assign_allowed_group(admin)
     end
 
-    it 'gives false in can_show_assigned_tab? when all users are not in assigned_allowed_group' do
+    it "gives false in can_show_assigned_tab? when all users are not in assigned_allowed_group" do
       group.add(user)
       group.add(user1)
       group.add(user2)
@@ -63,7 +60,7 @@ RSpec.describe Group do
       expect(group.can_show_assigned_tab?).to eq(false)
     end
 
-    it 'gives true in can_show_assigned_tab? when all users are in assigned_allowed_group' do
+    it "gives true in can_show_assigned_tab? when all users are in assigned_allowed_group" do
       group.add(user)
       group.add(user1)
 

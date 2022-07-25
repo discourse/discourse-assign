@@ -2,6 +2,6 @@
 
 class AddIndexToAssignedToIdAndType < ActiveRecord::Migration[6.1]
   def change
-    add_index :assignments, [:assigned_to_id, :assigned_to_type]
+    add_index :assignments, %i[assigned_to_id assigned_to_type]
   end
 end

@@ -41,7 +41,6 @@ class CorrectlyMoveAssignmentsFromCustomFieldsToATable < ActiveRecord::Migration
         ORDER BY assigned_by.created_at DESC
         ON CONFLICT DO NOTHING
       SQL
-
     else
       execute <<~SQL
         INSERT INTO assignments (assigned_to_id, assigned_by_user_id, topic_id, created_at, updated_at)

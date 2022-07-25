@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require_relative '../support/assign_allowed_group'
-require_relative '../fabricators/assign_hook_fabricator.rb'
+require "rails_helper"
+require_relative "../support/assign_allowed_group"
+require_relative "../fabricators/assign_hook_fabricator.rb"
 
-describe 'integration tests' do
-  before do
-    SiteSetting.assign_enabled = true
-  end
+describe "integration tests" do
+  before { SiteSetting.assign_enabled = true }
 
-  it 'preloads data in topic list' do
+  it "preloads data in topic list" do
     admin = Fabricate(:admin)
     post = create_post
     list = TopicList.new("latest", admin, [post.topic])
@@ -17,7 +15,7 @@ describe 'integration tests' do
     # should not explode for now
   end
 
-  describe 'for a private message' do
+  describe "for a private message" do
     let(:post) { Fabricate(:private_message_post) }
     let(:pm) { post.topic }
     let(:user) { pm.allowed_users.first }
@@ -25,7 +23,7 @@ describe 'integration tests' do
     let(:channel) { "/private-messages/assigned" }
     fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
 
-    include_context 'A group that is allowed to assign'
+    include_context "A group that is allowed to assign"
 
     before do
       add_to_assign_allowed_group(user)
@@ -35,9 +33,7 @@ describe 'integration tests' do
     end
 
     def assert_publish_topic_state(topic, user: nil, group: nil)
-      messages = MessageBus.track_publish do
-        yield
-      end
+      messages = MessageBus.track_publish { yield }
 
       message = messages.find { |m| m.channel == channel }
 
@@ -46,7 +42,7 @@ describe 'integration tests' do
       expect(message.group_ids).to eq([group.id]) if group
     end
 
-    it 'publishes the right message on archive and move to inbox' do
+    it "publishes the right message on archive and move to inbox" do
       assigner = Assigner.new(pm, user)
       assigner.assign(user)
 
@@ -59,7 +55,7 @@ describe 'integration tests' do
       end
     end
 
-    it 'publishes the right message on archive and move to inbox for groups' do
+    it "publishes the right message on archive and move to inbox for groups" do
       assigner = Assigner.new(pm, user)
       assigner.assign(group)
 
@@ -106,7 +102,7 @@ describe 'integration tests' do
     let(:user1) { Fabricate(:user) }
     let(:user2) { Fabricate(:user) }
 
-    include_context 'A group that is allowed to assign'
+    include_context "A group that is allowed to assign"
 
     before do
       add_to_assign_allowed_group(user1)
@@ -142,15 +138,15 @@ describe 'integration tests' do
     end
   end
 
-  context 'already assigned' do
+  context "already assigned" do
     fab!(:post) { Fabricate(:post) }
     fab!(:post_2) { Fabricate(:post, topic: post.topic) }
     let(:topic) { post.topic }
     fab!(:user) { Fabricate(:user) }
 
-    include_context 'A group that is allowed to assign'
+    include_context "A group that is allowed to assign"
 
-    it 'does not allow to assign topic if post is already assigned' do
+    it "does not allow to assign topic if post is already assigned" do
       add_to_assign_allowed_group(user)
 
       assigner = Assigner.new(post, user)
@@ -168,14 +164,22 @@ describe 'integration tests' do
     end
   end
 
-  context 'move post' do
+  context "move post" do
     fab!(:old_topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: old_topic) }
     fab!(:user) { Fabricate(:user) }
-    fab!(:assignment) { Assignment.create!(target_id: post.id, target_type: "Post", topic_id: old_topic.id, assigned_by_user: user, assigned_to: user) }
+    fab!(:assignment) do
+      Assignment.create!(
+        target_id: post.id,
+        target_type: "Post",
+        topic_id: old_topic.id,
+        assigned_by_user: user,
+        assigned_to: user,
+      )
+    end
     let(:new_topic) { Fabricate(:topic) }
 
-    it 'assignment becomes topic assignment when new topic' do
+    it "assignment becomes topic assignment when new topic" do
       post.update!(topic: new_topic)
       DiscourseEvent.trigger(:post_moved, post, old_topic.id)
       assignment.reload
@@ -184,7 +188,7 @@ describe 'integration tests' do
       expect(assignment.target_id).to eq(new_topic.id)
     end
 
-    it 'assigment is still post assignment when not first post' do
+    it "assigment is still post assignment when not first post" do
       post.update!(topic: new_topic, post_number: "3")
       DiscourseEvent.trigger(:post_moved, post, old_topic.id)
       assignment.reload
