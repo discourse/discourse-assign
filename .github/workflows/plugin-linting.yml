@@ -55,3 +55,7 @@ jobs:
       - name: Rubocop
         if: ${{ always() }}
         run: bundle exec rubocop .
+
+      - name: Syntax Tree
+        if: ${{ always() }}
+        run: RUBYOPT="-W0" bundle exec stree check --print-width=100 --plugins=plugin/trailing_comma **/*.rb Gemfile **/*.rake
