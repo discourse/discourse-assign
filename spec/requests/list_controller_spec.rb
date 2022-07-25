@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require_relative '../support/assign_allowed_group'
+require "rails_helper"
+require_relative "../support/assign_allowed_group"
 
 describe ListController do
   before { SiteSetting.assign_enabled = true }
@@ -11,12 +11,12 @@ describe ListController do
   let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
 
-  describe 'only allow users from allowed groups' do
-    include_context 'A group that is allowed to assign'
+  describe "only allow users from allowed groups" do
+    include_context "A group that is allowed to assign"
 
-    it 'filters requests where current_user is not member of an allowed group' do
+    it "filters requests where current_user is not member of an allowed group" do
       sign_in(user)
-      SiteSetting.assign_allowed_on_groups = ''
+      SiteSetting.assign_allowed_on_groups = ""
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(403)
@@ -25,7 +25,7 @@ describe ListController do
       expect(response.status).to eq(403)
     end
 
-    it 'as an anon user' do
+    it "as an anon user" do
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(403)
 
@@ -33,7 +33,7 @@ describe ListController do
       expect(response.status).to eq(403)
     end
 
-    it 'as an admin user' do
+    it "as an admin user" do
       sign_in(admin)
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(200)
@@ -43,8 +43,8 @@ describe ListController do
     end
   end
 
-  context '#group_topics_assigned' do
-    include_context 'A group that is allowed to assign'
+  context "#group_topics_assigned" do
+    include_context "A group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -62,30 +62,30 @@ describe ListController do
       sign_in(user)
     end
 
-    it 'returns user-assigned-topics-list of users in the assigned_allowed_group and doesnt include deleted topic' do
+    it "returns user-assigned-topics-list of users in the assigned_allowed_group and doesnt include deleted topic" do
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['assigned_to_user']['id'] }).to match_array([user.id])
+      expect(
+        JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["assigned_to_user"]["id"] },
+      ).to match_array([user.id])
     end
 
-    it 'returns user-assigned-topics-list of users in the assigned_allowed_group and doesnt include inactive topics' do
+    it "returns user-assigned-topics-list of users in the assigned_allowed_group and doesnt include inactive topics" do
       Assignment.where(assigned_to: user, target: topic1).update_all(active: false)
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
-      expect(response.parsed_body['topic_list']['topics']).to be_empty
+      expect(response.parsed_body["topic_list"]["topics"]).to be_empty
     end
 
-    it 'returns empty user-assigned-topics-list for users not in the assigned_allowed_group' do
+    it "returns empty user-assigned-topics-list for users not in the assigned_allowed_group" do
       ids = []
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
-      JSON.parse(response.body)['topic_list']['topics'].each do |t|
-        if t['assigned_to_user']['id'] == user2.id
-          ids.push(t['assigned_to_user']['id'])
-        end
+      JSON.parse(response.body)["topic_list"]["topics"].each do |t|
+        ids.push(t["assigned_to_user"]["id"]) if t["assigned_to_user"]["id"] == user2.id
       end
       expect(ids).to be_empty
     end
 
-    it 'doesnt returns deleted topics' do
+    it "doesnt returns deleted topics" do
       sign_in(admin)
 
       Assigner.new(topic, user).assign(user)
@@ -97,18 +97,16 @@ describe ListController do
       id = 0
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json"
 
-      JSON.parse(response.body)['topic_list']['topics'].each do |t|
-        if t['id'] == topic.id
-          id = t.id
-        end
+      JSON.parse(response.body)["topic_list"]["topics"].each do |t|
+        id = t.id if t["id"] == topic.id
       end
 
       expect(id).to eq(0)
     end
   end
 
-  context '#sorting messages_assigned and group_topics_assigned' do
-    include_context 'A group that is allowed to assign'
+  context "#sorting messages_assigned and group_topics_assigned" do
+    include_context "A group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -128,7 +126,7 @@ describe ListController do
       sign_in(user)
     end
 
-    it 'group_topics_assigned returns sorted topicsList' do
+    it "group_topics_assigned returns sorted topicsList" do
       topic1.bumped_at = Time.now
       topic2.bumped_at = 1.day.ago
       topic3.bumped_at = 3.day.ago
@@ -146,25 +144,37 @@ describe ListController do
       topic3.save!
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=posts"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id, topic1.id, topic3.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic2.id, topic1.id, topic3.id],
+      )
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=views"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id, topic2.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic3.id, topic1.id, topic2.id],
+      )
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=activity"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic2.id, topic1.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic3.id, topic2.id, topic1.id],
+      )
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=posts&ascending=true"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id, topic2.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic3.id, topic1.id, topic2.id],
+      )
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=views&ascending=true"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id, topic1.id, topic3.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic2.id, topic1.id, topic3.id],
+      )
 
       get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json?order=activity&ascending=true"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([ topic1.id, topic2.id, topic3.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id, topic2.id, topic3.id],
+      )
     end
 
-    it 'messages_assigned returns sorted topicsList' do
+    it "messages_assigned returns sorted topicsList" do
       topic1.bumped_at = Time.now
       topic3.bumped_at = 3.day.ago
 
@@ -178,27 +188,39 @@ describe ListController do
       topic3.reload
 
       get "/topics/messages-assigned/#{user.username}.json?order=posts"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id, topic3.id],
+      )
 
       get "/topics/messages-assigned/#{user.username}.json?order=views"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic3.id, topic1.id],
+      )
 
       get "/topics/messages-assigned/#{user.username}.json?order=activity"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic3.id, topic1.id],
+      )
 
       get "/topics/messages-assigned/#{user.username}.json?order=posts&ascending=true"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic3.id, topic1.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic3.id, topic1.id],
+      )
 
       get "/topics/messages-assigned/#{user.username}.json?order=views&ascending=true"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id, topic3.id],
+      )
 
       get "/topics/messages-assigned/#{user.username}.json?order=activity&ascending=true"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id, topic3.id],
+      )
     end
   end
 
-  context 'filtering of topics as per parameter' do
-    include_context 'A group that is allowed to assign'
+  context "filtering of topics as per parameter" do
+    include_context "A group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -222,44 +244,66 @@ describe ListController do
 
     after { SearchIndexer.disable }
 
-    it 'returns topics as per filter for #group_topics_assigned' do
-      topic1.title = 'QUnit testing is love'
-      topic2.title = 'RSpec testing is too fun'
-      topic3.title = 'Testing is main part of programming'
+    it "returns topics as per filter for #group_topics_assigned" do
+      topic1.title = "QUnit testing is love"
+      topic2.title = "RSpec testing is too fun"
+      topic3.title = "Testing is main part of programming"
 
       topic1.save!
       topic2.save!
       topic3.save!
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'Testing' }
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic2.id, topic3.id])
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+          params: {
+            search: "Testing",
+          }
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id, topic2.id, topic3.id],
+      )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'RSpec' }
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic2.id])
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+          params: {
+            search: "RSpec",
+          }
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic2.id],
+      )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'love' }
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+          params: {
+            search: "love",
+          }
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id],
+      )
     end
 
-    it 'returns topics as per filter for #group_topics_assigned' do
-      topic1.title = 'QUnit testing is love'
-      topic2.title = 'RSpec testing is too fun'
-      topic3.title = 'Testing is main part of programming'
+    it "returns topics as per filter for #group_topics_assigned" do
+      topic1.title = "QUnit testing is love"
+      topic2.title = "RSpec testing is too fun"
+      topic3.title = "Testing is main part of programming"
 
       topic1.save!
       topic2.save!
       topic3.save!
 
-      get "/topics/messages-assigned/#{user.username}.json", params: { search: 'Testing' }
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id, topic3.id])
+      get "/topics/messages-assigned/#{user.username}.json", params: { search: "Testing" }
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id, topic3.id],
+      )
 
-      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json", params: { search: 'love' }
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['id'] }).to match_array([topic1.id])
+      get "/topics/group-topics-assigned/#{get_assigned_allowed_group_name}.json",
+          params: {
+            search: "love",
+          }
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to match_array(
+        [topic1.id],
+      )
     end
   end
 
-  context '#messages_assigned' do
-    include_context 'A group that is allowed to assign'
+  context "#messages_assigned" do
+    include_context "A group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -273,14 +317,16 @@ describe ListController do
       sign_in(user)
     end
 
-    it 'returns user-assigned-topics-list of given user' do
+    it "returns user-assigned-topics-list of given user" do
       get "/topics/messages-assigned/#{user.username_lower}.json"
-      expect(JSON.parse(response.body)['topic_list']['topics'].map { |t| t['assigned_to_user']['id'] }).to match_array([user.id])
+      expect(
+        JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["assigned_to_user"]["id"] },
+      ).to match_array([user.id])
     end
 
-    it 'returns empty user-assigned-topics-list for given user not in the assigned_allowed_group' do
+    it "returns empty user-assigned-topics-list for given user not in the assigned_allowed_group" do
       get "/topics/messages-assigned/#{user2.username_lower}.json"
-      expect(JSON.parse(response.body)['topic_list']['topics']).to be_empty
+      expect(JSON.parse(response.body)["topic_list"]["topics"]).to be_empty
     end
   end
 end

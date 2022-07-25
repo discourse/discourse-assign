@@ -37,6 +37,10 @@ class ::TopicAssigner
   end
 
   def self.deprecation_note
-    Discourse.deprecate("TopicAssigner class is deprecated, use Assigner", since: "2.8", drop_from: "2.9")
+    Discourse.deprecate(
+      "TopicAssigner class is deprecated, use Assigner",
+      since: "2.8",
+      drop_from: "2.9",
+    )
   end
 end

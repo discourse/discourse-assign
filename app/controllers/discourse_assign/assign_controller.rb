@@ -7,9 +7,10 @@ module DiscourseAssign
 
     def suggestions
       users = [current_user]
-      users += User
-        .where('users.id <> ?', current_user.id)
-        .joins(<<~SQL
+      users +=
+        User
+          .where("users.id <> ?", current_user.id)
+          .joins(<<~SQL)
           JOIN(
             SELECT assigned_to_id user_id, MAX(created_at) last_assigned
             FROM assignments
@@ -18,16 +19,22 @@ module DiscourseAssign
             HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
           ) as X ON X.user_id = users.id
         SQL
-        )
-        .assign_allowed
-        .order('X.last_assigned DESC')
-        .limit(6)
+          .assign_allowed
+          .order("X.last_assigned DESC")
+          .limit(6)
 
       render json: {
-        assign_allowed_on_groups: Group.visible_groups(current_user).assign_allowed_groups.pluck(:name),
-        assign_allowed_for_groups: Group.visible_groups(current_user).assignable(current_user).pluck(:name),
-        suggestions: ActiveModel::ArraySerializer.new(users, scope: guardian, each_serializer: BasicUserSerializer),
-      }
+               assign_allowed_on_groups:
+                 Group.visible_groups(current_user).assign_allowed_groups.pluck(:name),
+               assign_allowed_for_groups:
+                 Group.visible_groups(current_user).assignable(current_user).pluck(:name),
+               suggestions:
+                 ActiveModel::ArraySerializer.new(
+                   users,
+                   scope: guardian,
+                   each_serializer: BasicUserSerializer,
+                 ),
+             }
     end
 
     def unassign
@@ -46,11 +53,18 @@ module DiscourseAssign
     def assign
       target_id = params.require(:target_id)
       target_type = params.require(:target_type)
-      username = params.permit(:username)['username']
-      group_name = params.permit(:group_name)['group_name']
-      note = params.permit(:note)['note'].presence
+      username = params.permit(:username)["username"]
+      group_name = params.permit(:group_name)["group_name"]
+      note = params.permit(:note)["note"].presence
 
-      assign_to = username.present? ? User.find_by(username_lower: username.downcase) : Group.where("LOWER(name) = ?", group_name.downcase).first
+      assign_to =
+        (
+          if username.present?
+            User.find_by(username_lower: username.downcase)
+          else
+            Group.where("LOWER(name) = ?", group_name.downcase).first
+          end
+        )
 
       raise Discourse::NotFound unless assign_to
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
@@ -72,23 +86,31 @@ module DiscourseAssign
       offset = (params[:offset] || 0).to_i
       limit = (params[:limit] || 100).to_i
 
-      topics = Topic
-        .includes(:tags)
-        .includes(:user)
-        .joins("JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic' AND a.assigned_to_id IS NOT NULL")
-        .order("a.assigned_to_id, topics.bumped_at desc")
-        .offset(offset)
-        .limit(limit)
+      topics =
+        Topic
+          .includes(:tags)
+          .includes(:user)
+          .joins(
+            "JOIN assignments a ON a.target_id = topics.id AND a.target_type = 'Topic' AND a.assigned_to_id IS NOT NULL",
+          )
+          .order("a.assigned_to_id, topics.bumped_at desc")
+          .offset(offset)
+          .limit(limit)
 
       Topic.preload_custom_fields(topics, TopicList.preloaded_custom_fields)
 
-      topic_assignments = Assignment.where(target_id: topics.map(&:id), target_type: 'Topic', active: true).pluck(:target_id, :assigned_to_id).to_h
+      topic_assignments =
+        Assignment
+          .where(target_id: topics.map(&:id), target_type: "Topic", active: true)
+          .pluck(:target_id, :assigned_to_id)
+          .to_h
 
-      users = User
-        .where("users.id IN (?)", topic_assignments.values.uniq)
-        .joins("join user_emails on user_emails.user_id = users.id AND user_emails.primary")
-        .select(UserLookup.lookup_columns)
-        .to_a
+      users =
+        User
+          .where("users.id IN (?)", topic_assignments.values.uniq)
+          .joins("join user_emails on user_emails.user_id = users.id AND user_emails.primary")
+          .select(UserLookup.lookup_columns)
+          .to_a
 
       User.preload_custom_fields(users, User.allowed_user_custom_fields(guardian))
 
@@ -114,41 +136,41 @@ module DiscourseAssign
 
       guardian.ensure_can_see_group_members!(group)
 
-      members = User
-        .joins("LEFT OUTER JOIN group_users g ON g.user_id = users.id")
-        .joins("LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id AND a.assigned_to_type = 'User'")
-        .joins("LEFT OUTER JOIN topics t ON t.id = a.target_id AND a.target_type = 'Topic'")
-        .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
-        .where("a.assigned_to_id IS NOT NULL AND a.active")
-        .order('COUNT(users.id) DESC')
-        .group('users.id')
-        .select('users.*, COUNT(users.id) as "assignments_count"')
-        .limit(limit)
-        .offset(offset)
+      members =
+        User
+          .joins("LEFT OUTER JOIN group_users g ON g.user_id = users.id")
+          .joins(
+            "LEFT OUTER JOIN assignments a ON a.assigned_to_id = users.id AND a.assigned_to_type = 'User'",
+          )
+          .joins("LEFT OUTER JOIN topics t ON t.id = a.target_id AND a.target_type = 'Topic'")
+          .where("g.group_id = ? AND users.id > 0 AND t.deleted_at IS NULL", group.id)
+          .where("a.assigned_to_id IS NOT NULL AND a.active")
+          .order("COUNT(users.id) DESC")
+          .group("users.id")
+          .select('users.*, COUNT(users.id) as "assignments_count"')
+          .limit(limit)
+          .offset(offset)
 
-      if params[:filter]
-        members = members.where(<<~SQL, pattern: "%#{params[:filter]}%")
+      members = members.where(<<~SQL, pattern: "%#{params[:filter]}%") if params[:filter]
           users.name ILIKE :pattern OR users.username_lower ILIKE :pattern
         SQL
-      end
 
-      group_assignments = Topic
-        .joins("JOIN assignments a ON a.topic_id = topics.id")
-        .where(<<~SQL, group_id: group.id)
+      group_assignments =
+        Topic
+          .joins("JOIN assignments a ON a.topic_id = topics.id")
+          .where(<<~SQL, group_id: group.id)
           a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group' AND a.active
         SQL
-        .pluck(:topic_id)
+          .pluck(:topic_id)
 
-      assignments = TopicQuery
-        .new(current_user)
-        .group_topics_assigned_results(group)
-        .pluck('topics.id')
+      assignments =
+        TopicQuery.new(current_user).group_topics_assigned_results(group).pluck("topics.id")
 
       render json: {
-        members: serialize_data(members, GroupUserAssignedSerializer),
-        assignment_count: (assignments | group_assignments).count,
-        group_assignment_count: group_assignments.count
-      }
+               members: serialize_data(members, GroupUserAssignedSerializer),
+               assignment_count: (assignments | group_assignments).count,
+               group_assignment_count: group_assignments.count,
+             }
     end
 
     private
@@ -156,26 +178,59 @@ module DiscourseAssign
     def translate_failure(reason, assign_to)
       case reason
       when :already_assigned
-        { error: I18n.t('discourse_assign.already_assigned', username: assign_to.username) }
+        { error: I18n.t("discourse_assign.already_assigned", username: assign_to.username) }
       when :forbidden_assign_to
-        { error: I18n.t('discourse_assign.forbidden_assign_to', username: assign_to.username) }
+        { error: I18n.t("discourse_assign.forbidden_assign_to", username: assign_to.username) }
       when :forbidden_assignee_not_pm_participant
-        { error: I18n.t('discourse_assign.forbidden_assignee_not_pm_participant', username: assign_to.username) }
+        {
+          error:
+            I18n.t(
+              "discourse_assign.forbidden_assignee_not_pm_participant",
+              username: assign_to.username,
+            ),
+        }
       when :forbidden_assignee_cant_see_topic
-        { error: I18n.t('discourse_assign.forbidden_assignee_cant_see_topic', username: assign_to.username) }
+        {
+          error:
+            I18n.t(
+              "discourse_assign.forbidden_assignee_cant_see_topic",
+              username: assign_to.username,
+            ),
+        }
       when :group_already_assigned
-        { error: I18n.t('discourse_assign.group_already_assigned', group: assign_to.name) }
+        { error: I18n.t("discourse_assign.group_already_assigned", group: assign_to.name) }
       when :forbidden_group_assign_to
-        { error: I18n.t('discourse_assign.forbidden_group_assign_to', group: assign_to.name) }
+        { error: I18n.t("discourse_assign.forbidden_group_assign_to", group: assign_to.name) }
       when :forbidden_group_assignee_not_pm_participant
-        { error: I18n.t('discourse_assign.forbidden_group_assignee_not_pm_participant', group: assign_to.name) }
+        {
+          error:
+            I18n.t(
+              "discourse_assign.forbidden_group_assignee_not_pm_participant",
+              group: assign_to.name,
+            ),
+        }
       when :forbidden_group_assignee_cant_see_topic
-        { error: I18n.t('discourse_assign.forbidden_group_assignee_cant_see_topic', group: assign_to.name) }
+        {
+          error:
+            I18n.t(
+              "discourse_assign.forbidden_group_assignee_cant_see_topic",
+              group: assign_to.name,
+            ),
+        }
       when :too_many_assigns_for_topic
-        { error: I18n.t('discourse_assign.too_many_assigns_for_topic', limit: Assigner::ASSIGNMENTS_PER_TOPIC_LIMIT) }
+        {
+          error:
+            I18n.t(
+              "discourse_assign.too_many_assigns_for_topic",
+              limit: Assigner::ASSIGNMENTS_PER_TOPIC_LIMIT,
+            ),
+        }
       else
         max = SiteSetting.max_assigned_topics
-        { error: I18n.t('discourse_assign.too_many_assigns', username: assign_to.username, max: max) }
+        {
+          error:
+            I18n.t("discourse_assign.too_many_assigns", username: assign_to.username, max: max),
+        }
       end
     end
 

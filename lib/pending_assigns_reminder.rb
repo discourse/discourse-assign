@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class PendingAssignsReminder
-  REMINDED_AT = 'last_reminded_at'
-  REMINDERS_FREQUENCY = 'remind_assigns_frequency'
-  CUSTOM_FIELD_NAME = 'assigns_reminder'
+  REMINDED_AT = "last_reminded_at"
+  REMINDERS_FREQUENCY = "remind_assigns_frequency"
+  CUSTOM_FIELD_NAME = "assigns_reminder"
   REMINDER_THRESHOLD = 2
 
   def remind(user)
@@ -14,7 +14,7 @@ class PendingAssignsReminder
 
     oldest_topics = assigned_topics(user, order: :asc).where.not(id: newest_topics.map(&:id))
     assigned_topics_count = assigned_count_for(user)
-    title = I18n.t('pending_assigns_reminder.title', pending_assignments: assigned_topics_count)
+    title = I18n.t("pending_assigns_reminder.title", pending_assignments: assigned_topics_count)
 
     PostCreator.create!(
       Discourse.system_user,
@@ -23,7 +23,9 @@ class PendingAssignsReminder
       archetype: Archetype.private_message,
       subtype: TopicSubtype.system_message,
       target_usernames: user.username,
-      custom_fields: { CUSTOM_FIELD_NAME => true }
+      custom_fields: {
+        CUSTOM_FIELD_NAME => true,
+      },
     )
 
     update_last_reminded(user)
@@ -32,38 +34,46 @@ class PendingAssignsReminder
   private
 
   def delete_previous_reminders(user)
-    posts = Post
-      .joins(topic: { topic_allowed_users: :user })
-      .where(topic: {
-        posts_count: 1,
-        user_id: Discourse.system_user,
-        archetype: Archetype.private_message,
-        subtype: TopicSubtype.system_message,
-        topic_allowed_users: {
-          users: { id: user.id }
-        }
-      })
-      .joins(topic: :_custom_fields)
-      .where(topic_custom_fields: {
-        name: CUSTOM_FIELD_NAME
-      })
+    posts =
+      Post
+        .joins(topic: { topic_allowed_users: :user })
+        .where(
+          topic: {
+            posts_count: 1,
+            user_id: Discourse.system_user,
+            archetype: Archetype.private_message,
+            subtype: TopicSubtype.system_message,
+            topic_allowed_users: {
+              users: {
+                id: user.id,
+              },
+            },
+          },
+        )
+        .joins(topic: :_custom_fields)
+        .where(topic_custom_fields: { name: CUSTOM_FIELD_NAME })
 
-    posts.find_each do |post|
-      PostDestroyer.new(Discourse.system_user, post).destroy
-    end
+    posts.find_each { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
   end
 
   def assigned_count_for(user)
-    Assignment.joins_with_topics.where(assigned_to_id: user.id, assigned_to_type: 'User', active: true).count
+    Assignment
+      .joins_with_topics
+      .where(assigned_to_id: user.id, assigned_to_type: "User", active: true)
+      .count
   end
 
   def assigned_topics(user, order:)
-    secure = Topic.listable_topics.secured(Guardian.new(user)).or(Topic.private_messages_for_user(user))
+    secure =
+      Topic.listable_topics.secured(Guardian.new(user)).or(Topic.private_messages_for_user(user))
 
     Topic
       .joins(:assignment)
-      .select(:slug, :id, :title, :fancy_title, 'assignments.created_at AS assigned_at')
-      .where("assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User' AND assignments.active", user.id)
+      .select(:slug, :id, :title, :fancy_title, "assignments.created_at AS assigned_at")
+      .where(
+        "assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User' AND assignments.active",
+        user.id,
+      )
       .merge(secure)
       .order("assignments.created_at #{order}")
       .limit(3)
@@ -74,38 +84,47 @@ class PendingAssignsReminder
     oldest_list = build_list_for(:oldest, last_three_topics)
 
     I18n.t(
-      'pending_assigns_reminder.body',
+      "pending_assigns_reminder.body",
       pending_assignments: assigned_topics_count,
       assignments_link: "#{Discourse.base_url}/u/#{user.username_lower}/activity/assigned",
       newest_assignments: newest_list,
       oldest_assignments: oldest_list,
-      frequency: frequency_in_words(user)
+      frequency: frequency_in_words(user),
     )
   end
 
   def build_list_for(key, topics)
-    return '' if topics.empty?
-    initial_list = { 'topic_0' => '', 'topic_1' => '', 'topic_2' => '' }
-    items = topics.each_with_index.reduce(initial_list) do |memo, (t, index)|
-      memo["topic_#{index}"] = "- [#{Emoji.gsub_emoji_to_unicode(t.fancy_title)}](#{t.relative_url}) - assigned #{time_in_words_for(t)}"
-      memo
-    end
+    return "" if topics.empty?
+    initial_list = { "topic_0" => "", "topic_1" => "", "topic_2" => "" }
+    items =
+      topics
+        .each_with_index
+        .reduce(initial_list) do |memo, (t, index)|
+          memo[
+            "topic_#{index}"
+          ] = "- [#{Emoji.gsub_emoji_to_unicode(t.fancy_title)}](#{t.relative_url}) - assigned #{time_in_words_for(t)}"
+          memo
+        end
 
     I18n.t("pending_assigns_reminder.#{key}", items.symbolize_keys!)
   end
 
   def time_in_words_for(topic)
     FreedomPatches::Rails4.distance_of_time_in_words(
-      Time.zone.now, topic.assigned_at.to_time, false, scope: 'datetime.distance_in_words_verbose'
+      Time.zone.now,
+      topic.assigned_at.to_time,
+      false,
+      scope: "datetime.distance_in_words_verbose",
     )
   end
 
   def frequency_in_words(user)
-    frequency = if user.custom_fields&.has_key?(REMINDERS_FREQUENCY)
-      user.custom_fields[REMINDERS_FREQUENCY]
-    else
-      SiteSetting.remind_assigns_frequency
-    end
+    frequency =
+      if user.custom_fields&.has_key?(REMINDERS_FREQUENCY)
+        user.custom_fields[REMINDERS_FREQUENCY]
+      else
+        SiteSetting.remind_assigns_frequency
+      end
 
     ::RemindAssignsFrequencySiteSettings.frequency_for(frequency)
   end

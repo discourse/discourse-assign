@@ -1,17 +1,18 @@
 # frozen_string_literal: true
 
-require 'email/sender'
-require 'nokogiri'
+require "email/sender"
+require "nokogiri"
 
 class ::Assigner
   ASSIGNMENTS_PER_TOPIC_LIMIT = 5
 
   def self.backfill_auto_assign
-    staff_mention = User
-      .assign_allowed
-      .pluck('username')
-      .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
-      .join(' OR ')
+    staff_mention =
+      User
+        .assign_allowed
+        .pluck("username")
+        .map { |name| "p.cooked ILIKE '%mention%@#{name}%'" }
+        .join(" OR ")
 
     sql = <<~SQL
       SELECT p.topic_id, MAX(post_number) post_number
@@ -29,11 +30,16 @@ class ::Assigner
     puts
     assigned = 0
 
-    ActiveRecord::Base.connection.raw_connection.exec(sql).to_a.each do |row|
-      post = Post.find_by(post_number: row["post_number"].to_i, topic_id: row["topic_id"].to_i)
-      assigned += 1 if post && auto_assign(post)
-      putc "."
-    end
+    ActiveRecord::Base
+      .connection
+      .raw_connection
+      .exec(sql)
+      .to_a
+      .each do |row|
+        post = Post.find_by(post_number: row["post_number"].to_i, topic_id: row["topic_id"].to_i)
+        assigned += 1 if post && auto_assign(post)
+        putc "."
+      end
 
     puts
     puts "#{assigned} topics where automatically assigned to staff members"
@@ -41,13 +47,23 @@ class ::Assigner
 
   def self.assigned_self?(text)
     return false if text.blank? || SiteSetting.assign_self_regex.blank?
-    regex = Regexp.new(SiteSetting.assign_self_regex) rescue nil
+    regex =
+      begin
+        Regexp.new(SiteSetting.assign_self_regex)
+      rescue StandardError
+        nil
+      end
     !!(regex && text[regex])
   end
 
   def self.assigned_other?(text)
     return false if text.blank? || SiteSetting.assign_other_regex.blank?
-    regex = Regexp.new(SiteSetting.assign_other_regex) rescue nil
+    regex =
+      begin
+        Regexp.new(SiteSetting.assign_other_regex)
+      rescue StandardError
+        nil
+      end
     !!(regex && text[regex])
   end
 
@@ -78,7 +94,7 @@ class ::Assigner
   end
 
   def self.is_last_staff_post?(post)
-    allowed_user_ids = User.assign_allowed.pluck(:id).join(',')
+    allowed_user_ids = User.assign_allowed.pluck(:id).join(",")
 
     sql = <<~SQL
       SELECT 1
@@ -90,10 +106,7 @@ class ::Assigner
       HAVING MAX(post_number) = :post_number
     SQL
 
-    args = {
-      topic_id: post.topic_id,
-      post_number: post.post_number
-    }
+    args = { topic_id: post.topic_id, post_number: post.post_number }
 
     DB.exec(sql, args) == 1
   end
@@ -101,20 +114,13 @@ class ::Assigner
   def self.mentioned_staff(post)
     mentions = post.raw_mentions
     if mentions.present?
-      User.human_users
-        .assign_allowed
-        .where('username_lower IN (?)', mentions.map(&:downcase))
-        .first
+      User.human_users.assign_allowed.where("username_lower IN (?)", mentions.map(&:downcase)).first
     end
   end
 
   def self.publish_topic_tracking_state(topic, user_id)
     if topic.private_message?
-      MessageBus.publish(
-        "/private-messages/assigned",
-        { topic_id: topic.id },
-        user_ids: [user_id]
-      )
+      MessageBus.publish("/private-messages/assigned", { topic_id: topic.id }, user_ids: [user_id])
     end
   end
 
@@ -135,11 +141,12 @@ class ::Assigner
     return true if assign_to.is_a?(Group)
     return true if @assigned_by.id == assign_to.id
 
-    assigned_total = Assignment
-      .joins_with_topics
-      .where(topics: { deleted_at: nil })
-      .where(assigned_to_id: assign_to.id, active: true)
-      .count
+    assigned_total =
+      Assignment
+        .joins_with_topics
+        .where(topics: { deleted_at: nil })
+        .where(assigned_to_id: assign_to.id, active: true)
+        .count
 
     assigned_total < SiteSetting.max_assigned_topics
   end
@@ -165,7 +172,10 @@ class ::Assigner
   end
 
   def can_assignee_see_target?(assignee)
-    return false if (topic_target? || post_target?) && topic.private_message? && !private_message_allowed_user_ids.include?(assignee.id)
+    if (topic_target? || post_target?) && topic.private_message? &&
+         !private_message_allowed_user_ids.include?(assignee.id)
+      return false
+    end
     return Guardian.new(assignee).can_see_topic?(@target) if topic_target?
     return Guardian.new(assignee).can_see_post?(@target) if post_target?
 
@@ -188,9 +198,17 @@ class ::Assigner
   def forbidden_reasons(assign_to:, type:, note:)
     case
     when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
-      topic.private_message? ? :forbidden_assignee_not_pm_participant : :forbidden_assignee_cant_see_topic
+      if topic.private_message?
+        :forbidden_assignee_not_pm_participant
+      else
+        :forbidden_assignee_cant_see_topic
+      end
     when assign_to.is_a?(Group) && assign_to.users.any? { |user| !can_assignee_see_target?(user) }
-      topic.private_message? ? :forbidden_group_assignee_not_pm_participant : :forbidden_group_assignee_cant_see_topic
+      if topic.private_message?
+        :forbidden_group_assignee_not_pm_participant
+      else
+        :forbidden_group_assignee_cant_see_topic
+      end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
     when topic_same_assignee_and_note(assign_to, type, note)
@@ -240,7 +258,14 @@ class ::Assigner
 
     @target.assignment&.destroy!
 
-    assignment = @target.create_assignment!(assigned_to_id: assign_to.id, assigned_to_type: assigned_to_type, assigned_by_user_id: @assigned_by.id, topic_id: topic.id, note: note)
+    assignment =
+      @target.create_assignment!(
+        assigned_to_id: assign_to.id,
+        assigned_to_type: assigned_to_type,
+        assigned_by_user_id: @assigned_by.id,
+        topic_id: topic.id,
+        note: note,
+      )
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
@@ -250,19 +275,23 @@ class ::Assigner
 
     if assignment.assigned_to_user?
       if !TopicUser.exists?(
-        user_id: assign_to.id,
-        topic_id: topic.id,
-        notification_level: TopicUser.notification_levels[:watching]
-      )
+           user_id: assign_to.id,
+           topic_id: topic.id,
+           notification_level: TopicUser.notification_levels[:watching],
+         )
         TopicUser.change(
           assign_to.id,
           topic.id,
           notification_level: TopicUser.notification_levels[:watching],
-          notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
+          notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
         )
       end
 
-      if SiteSetting.assign_mailer == AssignMailer.levels[:always] || (SiteSetting.assign_mailer == AssignMailer.levels[:different_users] && @assigned_by.id != assign_to.id)
+      if SiteSetting.assign_mailer == AssignMailer.levels[:always] ||
+           (
+             SiteSetting.assign_mailer == AssignMailer.levels[:different_users] &&
+               @assigned_by.id != assign_to.id
+           )
         if !topic.muted?(assign_to)
           message = AssignMailer.send_assignment(assign_to.email, topic, @assigned_by)
           Email::Sender.new(message, :assign_message).send
@@ -283,18 +312,14 @@ class ::Assigner
         topic_id: topic.id,
         topic_title: topic.title,
         assigned_by_id: @assigned_by.id,
-        assigned_by_username: @assigned_by.username
+        assigned_by_username: @assigned_by.username,
       }
       if assignment.assigned_to_user?
-        payload.merge!({
-          assigned_to_id: assign_to.id,
-          assigned_to_username: assign_to.username,
-        })
+        payload.merge!({ assigned_to_id: assign_to.id, assigned_to_username: assign_to.username })
       else
-        payload.merge!({
-          assigned_to_group_id: assign_to.id,
-          assigned_to_group_name: assign_to.name,
-        })
+        payload.merge!(
+          { assigned_to_group_id: assign_to.id, assigned_to_group_name: assign_to.name },
+        )
       end
       WebHook.enqueue_assign_hooks(assigned_to_type, payload.to_json)
     end
@@ -310,24 +335,25 @@ class ::Assigner
 
       first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
-      Jobs.enqueue(:unassign_notification,
-                   topic_id: topic.id,
-                   assigned_to_id: assignment.assigned_to.id,
-                   assigned_to_type: assignment.assigned_to_type)
+      Jobs.enqueue(
+        :unassign_notification,
+        topic_id: topic.id,
+        assigned_to_id: assignment.assigned_to.id,
+        assigned_to_type: assignment.assigned_to_type,
+      )
 
       if assignment.assigned_to_user?
         if TopicUser.exists?(
-          user_id: assignment.assigned_to_id,
-          topic: topic,
-          notification_level: TopicUser.notification_levels[:watching],
-          notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
-        )
-
+             user_id: assignment.assigned_to_id,
+             topic: topic,
+             notification_level: TopicUser.notification_levels[:watching],
+             notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
+           )
           TopicUser.change(
             assignment.assigned_to_id,
             topic.id,
             notification_level: TopicUser.notification_levels[:tracking],
-            notifications_reason_id: TopicUser.notification_reasons[:plugin_changed]
+            notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
           )
         end
       end
@@ -337,7 +363,9 @@ class ::Assigner
       if SiteSetting.unassign_creates_tracking_post && !silent
         post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
 
-        custom_fields = { "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name }
+        custom_fields = {
+          "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name,
+        }
 
         if post_target?
           custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
@@ -345,7 +373,8 @@ class ::Assigner
         end
 
         topic.add_moderator_post(
-          @assigned_by, nil,
+          @assigned_by,
+          nil,
           bump: false,
           post_type: post_type,
           custom_fields: custom_fields,
@@ -361,18 +390,16 @@ class ::Assigner
           topic_id: topic.id,
           topic_title: topic.title,
           unassigned_by_id: @assigned_by.id,
-          unassigned_by_username: @assigned_by.username
+          unassigned_by_username: @assigned_by.username,
         }
         if assignment.assigned_to_user?
-          payload.merge!({
-            unassigned_to_id: assigned_to.id,
-            unassigned_to_username: assigned_to.username,
-          })
+          payload.merge!(
+            { unassigned_to_id: assigned_to.id, unassigned_to_username: assigned_to.username },
+          )
         else
-          payload.merge!({
-            unassigned_to_group_id: assigned_to.id,
-            unassigned_to_group_name: assigned_to.name,
-          })
+          payload.merge!(
+            { unassigned_to_group_id: assigned_to.id, unassigned_to_group_name: assigned_to.name },
+          )
         end
         WebHook.enqueue_assign_hooks(type, payload.to_json)
       end
@@ -380,14 +407,14 @@ class ::Assigner
       MessageBus.publish(
         "/staff/topic-assignment",
         {
-          type: 'unassigned',
+          type: "unassigned",
           topic_id: topic.id,
           post_id: post_target? && @target.id,
           post_number: post_target? && @target.post_number,
           assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
           assignment_note: nil,
         },
-        user_ids: allowed_user_ids
+        user_ids: allowed_user_ids,
       )
     end
   end
@@ -395,20 +422,26 @@ class ::Assigner
   private
 
   def queue_notification(assign_to, skip_small_action_post)
-    Jobs.enqueue(:assign_notification,
+    Jobs.enqueue(
+      :assign_notification,
       topic_id: topic.id,
       post_id: topic_target? ? first_post.id : @target.id,
       assigned_to_id: assign_to.id,
       assigned_to_type: assign_to.is_a?(User) ? "User" : "Group",
       assigned_by_id: @assigned_by.id,
-      skip_small_action_post: skip_small_action_post)
+      skip_small_action_post: skip_small_action_post,
+    )
   end
 
   def add_small_action_post(action_code, assign_to, note)
-    custom_fields = { "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name }
+    custom_fields = {
+      "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name,
+    }
 
     if post_target?
-      custom_fields.merge!({ "action_code_path" => "/p/#{@target.id}", "action_code_post_id" => @target.id })
+      custom_fields.merge!(
+        { "action_code_path" => "/p/#{@target.id}", "action_code_post_id" => @target.id },
+      )
     end
 
     topic.add_moderator_post(
@@ -417,7 +450,7 @@ class ::Assigner
       bump: false,
       post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
       action_code: action_code,
-      custom_fields: custom_fields
+      custom_fields: custom_fields,
     )
   end
 
@@ -434,7 +467,7 @@ class ::Assigner
         assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json,
         assignment_note: note,
       },
-      user_ids: allowed_user_ids
+      user_ids: allowed_user_ids,
     )
   end
 
@@ -460,18 +493,18 @@ class ::Assigner
 
   def topic_same_assignee_and_note(assign_to, type, note)
     topic.assignment&.assigned_to_id == assign_to.id &&
-      topic.assignment&.assigned_to_type == type &&
-      topic.assignment.active == true &&
+      topic.assignment&.assigned_to_type == type && topic.assignment.active == true &&
       topic.assignment&.note == note
   end
 
   def post_same_assignee_and_note(assign_to, type, note)
     @target.is_a?(Topic) &&
-      Assignment.where(topic_id: topic.id, target_type: "Post", active: true).any? do |assignment|
-        assignment.assigned_to_id == assign_to.id &&
-          assignment.assigned_to_type == type &&
-          assignment&.note == note
-      end
+      Assignment
+        .where(topic_id: topic.id, target_type: "Post", active: true)
+        .any? do |assignment|
+          assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type &&
+            assignment&.note == note
+        end
   end
 
   def no_assignee_change?(assignee)

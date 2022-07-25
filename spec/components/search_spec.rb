@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-require_relative '../support/assign_allowed_group'
+require "rails_helper"
+require_relative "../support/assign_allowed_group"
 
 describe Search do
   fab!(:user) { Fabricate(:active_user) }
@@ -12,8 +12,8 @@ describe Search do
     SiteSetting.assign_enabled = true
   end
 
-  context 'Advanced search' do
-    include_context 'A group that is allowed to assign'
+  context "Advanced search" do
+    include_context "A group that is allowed to assign"
 
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }
@@ -30,34 +30,47 @@ describe Search do
       Assigner.new(post2.topic, user).assign(user2)
       Assigner.new(post3.topic, user).assign(user)
       Assigner.new(post5, user).assign(user)
-      Assignment.create!(assigned_to: user, assigned_by_user: user, target: post6, topic_id: post6.topic.id, active: false)
+      Assignment.create!(
+        assigned_to: user,
+        assigned_by_user: user,
+        target: post6,
+        topic_id: post6.topic.id,
+        active: false,
+      )
     end
 
-    it 'can find by status' do
-      expect(Search.execute('in:assigned', guardian: Guardian.new(user)).posts.length).to eq(4)
+    it "can find by status" do
+      expect(Search.execute("in:assigned", guardian: Guardian.new(user)).posts.length).to eq(4)
 
       Assigner.new(post3.topic, user).unassign
 
-      expect(Search.execute('in:unassigned', guardian: Guardian.new(user)).posts.length).to eq(2)
-      expect(Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length).to eq(2)
+      expect(Search.execute("in:unassigned", guardian: Guardian.new(user)).posts.length).to eq(2)
+      expect(
+        Search.execute("assigned:#{user.username}", guardian: Guardian.new(user)).posts.length,
+      ).to eq(2)
     end
 
-    it 'serializes results' do
+    it "serializes results" do
       guardian = Guardian.new(user)
-      result = Search.execute('in:assigned', guardian: guardian)
+      result = Search.execute("in:assigned", guardian: guardian)
       serializer = GroupedSearchResultSerializer.new(result, scope: guardian)
-      indirectly_assigned_to = serializer.as_json[:topics].find { |topic| topic[:id] == post5.topic.id }[:indirectly_assigned_to]
-      expect(indirectly_assigned_to).to eq(post5.id => {
-        assigned_to: {
-          assign_icon: "user-plus",
-          assign_path: "/u/#{user.username}/activity/assigned",
-          avatar_template: user.avatar_template,
-          name: user.name,
-          username: user.username,
+      indirectly_assigned_to =
+        serializer.as_json[:topics].find { |topic| topic[:id] == post5.topic.id }[
+          :indirectly_assigned_to
+        ]
+      expect(indirectly_assigned_to).to eq(
+        post5.id => {
+          assigned_to: {
+            assign_icon: "user-plus",
+            assign_path: "/u/#{user.username}/activity/assigned",
+            avatar_template: user.avatar_template,
+            name: user.name,
+            username: user.username,
+          },
+          post_number: post5.post_number,
+          assignment_note: nil,
         },
-        post_number: post5.post_number,
-        assignment_note: nil,
-      })
+      )
     end
   end
 end

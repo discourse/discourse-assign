@@ -14,8 +14,11 @@ class AddTargetToAssignments < ActiveRecord::Migration[6.1]
     change_column :assignments, :target_id, :integer, null: false
     change_column :assignments, :target_type, :string, null: false
 
-    add_index :assignments, [:target_id, :target_type], unique: true
-    add_index :assignments, [:assigned_to_id, :assigned_to_type, :target_id, :target_type], unique: true, name: 'unique_target_and_assigned'
+    add_index :assignments, %i[target_id target_type], unique: true
+    add_index :assignments,
+              %i[assigned_to_id assigned_to_type target_id target_type],
+              unique: true,
+              name: "unique_target_and_assigned"
   end
 
   def down

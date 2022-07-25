@@ -2,7 +2,7 @@
 
 module Jobs
   class RemindUser < ::Jobs::Base
-    sidekiq_options queue: 'low'
+    sidekiq_options queue: "low"
 
     def execute(args)
       user = User.find_by(id: args[:user_id])

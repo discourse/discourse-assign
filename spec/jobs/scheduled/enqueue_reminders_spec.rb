@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Jobs::EnqueueReminders do
-  let(:assign_allowed_group) { Group.find_by(name: 'staff') }
+  let(:assign_allowed_group) { Group.find_by(name: "staff") }
   let(:user) { Fabricate(:user, groups: [assign_allowed_group]) }
 
   before do
@@ -11,26 +11,26 @@ RSpec.describe Jobs::EnqueueReminders do
     SiteSetting.assign_enabled = true
   end
 
-  describe '#execute' do
-    it 'does not enqueue reminders when there are no assigned tasks' do
+  describe "#execute" do
+    it "does not enqueue reminders when there are no assigned tasks" do
       assert_reminders_enqueued(0)
     end
 
-    it 'does not enqueue reminders when no groups are allowed to assign' do
-      SiteSetting.assign_allowed_on_groups = ''
+    it "does not enqueue reminders when no groups are allowed to assign" do
+      SiteSetting.assign_allowed_on_groups = ""
 
       assign_multiple_tasks_to(user)
 
       assert_reminders_enqueued(0)
     end
 
-    it 'enqueues a reminder when the user has more than one task' do
+    it "enqueues a reminder when the user has more than one task" do
       assign_multiple_tasks_to(user)
 
       assert_reminders_enqueued(1)
     end
 
-    it 'does not enqueue a reminder when the user only has one task' do
+    it "does not enqueue a reminder when the user only has one task" do
       assign_one_task_to(user)
 
       assert_reminders_enqueued(0)
@@ -43,31 +43,32 @@ RSpec.describe Jobs::EnqueueReminders do
       assert_reminders_enqueued(0)
     end
 
-    it 'enqueues a reminder if the user was reminded more than a month ago' do
+    it "enqueues a reminder if the user was reminded more than a month ago" do
       user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 31.days.ago)
       assign_multiple_tasks_to(user)
 
       assert_reminders_enqueued(1)
     end
 
-    it 'does not enqueue reminders if the remind frequency is set to never' do
+    it "does not enqueue reminders if the remind frequency is set to never" do
       SiteSetting.remind_assigns_frequency = 0
       assign_multiple_tasks_to(user)
 
       assert_reminders_enqueued(0)
     end
 
-    it 'does not enqueue reminders if the topic was just assigned to the user' do
+    it "does not enqueue reminders if the topic was just assigned to the user" do
       just_assigned = DateTime.now
       assign_multiple_tasks_to(user, assigned_on: just_assigned)
 
       assert_reminders_enqueued(0)
     end
 
-    it 'enqueues a reminder when the user overrides the global frequency' do
+    it "enqueues a reminder when the user overrides the global frequency" do
       SiteSetting.remind_assigns_frequency = 0
       user.custom_fields.merge!(
-        PendingAssignsReminder::REMINDERS_FREQUENCY => RemindAssignsFrequencySiteSettings::DAILY_MINUTES
+        PendingAssignsReminder::REMINDERS_FREQUENCY =>
+          RemindAssignsFrequencySiteSettings::DAILY_MINUTES,
       )
       user.save_custom_fields
 
@@ -91,9 +92,7 @@ RSpec.describe Jobs::EnqueueReminders do
     end
 
     def assign_one_task_to(user, assigned_on: 3.months.ago, post: Fabricate(:post))
-      freeze_time(assigned_on) do
-        Assigner.new(post.topic, user).assign(user)
-      end
+      freeze_time(assigned_on) { Assigner.new(post.topic, user).assign(user) }
     end
 
     def assign_multiple_tasks_to(user, assigned_on: 3.months.ago)
