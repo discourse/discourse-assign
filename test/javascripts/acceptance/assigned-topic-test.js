@@ -7,8 +7,10 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "I18n";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import NotificationFixture from "../fixtures/notifications-fixtures";
 
 function assignCurrentUserToTopic(needs) {
   needs.pretender((server, helper) => {
@@ -39,6 +41,12 @@ function assignCurrentUserToTopic(needs) {
         name: "Developers",
       };
       return helper.response(topic);
+    });
+
+    server.get("/notifications", () => {
+      return helper.response(
+        NotificationFixture["/assign/notifications/eviltrout"]
+      );
     });
   });
 }
@@ -144,6 +152,33 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     assert.notOk(
       exists("#topic-footer-dropdown-reassign"),
       "does not show reassign dropdown at the bottom of the topic"
+    );
+  });
+
+  test("Shows assignment notification", async function (assert) {
+    updateCurrentUser({ can_assign: true });
+
+    await visit("/u/eviltrout/notifications");
+
+    const notification = query(
+      "section.user-content ul.notifications li.item.notification"
+    );
+
+    assert.equal(
+      notification.children[0].classList,
+      "assigned",
+      "with correct assigned class"
+    );
+
+    assert.equal(
+      notification.querySelector("a").title,
+      I18n.t("notifications.titles.assigned"),
+      "with correct title"
+    );
+    assert.equal(
+      notification.querySelector("svg use").href["baseVal"],
+      "#user-plus",
+      "with correct icon"
     );
   });
 });
