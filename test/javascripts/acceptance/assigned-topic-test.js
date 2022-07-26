@@ -144,7 +144,6 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "shows reassign dropdown at the bottom of the topic"
     );
   });
-<<<<<<< HEAD
 
   test("User without assign ability cannot see footer button", async (assert) => {
     updateCurrentUser({ can_assign: false, admin: false, moderator: false });
@@ -155,8 +154,6 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "does not show reassign dropdown at the bottom of the topic"
     );
   });
-||||||| parent of 4233170 (first try)
-=======
 
   test("Shows assignment notification", async function (assert) {
     updateCurrentUser({ can_assign: true });
@@ -184,7 +181,6 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "with correct icon"
     );
   });
->>>>>>> 4233170 (first try)
 });
 
 acceptance("Discourse Assign | Re-assign topic", function (needs) {
