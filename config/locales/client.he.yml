@@ -139,6 +139,3 @@ he:
         assigned: "הוקצה אליך על ידי %{username}"
       titles:
         assigned: "מוקצה"
-    sidebar:
-      assigned_link_title: "נושאים שהוקצו לך"
-      assigned_link_text: "מוקצה"
