@@ -139,6 +139,3 @@ sv:
         assigned: "%{username} tilldelade dig"
       titles:
         assigned: "Tilldelad"
-    sidebar:
-      assigned_link_title: "Ämnen som tilldelats dig"
-      assigned_link_text: "Tilldelad"
