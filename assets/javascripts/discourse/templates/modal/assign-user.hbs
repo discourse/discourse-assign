@@ -26,7 +26,7 @@
       {{/each}}
     </div>
     <label>{{i18n "discourse_assign.assign_modal.note_label"}}</label>
-    {{textarea value=model.note}}
+    {{textarea id="assign-modal-note" value=model.note key-down=(action "handleTextAreaKeydown")}}
   </div>
 {{/d-modal-body}}
 
