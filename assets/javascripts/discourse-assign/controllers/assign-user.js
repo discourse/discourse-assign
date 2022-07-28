@@ -1,4 +1,5 @@
 import Controller, { inject as controller } from "@ember/controller";
+import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
 import { not, or } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
@@ -6,7 +7,7 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Controller.extend({
+export default Controller.extend(ModalFunctionality, {
   topicBulkActions: controller(),
   assignSuggestions: null,
   allowedGroups: null,
@@ -39,6 +40,13 @@ export default Controller.extend({
       type: "assign",
       username,
     });
+  },
+
+  @action
+  handleTextAreaKeydown(value, event) {
+    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+      this.assign();
+    }
   },
 
   @action
