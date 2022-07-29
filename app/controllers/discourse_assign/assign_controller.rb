@@ -56,6 +56,7 @@ module DiscourseAssign
       username = params.permit(:username)["username"]
       group_name = params.permit(:group_name)["group_name"]
       note = params.permit(:note)["note"].presence
+      status = params.permit(:status)["status"].presence
 
       assign_to =
         (
@@ -71,7 +72,7 @@ module DiscourseAssign
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound unless target
 
-      assign = Assigner.new(target, current_user).assign(assign_to, note: note)
+      assign = Assigner.new(target, current_user).assign(assign_to, note: note, status: status)
 
       if assign[:success]
         render json: success_json

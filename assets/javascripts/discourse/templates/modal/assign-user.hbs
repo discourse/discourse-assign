@@ -25,8 +25,19 @@
         </a>
       {{/each}}
     </div>
-    <label>{{i18n "discourse_assign.assign_modal.note_label"}}</label>
-    {{textarea id="assign-modal-note" value=model.note key-down=(action "handleTextAreaKeydown")}}
+    <div class="control-group assign-status">
+      <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
+      {{combo-box
+        id="assign-status"
+        content=availiableStatuses
+        value=model.status
+        onChange=(action (mut model.status))
+      }}
+    </div>
+    <div class="control-group assign-status">
+      <label>{{i18n "discourse_assign.assign_modal.note_label"}}</label>
+      {{textarea id="assign-modal-note" value=model.note key-down=(action "handleTextAreaKeydown")}}
+    </div>
   </div>
 {{/d-modal-body}}
 
