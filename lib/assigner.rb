@@ -289,7 +289,7 @@ class ::Assigner
 
     queue_notification(assign_to, skip_small_action_post)
 
-    publish_assignment(assignment, assign_to, note)
+    publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?
       if !TopicUser.exists?(
@@ -319,7 +319,7 @@ class ::Assigner
 
     unless skip_small_action_post
       post_action_code = moderator_post_assign_action_code(assignment, action_code)
-      add_small_action_post(post_action_code, assign_to, note, status)
+      add_small_action_post(post_action_code, assign_to, note)
     end
 
     # Create a webhook event

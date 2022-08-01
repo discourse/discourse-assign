@@ -34,7 +34,7 @@ plugins:
     allow_any: false
     refresh: true
   enable_assign_status:
-    default: true
+    default: false
     client: true
   assign_statuses:
     client: true
