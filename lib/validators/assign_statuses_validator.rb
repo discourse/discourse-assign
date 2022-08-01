@@ -8,8 +8,6 @@ class AssignStatusesValidator
   def valid_value?(value)
     statuses = value.split("|")
 
-    byebug
-
     case
     when statuses.size < 2
       @reason = "too_few"
