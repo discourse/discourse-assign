@@ -4,7 +4,10 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 RSpec.describe DiscourseAssign::AssignController do
-  before { SiteSetting.assign_enabled = true }
+  before do
+    SiteSetting.assign_enabled = true
+    SiteSetting.enable_assign_status = true
+  end
 
   fab!(:default_allowed_group) { Group.find_by(name: "staff") }
   let(:user) do
@@ -139,6 +142,29 @@ RSpec.describe DiscourseAssign::AssignController do
           }
 
       expect(post.topic.reload.assignment.note).to eq("do dis pls")
+    end
+
+    it "assigns topic with a set status to a user" do
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            username: user2.username,
+            status: "In Progress",
+          }
+
+      expect(post.topic.reload.assignment.status).to eq("In Progress")
+    end
+
+    it "assigns topic with default status to a user" do
+      put "/assign/assign.json",
+          params: {
+            target_id: post.topic_id,
+            target_type: "Topic",
+            username: user2.username,
+          }
+
+      expect(post.topic.reload.assignment.status).to eq("New")
     end
 
     it "assigns topic to a group" do

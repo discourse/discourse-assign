@@ -39,4 +39,10 @@ describe PostSerializer do
     serializer = PostSerializer.new(post, scope: guardian)
     expect(serializer.as_json[:post][:assignment_note]).to eq("tomtom best")
   end
+
+  it "includes status in serializer" do
+    Assigner.new(post, user).assign(user, status: "Done")
+    serializer = PostSerializer.new(post, scope: guardian)
+    expect(serializer.as_json[:post][:assignment_status]).to eq("Done")
+  end
 end

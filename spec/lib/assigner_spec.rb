@@ -3,7 +3,10 @@
 require "rails_helper"
 
 RSpec.describe Assigner do
-  before { SiteSetting.assign_enabled = true }
+  before do
+    SiteSetting.assign_enabled = true
+    SiteSetting.enable_assign_status = true
+  end
 
   let(:assign_allowed_group) { Group.find_by(name: "staff") }
   let(:pm_post) { Fabricate(:private_message_post) }
@@ -53,11 +56,24 @@ RSpec.describe Assigner do
       expect(topic.posts.last.raw).to eq "tomtom best mom"
     end
 
+    it "can assign with status" do
+      assigner.assign(moderator, status: "In Progress")
+
+      expect(topic.assignment.status).to eq "In Progress"
+    end
+
+    it "assign with note adds moderator post with note" do
+      expect { assigner.assign(moderator, status: "In Progress") }.to change {
+        topic.posts.count
+      }.by(1)
+      expect(topic.posts.last.raw).to eq "In Progress"
+    end
+
     it "publishes topic assignment after assign and unassign" do
       messages =
         MessageBus.track_publish("/staff/topic-assignment") do
           assigner = described_class.new(topic, moderator_2)
-          assigner.assign(moderator, note: "tomtom best mom")
+          assigner.assign(moderator, note: "tomtom best mom", status: "In Progress")
           assigner.unassign
         end
 
@@ -71,6 +87,7 @@ RSpec.describe Assigner do
           assigned_type: "User",
           assigned_to: BasicUserSerializer.new(moderator, scope: Guardian.new, root: false).as_json,
           assignment_note: "tomtom best mom",
+          assignment_status: "In Progress",
         },
       )
 
@@ -83,6 +100,7 @@ RSpec.describe Assigner do
           post_number: false,
           assigned_type: "User",
           assignment_note: nil,
+          assignment_status: "In Progress",
         },
       )
     end
@@ -354,6 +372,76 @@ RSpec.describe Assigner do
 
         small_action_post = topic.posts.last
         expect(small_action_post.action_code).to eq "note_change"
+      end
+    end
+
+    describe "updating status" do
+      it "does not recreate assignment if no assignee change" do
+        assigner.assign(moderator)
+
+        expect do assigner.assign(moderator, status: "Done") end.to_not change {
+          Assignment.last.id
+        }
+      end
+
+      it "updates status" do
+        assigner.assign(moderator)
+
+        assigner.assign(moderator, status: "Done")
+
+        expect(Assignment.last.status).to eq "Done"
+      end
+
+      it "queues notification" do
+        assigner.assign(moderator)
+
+        expect_enqueued_with(job: :assign_notification) do
+          assigner.assign(moderator, status: "Done")
+        end
+      end
+
+      it "publishes topic assignment with note" do
+        assigner.assign(moderator)
+
+        messages =
+          MessageBus.track_publish("/staff/topic-assignment") do
+            assigner = described_class.new(topic, moderator_2)
+            assigner.assign(moderator, status: "Done")
+          end
+
+        expect(messages[0].channel).to eq "/staff/topic-assignment"
+        expect(messages[0].data).to include(
+          {
+            type: "assigned",
+            topic_id: topic.id,
+            post_id: false,
+            post_number: false,
+            assigned_type: "User",
+            assigned_to:
+              BasicUserSerializer.new(moderator, scope: Guardian.new, root: false).as_json,
+            assignment_status: "Done",
+          },
+        )
+      end
+
+      it "adds a note_change small action post" do
+        assigner.assign(moderator)
+
+        assigner.assign(moderator, status: "Done")
+
+        small_action_post = topic.posts.last
+        expect(small_action_post.action_code).to eq "status_change"
+      end
+    end
+
+    describe "updating note and status at the same time" do
+      it "adds a note_change small action post" do
+        assigner.assign(moderator)
+
+        assigner.assign(moderator, note: "This is a note!", status: "Done")
+
+        small_action_post = topic.posts.last
+        expect(small_action_post.action_code).to eq "details_change"
       end
     end
   end

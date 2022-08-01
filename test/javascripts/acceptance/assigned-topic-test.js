@@ -23,6 +23,7 @@ function assignCurrentUserToTopic(needs) {
           "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
       };
       topic["assignment_note"] = "Shark Doododooo";
+      topic["assignment_status"] = "New";
       topic["indirectly_assigned_to"] = {
         2: {
           assigned_to: {
@@ -89,6 +90,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     tagging_enabled: true,
     assigns_user_url_path: "/",
     assigns_public: true,
+    enable_assign_status: true,
   });
 
   assignCurrentUserToTopic(needs);
