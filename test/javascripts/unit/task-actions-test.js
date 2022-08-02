@@ -28,6 +28,7 @@ discourseModule("Unit | Service | task-actions", function () {
         group_name: "cats",
         target,
         targetType: "Topic",
+        status: undefined,
       },
     });
   });
