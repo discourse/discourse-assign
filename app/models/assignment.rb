@@ -27,6 +27,10 @@ class Assignment < ActiveRecord::Base
     SiteSetting.assign_statuses.split("|")
   end
 
+  def self.default_status
+    Assignment.statuses.first
+  end
+
   def self.status_enabled?
     SiteSetting.enable_assign_status
   end
@@ -42,12 +46,12 @@ class Assignment < ActiveRecord::Base
   private
 
   def default_status
-    self.status ||= Assignment.statuses.split("|").first if SiteSetting.enable_assign_status
+    self.status ||= Assignment.default_status if SiteSetting.enable_assign_status
   end
 
   def validate_status
     if SiteSetting.enable_assign_status && !Assignment.statuses.include?(self.status)
-      errors.add(:status, :invalid_status)
+      errors.add(:status, :invalid)
     end
   end
 end

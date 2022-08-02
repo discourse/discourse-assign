@@ -62,13 +62,6 @@ RSpec.describe Assigner do
       expect(topic.assignment.status).to eq "In Progress"
     end
 
-    it "assign with note adds moderator post with note" do
-      expect { assigner.assign(moderator, status: "In Progress") }.to change {
-        topic.posts.count
-      }.by(1)
-      expect(topic.posts.last.raw).to eq "In Progress"
-    end
-
     it "publishes topic assignment after assign and unassign" do
       messages =
         MessageBus.track_publish("/staff/topic-assignment") do
@@ -100,7 +93,7 @@ RSpec.describe Assigner do
           post_number: false,
           assigned_type: "User",
           assignment_note: nil,
-          assignment_status: "In Progress",
+          assignment_status: nil,
         },
       )
     end

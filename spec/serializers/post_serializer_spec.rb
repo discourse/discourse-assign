@@ -13,6 +13,7 @@ describe PostSerializer do
 
   before do
     SiteSetting.assign_enabled = true
+    SiteSetting.enable_assign_status = true
     add_to_assign_allowed_group(user)
   end
 

@@ -224,7 +224,7 @@ class ::Assigner
 
   def update_details(assign_to, note, status, skip_small_action_post: false)
     case
-    when @target.assignment.note != note && @target.assignment.status != status
+    when @target.assignment.note != note && @target.assignment.status != status && status.present?
       small_action_text = <<~TEXT
         Status: #{@target.assignment.status} → #{status}
 
@@ -514,7 +514,11 @@ class ::Assigner
   def topic_same_assignee_and_details(assign_to, type, note, status)
     topic.assignment&.assigned_to_id == assign_to.id &&
       topic.assignment&.assigned_to_type == type && topic.assignment.active == true &&
-      topic.assignment&.note == note && topic.assignment&.status == status
+      topic.assignment&.note == note &&
+      (
+        topic.assignment&.status == status ||
+          topic.assignment&.status == Assignment.default_status && status.nil?
+      )
   end
 
   def post_same_assignee_and_details(assign_to, type, note, status)
@@ -523,7 +527,11 @@ class ::Assigner
         .where(topic_id: topic.id, target_type: "Post", active: true)
         .any? do |assignment|
           assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type &&
-            assignment&.note == note && assignment&.status == status
+            assignment&.note == note &&
+            (
+              topic.assignment&.status == status ||
+                topic.assignment&.status == Assignment.default_status && status.nil?
+            )
         end
   end
 

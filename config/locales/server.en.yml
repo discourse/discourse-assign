@@ -90,4 +90,4 @@ en:
         assignment:
           attributes:
             status:
-              invalid: "Status is not on the possbile status list"
+              invalid: "Status is not on the possbile status list."

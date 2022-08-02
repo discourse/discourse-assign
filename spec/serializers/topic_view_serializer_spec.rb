@@ -13,6 +13,7 @@ RSpec.describe TopicViewSerializer do
 
   before do
     SiteSetting.assign_enabled = true
+    SiteSetting.enable_assign_status = true
     add_to_assign_allowed_group(user)
   end
 
@@ -52,7 +53,7 @@ RSpec.describe TopicViewSerializer do
     expect(serializer.as_json[:topic_view][:assignment_status]).to eq("Done")
   end
 
-  it "includes indirectly_assigned_to statuss in serializer" do
+  it "includes indirectly_assigned_to status in serializer" do
     Assigner.new(post, user).assign(user, status: "Done")
     serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
     expect(
