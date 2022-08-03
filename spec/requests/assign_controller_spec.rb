@@ -4,10 +4,7 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 RSpec.describe DiscourseAssign::AssignController do
-  before do
-    SiteSetting.assign_enabled = true
-    SiteSetting.enable_assign_status = true
-  end
+  before { SiteSetting.assign_enabled = true }
 
   fab!(:default_allowed_group) { Group.find_by(name: "staff") }
   let(:user) do
@@ -118,6 +115,7 @@ RSpec.describe DiscourseAssign::AssignController do
     before do
       sign_in(user)
       add_to_assign_allowed_group(user2)
+      SiteSetting.enable_assign_status = true
     end
 
     it "assigns topic to a user" do
