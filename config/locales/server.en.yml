@@ -16,7 +16,7 @@ en:
     max_assigned_topics: "Maximum number of topics that can be assigned to a user."
     assign_allowed_on_groups: "Users in these groups are allowed to assign topics and can be assigned topics."
     enable_assign_status: "Add a customizable status field to every assignment."
-    assign_statuses: "List of the possible status an assignment can have. First one is the default status applied to every new assignment."
+    assign_statuses: "List of statuses available to each assignment. The first status is the default status applied to every new assignment."
     errors:
       assign_statuses:
         too_few: "Minimum of two different status required"
