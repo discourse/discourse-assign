@@ -20,7 +20,7 @@ en:
     errors:
       assign_statuses:
         too_few: "Minimum of two different status required"
-        duplicate: "There are duplicated status values"
+        duplicate: "There are duplicate status values."
         removed_in_use: "Can't remove a status from the list if there are existing assignments using this status."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
