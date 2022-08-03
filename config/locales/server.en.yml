@@ -19,7 +19,7 @@ en:
     assign_statuses: "List of statuses available to each assignment. The first status is the default status applied to every new assignment."
     errors:
       assign_statuses:
-        too_few: "Minimum of two different status required"
+        too_few: "There must be at least two different statuses available."
         duplicate: "There are duplicate status values."
         removed_in_use: "Can't remove a status from the list if there are existing assignments using this status."
   discourse_assign:
