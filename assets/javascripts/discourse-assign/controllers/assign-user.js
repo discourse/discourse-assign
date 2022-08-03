@@ -15,6 +15,7 @@ export default Controller.extend(ModalFunctionality, {
   taskActions: service(),
   autofocus: not("capabilities.touch"),
   assigneeName: or("model.username", "model.group_name"),
+  status: or("model.status", "model.target.assignment_status"),
 
   init() {
     this._super(...arguments);
