@@ -49,7 +49,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   @discourseComputed("siteSettings.assign_statuses")
-  availiableStatuses() {
+  availableStatuses() {
     return this.siteSettings.assign_statuses.split("|").map((status) => {
       return { id: status, name: status };
     });
