@@ -498,12 +498,16 @@ after_initialize do
         .where(topic_id: id, target_type: "Post", active: true)
         .includes(:target)
         .inject({}) do |acc, assignment|
-          acc[assignment.target_id] = {
-            assigned_to: assignment.assigned_to,
-            post_number: assignment.target.post_number,
-            assignment_note: assignment.note,
-            assignment_status: assignment.status,
-          } if assignment.target
+          if assignment.target
+            acc[assignment.target_id] = {
+              assigned_to: assignment.assigned_to,
+              post_number: assignment.target.post_number,
+              assignment_note: assignment.note,
+            }
+            acc[assignment.target_id][
+              :assignment_status
+            ] = assignment.status if SiteSetting.enable_assign_status
+          end
           acc
         end
   end

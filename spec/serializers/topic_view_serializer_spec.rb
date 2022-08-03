@@ -13,7 +13,6 @@ RSpec.describe TopicViewSerializer do
 
   before do
     SiteSetting.assign_enabled = true
-    SiteSetting.enable_assign_status = true
     add_to_assign_allowed_group(user)
   end
 
@@ -47,17 +46,39 @@ RSpec.describe TopicViewSerializer do
     ).to eq("note me down")
   end
 
-  it "includes status in serializer" do
-    Assigner.new(topic, user).assign(user, status: "Done")
-    serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
-    expect(serializer.as_json[:topic_view][:assignment_status]).to eq("Done")
+  context "when status is enabled" do
+    before { SiteSetting.enable_assign_status = true }
+
+    it "includes status in serializer" do
+      Assigner.new(topic, user).assign(user, status: "Done")
+      serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
+      expect(serializer.as_json[:topic_view][:assignment_status]).to eq("Done")
+    end
+
+    it "includes indirectly_assigned_to status in serializer" do
+      Assigner.new(post, user).assign(user, status: "Done")
+      serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
+      expect(
+        serializer.as_json[:topic_view][:indirectly_assigned_to][post.id][:assignment_status],
+      ).to eq("Done")
+    end
   end
 
-  it "includes indirectly_assigned_to status in serializer" do
-    Assigner.new(post, user).assign(user, status: "Done")
-    serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
-    expect(
-      serializer.as_json[:topic_view][:indirectly_assigned_to][post.id][:assignment_status],
-    ).to eq("Done")
+  context "when status is disabled" do
+    before { SiteSetting.enable_assign_status = false }
+
+    it "doesn't include status in serializer" do
+      Assigner.new(topic, user).assign(user, status: "Done")
+      serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
+      expect(serializer.as_json[:topic_view][:assignment_status]).not_to eq("Done")
+    end
+
+    it "doesn't include indirectly_assigned_to status in serializer" do
+      Assigner.new(post, user).assign(user, status: "Done")
+      serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
+      expect(
+        serializer.as_json[:topic_view][:indirectly_assigned_to][post.id][:assignment_status],
+      ).not_to eq("Done")
+    end
   end
 end
