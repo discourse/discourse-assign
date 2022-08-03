@@ -90,4 +90,4 @@ en:
         assignment:
           attributes:
             status:
-              invalid: "Status is not on the possbile status list."
+              invalid: "Selected status is invalid (it is not included in the assigned_status site setting)."
