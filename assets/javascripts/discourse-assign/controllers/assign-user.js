@@ -44,7 +44,7 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
-  @discourseComputed("siteSettings.assign_statuses")
+  @discourseComputed("siteSettings.enable_assign_status")
   statusEnabled() {
     return this.siteSettings.enable_assign_status;
   },
