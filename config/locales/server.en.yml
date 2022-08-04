@@ -15,6 +15,13 @@ en:
     remind_assigns_frequency: "Frequency for reminding users about assigned topics."
     max_assigned_topics: "Maximum number of topics that can be assigned to a user."
     assign_allowed_on_groups: "Users in these groups are allowed to assign topics and can be assigned topics."
+    enable_assign_status: "Add a customizable status field to every assignment."
+    assign_statuses: "List of statuses available to each assignment. The first status is the default status applied to every new assignment."
+    errors:
+      assign_statuses:
+        too_few: "There must be at least two different statuses available."
+        duplicate: "There are duplicate status values."
+        removed_in_use: "Can't remove a status from the list if there are existing assignments using this status."
   discourse_assign:
     assigned_to: "Topic assigned to @%{username}"
     unassigned: "Topic was unassigned"
@@ -77,3 +84,10 @@ en:
   discourse_push_notifications:
     popup:
       assigned: "@%{username} assigned you"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Selected status is invalid (it is not included in the assigned_status site setting)."

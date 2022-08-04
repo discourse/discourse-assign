@@ -109,6 +109,92 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
   });
 });
 
+acceptance("Discourse Assign | Assign Status enabled", function (needs) {
+  needs.user({
+    can_assign: true,
+  });
+  needs.settings({
+    assign_enabled: true,
+    enable_assign_status: true,
+    assign_statuses: "New|In Progress|Done",
+  });
+  needs.hooks.beforeEach(() => clearTopicFooterButtons());
+
+  needs.pretender((server, helper) => {
+    server.get("/assign/suggestions", () => {
+      return helper.response({
+        success: true,
+        assign_allowed_groups: false,
+        assign_allowed_for_groups: [],
+        suggestions: [
+          {
+            id: 19,
+            username: "eviltrout",
+            name: "Robin Ward",
+            avatar_template:
+              "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
+          },
+        ],
+      });
+    });
+
+    server.put("/assign/assign", () => {
+      return helper.response({ success: true });
+    });
+  });
+
+  test("Modal contains status dropdown", async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-assign");
+
+    assert.ok(
+      exists(".assign.modal-body #assign-status"),
+      "assign status dropdown exists"
+    );
+  });
+});
+
+acceptance("Discourse Assign | Assign Status disabled", function (needs) {
+  needs.user({
+    can_assign: true,
+  });
+  needs.settings({ assign_enabled: true, enable_assign_status: false });
+  needs.hooks.beforeEach(() => clearTopicFooterButtons());
+
+  needs.pretender((server, helper) => {
+    server.get("/assign/suggestions", () => {
+      return helper.response({
+        success: true,
+        assign_allowed_groups: false,
+        assign_allowed_for_groups: [],
+        suggestions: [
+          {
+            id: 19,
+            username: "eviltrout",
+            name: "Robin Ward",
+            avatar_template:
+              "/user_avatar/meta.discourse.org/eviltrout/{size}/5275_2.png",
+          },
+        ],
+      });
+    });
+
+    server.put("/assign/assign", () => {
+      return helper.response({ success: true });
+    });
+  });
+
+  test("Modal contains status dropdown", async (assert) => {
+    await visit("/t/internationalization-localization/280");
+    await click("#topic-footer-button-assign");
+
+    assert.notOk(
+      exists(".assign.modal-body #assign-status"),
+      "assign status dropdown doesn't exists"
+    );
+  });
+});
+
 // See RemindAssignsFrequencySiteSettings
 const remindersFrequency = [
   {

@@ -15,7 +15,9 @@ en:
       unassigned_group_from_post: "unassigned %{who} from <a href='%{path}'>post</a> %{when}"
       reassigned: "Reassigned %{who} %{when}"
       reassigned_group: "Reassigned %{who} %{when}"
+      details_change: "changed assignment details for %{who} %{when}"
       note_change: "changed assignment note for %{who} %{when}"
+      status_change: "changed assignment status for %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Add 'unassigned' filter to category"
       cant_act: "You cannot act on flags that have been assigned to other users"
@@ -41,11 +43,11 @@ en:
         title: "Unassign from Post"
         help: "Unassign %{username} from Post"
       reassign:
-        title: "Reassign"
+        title: "Edit"
         title_w_ellipsis: "Edit assignment..."
         to_self: "Reassign to me"
         to_self_help: "Reassign Topic to me"
-        help: "Reassign Topic to a different user"
+        help: "Edit assignment details"
       reassign_modal:
         title: "Reassign Topic"
         description: "Enter the name of the user you'd like to Reassign this topic"
@@ -55,6 +57,7 @@ en:
         description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
         note_label: Note
+        status_label: Status
       assign_post_modal:
         title: "Assign Post"
         description: "Enter the name of the user you'd like to assign this post"

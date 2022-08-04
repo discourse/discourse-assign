@@ -19,6 +19,7 @@ register_svg_icon "user-times"
 
 load File.expand_path("../lib/discourse_assign/engine.rb", __FILE__)
 load File.expand_path("../lib/discourse_assign/helpers.rb", __FILE__)
+load File.expand_path("../lib/validators/assign_statuses_validator.rb", __FILE__)
 
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
@@ -497,11 +498,16 @@ after_initialize do
         .where(topic_id: id, target_type: "Post", active: true)
         .includes(:target)
         .inject({}) do |acc, assignment|
-          acc[assignment.target_id] = {
-            assigned_to: assignment.assigned_to,
-            post_number: assignment.target.post_number,
-            assignment_note: assignment.note,
-          } if assignment.target
+          if assignment.target
+            acc[assignment.target_id] = {
+              assigned_to: assignment.assigned_to,
+              post_number: assignment.target.post_number,
+              assignment_note: assignment.note,
+            }
+            acc[assignment.target_id][
+              :assignment_status
+            ] = assignment.status if SiteSetting.enable_assign_status
+          end
           acc
         end
   end
@@ -563,6 +569,13 @@ after_initialize do
     (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assignment.present?
   end
 
+  add_to_serializer(:topic_view, :assignment_status, false) { object.topic.assignment.status }
+
+  add_to_serializer(:topic_view, :include_assignment_status?, false) do
+    SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
+      object.topic.assignment.present?
+  end
+
   # SuggestedTopic serializer
   add_to_serializer(:suggested_topic, :assigned_to_user, false) do
     DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
@@ -611,6 +624,13 @@ after_initialize do
 
   add_to_serializer(:topic_list_item, :include_assigned_to_group?) do
     (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+  end
+
+  add_to_serializer(:topic_list_item, :assignment_status, false) { object.assignment.status }
+
+  add_to_serializer(:topic_list_item, :include_assignment_status?, false) do
+    SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
+      object.assignment.present?
   end
 
   # SearchTopicListItem serializer
@@ -716,6 +736,13 @@ after_initialize do
 
   add_to_serializer(:post, :include_assignment_note?, false) do
     (SiteSetting.assigns_public || scope.can_assign?) && object.assignment.present?
+  end
+
+  add_to_serializer(:post, :assignment_status, false) { object.assignment.status }
+
+  add_to_serializer(:post, :include_assignment_status?, false) do
+    SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
+      object.assignment.present?
   end
 
   # CurrentUser serializer

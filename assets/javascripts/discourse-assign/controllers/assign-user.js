@@ -1,6 +1,7 @@
 import Controller, { inject as controller } from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
+import discourseComputed from "discourse-common/utils/decorators";
 import { not, or } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -40,6 +41,27 @@ export default Controller.extend(ModalFunctionality, {
       type: "assign",
       username,
     });
+  },
+
+  @discourseComputed("siteSettings.enable_assign_status")
+  statusEnabled() {
+    return this.siteSettings.enable_assign_status;
+  },
+
+  @discourseComputed("siteSettings.assign_statuses")
+  availableStatuses() {
+    return this.siteSettings.assign_statuses.split("|").map((status) => {
+      return { id: status, name: status };
+    });
+  },
+
+  @discourseComputed("siteSettings.assign_statuses", "model.status")
+  status() {
+    return (
+      this.model.status ||
+      this.model.target.assignment_status ||
+      this.siteSettings.assign_statuses.split("|")[0]
+    );
   },
 
   @action
@@ -82,6 +104,7 @@ export default Controller.extend(ModalFunctionality, {
         target_id: this.get("model.target.id"),
         target_type: this.get("model.targetType"),
         note: this.get("model.note"),
+        status: this.get("model.status"),
       },
     })
       .then(() => {

@@ -69,6 +69,7 @@ describe Search do
           },
           post_number: post5.post_number,
           assignment_note: nil,
+          assignment_status: nil,
         },
       )
     end

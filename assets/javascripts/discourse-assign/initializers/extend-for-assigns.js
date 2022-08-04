@@ -577,7 +577,9 @@ function initialize(api) {
         "assigned_group_to_post",
         "unassigned_from_post",
         "unassigned_group_from_post",
+        "details_change",
         "note_change",
+        "status_change",
       ].includes(transformed.actionCode)
     ) {
       transformed.isSmallAction = true;
@@ -592,7 +594,8 @@ function initialize(api) {
       topic.getProperties(
         "assigned_to_user",
         "assigned_to_group",
-        "assignment_note"
+        "assignment_note",
+        "assignment_status"
       )
     );
 
@@ -617,6 +620,7 @@ function initialize(api) {
         topicAssignee,
         assignedToIndirectly.map((assigned) => ({
           assignee: assigned.assigned_to,
+          status: assigned.assignment_status,
           note: assigned.assignment_note,
         }))
       )
@@ -782,6 +786,7 @@ function initialize(api) {
           const target = post || topic;
 
           target.set("assignment_note", data.assignment_note);
+          target.set("assignment_status", data.assignment_status);
           if (data.assigned_type === "User") {
             target.set(
               "assigned_to_user_id",

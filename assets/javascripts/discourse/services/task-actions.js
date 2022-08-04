@@ -38,6 +38,7 @@ export default Service.extend({
         group_name: target.assigned_to_group?.name,
         target,
         targetType: options.targetType,
+        status: target.assignment_status,
       },
     });
   },
@@ -49,6 +50,7 @@ export default Service.extend({
         username: user.username,
         target_id: target.id,
         target_type: targetType,
+        status: target.assignment_status,
       },
     });
   },

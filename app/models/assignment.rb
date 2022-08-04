@@ -15,8 +15,24 @@ class Assignment < ActiveRecord::Base
           )
         }
 
+  before_validation :default_status
+
+  validate :validate_status, if: -> { SiteSetting.enable_assign_status }
+
   def self.valid_type?(type)
     VALID_TYPES.include?(type.downcase)
+  end
+
+  def self.statuses
+    SiteSetting.assign_statuses.split("|")
+  end
+
+  def self.default_status
+    Assignment.statuses.first
+  end
+
+  def self.status_enabled?
+    SiteSetting.enable_assign_status
   end
 
   def assigned_to_user?
@@ -25,6 +41,18 @@ class Assignment < ActiveRecord::Base
 
   def assigned_to_group?
     assigned_to_type == "Group"
+  end
+
+  private
+
+  def default_status
+    self.status ||= Assignment.default_status if SiteSetting.enable_assign_status
+  end
+
+  def validate_status
+    if SiteSetting.enable_assign_status && !Assignment.statuses.include?(self.status)
+      errors.add(:status, :invalid)
+    end
   end
 end
 

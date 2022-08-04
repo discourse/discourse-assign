@@ -195,7 +195,7 @@ class ::Assigner
     topic.posts.where(post_number: 1).first
   end
 
-  def forbidden_reasons(assign_to:, type:, note:)
+  def forbidden_reasons(assign_to:, type:, note:, status:)
     case
     when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
       if topic.private_message?
@@ -211,9 +211,9 @@ class ::Assigner
       end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-    when topic_same_assignee_and_note(assign_to, type, note)
+    when topic_same_assignee_and_details(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when post_same_assignee_and_note(assign_to, type, note)
+    when post_same_assignee_and_details(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
       :too_many_assigns_for_topic
@@ -222,32 +222,49 @@ class ::Assigner
     end
   end
 
-  def update_note(assign_to, note, skip_small_action_post: false)
-    @target.assignment.update!(note: note)
+  def update_details(assign_to, note, status, skip_small_action_post: false)
+    case
+    when @target.assignment.note != note && @target.assignment.status != status && status.present?
+      small_action_text = <<~TEXT
+        Status: #{@target.assignment.status} → #{status}
+
+        #{note}
+      TEXT
+      change_type = "details"
+    when @target.assignment.note != note
+      small_action_text = note
+      change_type = "note"
+    when @target.assignment.status != status
+      small_action_text = "#{@target.assignment.status} → #{status}"
+      change_type = "status"
+    end
+
+    @target.assignment.update!(note: note, status: status)
 
     queue_notification(assign_to, skip_small_action_post)
 
     assignment = @target.assignment
-    publish_assignment(assignment, assign_to, note)
+    publish_assignment(assignment, assign_to, note, status)
 
     # email is skipped, for now
 
     unless skip_small_action_post
-      action_code = "note_change"
-      add_small_action_post(action_code, assign_to, note)
+      action_code = "#{change_type}_change"
+      add_small_action_post(action_code, assign_to, small_action_text)
     end
 
     { success: true }
   end
 
-  def assign(assign_to, note: nil, skip_small_action_post: false)
+  def assign(assign_to, note: nil, skip_small_action_post: false, status: nil)
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
-    forbidden_reason = forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note)
+    forbidden_reason =
+      forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note, status: status)
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
     if no_assignee_change?(assign_to)
-      return update_note(assign_to, note, skip_small_action_post: skip_small_action_post)
+      return update_details(assign_to, note, status, skip_small_action_post: skip_small_action_post)
     end
 
     action_code = {}
@@ -265,13 +282,14 @@ class ::Assigner
         assigned_by_user_id: @assigned_by.id,
         topic_id: topic.id,
         note: note,
+        status: status,
       )
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
     queue_notification(assign_to, skip_small_action_post)
 
-    publish_assignment(assignment, assign_to, note)
+    publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?
       if !TopicUser.exists?(
@@ -413,6 +431,7 @@ class ::Assigner
           post_number: post_target? && @target.post_number,
           assigned_type: assignment.assigned_to.is_a?(User) ? "User" : "Group",
           assignment_note: nil,
+          assignment_status: nil,
         },
         user_ids: allowed_user_ids,
       )
@@ -433,7 +452,7 @@ class ::Assigner
     )
   end
 
-  def add_small_action_post(action_code, assign_to, note)
+  def add_small_action_post(action_code, assign_to, text)
     custom_fields = {
       "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name,
     }
@@ -446,7 +465,7 @@ class ::Assigner
 
     topic.add_moderator_post(
       @assigned_by,
-      note,
+      text,
       bump: false,
       post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
       action_code: action_code,
@@ -454,7 +473,7 @@ class ::Assigner
     )
   end
 
-  def publish_assignment(assignment, assign_to, note)
+  def publish_assignment(assignment, assign_to, note, status)
     serializer = assignment.assigned_to_user? ? BasicUserSerializer : BasicGroupSerializer
     MessageBus.publish(
       "/staff/topic-assignment",
@@ -466,6 +485,7 @@ class ::Assigner
         assigned_type: assignment.assigned_to_type,
         assigned_to: serializer.new(assign_to, scope: Guardian.new, root: false).as_json,
         assignment_note: note,
+        assignment_status: status,
       },
       user_ids: allowed_user_ids,
     )
@@ -491,19 +511,27 @@ class ::Assigner
     return "unassigned_group#{suffix}" if assignment.assigned_to_group?
   end
 
-  def topic_same_assignee_and_note(assign_to, type, note)
+  def topic_same_assignee_and_details(assign_to, type, note, status)
     topic.assignment&.assigned_to_id == assign_to.id &&
       topic.assignment&.assigned_to_type == type && topic.assignment.active == true &&
-      topic.assignment&.note == note
+      topic.assignment&.note == note &&
+      (
+        topic.assignment&.status == status ||
+          topic.assignment&.status == Assignment.default_status && status.nil?
+      )
   end
 
-  def post_same_assignee_and_note(assign_to, type, note)
+  def post_same_assignee_and_details(assign_to, type, note, status)
     @target.is_a?(Topic) &&
       Assignment
         .where(topic_id: topic.id, target_type: "Post", active: true)
         .any? do |assignment|
           assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type &&
-            assignment&.note == note
+            assignment&.note == note &&
+            (
+              topic.assignment&.status == status ||
+                topic.assignment&.status == Assignment.default_status && status.nil?
+            )
         end
   end
 

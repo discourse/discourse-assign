@@ -33,3 +33,12 @@ plugins:
     default: ""
     allow_any: false
     refresh: true
+  enable_assign_status:
+    default: false
+    client: true
+  assign_statuses:
+    client: true
+    type: list
+    default: "New|In Progress|Done"
+    allow_any: true
+    validator: AssignStatusesValidator

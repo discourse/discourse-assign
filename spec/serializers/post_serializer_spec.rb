@@ -39,4 +39,24 @@ describe PostSerializer do
     serializer = PostSerializer.new(post, scope: guardian)
     expect(serializer.as_json[:post][:assignment_note]).to eq("tomtom best")
   end
+
+  context "when status is enabled" do
+    before { SiteSetting.enable_assign_status = true }
+
+    it "includes status in serializer" do
+      Assigner.new(post, user).assign(user, status: "Done")
+      serializer = PostSerializer.new(post, scope: guardian)
+      expect(serializer.as_json[:post][:assignment_status]).to eq("Done")
+    end
+  end
+
+  context "when status is disabled" do
+    before { SiteSetting.enable_assign_status = false }
+
+    it "doesn't include status in serializer" do
+      Assigner.new(post, user).assign(user, status: "Done")
+      serializer = PostSerializer.new(post, scope: guardian)
+      expect(serializer.as_json[:post][:assignment_status]).not_to eq("Done")
+    end
+  end
 end
