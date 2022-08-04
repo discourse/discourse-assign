@@ -15,7 +15,6 @@ export default Controller.extend(ModalFunctionality, {
   taskActions: service(),
   autofocus: not("capabilities.touch"),
   assigneeName: or("model.username", "model.group_name"),
-  status: or("model.status", "model.target.assignment_status"),
 
   init() {
     this._super(...arguments);
@@ -54,6 +53,15 @@ export default Controller.extend(ModalFunctionality, {
     return this.siteSettings.assign_statuses.split("|").map((status) => {
       return { id: status, name: status };
     });
+  },
+
+  @discourseComputed("siteSettings.assign_statuses", "model.status")
+  status() {
+    return (
+      this.model.status ||
+      this.model.target.assignment_status ||
+      this.siteSettings.assign_statuses.split("|")[0]
+    );
   },
 
   @action
