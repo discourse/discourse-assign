@@ -113,7 +113,11 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
   needs.user({
     can_assign: true,
   });
-  needs.settings({ assign_enabled: true, enable_assign_status: true, assign_statuses: 'New|In Progress|Done' });
+  needs.settings({
+    assign_enabled: true,
+    enable_assign_status: true,
+    assign_statuses: "New|In Progress|Done",
+  });
   needs.hooks.beforeEach(() => clearTopicFooterButtons());
 
   needs.pretender((server, helper) => {
@@ -143,7 +147,10 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
-    assert.ok(exists(".assign.modal-body #assign-status"), "assign status dropdown exists");
+    assert.ok(
+      exists(".assign.modal-body #assign-status"),
+      "assign status dropdown exists"
+    );
   });
 });
 
@@ -181,7 +188,10 @@ acceptance("Discourse Assign | Assign Status disabled", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
-    assert.notOk(exists(".assign.modal-body #assign-status"), "assign status dropdown doesn't exists");
+    assert.notOk(
+      exists(".assign.modal-body #assign-status"),
+      "assign status dropdown doesn't exists"
+    );
   });
 });
 
