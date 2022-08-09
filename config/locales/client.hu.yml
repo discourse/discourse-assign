@@ -46,10 +46,8 @@ hu:
         title: "Elvétel a bejegyzéstől"
         help: "%{username} elvétele a bejegyzéstől"
       reassign:
-        title: "Átadás"
         to_self: "Átvétel"
         to_self_help: "Téma átvétele"
-        help: "Téma átadása egy másik felhasználónak"
       reassign_modal:
         title: "Téma átadása"
         description: "Írja be annak a felhasználónak a nevét, akinek át akarja adni a témát"

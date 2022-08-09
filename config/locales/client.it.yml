@@ -46,10 +46,8 @@ it:
         title: "Annulla assegnazione da messaggio"
         help: "Annulla assegnazione di %{username} da messaggio"
       reassign:
-        title: "Riassegna"
         to_self: "Riassegna a me"
         to_self_help: "Riassegna argomento a me"
-        help: "Riassegna argomento a un altro utente"
       reassign_modal:
         title: "Riassegna argomento"
         description: "Inserisci il nome dell'utente a cui desideri riassegnare questo argomento"

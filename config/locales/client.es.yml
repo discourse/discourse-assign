@@ -46,10 +46,8 @@ es:
         title: "Anular asignación de la publicación"
         help: "Anular la asignación de %{username} de la publicación"
       reassign:
-        title: "Reasignar"
         to_self: "Reasignar a mí"
         to_self_help: "Reasignar tema a mí"
-        help: "Reasignar tema a un usuario distinto"
       reassign_modal:
         title: "Reasignar tema"
         description: "Introduce el nombre del usuario al que quieres reasignar este tema"

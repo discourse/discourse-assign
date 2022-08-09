@@ -46,10 +46,8 @@ fr:
         title: "Annuler l'attribution du message"
         help: "Annuler l'attribution de %{username} au message"
       reassign:
-        title: "Réattribuer"
         to_self: "Réattribuer à moi"
         to_self_help: "Me réattribuer le sujet"
-        help: "Réattribuer le sujet à un autre utilisateur"
       reassign_modal:
         title: "Réattribuer le sujet"
         description: "Saisissez le nom de l'utilisateur auquel réattribuer ce sujet"

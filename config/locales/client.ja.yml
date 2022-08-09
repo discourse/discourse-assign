@@ -46,10 +46,8 @@ ja:
         title: "投稿の割り当てを解除する"
         help: "投稿から %{username} の割り当てを解除する"
       reassign:
-        title: "再割り当てする"
         to_self: "自分に再割り当てする"
         to_self_help: "トピックを自分に再割り当てする"
-        help: "トピックを別のユーザーに再割り当てする"
       reassign_modal:
         title: "トピックを再割り当てする"
         description: "このトピックの再割り当て先のユーザー名を入力します"

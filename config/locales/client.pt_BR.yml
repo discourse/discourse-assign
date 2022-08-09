@@ -46,10 +46,8 @@ pt_BR:
         title: "Remover atribuição da postagem"
         help: "Remover atribuição de %{username} da postagem"
       reassign:
-        title: "Reatribuir"
         to_self: "Reatribuir a mim"
         to_self_help: "Reatribuir tópico a mim"
-        help: "Reatribuir tópico a um usuário(a) diferente"
       reassign_modal:
         title: "Reatribuir tópico"
         description: "Insira o nome do usuário(a) a quem você gostaria de reatribuir este tópico"
