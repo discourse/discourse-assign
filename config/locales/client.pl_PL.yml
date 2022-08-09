@@ -46,10 +46,8 @@ pl_PL:
         title: "Cofnij przypisanie z posta"
         help: "Cofnij przypisanie %{username} z posta"
       reassign:
-        title: "Przypisz ponownie"
         to_self: "Przypisz ponownie do mnie"
         to_self_help: "Przypisz ponownie temat do mnie"
-        help: "Przypisz ponownie temat do innego użytkownika"
       reassign_modal:
         title: "Przypisz ponownie temat"
         description: "Wpisz nazwę użytkownika, któremu chcesz ponownie przypisać ten temat"

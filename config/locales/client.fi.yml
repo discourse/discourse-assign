@@ -46,10 +46,8 @@ fi:
         title: "Peru osoitus viestistä"
         help: "Peru käyttäjän %{username} osoitus viestistä"
       reassign:
-        title: "Osoita uudelleen"
         to_self: "Osoita uudelleen minulle"
         to_self_help: "Osoita ketju uudelleen minulle"
-        help: "Osoita ketju uudelleen eri käyttäjälle"
       reassign_modal:
         title: "Osoita ketju uudelleen"
         description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa tämän ketjun uudelleen"

@@ -8,8 +8,11 @@ fa_IR:
   js:
     discourse_assign:
       group_everyone: "همه"
+      reassign:
+        title: "ویرایش"
       assign_modal:
         note_label: یادداشت
+        status_label: وضعیت
       assign_mailer:
         never: "هیچ‌وقت"
         always: "همیشه"

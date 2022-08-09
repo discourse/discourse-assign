@@ -46,10 +46,8 @@ zh_CN:
         title: "从帖子中取消分配"
         help: "从帖子中取消分配 %{username}"
       reassign:
-        title: "重新分配"
         to_self: "重新分配给我"
         to_self_help: "将话题重新分配给我"
-        help: "将话题重新分配给其他用户"
       reassign_modal:
         title: "重新分配话题"
         description: "输入您要将此话题重新分配给的用户的名称"
