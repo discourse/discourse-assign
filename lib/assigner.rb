@@ -241,7 +241,7 @@ class ::Assigner
 
     @target.assignment.update!(note: note, status: status)
 
-    queue_notification(assign_to, skip_small_action_post)
+    queue_notification(assign_to, skip_small_action_post, @target.assignment)
 
     assignment = @target.assignment
     publish_assignment(assignment, assign_to, note, status)
@@ -287,7 +287,7 @@ class ::Assigner
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
 
-    queue_notification(assign_to, skip_small_action_post)
+    queue_notification(assign_to, skip_small_action_post, assignment)
 
     publish_assignment(assignment, assign_to, note, status)
 
@@ -440,7 +440,7 @@ class ::Assigner
 
   private
 
-  def queue_notification(assign_to, skip_small_action_post)
+  def queue_notification(assign_to, skip_small_action_post, assignment)
     Jobs.enqueue(
       :assign_notification,
       topic_id: topic.id,
@@ -449,6 +449,7 @@ class ::Assigner
       assigned_to_type: assign_to.is_a?(User) ? "User" : "Group",
       assigned_by_id: @assigned_by.id,
       skip_small_action_post: skip_small_action_post,
+      assignment_id: assignment.id,
     )
   end
 
