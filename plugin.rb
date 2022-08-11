@@ -870,6 +870,7 @@ after_initialize do
           assigned_to_type: assignment.assigned_to_type,
           assigned_by_id: assignment.assigned_by_user_id,
           skip_small_action_post: true,
+          assignment_id: assignment.id,
         )
       end
   end

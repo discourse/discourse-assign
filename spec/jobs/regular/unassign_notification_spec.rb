@@ -31,6 +31,7 @@ RSpec.describe Jobs::UnassignNotification do
             assigned_to_type: "User",
             assigned_by_id: user1.id,
             skip_small_action_post: false,
+            assignment_id: 4519,
           },
         )
 
@@ -82,6 +83,7 @@ RSpec.describe Jobs::UnassignNotification do
             assigned_to_type: "Group",
             assigned_by_id: user1.id,
             skip_small_action_post: false,
+            assignment_id: 9281,
           },
         )
 

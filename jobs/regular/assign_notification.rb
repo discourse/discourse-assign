@@ -8,6 +8,8 @@ module Jobs
       raise Discourse::InvalidParameters.new(:assigned_to_id) if args[:assigned_to_id].nil?
       raise Discourse::InvalidParameters.new(:assigned_to_type) if args[:assigned_to_type].nil?
       raise Discourse::InvalidParameters.new(:assigned_by_id) if args[:assigned_by_id].nil?
+      raise Discourse::InvalidParameters.new(:assignment_id) if args[:assignment_id].nil?
+
       if args[:skip_small_action_post].nil?
         raise Discourse::InvalidParameters.new(:skip_small_action_post)
       end
@@ -70,6 +72,7 @@ module Jobs
               ),
             display_username: assigned_to_user ? assigned_by.username : assigned_to.name,
             topic_title: topic.title,
+            assignment_id: args[:assignment_id],
           }.to_json,
         )
       end

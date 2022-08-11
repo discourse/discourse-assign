@@ -33,6 +33,7 @@ RSpec.describe Jobs::AssignNotification do
                 assigned_to_type: "User",
                 assigned_by_id: user1.id,
                 skip_small_action_post: false,
+                assignment_id: 1093,
               },
             )
           end
@@ -54,6 +55,7 @@ RSpec.describe Jobs::AssignNotification do
               assigned_to_type: "User",
               assigned_by_id: user1.id,
               skip_small_action_post: false,
+              assignment_id: 9023,
             },
           )
         end
@@ -70,6 +72,7 @@ RSpec.describe Jobs::AssignNotification do
             message: "discourse_assign.assign_notification",
             display_username: user1.username,
             topic_title: topic.title,
+            assignment_id: 3194,
           }.to_json,
         )
         described_class.new.execute(
@@ -80,6 +83,7 @@ RSpec.describe Jobs::AssignNotification do
             assigned_to_type: "User",
             assigned_by_id: user1.id,
             skip_small_action_post: false,
+            assignment_id: 3194,
           },
         )
       end
@@ -110,6 +114,7 @@ RSpec.describe Jobs::AssignNotification do
                 assigned_to_type: "Group",
                 assigned_by_id: user1.id,
                 skip_small_action_post: false,
+                assignment_id: 7839,
               },
             )
           end
@@ -128,6 +133,7 @@ RSpec.describe Jobs::AssignNotification do
                 assigned_to_type: "Group",
                 assigned_by_id: user1.id,
                 skip_small_action_post: false,
+                assignment_id: 7763,
               },
             )
           end
@@ -146,6 +152,7 @@ RSpec.describe Jobs::AssignNotification do
                 assigned_to_type: "Group",
                 assigned_by_id: user1.id,
                 skip_small_action_post: false,
+                assignment_id: 8883,
               },
             )
           end
@@ -164,6 +171,7 @@ RSpec.describe Jobs::AssignNotification do
               message: "discourse_assign.assign_group_notification",
               display_username: group.name,
               topic_title: topic.title,
+              assignment_id: 9429,
             }.to_json,
           )
         end
@@ -176,6 +184,7 @@ RSpec.describe Jobs::AssignNotification do
             assigned_to_type: "Group",
             assigned_by_id: user1.id,
             skip_small_action_post: false,
+            assignment_id: 9429,
           },
         )
       end
