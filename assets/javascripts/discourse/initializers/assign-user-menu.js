@@ -1,5 +1,4 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
 
 export default {
   name: "assign-user-menu",

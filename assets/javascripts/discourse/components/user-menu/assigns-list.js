@@ -12,7 +12,7 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   get showDismiss() {
-    return this.#unreadAssignedNotificationsCount > 0;
+    return this._unreadAssignedNotificationsCount > 0;
   }
 
   get dismissTitle() {
@@ -61,13 +61,13 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
     modalController.set(
       "confirmationMessage",
       I18n.t("notifications.dismiss_confirmation.body.assigns", {
-        count: this.#unreadAssignedNotificationsCount,
+        count: this._unreadAssignedNotificationsCount,
       })
     );
     return modalController;
   }
 
-  get #unreadAssignedNotificationsCount() {
+  get _unreadAssignedNotificationsCount() {
     const key = `grouped_unread_high_priority_notifications.${this.site.notification_types.assigned}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.

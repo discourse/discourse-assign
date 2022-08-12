@@ -446,7 +446,6 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
       emptyStateBody.querySelector(".d-icon-user-plus"),
       "empty state body has user-plus icon"
     );
-    console.log(emptyStateBody.querySelector("a").href);
     assert.ok(
       emptyStateBody
         .querySelector("a")
