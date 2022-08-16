@@ -236,6 +236,16 @@ RSpec.describe Assigner do
         expect(assign[:reason]).to eq(:already_assigned)
       end
 
+      it "fails to assign when the assigned user and note is the same" do
+        assigner = described_class.new(post, moderator_2)
+        assigner.assign(moderator, note: "note me down")
+
+        assign = assigner.assign(moderator, note: "note me down")
+
+        expect(assign[:success]).to eq(false)
+        expect(assign[:reason]).to eq(:already_assigned)
+      end
+
       it "allows assign when the assigned user is same but note is different" do
         assigner = described_class.new(topic, moderator_2)
         assigner.assign(moderator, note: "note me down")

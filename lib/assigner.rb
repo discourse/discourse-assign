@@ -523,7 +523,15 @@ class ::Assigner
   end
 
   def post_same_assignee_and_details(assign_to, type, note, status)
-    @target.is_a?(Topic) &&
+    if @target.is_a?(Post)
+      @target.assignment&.assigned_to_id == assign_to.id &&
+      @target.assignment&.assigned_to_type == type && @target.assignment.active == true &&
+      @target.assignment&.note == note &&
+      (
+        @target.assignment&.status == status ||
+          @target.assignment&.status == Assignment.default_status && status.nil?
+      )
+    elsif @target.is_a?(Topic)
       Assignment
         .where(topic_id: topic.id, target_type: "Post", active: true)
         .any? do |assignment|
@@ -534,6 +542,7 @@ class ::Assigner
                 topic.assignment&.status == Assignment.default_status && status.nil?
             )
         end
+    end
   end
 
   def no_assignee_change?(assignee)
