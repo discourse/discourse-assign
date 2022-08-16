@@ -21,6 +21,13 @@ he:
     remind_assigns_frequency: "תדירות לשליחת תזכורת למשתמשים בנוגע לנושאים מוקצים."
     max_assigned_topics: "מספר הנושאים המרבי שניתן להקצות למשתמש."
     assign_allowed_on_groups: "משתמשים בקבוצות אלה רשאים להקצות נושאים וניתן להקצות להם נושאים."
+    enable_assign_status: "הוספת שדה מצב מותאם לכל משימה."
+    assign_statuses: "רשימת המצבים הזמינים לכל משימה. המצב הראשון הוא מצב ברירת המחדל שחל על כל משימה חדשה."
+    errors:
+      assign_statuses:
+        too_few: "חייבים להיות לפחות שני מצבים זמינים."
+        duplicate: "יש ערכי מצב כפולים."
+        removed_in_use: "אי אפשר להסיר מצב מהרשימה אם יש משימות קיימות שנמצאות במצב הזה."
   discourse_assign:
     assigned_to: "הנושא רשום ל@%{username}"
     unassigned: "הקצאת הנושא בוטלה"
@@ -82,3 +89,10 @@ he:
   discourse_push_notifications:
     popup:
       assigned: "הוקצה אליך על ידי ‎@%{username}"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "המצב הנבחר שגוי (אינו כלול בהגדרת האתר assigned_status - מצב מוקצה)."
