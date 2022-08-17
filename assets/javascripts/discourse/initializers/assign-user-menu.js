@@ -18,7 +18,7 @@ export default {
         api.registerUserMenuTab((UserMenuTab) => {
           return class extends UserMenuTab {
             get id() {
-              return "assign-notifications";
+              return "assign-list";
             }
 
             get panelComponent() {

@@ -208,7 +208,7 @@ acceptance(
     test("the assigns tab is not shown", async function (assert) {
       await visit("/");
       await click(".d-header-icons .current-user");
-      assert.notOk(exists("#user-menu-button-assign-notifications"));
+      assert.notOk(exists("#user-menu-button-assign-list"));
     });
   }
 );
@@ -224,7 +224,7 @@ acceptance(
     test("the assigns tab is not shown", async function (assert) {
       await visit("/");
       await click(".d-header-icons .current-user");
-      assert.notOk(exists("#user-menu-button-assign-notifications"));
+      assert.notOk(exists("#user-menu-button-assign-list"));
     });
   }
 );
@@ -271,17 +271,14 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
   test("assigns tab", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
+    assert.ok(exists("#user-menu-button-assign-list"), "assigns tab exists");
     assert.ok(
-      exists("#user-menu-button-assign-notifications"),
-      "assigns tab exists"
-    );
-    assert.ok(
-      exists("#user-menu-button-assign-notifications .d-icon-user-plus"),
+      exists("#user-menu-button-assign-list .d-icon-user-plus"),
       "assigns tab has the user-plus icon"
     );
     assert.strictEqual(
       query(
-        "#user-menu-button-assign-notifications .badge-notification"
+        "#user-menu-button-assign-list .badge-notification"
       ).textContent.trim(),
       "173",
       "assigns tab has a count badge"
@@ -292,11 +289,11 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
     });
 
     assert.notOk(
-      exists("#user-menu-button-assign-notifications .badge-notification"),
+      exists("#user-menu-button-assign-list .badge-notification"),
       "badge count disappears when it goes to zero"
     );
     assert.ok(
-      exists("#user-menu-button-assign-notifications"),
+      exists("#user-menu-button-assign-list"),
       "assigns tab still exists"
     );
   });
@@ -304,11 +301,9 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
   test("displays unread assign notifications on top and fills the remaining space with read assigns", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
-    await click("#user-menu-button-assign-notifications");
+    await click("#user-menu-button-assign-list");
 
-    const notifications = queryAll(
-      "#quick-access-assign-notifications .notification"
-    );
+    const notifications = queryAll("#quick-access-assign-list .notification");
     assert.strictEqual(
       notifications.length,
       1,
@@ -323,7 +318,7 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
       "the notification is of type assigned"
     );
 
-    const assigns = queryAll("#quick-access-assign-notifications .assign");
+    const assigns = queryAll("#quick-access-assign-list .assign");
     assert.strictEqual(assigns.length, 2, "there are 2 assigns");
 
     const userAssign = assigns[0];
@@ -400,10 +395,10 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
   test("dismiss button", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
-    await click("#user-menu-button-assign-notifications");
+    await click("#user-menu-button-assign-list");
 
     assert.ok(
-      exists("#user-menu-button-assign-notifications .badge-notification"),
+      exists("#user-menu-button-assign-list .badge-notification"),
       "badge count is visible before dismissing"
     );
 
@@ -419,7 +414,7 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
     assert.ok(markRead, "mark-read request is sent");
     assert.notOk(exists(".notifications-dismiss"), "dismiss button is gone");
     assert.notOk(
-      exists("#user-menu-button-assign-notifications .badge-notification"),
+      exists("#user-menu-button-assign-list .badge-notification"),
       "badge count is gone after dismissing"
     );
     assert.strictEqual(
@@ -433,7 +428,7 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
     forceEmptyState = true;
     await visit("/");
     await click(".d-header-icons .current-user");
-    await click("#user-menu-button-assign-notifications");
+    await click("#user-menu-button-assign-list");
 
     assert.strictEqual(
       query(".empty-state-title").textContent.trim(),
