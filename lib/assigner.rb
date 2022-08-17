@@ -211,9 +211,7 @@ class ::Assigner
       end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-    when topic_same_assignee_and_details(assign_to, type, note, status)
-      assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when post_same_assignee_and_details(assign_to, type, note, status)
+    when already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
       :too_many_assigns_for_topic
@@ -512,40 +510,32 @@ class ::Assigner
     return "unassigned_group#{suffix}" if assignment.assigned_to_group?
   end
 
-  def topic_same_assignee_and_details(assign_to, type, note, status)
-    topic.assignment&.assigned_to_id == assign_to.id &&
-      topic.assignment&.assigned_to_type == type && topic.assignment.active == true &&
-      topic.assignment&.note == note &&
-      (
-        topic.assignment&.status == status ||
-          topic.assignment&.status == Assignment.default_status && status.nil?
-      )
+  def target_same_assignee_and_details(assign_to, type, note, status)
+    assignment_eq?(@target.assignment, assign_to, type, note, status)
   end
 
-  def post_same_assignee_and_details(assign_to, type, note, status)
-    if @target.is_a?(Post)
-      @target.assignment&.assigned_to_id == assign_to.id &&
-      @target.assignment&.assigned_to_type == type && @target.assignment.active == true &&
-      @target.assignment&.note == note &&
-      (
-        @target.assignment&.status == status ||
-          @target.assignment&.status == Assignment.default_status && status.nil?
-      )
-    elsif @target.is_a?(Topic)
-      Assignment
-        .where(topic_id: topic.id, target_type: "Post", active: true)
-        .any? do |assignment|
-          assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type &&
-            assignment&.note == note &&
-            (
-              topic.assignment&.status == status ||
-                topic.assignment&.status == Assignment.default_status && status.nil?
-            )
-        end
-    end
+  def assignee_was_assigned_in_topic(assign_to, type, note, status)
+    Assignment
+      .where(topic_id: topic.id, target_type: "Post", active: true)
+      .any? do |assignment|
+        assignment_eq?(assignment, assign_to, type, note, status)
+      end
+  end
+
+  def already_assigned?(assign_to, type, note, status)
+    target_same_assignee_and_details(assign_to, type, note, status) ||
+      (@target.is_a?(Topic) && assignee_was_assigned_in_topic(assign_to, type, note, status))
   end
 
   def no_assignee_change?(assignee)
     @target.assignment&.assigned_to_id == assignee.id
+  end
+
+  def assignment_eq?(assignment, assign_to, type, note, status)
+    return false if !assignment&.active
+    return false if assignment.assigned_to_id != assign_to.id
+    return false if assignment.assigned_to_type != type
+    return false if assignment.note != note
+    assignment.status == status || !status && assignment.status == Assignment.default_status
   end
 end
