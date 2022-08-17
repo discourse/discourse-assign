@@ -468,7 +468,7 @@ RSpec.describe DiscourseAssign::AssignController do
         expect(response.status).to eq(403)
       end
 
-      it "responds with 404 if the assign_enabled setting is disabled" do
+      it "responds with 403 if the assign_enabled setting is disabled" do
         SiteSetting.assign_enabled = false
         get "/assign/user-menu-assigns.json"
         expect(response.status).to eq(403)
