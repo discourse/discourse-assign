@@ -479,11 +479,11 @@ RSpec.describe DiscourseAssign::AssignController do
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to contain_exactly(
+        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to eq([
           [unread_assigned_topic.id, 1],
           [unread_assigned_post.topic.id, unread_assigned_post.post_number],
           [unread_assigned_post_in_same_topic.topic.id, unread_assigned_post_in_same_topic.post_number]
-        )
+        ])
       end
 
       it "responds with an array of assigned topics that are not associated with any of the unread assigned notifications" do
@@ -491,11 +491,11 @@ RSpec.describe DiscourseAssign::AssignController do
         expect(response.status).to eq(200)
 
         topics = response.parsed_body["topics"]
-        expect(topics.map { |t| t["id"] }).to contain_exactly(
-          read_assigned_topic.id,
-          read_assigned_post.topic.id,
+        expect(topics.map { |t| t["id"] }).to eq([
           read_assigned_post_in_same_topic.topic.id,
-        )
+          read_assigned_post.topic.id,
+          read_assigned_topic.id,
+        ])
       end
 
       it "fills up the remaining of the UsersController::USER_MENU_LIST_LIMIT limit with assigned topics" do
