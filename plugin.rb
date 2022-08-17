@@ -380,23 +380,30 @@ after_initialize do
     next results
   end
 
-  add_to_class(:topic_query, :list_messages_assigned) do |user|
+  add_to_class(:topic_query, :list_messages_assigned) do |user, ignored_assignment_ids: nil|
     list = default_results(include_pms: true)
 
+    where_clause = +"("
+    where_clause << "(assigned_to_id = :user_id AND assigned_to_type = 'User' AND active)"
+    if @options[:filter] != :direct
+      where_clause << "OR (assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group' AND active)"
+    end
+    where_clause << ")"
+
+    if ignored_assignment_ids.present?
+      where_clause << "AND assignments.id NOT IN (:ignored_assignment_ids)"
+    end
     topic_ids_sql = +<<~SQL
       SELECT topic_id FROM assignments
       LEFT JOIN group_users ON group_users.user_id = :user_id
-      WHERE
-        (assigned_to_id = :user_id AND assigned_to_type = 'User' AND active)
+      WHERE #{where_clause}
     SQL
 
-    topic_ids_sql << <<~SQL if @options[:filter] != :direct
-        OR (assigned_to_id IN (group_users.group_id) AND assigned_to_type = 'Group' AND active)
-      SQL
-
-    sql = "topics.id IN (#{topic_ids_sql})"
-
-    list = list.where(sql, user_id: user.id).includes(:allowed_users)
+    where_args = { user_id: user.id }
+    if ignored_assignment_ids.present?
+      where_args[:ignored_assignment_ids] = ignored_assignment_ids
+    end
+    list = list.where("topics.id IN (#{topic_ids_sql})", **where_args).includes(:allowed_users)
 
     create_list(:assigned, { unordered: true }, list)
   end
