@@ -498,8 +498,8 @@ RSpec.describe DiscourseAssign::AssignController do
         )
       end
 
-      it "fills up the remaining of the USER_MENU_LIMIT limit with assigned topics" do
-        stub_const(DiscourseAssign::AssignController, "USER_MENU_LIMIT", 3) do
+      it "fills up the remaining of the UsersController::USER_MENU_LIST_LIMIT limit with assigned topics" do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
           get "/assign/user-menu-assigns.json"
         end
         expect(response.status).to eq(200)
@@ -509,7 +509,7 @@ RSpec.describe DiscourseAssign::AssignController do
         topics = response.parsed_body["topics"]
         expect(topics.size).to eq(0)
 
-        stub_const(DiscourseAssign::AssignController, "USER_MENU_LIMIT", 4) do
+        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 4) do
           get "/assign/user-menu-assigns.json"
         end
         expect(response.status).to eq(200)

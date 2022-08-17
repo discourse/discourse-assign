@@ -174,15 +174,14 @@ module DiscourseAssign
              }
     end
 
-    USER_MENU_LIMIT = 20
     def user_menu_assigns
       assign_notifications = Notification.unread_type(
         current_user,
         Notification.types[:assigned],
-        USER_MENU_LIMIT
+        user_menu_limit
       )
 
-      if assign_notifications.size < USER_MENU_LIMIT
+      if assign_notifications.size < user_menu_limit
         opts = {}
         ignored_assignment_ids = assign_notifications.filter_map do |notification|
           notification.data_hash[:assignment_id]
@@ -191,7 +190,7 @@ module DiscourseAssign
 
         assigns_list = TopicQuery.new(
           current_user,
-          per_page: USER_MENU_LIMIT - assign_notifications.size
+          per_page: user_menu_limit - assign_notifications.size
         ).list_messages_assigned(current_user, ignored_assignment_ids: ignored_assignment_ids)
       end
 
@@ -281,6 +280,10 @@ module DiscourseAssign
 
     def ensure_assign_allowed
       raise Discourse::InvalidAccess.new unless current_user.can_assign?
+    end
+
+    def user_menu_limit
+      UsersController::USER_MENU_LIST_LIMIT
     end
   end
 end
