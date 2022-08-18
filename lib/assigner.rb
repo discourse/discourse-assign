@@ -510,21 +510,17 @@ class ::Assigner
     return "unassigned_group#{suffix}" if assignment.assigned_to_group?
   end
 
-  def target_same_assignee_and_details(assign_to, type, note, status)
-    assignment_eq?(@target.assignment, assign_to, type, note, status)
-  end
-
-  def assignee_was_assigned_in_topic(assign_to, type, note, status)
-    Assignment
-      .where(topic_id: topic.id, target_type: "Post", active: true)
-      .any? do |assignment|
-        assignment_eq?(assignment, assign_to, type, note, status)
-      end
-  end
-
   def already_assigned?(assign_to, type, note, status)
-    target_same_assignee_and_details(assign_to, type, note, status) ||
-      (@target.is_a?(Topic) && assignee_was_assigned_in_topic(assign_to, type, note, status))
+    return true if assignment_eq?(@target.assignment, assign_to, type, note, status)
+
+    # Check if the user is not assigned to any of the posts from the topic
+    # they will be assigned to.
+    if @target.is_a?(Topic)
+      assignments = Assignment.where(topic_id: topic.id, target_type: "Post", active: true)
+      return true if assignments.any? { |a| assignment_eq?(a, assign_to, type, note, status) }
+    end
+
+    false
   end
 
   def no_assignee_change?(assignee)
