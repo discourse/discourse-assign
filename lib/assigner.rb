@@ -211,9 +211,7 @@ class ::Assigner
       end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-    when topic_same_assignee_and_details(assign_to, type, note, status)
-      assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when post_same_assignee_and_details(assign_to, type, note, status)
+    when already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
       :too_many_assigns_for_topic
@@ -512,31 +510,28 @@ class ::Assigner
     return "unassigned_group#{suffix}" if assignment.assigned_to_group?
   end
 
-  def topic_same_assignee_and_details(assign_to, type, note, status)
-    topic.assignment&.assigned_to_id == assign_to.id &&
-      topic.assignment&.assigned_to_type == type && topic.assignment.active == true &&
-      topic.assignment&.note == note &&
-      (
-        topic.assignment&.status == status ||
-          topic.assignment&.status == Assignment.default_status && status.nil?
-      )
-  end
+  def already_assigned?(assign_to, type, note, status)
+    return true if assignment_eq?(@target.assignment, assign_to, type, note, status)
 
-  def post_same_assignee_and_details(assign_to, type, note, status)
-    @target.is_a?(Topic) &&
-      Assignment
-        .where(topic_id: topic.id, target_type: "Post", active: true)
-        .any? do |assignment|
-          assignment.assigned_to_id == assign_to.id && assignment.assigned_to_type == type &&
-            assignment&.note == note &&
-            (
-              topic.assignment&.status == status ||
-                topic.assignment&.status == Assignment.default_status && status.nil?
-            )
-        end
+    # Check if the user is not assigned to any of the posts from the topic
+    # they will be assigned to.
+    if @target.is_a?(Topic)
+      assignments = Assignment.where(topic_id: topic.id, target_type: "Post", active: true)
+      return true if assignments.any? { |a| assignment_eq?(a, assign_to, type, note, status) }
+    end
+
+    false
   end
 
   def no_assignee_change?(assignee)
     @target.assignment&.assigned_to_id == assignee.id
+  end
+
+  def assignment_eq?(assignment, assign_to, type, note, status)
+    return false if !assignment&.active
+    return false if assignment.assigned_to_id != assign_to.id
+    return false if assignment.assigned_to_type != type
+    return false if assignment.note != note
+    assignment.status == status || !status && assignment.status == Assignment.default_status
   end
 end
