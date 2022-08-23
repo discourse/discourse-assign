@@ -126,6 +126,9 @@ en:
             min_recently_assigned_days:
               label: Min recently assigned days
               description: Defaults to 14 days.
+            skip_new_users_for_days:
+              label: Skip new users for days
+              description: Defaults to 0 days (users can be assigned immediately after signing up).
             max_recently_assigned_days:
               label: Max recently assigned days
               description: First attempt to exclude users assigned in the last `n` days. If no user left, fallbacks to `min_recently_assigned_days`. Defaults to 180 days.

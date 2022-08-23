@@ -46,13 +46,15 @@ class RandomAssignUtils
         ).pluck(:id),
       )
 
-    group_users_ids =
-      group
-        .group_users
-        .joins(:user)
-        .pluck("users.id")
-        .filter { |user_id| allowed_assign_user_ids.include?(user_id) }
-        .reject { |user_id| users_on_holiday.include?(user_id) }
+    group_users = group.group_users.joins(:user)
+    if skip_new_users_for_days = fields.dig("skip_new_users_for_days", "value").presence
+      group_users = group_users.where("users.created_at < ?", skip_new_users_for_days.to_i.days.ago)
+    end
+
+    group_users_ids = group_users
+      .pluck("users.id")
+      .filter { |user_id| allowed_assign_user_ids.include?(user_id) }
+      .reject { |user_id| users_on_holiday.include?(user_id) }
 
     if group_users_ids.empty?
       RandomAssignUtils.no_one!(topic_id, group.name)

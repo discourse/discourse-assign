@@ -278,6 +278,59 @@ describe RandomAssignUtils do
         end
       end
     end
+
+    context "skip_new_users_for_days is set" do
+      fab!(:topic_1) { Fabricate(:topic) }
+      fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+      fab!(:group_1) { Fabricate(:group) }
+      fab!(:user_1) { Fabricate(:user) }
+
+      before do
+        SiteSetting.assign_allowed_on_groups = "#{group_1.id}"
+        group_1.add(user_1)
+      end
+
+      it "creates post on the topic if all users are new" do
+        described_class.automation_script!(
+          {},
+          {
+            "assignees_group" => {
+              "value" => group_1.id,
+            },
+            "assigned_topic" => {
+              "value" => topic_1.id,
+            },
+            "skip_new_users_for_days" => {
+              "value" => "10",
+            },
+          },
+          automation,
+        )
+        expect(topic_1.posts.last.raw).to match(
+          "Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.",
+        )
+      end
+
+      it "assign topic if all users are old" do
+        described_class.automation_script!(
+          {},
+          {
+            "assignees_group" => {
+              "value" => group_1.id,
+            },
+            "assigned_topic" => {
+              "value" => topic_1.id,
+            },
+            "skip_new_users_for_days" => {
+              "value" => "0",
+            },
+          },
+          automation,
+        )
+
+        expect(topic_1.assignment).not_to eq(nil)
+      end
+    end
   end
 
   describe ".recently_assigned_users_ids" do
