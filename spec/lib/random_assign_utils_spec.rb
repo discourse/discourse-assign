@@ -78,6 +78,34 @@ describe RandomAssignUtils do
       end
     end
 
+    context "no users of group can be assigned because are not members of assign_allowed_on_groups groups" do
+      fab!(:topic_1) { Fabricate(:topic) }
+      fab!(:group_1) { Fabricate(:group) }
+      fab!(:user_1) { Fabricate(:user) }
+
+      before do
+        group_1.add(user_1)
+      end
+
+      it "creates post on the topic" do
+        described_class.automation_script!(
+          {},
+          {
+            "assignees_group" => {
+              "value" => group_1.id,
+            },
+            "assigned_topic" => {
+              "value" => topic_1.id,
+            },
+          },
+          automation,
+        )
+        expect(topic_1.posts.first.raw).to match(
+          "Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.",
+        )
+      end
+    end
+
     context "user can be assigned" do
       fab!(:group_1) { Fabricate(:group) }
       fab!(:user_1) { Fabricate(:user) }

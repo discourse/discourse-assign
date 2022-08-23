@@ -38,6 +38,7 @@ class RandomAssignUtils
       raise_error(automation, "Group(#{group_id}) not found")
     end
 
+    allowed_assign_user_ids = User.assign_allowed.pluck(:id)
     users_on_holiday =
       Set.new(
         User.where(
@@ -50,6 +51,7 @@ class RandomAssignUtils
         .group_users
         .joins(:user)
         .pluck("users.id")
+        .filter { |user_id| allowed_assign_user_ids.include?(user_id) }
         .reject { |user_id| users_on_holiday.include?(user_id) }
 
     if group_users_ids.empty?
