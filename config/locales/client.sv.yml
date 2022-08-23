@@ -97,6 +97,9 @@ sv:
       no_assignments_title: "Du har inga tilldelningar än"
       no_assignments_body: >
         Dina tilldelade ämnen och meddelanden visas här i en lista. Du kommer också att få en periodisk påminnelse om dina tilldelningar, som du kan justera i dina <a href='%{preferencesUrl}'>användarinställningar</a>. <br><br> Om du vill tilldela ett ämne eller ett meddelande till dig själv eller till någon annan letar du efter tilldelningsknappen %{icon} längst ned.
+      dismiss_assigned_tooltip: "Markera alla olästa tilldelningsmeddelanden som lästa"
+      assigned_to_group: "tilldelad till %{group_name}"
+      assigned_to_you: "tilldelad till dig"
     admin:
       web_hooks:
         assign_event:
@@ -142,3 +145,10 @@ sv:
         assigned: "%{username} tilldelade dig"
       titles:
         assigned: "Tilldelad"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Är du säker? Du har %{count} olästa tilldelningsmeddelande."
+            other: "Är du säker? Du har %{count} olästa tilldelningsmeddelande."
+    user_menu:
+      view_all_assigned: "visa alla tilldelade"
