@@ -95,6 +95,9 @@ he:
       no_assignments_title: "אין לך מטלות עדיין"
       no_assignments_body: >
         הנושאים שמוקצים אליך יופיעו כאן. תישלחנה אליך הודעות תזכורת מדי פעם בפעם כדי להזכיר לך את המטלות שלך, ניתן להגדיר אותן <a href='%{preferencesUrl}'>בהעדפות המשתמש</a> שלך. <br><br> כדי להקצות נושא או הודעה לעצמך או למישהו אחר יש לחפש את הכפתור %{icon} הקצאה למטה.
+      dismiss_assigned_tooltip: "סימון כל התראות ההקצאה שלא נקראו כהתראות שנקראו"
+      assigned_to_group: "מוקצה לטובת %{group_name}"
+      assigned_to_you: "מוקצה לך"
     admin:
       web_hooks:
         assign_event:
@@ -140,3 +143,12 @@ he:
         assigned: "הוקצה אליך על ידי %{username}"
       titles:
         assigned: "מוקצה"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "בוודאות? יש לך התראת הקצאה %{count}."
+            two: "בוודאות? יש לך %{count} התראות הקצאה."
+            many: "בוודאות? יש לך %{count} התראות הקצאה."
+            other: "בוודאות? יש לך %{count} התראות הקצאה."
+    user_menu:
+      view_all_assigned: "הצגת כל ההקצאות"
