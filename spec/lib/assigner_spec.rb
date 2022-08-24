@@ -560,6 +560,8 @@ RSpec.describe Assigner do
     context "post" do
       let(:post_2) { Fabricate(:post, topic: topic) }
       let(:assigner) { described_class.new(post_2, moderator) }
+      let(:post_3) { Fabricate(:post, topic: topic) }
+      let(:assigner_2) { described_class.new(post_3, moderator) }
 
       before do
         SiteSetting.unassign_on_close = true
@@ -595,6 +597,16 @@ RSpec.describe Assigner do
 
         PostDestroyer.new(moderator, post_2).destroy
         expect { small_action_post.reload }.to raise_error(ActiveRecord::RecordNotFound)
+      end
+
+      it "deletes post successfully when small action is already deleted" do
+        assigner_2.assign(moderator)
+        small_action_post = PostCustomField.where(name: "action_code_post_id").first.post
+
+        PostDestroyer.new(moderator, small_action_post).destroy
+        PostDestroyer.new(moderator, post_3).destroy
+
+        expect(post_3).to be nil
       end
     end
   end
