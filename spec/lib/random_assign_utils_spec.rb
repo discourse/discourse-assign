@@ -44,7 +44,7 @@ describe RandomAssignUtils do
           automation,
         )
         expect(topic_1.posts.first.raw).to match(
-          "Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.",
+          I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
     end
@@ -73,19 +73,17 @@ describe RandomAssignUtils do
           automation,
         )
         expect(topic_1.posts.first.raw).to match(
-          "Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.",
+          I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
     end
 
-    context "no users of group can be assigned because are not members of assign_allowed_on_groups groups" do
+    context "no users can be assigned because none are members of assign_allowed_on_groups groups" do
       fab!(:topic_1) { Fabricate(:topic) }
       fab!(:group_1) { Fabricate(:group) }
       fab!(:user_1) { Fabricate(:user) }
 
-      before do
-        group_1.add(user_1)
-      end
+      before { group_1.add(user_1) }
 
       it "creates post on the topic" do
         described_class.automation_script!(
@@ -101,7 +99,7 @@ describe RandomAssignUtils do
           automation,
         )
         expect(topic_1.posts.first.raw).to match(
-          "Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.",
+          I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
     end
@@ -186,7 +184,7 @@ describe RandomAssignUtils do
           automation,
         )
         expect(topic_1.posts.first.raw).to match(
-          "Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.",
+          I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
     end
@@ -307,7 +305,7 @@ describe RandomAssignUtils do
           automation,
         )
         expect(topic_1.posts.last.raw).to match(
-          "Attempted randomly assign a member of `@#{group_1.name}`, but no one was available.",
+          I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
 

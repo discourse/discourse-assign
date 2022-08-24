@@ -400,9 +400,7 @@ after_initialize do
     SQL
 
     where_args = { user_id: user.id }
-    if ignored_assignment_ids.present?
-      where_args[:ignored_assignment_ids] = ignored_assignment_ids
-    end
+    where_args[:ignored_assignment_ids] = ignored_assignment_ids if ignored_assignment_ids.present?
     list = list.where("topics.id IN (#{topic_ids_sql})", **where_args).includes(:allowed_users)
 
     create_list(:assigned, { unordered: true }, list)
