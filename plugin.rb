@@ -835,6 +835,7 @@ after_initialize do
     PostCustomField
       .where(name: "action_code_post_id", value: post.id)
       .find_each do |post_custom_field|
+        next if post_custom_field.post == nil
         if ![Post.types[:small_action], Post.types[:whisper]].include?(
              post_custom_field.post.post_type,
            )
