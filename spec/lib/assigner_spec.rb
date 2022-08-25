@@ -606,7 +606,8 @@ RSpec.describe Assigner do
         PostDestroyer.new(moderator, small_action_post).destroy
         PostDestroyer.new(moderator, post_3).destroy
 
-        expect(post_3).to be nil
+        expect(small_action_post.reload.deleted_at).to be_present
+        expect(post_3.reload.deleted_at).to be_present
       end
     end
   end
