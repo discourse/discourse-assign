@@ -175,46 +175,40 @@ module DiscourseAssign
     end
 
     def user_menu_assigns
-      assign_notifications = Notification.unread_type(
-        current_user,
-        Notification.types[:assigned],
-        user_menu_limit
-      )
+      assign_notifications =
+        Notification.unread_type(current_user, Notification.types[:assigned], user_menu_limit)
 
       if assign_notifications.size < user_menu_limit
         opts = {}
-        ignored_assignment_ids = assign_notifications.filter_map do |notification|
-          notification.data_hash[:assignment_id]
-        end
+        ignored_assignment_ids =
+          assign_notifications.filter_map { |notification| notification.data_hash[:assignment_id] }
         opts[:ignored_assignment_ids] = ignored_assignment_ids if ignored_assignment_ids.present?
 
-        assigns_list = TopicQuery.new(
-          current_user,
-          per_page: user_menu_limit - assign_notifications.size
-        ).list_messages_assigned(current_user, ignored_assignment_ids: ignored_assignment_ids)
+        assigns_list =
+          TopicQuery.new(
+            current_user,
+            per_page: user_menu_limit - assign_notifications.size,
+          ).list_messages_assigned(current_user, ignored_assignment_ids: ignored_assignment_ids)
       end
 
       if assign_notifications.present?
-        serialized_notifications = ActiveModel::ArraySerializer.new(
-          assign_notifications,
-          each_serializer: NotificationSerializer,
-          scope: guardian
-        )
+        serialized_notifications =
+          ActiveModel::ArraySerializer.new(
+            assign_notifications,
+            each_serializer: NotificationSerializer,
+            scope: guardian,
+          )
       end
 
       if assigns_list
-        serialized_assigns = serialize_data(
-          assigns_list,
-          TopicListSerializer,
-          scope: guardian,
-          root: false
-        )[:topics]
+        serialized_assigns =
+          serialize_data(assigns_list, TopicListSerializer, scope: guardian, root: false)[:topics]
       end
 
       render json: {
-        notifications: serialized_notifications || [],
-        topics: serialized_assigns || [],
-      }
+               notifications: serialized_notifications || [],
+               topics: serialized_assigns || [],
+             }
     end
 
     private

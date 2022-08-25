@@ -400,9 +400,7 @@ after_initialize do
     SQL
 
     where_args = { user_id: user.id }
-    if ignored_assignment_ids.present?
-      where_args[:ignored_assignment_ids] = ignored_assignment_ids
-    end
+    where_args[:ignored_assignment_ids] = ignored_assignment_ids if ignored_assignment_ids.present?
     list = list.where("topics.id IN (#{topic_ids_sql})", **where_args).includes(:allowed_users)
 
     create_list(:assigned, { unordered: true }, list)
@@ -978,6 +976,7 @@ after_initialize do
       field :minimum_time_between_assignments, component: :text
       field :max_recently_assigned_days, component: :text
       field :min_recently_assigned_days, component: :text
+      field :skip_new_users_for_days, component: :text
       field :in_working_hours, component: :boolean
       field :post_template, component: :post
 

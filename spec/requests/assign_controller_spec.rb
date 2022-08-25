@@ -401,7 +401,9 @@ RSpec.describe DiscourseAssign::AssignController do
     fab!(:read_assigned_post) { Fabricate(:post, topic: Fabricate(:post).topic) }
 
     fab!(:read_assigned_post_in_same_topic) { Fabricate(:post, topic: Fabricate(:post).topic) }
-    fab!(:unread_assigned_post_in_same_topic) { Fabricate(:post, topic: read_assigned_post_in_same_topic.topic) }
+    fab!(:unread_assigned_post_in_same_topic) do
+      Fabricate(:post, topic: read_assigned_post_in_same_topic.topic)
+    end
 
     fab!(:another_user_unread_assigned_topic) { Fabricate(:post).topic }
     fab!(:another_user_read_assigned_topic) { Fabricate(:post).topic }
@@ -416,9 +418,7 @@ RSpec.describe DiscourseAssign::AssignController do
         read_assigned_post,
         unread_assigned_post_in_same_topic,
         read_assigned_post_in_same_topic,
-      ].each do |target|
-        Assigner.new(target, normal_admin).assign(user)
-      end
+      ].each { |target| Assigner.new(target, normal_admin).assign(user) }
 
       Notification
         .where(
@@ -428,25 +428,23 @@ RSpec.describe DiscourseAssign::AssignController do
           topic_id: [
             read_assigned_topic.id,
             read_assigned_post.topic.id,
-            read_assigned_post_in_same_topic.topic.id
-          ]
+            read_assigned_post_in_same_topic.topic.id,
+          ],
         )
         .where.not(
           topic_id: read_assigned_post_in_same_topic.topic.id,
-          post_number: unread_assigned_post_in_same_topic.post_number
+          post_number: unread_assigned_post_in_same_topic.post_number,
         )
         .update_all(read: true)
 
       Assigner.new(another_user_read_assigned_topic, normal_admin).assign(user2)
       Assigner.new(another_user_unread_assigned_topic, normal_admin).assign(user2)
-      Notification
-        .where(
-          notification_type: Notification.types[:assigned],
-          read: false,
-          user_id: user2.id,
-          topic_id: another_user_read_assigned_topic,
-        )
-        .update_all(read: true)
+      Notification.where(
+        notification_type: Notification.types[:assigned],
+        read: false,
+        user_id: user2.id,
+        topic_id: another_user_read_assigned_topic,
+      ).update_all(read: true)
     end
 
     context "when logged out" do
@@ -457,9 +455,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     context "when logged in" do
-      before do
-        sign_in(user)
-      end
+      before { sign_in(user) }
 
       it "responds with 403 if the current user can't assign" do
         user.update!(admin: false)
@@ -479,11 +475,16 @@ RSpec.describe DiscourseAssign::AssignController do
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to eq([
-          [unread_assigned_topic.id, 1],
-          [unread_assigned_post.topic.id, unread_assigned_post.post_number],
-          [unread_assigned_post_in_same_topic.topic.id, unread_assigned_post_in_same_topic.post_number]
-        ])
+        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to eq(
+          [
+            [unread_assigned_topic.id, 1],
+            [unread_assigned_post.topic.id, unread_assigned_post.post_number],
+            [
+              unread_assigned_post_in_same_topic.topic.id,
+              unread_assigned_post_in_same_topic.post_number,
+            ],
+          ],
+        )
       end
 
       it "responds with an array of assigned topics that are not associated with any of the unread assigned notifications" do
@@ -491,11 +492,13 @@ RSpec.describe DiscourseAssign::AssignController do
         expect(response.status).to eq(200)
 
         topics = response.parsed_body["topics"]
-        expect(topics.map { |t| t["id"] }).to eq([
-          read_assigned_post_in_same_topic.topic.id,
-          read_assigned_post.topic.id,
-          read_assigned_topic.id,
-        ])
+        expect(topics.map { |t| t["id"] }).to eq(
+          [
+            read_assigned_post_in_same_topic.topic.id,
+            read_assigned_post.topic.id,
+            read_assigned_topic.id,
+          ],
+        )
       end
 
       it "fills up the remaining of the UsersController::USER_MENU_LIST_LIMIT limit with assigned topics" do

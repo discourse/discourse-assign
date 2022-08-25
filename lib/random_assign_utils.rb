@@ -38,6 +38,7 @@ class RandomAssignUtils
       raise_error(automation, "Group(#{group_id}) not found")
     end
 
+    assignable_user_ids = User.assign_allowed.pluck(:id)
     users_on_holiday =
       Set.new(
         User.where(
@@ -45,11 +46,15 @@ class RandomAssignUtils
         ).pluck(:id),
       )
 
+    group_users = group.group_users.joins(:user)
+    if skip_new_users_for_days = fields.dig("skip_new_users_for_days", "value").presence
+      group_users = group_users.where("users.created_at < ?", skip_new_users_for_days.to_i.days.ago)
+    end
+
     group_users_ids =
-      group
-        .group_users
-        .joins(:user)
+      group_users
         .pluck("users.id")
+        .filter { |user_id| assignable_user_ids.include?(user_id) }
         .reject { |user_id| users_on_holiday.include?(user_id) }
 
     if group_users_ids.empty?
