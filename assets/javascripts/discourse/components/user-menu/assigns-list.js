@@ -5,6 +5,7 @@ import UserMenuAssignItem from "discourse/plugins/discourse-assign/discourse-ass
 import Notification from "discourse/models/notification";
 import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
+import Topic from "discourse/models/topic";
 
 export default class UserMenuAssignNotificationsList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -35,25 +36,27 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
     return "user-menu/assigns-list-empty-state";
   }
 
-  fetchItems() {
-    return ajax("/assign/user-menu-assigns.json").then((data) => {
-      const content = [];
-      data.notifications.forEach((rawNotification) => {
-        const notification = Notification.create(rawNotification);
-        content.push(
-          new UserMenuNotificationItem({
-            notification,
-            currentUser: this.currentUser,
-            siteSettings: this.siteSettings,
-            site: this.site,
-          })
-        );
-      });
+  async fetchItems() {
+    const data = await ajax("/assign/user-menu-assigns.json");
+    const content = [];
+
+    const notifications = data.notifications.map((n) => Notification.create(n));
+    await Notification.applyTransformations(notifications);
+    notifications.forEach((notification) => {
       content.push(
-        ...data.topics.map((assign) => new UserMenuAssignItem({ assign }))
+        new UserMenuNotificationItem({
+          notification,
+          currentUser: this.currentUser,
+          siteSettings: this.siteSettings,
+          site: this.site,
+        })
       );
-      return content;
     });
+
+    const topics = data.topics.map((t) => Topic.create(t));
+    await Topic.applyTransformations(topics);
+    content.push(...topics.map((assign) => new UserMenuAssignItem({ assign })));
+    return content;
   }
 
   dismissWarningModal() {

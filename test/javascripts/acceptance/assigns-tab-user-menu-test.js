@@ -8,6 +8,7 @@ import {
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
+import { withPluginApi } from "discourse/lib/plugin-api";
 
 const USER_MENU_ASSIGN_RESPONSE = {
   notifications: [
@@ -446,6 +447,39 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
         .querySelector("a")
         .href.endsWith("/my/preferences/notifications"),
       "empty state body has user-plus icon"
+    );
+  });
+
+  test("assigns tab applies model transformations", async function (assert) {
+    withPluginApi("0.1", (api) => {
+      api.registerModelTransformer("notification", (notifications) => {
+        notifications.forEach((notification) => {
+          notification.fancy_title = `notificationModelTransformer ${notification.fancy_title}`;
+        });
+      });
+      api.registerModelTransformer("topic", (topics) => {
+        topics.forEach((topic) => {
+          topic.fancy_title = `topicModelTransformer ${topic.fancy_title}`;
+        });
+      });
+    });
+
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-assign-list");
+
+    const notifications = queryAll(
+      "#quick-access-assign-list ul li.notification"
+    );
+    assert.strictEqual(
+      notifications[0].textContent.replace(/\s+/g, " ").trim(),
+      "tony notificationModelTransformer Test poll topic please bear with me"
+    );
+
+    const assigns = queryAll("#quick-access-assign-list ul li.assign");
+    assert.strictEqual(
+      assigns[0].textContent.replace(/\s+/g, " ").trim(),
+      "topicModelTransformer Howdy this my test topic with emoji !"
     );
   });
 });
