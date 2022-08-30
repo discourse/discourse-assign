@@ -174,6 +174,31 @@ RSpec.describe Assigner do
     end
 
     context "forbidden reasons" do
+      it "doesn't assign if the topic has more than 5 assignments" do
+        other_post = nil
+
+        # Assign many posts to reach the limit
+        1.upto(described_class::ASSIGNMENTS_PER_TOPIC_LIMIT) do
+          other_post = Fabricate(:post, topic: topic)
+          user = Fabricate(:moderator, groups: [assign_allowed_group])
+          status = described_class.new(other_post, admin).assign(user)
+          expect(status[:success]).to eq(true)
+        end
+
+        # Assigning one more post is not allowed
+        post = Fabricate(:post, topic: topic)
+        status = described_class.new(post, admin).assign(moderator)
+        expect(status[:success]).to eq(false)
+        expect(status[:reason]).to eq(:too_many_assigns_for_topic)
+
+        # Delete a post to mark the assignment as inactive
+        PostDestroyer.new(admin, other_post).destroy
+
+        # Try assigning again
+        status = described_class.new(post, admin).assign(moderator)
+        expect(status[:success]).to eq(true)
+      end
+
       it "doesn't assign if the user has too many assigned topics" do
         SiteSetting.max_assigned_topics = 1
         another_post = Fabricate.build(:post)

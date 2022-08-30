@@ -213,7 +213,7 @@ class ::Assigner
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
     when already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when Assignment.where(topic: topic).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
+    when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
       :too_many_assigns_for_topic
     when !can_assign_to?(assign_to)
       :too_many_assigns
