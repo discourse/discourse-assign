@@ -234,7 +234,7 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
   needs.user({
     redesigned_user_menu_enabled: true,
     can_assign: true,
-    grouped_unread_high_priority_notifications: {
+    grouped_unread_notifications: {
       34: 173, // assigned notification type
     },
   });
@@ -286,7 +286,7 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
     );
 
     updateCurrentUser({
-      grouped_unread_high_priority_notifications: {},
+      grouped_unread_notifications: {},
     });
 
     assert.notOk(
