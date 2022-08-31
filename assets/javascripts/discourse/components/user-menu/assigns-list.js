@@ -71,7 +71,7 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   get _unreadAssignedNotificationsCount() {
-    const key = `grouped_unread_high_priority_notifications.${this.site.notification_types.assigned}`;
+    const key = `grouped_unread_notifications.${this.site.notification_types.assigned}`;
     // we're retrieving the value with get() so that Ember tracks the property
     // and re-renders the UI when it changes.
     // we can stop using `get()` when the User model is refactored into native
