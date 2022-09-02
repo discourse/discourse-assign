@@ -32,6 +32,10 @@ export default {
             get count() {
               return this.getUnreadCountForType("assigned");
             }
+
+            get notificationTypes() {
+              return ["assigned"];
+            }
           };
         });
       }

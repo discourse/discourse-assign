@@ -9,7 +9,7 @@ import Topic from "discourse/models/topic";
 
 export default class UserMenuAssignNotificationsList extends UserMenuNotificationsList {
   get dismissTypes() {
-    return ["assigned"];
+    return this.filterByTypes;
   }
 
   get showDismiss() {
