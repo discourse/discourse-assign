@@ -12,9 +12,9 @@ RSpec.describe DiscourseAssign::AssignController do
   end
   fab!(:post) { Fabricate(:post) }
   fab!(:user2) do
-    Fabricate(:active_user, name: "David Tylor", username: "david", groups: [default_allowed_group])
+    Fabricate(:active_user, name: "David Taylor", username: "david", groups: [default_allowed_group])
   end
-  let(:nonadmin) { Fabricate(:user, groups: [default_allowed_group]) }
+  let(:non_admin) { Fabricate(:user, groups: [default_allowed_group]) }
   fab!(:normal_user) { Fabricate(:user) }
   fab!(:normal_admin) { Fabricate(:admin) }
 
@@ -34,7 +34,7 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(403)
     end
 
-    it "filters requests where assigne group is not allowed" do
+    it "filters requests where assigned group is not allowed" do
       put "/assign/assign.json",
           params: {
             target_id: post.topic_id,
@@ -76,10 +76,10 @@ RSpec.describe DiscourseAssign::AssignController do
       end
 
       it "does include only visible assign_allowed_on_groups" do
-        sign_in(nonadmin) # Need to use nonadmin to test. Admins can see all groups
+        sign_in(non_admin) # Need to use non-admin to test. Admins can see all groups
 
         visible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
-        visible_group.add(nonadmin)
+        visible_group.add(non_admin)
         invisible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
 
         SiteSetting.assign_allowed_on_groups = "#{visible_group.id}|#{invisible_group.id}"
@@ -305,7 +305,7 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     context "with custom allowed groups" do
-      let(:custom_allowed_group) { Fabricate(:group, name: "mygroup") }
+      let(:custom_allowed_group) { Fabricate(:group, name: "my-group") }
       let(:other_user) { Fabricate(:user, groups: [custom_allowed_group]) }
 
       before { SiteSetting.assign_allowed_on_groups += "|#{custom_allowed_group.id}" }
@@ -351,7 +351,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "doesn't include members with no assignments" do
       sign_in(user)
-      add_to_assign_allowed_group(nonadmin)
+      add_to_assign_allowed_group(non_admin)
 
       get "/assign/members/#{get_assigned_allowed_group_name}.json"
       expect(response.status).to eq(200)
@@ -373,7 +373,7 @@ RSpec.describe DiscourseAssign::AssignController do
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array([user2.id])
 
-      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "Tylor" }
+      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "Taylor" }
       expect(response.status).to eq(200)
       expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array([user2.id])
     end
@@ -475,7 +475,7 @@ RSpec.describe DiscourseAssign::AssignController do
         expect(response.status).to eq(200)
 
         notifications = response.parsed_body["notifications"]
-        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to eq(
+        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to match_array(
           [
             [unread_assigned_topic.id, 1],
             [unread_assigned_post.topic.id, unread_assigned_post.post_number],
