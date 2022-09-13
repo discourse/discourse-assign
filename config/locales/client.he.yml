@@ -21,7 +21,9 @@ he:
       unassigned_group_from_post: "בוטלה הקצאה של %{who} מה<a href='%{path}'>פוסט</a> ב־%{when}"
       reassigned: "הוקצה מחדש לטובת %{who} %{when}"
       reassigned_group: "הוקצה מחדש לטובת %{who} %{when}"
+      details_change: "הוחלפו פרטי ההקצאה עבור %{who} %{when}"
       note_change: "הערת ההקצאה של %{who} נערכה ב־%{when}"
+      status_change: "הוחלף מצב ההקצאה עבור %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "הוספת מסנן ‚ללא הקצאה’ לקטגוריה"
       cant_act: "אין לך אפשרות לפעול על דגלים שהוקצו למשתמשים אחרים"
@@ -128,6 +130,9 @@ he:
             min_recently_assigned_days:
               label: כמות מזערית של ימים שהוקצו לאחרונה
               description: ברירת המחדל היא 14 ימים.
+            skip_new_users_for_days:
+              label: דילוג על משתמשים חדשים למשך ימים
+              description: ברירת המחדל היא 0 ימים (אפשר להקצות משתמשים מיידית לאחר ההרשמה).
             max_recently_assigned_days:
               label: כמות מרבית של ימים שהוקצו לאחרונה
               description: הניסיון הראשון להחריג משתמש שהוקצו ב־`n` הימים האחרונים. אם לא עזבו משתמשים, תתבצע נסיגה אל `min_recently_assigned_days`. ברירת המחדל היא 180 ימים.
