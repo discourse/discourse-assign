@@ -624,7 +624,7 @@ after_initialize do
   end
 
   add_to_serializer(:topic_list_item, :assigned_to_group) do
-    BasicGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
+    AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:topic_list_item, :include_assigned_to_group?) do
@@ -648,7 +648,7 @@ after_initialize do
   end
 
   add_to_serializer(:search_topic_list_item, :assigned_to_group, false) do
-    BasicGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
+    AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:search_topic_list_item, "include_assigned_to_group?") do
@@ -700,7 +700,7 @@ after_initialize do
 
   add_to_serializer(:user_bookmark_base, :assigned_to_group, false) do
     return if !can_have_assignment?
-    BasicGroupSerializer.new(assigned_to, scope: scope, root: false).as_json
+    AssignedGroupSerializer.new(assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:user_bookmark_base, "include_assigned_to_group?") do
@@ -714,10 +714,6 @@ after_initialize do
     SiteSetting.assigns_user_url_path.gsub("{username}", object.username)
   end
 
-  add_to_serializer(:basic_group, :assign_icon) { "group-plus" }
-
-  add_to_serializer(:basic_group, :assign_path) { "/g/#{object.name}/assigned/everyone" }
-
   # PostSerializer
   add_to_serializer(:post, :assigned_to_user) do
     BasicUserSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
@@ -729,7 +725,7 @@ after_initialize do
   end
 
   add_to_serializer(:post, :assigned_to_group, false) do
-    BasicGroupSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
+    AssignedGroupSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
   end
 
   add_to_serializer(:post, "include_assigned_to_group?") do
