@@ -36,6 +36,10 @@ export default {
             get notificationTypes() {
               return ["assigned"];
             }
+
+            get linkWhenActive() {
+              return `${this.currentUser.path}/activity/assigned`;
+            }
           };
         });
       }
