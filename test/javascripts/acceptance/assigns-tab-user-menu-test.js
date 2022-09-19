@@ -5,7 +5,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -261,6 +261,15 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
       markRead = true;
       return helper.response({ success: true });
     });
+
+    server.get("/topics/messages-assigned/eviltrout.json", () => {
+      return helper.response({
+        users: [],
+        topic_list: {
+          topics: [],
+        },
+      });
+    });
   });
 
   needs.hooks.afterEach(() => {
@@ -296,6 +305,19 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
     assert.ok(
       exists("#user-menu-button-assign-list"),
       "assigns tab still exists"
+    );
+  });
+
+  test("clicking on the assign tab when it's already selected navigates to the user's assignments page", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-assign-list");
+    await click("#user-menu-button-assign-list");
+
+    assert.strictEqual(
+      currentURL(),
+      "/u/eviltrout/activity/assigned",
+      "user is navigated to their assignments page"
     );
   });
 
