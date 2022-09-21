@@ -151,3 +151,8 @@ en:
             other: "Are you sure? You have %{count} unread assign notifications."
     user_menu:
       view_all_assigned: "view all assigned"
+      tabs:
+        assign_list: "Assign list"
+        assign_list_with_unread:
+          one: "Assign list - %{count} unread assignment"
+          other: "Assign list - %{count} unread assignments"
