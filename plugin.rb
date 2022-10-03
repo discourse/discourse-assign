@@ -12,9 +12,6 @@ enabled_site_setting :assign_enabled
 register_asset "stylesheets/assigns.scss"
 register_asset "stylesheets/mobile/assigns.scss", :mobile
 
-register_svg_icon "user-plus"
-register_svg_icon "user-times"
-
 %w[user-plus user-times group-plus group-times].each { |i| register_svg_icon(i) }
 
 load File.expand_path("../lib/discourse_assign/engine.rb", __FILE__)
