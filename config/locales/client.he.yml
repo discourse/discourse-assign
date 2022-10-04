@@ -157,3 +157,10 @@ he:
             other: "בוודאות? יש לך %{count} התראות הקצאה."
     user_menu:
       view_all_assigned: "הצגת כל ההקצאות"
+      tabs:
+        assign_list: "רשימת הקצאות"
+        assign_list_with_unread:
+          one: "רשימת הקצאות - הקצאה %{count} שלא נקראה"
+          two: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
+          many: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
+          other: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
