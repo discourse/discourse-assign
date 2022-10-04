@@ -8,6 +8,8 @@ describe TopicQuery do
 
   fab!(:user) { Fabricate(:user) }
   fab!(:user2) { Fabricate(:user) }
+  fab!(:user3) { Fabricate(:user) }
+  fab!(:user4) { Fabricate(:user) }
 
   include_context "A group that is allowed to assign"
 
@@ -108,7 +110,7 @@ describe TopicQuery do
     let(:user_topic) do
       topic =
         create_post(
-          user: Fabricate(:user),
+          user: user3,
           target_usernames: [user.username, user2.username],
           archetype: Archetype.private_message,
         ).topic
@@ -121,7 +123,7 @@ describe TopicQuery do
     let(:assigned_topic) do
       topic =
         create_post(
-          user: Fabricate(:user),
+          user: user4,
           target_usernames: [user.username, user2.username],
           archetype: Archetype.private_message,
         ).topic
@@ -143,6 +145,8 @@ describe TopicQuery do
     end
 
     before do
+      Group.refresh_automatic_groups!
+
       assign_allowed_group.update!(messageable_level: Group::ALIAS_LEVELS[:everyone])
 
       user_topic
