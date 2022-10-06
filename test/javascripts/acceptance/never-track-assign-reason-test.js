@@ -43,7 +43,7 @@ acceptance(
       });
     });
 
-    test("Show default assign reason when user tracks topics", async (assert) => {
+    test("Show default assign reason when user tracks topics", async function (assert) {
       updateCurrentUser({ never_auto_track_topics: false });
 
       await visit("/t/assignment-topic/44");
@@ -54,7 +54,7 @@ acceptance(
       );
     });
 
-    test("Show user assign reason when user never tracks topics", async (assert) => {
+    test("Show user assign reason when user never tracks topics", async function (assert) {
       updateCurrentUser({
         never_auto_track_topics: true,
       });

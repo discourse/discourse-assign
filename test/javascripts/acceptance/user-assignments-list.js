@@ -10,7 +10,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 import { test } from "qunit";
 
 acceptance(
-  "Discourse Assign | UnAssign/Re-assign from the topics list",
+  "Discourse Assign | Unassign/reassign from the topics list",
   function (needs) {
     needs.user();
     needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
@@ -20,14 +20,14 @@ acceptance(
       server.get(messagesPath, () => helper.response(assigns));
     });
 
-    test("Unassign/Re-assign options are visible", async (assert) => {
+    test("Unassign/reassign options are visible", async function (assert) {
       const options = selectKit(".assign-actions-dropdown");
 
       await visit("/u/eviltrout/activity/assigned");
       await options.expand();
 
-      assert.equal(count("li[data-value='unassign']"), 1);
-      assert.equal(count("li[data-value='reassign']"), 1);
+      assert.strictEqual(count("li[data-value='unassign']"), 1);
+      assert.strictEqual(count("li[data-value='reassign']"), 1);
     });
   }
 );

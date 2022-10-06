@@ -36,7 +36,7 @@ acceptance(
     });
     stubCategory(needs, { enable_unassigned_filter: "true" });
 
-    test("can see Unassigned button", async (assert) => {
+    test("can see Unassigned button", async function (assert) {
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
@@ -56,7 +56,7 @@ acceptance(
     });
     stubCategory(needs, { enable_unassigned_filter: "false" });
 
-    test("cannot see Unassigned button", async (assert) => {
+    test("cannot see Unassigned button", async function (assert) {
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
@@ -76,7 +76,7 @@ acceptance(
     });
     stubCategory(needs, { enable_unassigned_filter: "true" });
 
-    test("can see Unassigned button", async (assert) => {
+    test("can see Unassigned button", async function (assert) {
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
@@ -96,7 +96,7 @@ acceptance(
     });
     stubCategory(needs, { enable_unassigned_filter: "true" });
 
-    test("cannot see Unassigned button", async (assert) => {
+    test("cannot see Unassigned button", async function (assert) {
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");

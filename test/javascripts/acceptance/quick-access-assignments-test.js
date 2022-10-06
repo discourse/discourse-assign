@@ -19,7 +19,7 @@ acceptance(
       server.get(messagesPath, () => helper.response(assigns));
     });
 
-    test("Quick access assignments panel", async (assert) => {
+    test("Quick access assignments panel", async function (assert) {
       updateCurrentUser({ can_assign: true });
 
       await visit("/");
@@ -32,7 +32,7 @@ acceptance(
       assert.ok(assignment.href.includes("/t/greetings/10/5"));
 
       await click(".widget-button.assigned");
-      assert.equal(
+      assert.strictEqual(
         currentURL(),
         "/u/eviltrout/activity/assigned",
         "a second click should redirect to the full assignments page"

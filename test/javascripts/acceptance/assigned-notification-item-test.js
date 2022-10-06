@@ -52,22 +52,22 @@ acceptance("Discourse Assign | Assignment notifications", function (needs) {
     );
   });
 
-  test("Shows the right icons", async (assert) => {
+  test("Shows the right icons", async function (assert) {
     await visit("/");
     await click("#current-user.header-dropdown-toggle");
 
     const userAssignment = query(".quick-access-panel li:nth-child(1) a");
     assert.ok(
-      [...userAssignment.querySelector(".d-icon").classList].includes(
-        "d-icon-user-plus"
-      )
+      userAssignment
+        .querySelector(".d-icon")
+        .classList.contains("d-icon-user-plus")
     );
 
     const groupAssignment = query(".quick-access-panel li:nth-child(2) a");
     assert.ok(
-      [...groupAssignment.querySelector(".d-icon").classList].includes(
-        "d-icon-group-plus"
-      )
+      groupAssignment
+        .querySelector(".d-icon")
+        .classList.contains("d-icon-group-plus")
     );
   });
 });

@@ -19,13 +19,13 @@ acceptance("Discourse Assign | GroupAssignments", function (needs) {
     server.get(getMembersPath, () => helper.response(getMembers));
   });
 
-  test("Group Assignments Everyone", async (assert) => {
+  test("Group Assignments Everyone", async function (assert) {
     await visit("/g/discourse/assigned");
-    assert.equal(count(".topic-list-item"), 1);
+    assert.strictEqual(count(".topic-list-item"), 1);
   });
 
-  test("Group Assignments Ahmedgagan", async (assert) => {
+  test("Group Assignments Ahmedgagan", async function (assert) {
     await visit("/g/discourse/assigned/ahmedgagan6");
-    assert.equal(count(".topic-list-item"), 1);
+    assert.strictEqual(count(".topic-list-item"), 1);
   });
 });
