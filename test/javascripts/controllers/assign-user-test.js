@@ -1,25 +1,19 @@
 import EmberObject from "@ember/object";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 
 discourseModule("Unit | Controller | assign-user", function () {
   test("assigning a user via suggestions makes API call and closes the modal", async function (assert) {
-    pretender.get("/assign/suggestions", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          suggestions: [],
-          assign_allowed_on_groups: ["nat"],
-          assign_allowed_for_groups: [],
-        },
-      ];
-    });
+    pretender.get("/assign/suggestions", () =>
+      response({
+        suggestions: [],
+        assign_allowed_on_groups: ["nat"],
+        assign_allowed_for_groups: [],
+      })
+    );
 
-    pretender.put("/assign/assign", () => {
-      return [200, { "Content-Type": "application/json" }, {}];
-    });
+    pretender.put("/assign/assign", () => response({}));
 
     let modalClosed = false;
     const controller = this.getController("assign-user", {
@@ -39,17 +33,13 @@ discourseModule("Unit | Controller | assign-user", function () {
   });
 
   test("assigning a user by selector does not close the modal", async function (assert) {
-    pretender.get("/assign/suggestions", () => {
-      return [
-        200,
-        { "Content-Type": "application/json" },
-        {
-          suggestions: [],
-          assign_allowed_on_groups: ["nat"],
-          assign_allowed_for_groups: [],
-        },
-      ];
-    });
+    pretender.get("/assign/suggestions", () =>
+      response({
+        suggestions: [],
+        assign_allowed_on_groups: ["nat"],
+        assign_allowed_for_groups: [],
+      })
+    );
 
     let modalClosed = false;
     const controller = this.getController("assign-user", {

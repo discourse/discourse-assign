@@ -10,7 +10,7 @@ discourseModule(
     setupRenderingTest(hooks);
 
     componentTest("displays username and name", {
-      template: hbs`{{group-assigned-filter showAvatar=true filter=filter}}`,
+      template: hbs`<GroupAssignedFilter @showAvatar={{true}} @filter={{filter}} />`,
 
       beforeEach() {
         this.set("filter", {
@@ -27,8 +27,8 @@ discourseModule(
       },
 
       test(assert) {
-        assert.equal(query(".assign-username").innerText, "Ahmed");
-        assert.equal(query(".assign-name").innerText, "Ahmed Gagan");
+        assert.strictEqual(query(".assign-username").innerText, "Ahmed");
+        assert.strictEqual(query(".assign-name").innerText, "Ahmed Gagan");
       },
     });
   }

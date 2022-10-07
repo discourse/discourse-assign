@@ -1,23 +1,17 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import {
-  acceptance,
-  updateCurrentUser,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
-import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { test } from "qunit";
 
 acceptance("Discourse Assign | Assign disabled mobile", function (needs) {
-  needs.user();
+  needs.user({ can_assign: true });
   needs.mobileView();
   needs.settings({ assign_enabled: false });
-  needs.hooks.beforeEach(() => clearTopicFooterButtons());
 
-  test("Footer dropdown does not contain button", async (assert) => {
-    updateCurrentUser({ can_assign: true });
-    const menu = selectKit(".topic-footer-mobile-dropdown");
-
+  test("Footer dropdown does not contain button", async function (assert) {
     await visit("/t/internationalization-localization/280");
+
+    const menu = selectKit(".topic-footer-mobile-dropdown");
     await menu.expand();
 
     assert.notOk(menu.rowByValue("assign").exists());

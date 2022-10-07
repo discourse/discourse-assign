@@ -2,7 +2,7 @@ import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import * as showModal from "discourse/lib/show-modal";
-import pretender from "discourse/tests/helpers/create-pretender";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 discourseModule("Unit | Service | task-actions", function () {
   test("assign", function (assert) {
@@ -14,10 +14,9 @@ discourseModule("Unit | Service | task-actions", function () {
     };
 
     const modal = service.assign(target);
-
     const modalCall = stub.getCall(0).args;
 
-    assert.equal(modal, "the modal");
+    assert.strictEqual(modal, "the modal");
     assert.deepEqual(modalCall[0], "assign-user");
     assert.deepEqual(modalCall[1], {
       title: "discourse_assign.assign_modal.title",
@@ -40,7 +39,7 @@ discourseModule("Unit | Service | task-actions", function () {
     let assignRequest;
     pretender.put("/assign/assign", (request) => {
       assignRequest = request;
-      return [200];
+      return response({});
     });
 
     await service.reassignUserToTopic(user, target);

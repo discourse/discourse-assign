@@ -490,17 +490,15 @@ acceptance("Discourse Assign | experimental user menu", function (needs) {
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-assign-list");
 
-    const notifications = queryAll(
-      "#quick-access-assign-list ul li.notification"
-    );
+    const notification = query("#quick-access-assign-list ul li.notification");
     assert.strictEqual(
-      notifications[0].textContent.replace(/\s+/g, " ").trim(),
+      notification.textContent.replace(/\s+/g, " ").trim(),
       "tony notificationModelTransformer Test poll topic please bear with me"
     );
 
-    const assigns = queryAll("#quick-access-assign-list ul li.assign");
+    const assign = query("#quick-access-assign-list ul li.assign");
     assert.strictEqual(
-      assigns[0].textContent.replace(/\s+/g, " ").trim(),
+      assign.textContent.replace(/\s+/g, " ").trim(),
       "topicModelTransformer Howdy this my test topic with emoji !"
     );
   });

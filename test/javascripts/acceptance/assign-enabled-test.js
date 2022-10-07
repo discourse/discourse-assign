@@ -7,14 +7,12 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
-import { clearTopicFooterButtons } from "discourse/lib/register-topic-footer-button";
 import { test } from "qunit";
 
 acceptance("Discourse Assign | Assign mobile", function (needs) {
   needs.user();
   needs.mobileView();
   needs.settings({ assign_enabled: true });
-  needs.hooks.beforeEach(() => clearTopicFooterButtons());
 
   needs.pretender((server, helper) => {
     server.get("/assign/suggestions", () => {
@@ -39,7 +37,7 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
     });
   });
 
-  test("Footer dropdown contains button", async (assert) => {
+  test("Footer dropdown contains button", async function (assert) {
     updateCurrentUser({ can_assign: true });
     await visit("/t/internationalization-localization/280");
     const menu = selectKit(".topic-footer-mobile-dropdown");
@@ -58,7 +56,6 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     can_assign: true,
   });
   needs.settings({ assign_enabled: true });
-  needs.hooks.beforeEach(() => clearTopicFooterButtons());
 
   needs.pretender((server, helper) => {
     server.get("/assign/suggestions", () => {
@@ -82,7 +79,8 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
       return helper.response({ success: true });
     });
   });
-  test("Post contains hidden assign button", async (assert) => {
+
+  test("Post contains hidden assign button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert.ok(
@@ -99,7 +97,7 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     assert.ok(exists(".assign.modal-body"), "assign modal opens");
   });
 
-  test("Footer dropdown contains button", async (assert) => {
+  test("Footer dropdown contains button", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
@@ -118,7 +116,6 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
     enable_assign_status: true,
     assign_statuses: "New|In Progress|Done",
   });
-  needs.hooks.beforeEach(() => clearTopicFooterButtons());
 
   needs.pretender((server, helper) => {
     server.get("/assign/suggestions", () => {
@@ -143,7 +140,7 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
     });
   });
 
-  test("Modal contains status dropdown", async (assert) => {
+  test("Modal contains status dropdown", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
@@ -159,7 +156,6 @@ acceptance("Discourse Assign | Assign Status disabled", function (needs) {
     can_assign: true,
   });
   needs.settings({ assign_enabled: true, enable_assign_status: false });
-  needs.hooks.beforeEach(() => clearTopicFooterButtons());
 
   needs.pretender((server, helper) => {
     server.get("/assign/suggestions", () => {
@@ -184,7 +180,7 @@ acceptance("Discourse Assign | Assign Status disabled", function (needs) {
     });
   });
 
-  test("Modal contains status dropdown", async (assert) => {
+  test("Modal contains status dropdown", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
@@ -226,36 +222,36 @@ acceptance("Discourse Assign | User preferences", function (needs) {
     remind_assigns_frequency: 43200,
   });
 
-  test("The frequency for assigned topic reminders defaults to the site setting", async (assert) => {
+  test("The frequency for assigned topic reminders defaults to the site setting", async function (assert) {
     await visit("/u/eviltrout/preferences/notifications");
 
-    assert.equal(
+    assert.strictEqual(
       selectKit("#remind-assigns-frequency").header().value(),
       "43200",
       "set frequency to default of Monthly"
     );
   });
 
-  test("The user can change the frequency to Never", async (assert) => {
+  test("The user can change the frequency to Never", async function (assert) {
     await visit("/u/eviltrout/preferences/notifications");
 
     await selectKit("#remind-assigns-frequency").expand();
     await selectKit("#remind-assigns-frequency").selectRowByValue(0);
 
-    assert.equal(
+    assert.strictEqual(
       selectKit("#remind-assigns-frequency").header().value(),
       "0",
       "set frequency to Never"
     );
   });
 
-  test("The user can change the frequency to some other non-default value", async (assert) => {
+  test("The user can change the frequency to some other non-default value", async function (assert) {
     await visit("/u/eviltrout/preferences/notifications");
 
     await selectKit("#remind-assigns-frequency").expand();
     await selectKit("#remind-assigns-frequency").selectRowByValue(10080); // weekly
 
-    assert.equal(
+    assert.strictEqual(
       selectKit("#remind-assigns-frequency").header().value(),
       "10080",
       "set frequency to Weekly"
@@ -286,10 +282,10 @@ acceptance(
       });
     });
 
-    test("The user's previously selected value is loaded", async (assert) => {
+    test("The user's previously selected value is loaded", async function (assert) {
       await visit("/u/eviltrout/preferences/notifications");
 
-      assert.equal(
+      assert.strictEqual(
         selectKit("#remind-assigns-frequency").header().value(),
         "10080",
         "frequency is pre-selected to Weekly"

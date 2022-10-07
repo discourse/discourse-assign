@@ -20,7 +20,7 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     });
   });
 
-  test("update in:assigned filter through advanced search ui", async (assert) => {
+  test("update in:assigned filter through advanced search ui", async function (assert) {
     const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
     await visit("/search");
@@ -28,14 +28,14 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("assigned");
-    assert.equal(
+    assert.strictEqual(
       query(".search-query").value,
       "none in:assigned",
       'has updated search term to "none in:assigned"'
     );
   });
 
-  test("update in:unassigned filter through advanced search ui", async (assert) => {
+  test("update in:unassigned filter through advanced search ui", async function (assert) {
     const inSelector = selectKit(".search-advanced-options .select-kit#in");
 
     await visit("/search");
@@ -43,14 +43,14 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("unassigned");
-    assert.equal(
+    assert.strictEqual(
       query(".search-query").value,
       "none in:unassigned",
       'has updated search term to "none in:unassigned"'
     );
   });
 
-  test("update assigned to through advanced search ui", async (assert) => {
+  test("update assigned to through advanced search ui", async function (assert) {
     const assignedField = selectKit(".assigned-advanced-search .select-kit");
 
     await visit("/search");
@@ -61,13 +61,13 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     await assignedField.fillInFilter("admin");
     await assignedField.selectRowByValue("admin");
 
-    assert.equal(
+    assert.strictEqual(
       assignedField.header().value(),
       "admin",
       'has "admin" filled in'
     );
 
-    assert.equal(
+    assert.strictEqual(
       query(".search-query").value,
       "none assigned:admin",
       'has updated search term to "none assigned:admin"'
