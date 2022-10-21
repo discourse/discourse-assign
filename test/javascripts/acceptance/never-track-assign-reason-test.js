@@ -11,7 +11,7 @@ import topicFixtures from "discourse/tests/fixtures/topic";
 acceptance(
   "Discourse Assign | Never track topics assign reason",
   function (needs) {
-    needs.user();
+    needs.user({ can_send_private_messages: true });
     needs.settings({
       assign_enabled: true,
       assigns_user_url_path: "/",
