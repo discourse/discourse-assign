@@ -201,7 +201,7 @@ RSpec.describe Assigner do
 
       it "doesn't assign if the user has too many assigned topics" do
         SiteSetting.max_assigned_topics = 1
-        another_post = Fabricate.build(:post)
+        another_post = Fabricate(:post)
         assigner.assign(moderator)
 
         second_assign = described_class.new(another_post.topic, moderator_2).assign(moderator)
