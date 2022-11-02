@@ -21,6 +21,9 @@ es:
       unassigned_group_from_post: "anuló la asignación de %{who} de <a href='%{path}'>publicación</a> %{when}"
       reassigned: "Reasignó a %{who} %{when}"
       reassigned_group: "Reasignó a %{who} %{when}"
+      details_change: "detalles de asignación cambiados para %{who} %{when}"
+      note_change: "nota de asignación cambiada para %{who} %{when}"
+      status_change: "estado de asignación cambiado para %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Añadir filtro «sin asignar» a la categoría"
       cant_act: "No puedes actuar sobre denuncias que han sido asignadas a otros usuarios"
@@ -46,8 +49,11 @@ es:
         title: "Anular asignación de la publicación"
         help: "Anular la asignación de %{username} de la publicación"
       reassign:
+        title: "Editar"
+        title_w_ellipsis: "Editar asignación..."
         to_self: "Reasignar a mí"
         to_self_help: "Reasignar tema a mí"
+        help: "Editar detalles de la asignación"
       reassign_modal:
         title: "Reasignar tema"
         description: "Introduce el nombre del usuario al que quieres reasignar este tema"
@@ -56,6 +62,8 @@ es:
         reassign_title: "Reasignar tema"
         description: "Introduce el nombre del usuario al que quieres asignar este tema"
         assign: "Asignar"
+        note_label: Nota
+        status_label: Estado
       assign_post_modal:
         title: "Asignar publicación"
         description: "Introduce el nombre del usuario al que quieres asignar esta publicación"
@@ -89,6 +97,9 @@ es:
       no_assignments_title: "Aún no tienes asignaciones"
       no_assignments_body: >
         Tus temas y mensajes asignados aparecerán aquí. También recibirás una notificación periódica de recordatorio de tus asignaciones, que puedes ajustar en tus <a href='%{preferencesUrl}'>preferencias de usuario</a>. <br><br> Para asignar un tema o mensaje a ti mismo o a otra persona, busca el botón %{icon} de asignar en la parte inferior.
+      dismiss_assigned_tooltip: "Marcar todas las notificaciones de asignación no leídas como leídas"
+      assigned_to_group: "asignada a %{group_name}"
+      assigned_to_you: "asignada a ti"
     admin:
       web_hooks:
         assign_event:
@@ -109,6 +120,9 @@ es:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Plantilla de publicación
+              description: Si se completa, se creará una publicación con esta plantilla y se le asignará un usuario en lugar del tema.
             assignees_group:
               label: Grupo de asignados
             minimum_time_between_assignments:
@@ -116,6 +130,9 @@ es:
             min_recently_assigned_days:
               label: Días mínimos asignados recientemente
               description: El valor predeterminado es 14 días.
+            skip_new_users_for_days:
+              label: Omitir a los nuevos usuarios durante días
+              description: El valor predeterminado es 0 días (los usuarios se pueden asignar inmediatamente después de registrarse).
             max_recently_assigned_days:
               label: Días máximos asignados recientemente
               description: Primer intento de excluir a los usuarios asignados en los últimos `n` días. Si no queda ningún usuario, se recurre a `mínimo_días_de_asignación_reciente`. Por defecto, 180 días.
@@ -125,3 +142,21 @@ es:
               label: Usuarios en horario laboral
     notification_reason:
       user: "Verás un recuento de nuevas respuestas porque este tema te fue asignado."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} te asignó"
+      titles:
+        assigned: "Asignada"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "¿Seguro? Tienes %{count} notificación de asignación no leída."
+            other: "¿Seguro? Tienes %{count} notificaciones de asignación no leídas."
+    user_menu:
+      view_all_assigned: "ver todas las asignadas"
+      tabs:
+        assign_list: "Asignar lista"
+        assign_list_with_unread:
+          one: "Asignar lista - %{count} asignación no leída"
+          other: "Asignar lista - %{count} asignación no leída"

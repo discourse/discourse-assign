@@ -21,6 +21,9 @@ fr:
       unassigned_group_from_post: "a annulé l'attribution de %{who} à la <a href='%{path}'>publication</a> %{when}"
       reassigned: "Réattribution à %{who} le %{when}"
       reassigned_group: "Réattribution à %{who} le %{when}"
+      details_change: "a modifié les détails de l'attribution pour %{who} %{when}"
+      note_change: "a modifié la note de l'attribution pour %{who} %{when}"
+      status_change: "a modifié le statut de l'attribution pour %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Ajouter le filtre « Non attribués » à la catégorie"
       cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été attribués à d'autres utilisateurs"
@@ -46,8 +49,11 @@ fr:
         title: "Annuler l'attribution du message"
         help: "Annuler l'attribution de %{username} au message"
       reassign:
+        title: "Modifier"
+        title_w_ellipsis: "Modifier l'attribution…"
         to_self: "Réattribuer à moi"
         to_self_help: "Me réattribuer le sujet"
+        help: "Modifier les détails de l'attribution"
       reassign_modal:
         title: "Réattribuer le sujet"
         description: "Saisissez le nom de l'utilisateur auquel réattribuer ce sujet"
@@ -56,6 +62,8 @@ fr:
         reassign_title: "Réattribuer le sujet"
         description: "Saisissez le nom de l'utilisateur auquel attribuer ce sujet"
         assign: "Attribuer"
+        note_label: Note
+        status_label: Statut
       assign_post_modal:
         title: "Attribuer un message"
         description: "Saisissez le nom de l'utilisateur auquel attribuer ce message"
@@ -89,6 +97,9 @@ fr:
       no_assignments_title: "Vous n'avez pas encore d'attribution"
       no_assignments_body: >
         Vos sujets et messages attribués seront répertoriés ici. Vous recevrez également une notification de rappel périodique de vos attributions que vous pouvez ajuster dans vos <a href='%{preferencesUrl}'>préférences d'utilisateur</a>. <br><br> Pour attribuer un sujet ou un message à vous-même ou à quelqu'un d'autre, recherchez le bouton d'attribution %{icon} en bas de l'écran.
+      dismiss_assigned_tooltip: "Marquer toutes les notifications d'attribution non lues comme lues"
+      assigned_to_group: "attribué à %{group_name}"
+      assigned_to_you: "attribué à vous"
     admin:
       web_hooks:
         assign_event:
@@ -109,6 +120,9 @@ fr:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Modèle de publication
+              description: S'il est rempli, un message avec ce modèle sera créé et un utilisateur lui sera attribué à la place du sujet.
             assignees_group:
               label: Groupe d'attributaires
             minimum_time_between_assignments:
@@ -116,6 +130,9 @@ fr:
             min_recently_assigned_days:
               label: Nombre minimal de jours récemment attribués
               description: La valeur par défaut est fixée à 14 jours.
+            skip_new_users_for_days:
+              label: Ignorer les nouveaux utilisateurs pendant plusieurs jours
+              description: La valeur par défaut est de 0 jour (les utilisateurs peuvent être attribués immédiatement après leur inscription).
             max_recently_assigned_days:
               label: Nombre maximal de jours récemment attribués
               description: Première tentative d'exclusion des utilisateurs attribués au cours des « n » derniers jours. Si aucun utilisateur n'est parti, cette valeur revient à « min_recently_assigned_days ». La valeur par défaut est de 180 jours.
@@ -125,3 +142,21 @@ fr:
               label: Utilisateurs pendant les heures de travail
     notification_reason:
       user: "Vous verrez le nombre de nouvelles réponses, car ce sujet vous a été attribué."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} vous a attribué"
+      titles:
+        assigned: "Attribué(s)"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Vous avez %{count} notification d'attribution non lue. Voulez-vous continuer ?"
+            other: "Vous avez %{count} notifications d'attribution non lues. Voulez-vous continuer ?"
+    user_menu:
+      view_all_assigned: "voir toutes les attributions"
+      tabs:
+        assign_list: "Liste des attributions"
+        assign_list_with_unread:
+          one: "Liste des attributions - %{count} attribution non lue"
+          other: "Liste des attributions - %{count} attributions non lues"

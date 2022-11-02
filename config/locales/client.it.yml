@@ -21,6 +21,9 @@ it:
       unassigned_group_from_post: "assegnazione a %{who} del <a href='%{path}' data-auto-route='true'>messaggio</a> annullata %{when}"
       reassigned: "Riassegnato a %{who} %{when}"
       reassigned_group: "Riassegnato a %{who} %{when}"
+      details_change: "dettagli di assegnazione modificati per %{who} %{when}"
+      note_change: "nota di assegnazione modificata per %{who} %{when}"
+      status_change: "stato di assegnazione modificato per %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Aggiungi il filtro 'non assegnato' alla categoria"
       cant_act: "Non puoi intervenire su segnalazioni assegnate ad altri utenti"
@@ -46,8 +49,11 @@ it:
         title: "Annulla assegnazione da messaggio"
         help: "Annulla assegnazione di %{username} da messaggio"
       reassign:
+        title: "Modifica"
+        title_w_ellipsis: "Modifica assegnazione..."
         to_self: "Riassegna a me"
         to_self_help: "Riassegna argomento a me"
+        help: "Modifica dettagli dell'assegnazione"
       reassign_modal:
         title: "Riassegna argomento"
         description: "Inserisci il nome dell'utente a cui desideri riassegnare questo argomento"
@@ -56,6 +62,8 @@ it:
         reassign_title: "Riassegna argomento"
         description: "Inserisci il nome dell'utente a cui desideri assegnare questo argomento"
         assign: "Assegna"
+        note_label: Nota
+        status_label: Stato
       assign_post_modal:
         title: "Assegna messaggio"
         description: "Inserisci il nome dell'utente a cui desideri assegnare questo messaggio"
@@ -89,6 +97,9 @@ it:
       no_assignments_title: "Non hai ancora assegnazioni"
       no_assignments_body: >
         Gli argomenti e i messaggi a te assegnati verranno elencati qui. Riceverai anche una notifica di promemoria periodica delle tue assegnazioni, che puoi modificare nelle tue <a href='%{preferencesUrl}'>preferenze utente</a>. <br><br> Per assegnare un argomento o un messaggio a te stesso o a qualcun altro, cerca il pulsante Assegna %{icon} in fondo.
+      dismiss_assigned_tooltip: "Imposta tutte le notifiche di assegnazione non lette come lette"
+      assigned_to_group: "assegnato a %{group_name}"
+      assigned_to_you: "assegnato a te"
     admin:
       web_hooks:
         assign_event:
@@ -109,6 +120,9 @@ it:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Modello di messaggio
+              description: Compilando questa opzione, verrà creato un messaggio con questo modello e un utente verrà assegnato a esso invece che all'argomento.
             assignees_group:
               label: Gruppo di assegnatari
             minimum_time_between_assignments:
@@ -116,6 +130,9 @@ it:
             min_recently_assigned_days:
               label: Numero min di giorni per assegnazioni recenti
               description: Valore predefinito 14 giorni.
+            skip_new_users_for_days:
+              label: Ignora nuovi utenti per giorni
+              description: Il valore predefinito è 0 giorni (gli utenti possono essere assegnati immediatamente dopo la registrazione).
             max_recently_assigned_days:
               label: Numero max di giorni per assegnazioni recenti
               description: Primo tentativo di escludere gli utenti assegnati negli ultimi `n` giorni. Se non rimangono utenti, si applica il valore di `min_recently_assigned_days`. Il valore predefinito è 180 giorni.
@@ -125,3 +142,21 @@ it:
               label: Utenti in orario di lavoro
     notification_reason:
       user: "Vedrai il conteggio delle nuove risposte perché questo argomento ti è stato assegnato."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} ti ha assegnato"
+      titles:
+        assigned: "Assegnato"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Procedere? Hai %{count} notifica di assegnazione non letta."
+            other: "Procedere? Hai %{count} notifiche di assegnazione non lette."
+    user_menu:
+      view_all_assigned: "visualizza tutte le assegnazioni"
+      tabs:
+        assign_list: "Elenco assegnazioni"
+        assign_list_with_unread:
+          one: "Elenco assegnazioni: %{count} assegnazione non letta"
+          other: "Elenco assegnazioni: %{count} assegnazioni non lette"

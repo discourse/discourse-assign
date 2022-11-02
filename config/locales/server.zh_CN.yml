@@ -21,6 +21,13 @@ zh_CN:
     remind_assigns_frequency: "就已分配的话题提醒用户的频率。"
     max_assigned_topics: "可以分配给用户的最大话题数。"
     assign_allowed_on_groups: "这些群组中的用户可以分配话题，也可以向他们分配话题。"
+    enable_assign_status: "向每个分配添加可自定义的状态字段。"
+    assign_statuses: "每个分配可用的状态列表。第一个状态是应用于每个新分配的默认状态。"
+    errors:
+      assign_statuses:
+        too_few: "必须至少有两种不同的状态。"
+        duplicate: "存在重复的状态值。"
+        removed_in_use: "如果存在使用此状态的现有分配，则无法从列表中移除该状态。"
   discourse_assign:
     assigned_to: "分配给 @%{username} 的话题"
     unassigned: "话题已被取消分配"
@@ -79,3 +86,14 @@ zh_CN:
     scriptables:
       random_assign:
         title: 随机分配
+        no_one: "尝试随机分配 `@%{group}` 的成员，但没有人可用。"
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} 已为您分配"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "所选状态无效（它未包含在 assigned_status 站点设置中）。"
