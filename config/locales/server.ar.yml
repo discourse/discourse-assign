@@ -21,6 +21,13 @@ ar:
     remind_assigns_frequency: "معدل تكرار تذكير المستخدمين بالموضوعات المعيَّنة"
     max_assigned_topics: "أقصى عدد من الموضوعات التي يمكن تعيينها إلى مستخدم"
     assign_allowed_on_groups: "المجموعات المسموح للمستخدمين فيها بتعيين الموضوعات ويمكن تعيين الموضوعات إليها"
+    enable_assign_status: "أضِف حقل حالة قابل للتخصيص لكل تعيين."
+    assign_statuses: "قائمة الحالات المتاحة لكل تعيين. الحالة الأولى هي الحالة الافتراضية المطبَّقة على كل تعيين جديد."
+    errors:
+      assign_statuses:
+        too_few: "يجب أن تتوفَّر حالتان مختلفتان على الأقل."
+        duplicate: "هناك قيم حالة مكرَّرة."
+        removed_in_use: "لا يمكن إزالة حالة من القائمة إذا كانت هناك تعيينات حالية تستخدم هذه الحالة."
   discourse_assign:
     assigned_to: "تم تعيين الموضوع إلى @%{username}"
     unassigned: "تم إلغاء تعيين الموضوع"
@@ -79,3 +86,14 @@ ar:
     scriptables:
       random_assign:
         title: تعيين عشوائي
+        no_one: "تمت محاولة تعيين عضو من المجموعة @%{group} عشوائيًا، ولكن لم يكن هناك أي عضو متاح."
+  discourse_push_notifications:
+    popup:
+      assigned: "عيَّنك @%{username}"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "الحالة المحدَّدة غير صالحة (لم يتم تضمينها في إعداد الموقع assigned_status)."

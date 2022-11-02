@@ -7,6 +7,6 @@
 fa_IR:
   discourse_assign:
     reminders_frequency:
-      never: "هیچوقت"
+      never: "هیچ‌وقت"
       daily: "روزانه"
       weekly: "هفتگی"

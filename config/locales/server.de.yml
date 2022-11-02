@@ -21,6 +21,13 @@ de:
     remind_assigns_frequency: "Häufigkeit, mit der Benutzer an zugeordnete Themen erinnert werden."
     max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugeordnet werden können."
     assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen und können Themen zugeordnet werden."
+    enable_assign_status: "Füge zu jeder Zuordnung ein anpassbares Statusfeld hinzu."
+    assign_statuses: "Liste der Status, die für jede Zuordnung verfügbar sind. Der erste Status ist der Standardstatus, der für jede neue Zuordnung verwendet wird."
+    errors:
+      assign_statuses:
+        too_few: "Es müssen mindestens zwei verschiedene Status verfügbar sein."
+        duplicate: "Es gibt doppelte Statuswerte."
+        removed_in_use: "Ein Status kann nicht aus der Liste entfernt werden, wenn es bereits Zuordnungen mit diesem Status gibt."
   discourse_assign:
     assigned_to: "Thema zugeordnet zu @%{username}"
     unassigned: "Zuordnung zum Thema wurde aufgehoben"
@@ -79,3 +86,14 @@ de:
     scriptables:
       random_assign:
         title: Zufällig zuordnen
+        no_one: "Es wurde versucht, ein Mitglied von `@%{group}` zufällig zuzuordnen, aber es war niemand verfügbar."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} hat dich zugeordnet"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Der ausgewählte Status ist ungültig (er ist nicht in der Website-Einstellung assigned_status enthalten)."

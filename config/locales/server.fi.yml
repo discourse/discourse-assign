@@ -21,6 +21,13 @@ fi:
     remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus."
     max_assigned_topics: "Käyttäjälle osoitettavien ketjujen enimmäismäärä."
     assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaa aiheita, ja heille voidaan osoittaa aiheita."
+    enable_assign_status: "Lisää mukautettava tilakenttä jokaiseen osoitukseen."
+    assign_statuses: "Luettelo kullekin osoitukselle käytettävissä olevista tiloista. Ensimmäinen tila on oletustila, jota käytetään jokaiselle uudelle osoitukselle."
+    errors:
+      assign_statuses:
+        too_few: "Käytettävissä täytyy olla vähintään kaksi eri tilaa."
+        duplicate: "Jotkin tilojen arvot ovat päällekkäisiä."
+        removed_in_use: "Tilaa ei voi poistaa luettelosta, jos jokin osoitus käyttää tätä tilaa."
   discourse_assign:
     assigned_to: "Ketju osoitettu käyttäjälle @%{username}"
     unassigned: "Ketjun osoitus peruttiin"
@@ -79,3 +86,14 @@ fi:
     scriptables:
       random_assign:
         title: Satunnainen osoitus
+        no_one: "Ryhmän @%{group} jäsentä yritettiin osoittaa satunnaisesti, mutta kukaan ei ollut saatavilla."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} osoitti sinut"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Valittu tila on virheellinen (se ei sisälly assigned_status-sivustoasetukseen)."

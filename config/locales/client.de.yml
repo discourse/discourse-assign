@@ -21,6 +21,9 @@ de:
       unassigned_group_from_post: "Zuordnung von %{who} zu <a href='%{path}'>Beitrag</a> aufgehoben %{when}"
       reassigned: "%{who} %{when} erneut zugeordnet"
       reassigned_group: "%{who} %{when} erneut zugeordnet"
+      details_change: "Zuordnungsdetails geändert für %{who} %{when}"
+      note_change: "Zuordnungsnotiz geändert für %{who} %{when}"
+      status_change: "Zuordnungsstatus geändert für %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Filter „Nicht zugeordnet“ zur Kategorie hinzufügen"
       cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugeordnet wurden."
@@ -46,8 +49,11 @@ de:
         title: "Zuordnung zu Beitrag aufheben"
         help: "Zuordnung von %{username} zu Beitrag aufheben"
       reassign:
+        title: "Bearbeiten"
+        title_w_ellipsis: "Zuordnung bearbeiten …"
         to_self: "Mir neu zuordnen"
         to_self_help: "Thema mir neu zuordnen"
+        help: "Zuordnungsdetails bearbeiten"
       reassign_modal:
         title: "Thema neu zuordnen"
         description: "Gib den Namen des Benutzers ein, dem du dieses Thema neu zuordnen möchtest"
@@ -56,6 +62,8 @@ de:
         reassign_title: "Thema neu zuordnen"
         description: "Gib den Namen des Benutzers ein, dem du dieses Thema zuordnen möchtest"
         assign: "Zuordnen"
+        note_label: Notiz
+        status_label: Status
       assign_post_modal:
         title: "Beitrag zuordnen"
         description: "Gib den Namen des Benutzers ein, dem du diesen Beitrag zuordnen möchtest"
@@ -89,6 +97,9 @@ de:
       no_assignments_title: "Du hast noch keine Zuordnungen"
       no_assignments_body: >
         Deine zugeordneten Themen und Nachrichten werden hier aufgelistet. Außerdem erhältst du regelmäßig eine Erinnerungsbenachrichtigung betreffend deine Zuordnungen, die du in deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> anpassen kannst. <br><br> Um dir selbst oder einer anderen Person ein Thema oder eine Nachricht zuzuordnen, verwende die Zuordnungsschaltfläche %{icon} unten.
+      dismiss_assigned_tooltip: "Alle ungelesenen Zuordnungsbenachrichtigungen als gelesen markieren"
+      assigned_to_group: "%{group_name} zugeordnet"
+      assigned_to_you: "dir zugeordnet"
     admin:
       web_hooks:
         assign_event:
@@ -109,6 +120,9 @@ de:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Beitragsvorlage
+              description: Wenn ausgefüllt, wird ein Beitrag mit dieser Vorlage erstellt und ein Benutzer anstelle des Themas zugeordnet.
             assignees_group:
               label: Gruppe der zugeordneten Personen
             minimum_time_between_assignments:
@@ -116,6 +130,9 @@ de:
             min_recently_assigned_days:
               label: 'Kürzlich zugeordnet: Mindestanzahl der Tage'
               description: Standardmäßig 14 Tage.
+            skip_new_users_for_days:
+              label: Neue Benutzer überspringen für Anzahl von Tagen
+              description: Standardmäßig 0 Tage (Benutzer können sofort nach der Registrierung zugeordnet werden).
             max_recently_assigned_days:
               label: 'Kürzlich zugeordnet: Maximalanzahl der Tage'
               description: Erster Versuch, Benutzer auszuschließen, die in den letzten `n` Tagen zugeordnet wurden. Wenn kein Benutzer übrig ist, wird auf `min_recently_assigned_days` zurückgegriffen. Standardmäßig 180 Tage.
@@ -125,3 +142,21 @@ de:
               label: Benutzer in Arbeitszeit
     notification_reason:
       user: "Du siehst die Anzahl der neuen Antworten, weil dir dieses Thema zugeordnet wurde."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} hat dich zugeordnet"
+      titles:
+        assigned: "Zugeordnet"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Bist du sicher? Du hast %{count} ungelesene Zuordnungsbenachrichtigung."
+            other: "Bist du sicher? Du hast %{count} ungelesene Zuordnungsbenachrichtigungen."
+    user_menu:
+      view_all_assigned: "alle zugeordneten anzeigen"
+      tabs:
+        assign_list: "Zuordnungsliste"
+        assign_list_with_unread:
+          one: "Zuordnungsliste – %{count} ungelesene Zuordnung"
+          other: "Zuordnungsliste – %{count} ungelesene Zuordnungen"

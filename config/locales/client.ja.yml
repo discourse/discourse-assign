@@ -21,6 +21,9 @@ ja:
       unassigned_group_from_post: "%{who} を<a href='%{path}'>投稿</a>の割り当てから解除しました: %{when}"
       reassigned: "%{who} を再割り当てしました: %{when}"
       reassigned_group: "%{who} を再割り当てしました: %{when}"
+      details_change: "が %{who} の割り当て情報を変更しました: %{when}"
+      note_change: "が %{who} の割り当てメモを変更しました: %{when}"
+      status_change: "が %{who} の割り当てステータスを変更しました: %{when}"
     discourse_assign:
       add_unassigned_filter: "カテゴリに「未割り当て」フィルターを追加"
       cant_act: "他のユーザーに割り当てられた通報に対応することはできません"
@@ -46,8 +49,11 @@ ja:
         title: "投稿の割り当てを解除する"
         help: "投稿から %{username} の割り当てを解除する"
       reassign:
+        title: "編集"
+        title_w_ellipsis: "割り当てを編集..."
         to_self: "自分に再割り当てする"
         to_self_help: "トピックを自分に再割り当てする"
+        help: "割り当て情報を編集します"
       reassign_modal:
         title: "トピックを再割り当てする"
         description: "このトピックの再割り当て先のユーザー名を入力します"
@@ -56,6 +62,8 @@ ja:
         reassign_title: "トピックを再割り当てする"
         description: "このトピックを割り当てるユーザーの名前を入力します"
         assign: "割り当てる"
+        note_label: メモ
+        status_label: ステータス
       assign_post_modal:
         title: "投稿を割り当てる"
         description: "この投稿を割り当てるユーザーの名前を入力します"
@@ -89,6 +97,9 @@ ja:
       no_assignments_title: "まだ割り当てはありません"
       no_assignments_body: >
         割り当てられたトピックとメッセージがここに一覧表示されます。また、割り当てのリマインダーが定期的に通知されます。この通知頻度は<a href='%{preferencesUrl}'>ユーザー設定</a>で変更できます。 <br><br>トピックまたはメッセージを自分または別のユーザーに割り当てるには、下にある %{icon} 割り当てボタンを探してください。
+      dismiss_assigned_tooltip: "すべての未読の割り当てを既読にします"
+      assigned_to_group: "が %{group_name} に割り当てました"
+      assigned_to_you: "があなたに割り当てました"
     admin:
       web_hooks:
         assign_event:
@@ -109,6 +120,9 @@ ja:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: 投稿テンプレート
+              description: 入力すると、このテンプレートを使った投稿が作成され、トピックではなく、その投稿にユーザーが割り当てられます。
             assignees_group:
               label: 割り当て先グループ
             minimum_time_between_assignments:
@@ -116,6 +130,9 @@ ja:
             min_recently_assigned_days:
               label: 最近の割り当ての最小日数
               description: デフォルトは 14 日です。
+            skip_new_users_for_days:
+              label: 新しいユーザーを数日間スキップ
+              description: デフォルトは 0 日です（ユーザーがサインアップした直後に割り当てられます）。
             max_recently_assigned_days:
               label: 最近の割り当ての最大日数
               description: まず、過去 `n` 日に割り当てられたユーザーを除外します。ほかにユーザーがいない場合、`min_recently_assigned_days` にフォールバックします。デフォルトは 180 日です。
@@ -125,3 +142,19 @@ ja:
               label: 勤務時間内のユーザー
     notification_reason:
       user: "このトピックはあなたに割り当てられたため、新しい返信の件数が表示されます。"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} があなたを割り当てました"
+      titles:
+        assigned: "割り当て完了"
+      dismiss_confirmation:
+        body:
+          assigns:
+            other: "本当によろしいですか？未読の割り当て通知が %{count} 件あります。"
+    user_menu:
+      view_all_assigned: "すべての割り当て済みを表示"
+      tabs:
+        assign_list: "割り当てリスト"
+        assign_list_with_unread:
+          other: "割り当てリスト - %{count} 件の未読の割り当て"

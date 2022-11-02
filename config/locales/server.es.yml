@@ -21,6 +21,13 @@ es:
     remind_assigns_frequency: "Frecuencia para recordar a los usuarios sobre los temas asignados."
     max_assigned_topics: "Número máximo de temas que se pueden asignar a un usuario."
     assign_allowed_on_groups: "Los usuarios de estos grupos pueden asignar temas y se les pueden asignar temas."
+    enable_assign_status: "Añade un campo de estado personalizable a cada asignación."
+    assign_statuses: "Lista de estados disponibles para cada asignación. El primer estado es el que se aplica por defecto a cada nueva asignación."
+    errors:
+      assign_statuses:
+        too_few: "Debe haber al menos dos estados diferentes disponibles."
+        duplicate: "Hay valores de estado duplicados."
+        removed_in_use: "No se puede eliminar un estado de la lista si hay asignaciones existentes que usan este estado."
   discourse_assign:
     assigned_to: "Tema asignado a @%{username}"
     unassigned: "Se anuló la asignación del tema"
@@ -79,3 +86,14 @@ es:
     scriptables:
       random_assign:
         title: Asignación aleatoria
+        no_one: "Se intentó asignar aleatoriamente un miembro de «@%{group}», pero no había nadie disponible."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} te asignó"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "El estado seleccionado no es válido (no está incluido en la configuración del sitio assigned_status)."

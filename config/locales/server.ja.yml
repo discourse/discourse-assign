@@ -21,6 +21,13 @@ ja:
     remind_assigns_frequency: "割り当てられたトピックについてユーザーに通知する頻度です。"
     max_assigned_topics: "ユーザーに割り当てられるトピックの最大数。"
     assign_allowed_on_groups: "これらのグループのユーザーはトピックを割り当てたり、割り当てられたりすることができます。"
+    enable_assign_status: "カスタマイズ可能なステータスフィールドをすべての割り当てに追加します。"
+    assign_statuses: "各割り当てに利用できるステータスのリスト。最初のステータスは、すべての新しい割り当てに適用されるデフォルトのステータスです。"
+    errors:
+      assign_statuses:
+        too_few: "少なくとも 2 つのステータスが利用可能である必要があります。"
+        duplicate: "ステータス値が重複しています。"
+        removed_in_use: "このステータスを使用する割り当てがすでに存在する場合、リストからそのステータスを削除できません。"
   discourse_assign:
     assigned_to: "@%{username} に割り当てられたトピック"
     unassigned: "トピックの割り当てが解除されました"
@@ -79,3 +86,14 @@ ja:
     scriptables:
       random_assign:
         title: ランダム割り当て
+        no_one: "`@%{group}` のメンバーをランダムに割り当てようとしましたが、割り当て可能なメンバーがいませんでした。"
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} があなたを割り当てました"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "選択されたステータスは無効です（assigned_status サイト設定に含まれていません）。"

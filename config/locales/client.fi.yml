@@ -21,6 +21,9 @@ fi:
       unassigned_group_from_post: "perui käyttäjän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
       reassigned: "Osoitti uudelleen käyttäjälle %{who} %{when}"
       reassigned_group: "Osoitti uudelleen käyttäjälle %{who} %{when}"
+      details_change: "muutti osoitustiedot käyttäjälle %{who} %{when}"
+      note_change: "muutti osoitushuomautuksen käyttäjälle %{who} %{when}"
+      status_change: "muutti osoitustilan käyttäjälle %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Lisää alueille osoittamattomat-suodatin"
       cant_act: "Et voi käsitellä lippua, joka on osoitettu toiselle käyttäjälle"
@@ -46,8 +49,11 @@ fi:
         title: "Peru osoitus viestistä"
         help: "Peru käyttäjän %{username} osoitus viestistä"
       reassign:
+        title: "Muokkaa"
+        title_w_ellipsis: "Muokkaa osoitusta..."
         to_self: "Osoita uudelleen minulle"
         to_self_help: "Osoita ketju uudelleen minulle"
+        help: "Muokkaa osoituksen tietoja"
       reassign_modal:
         title: "Osoita ketju uudelleen"
         description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa tämän ketjun uudelleen"
@@ -56,6 +62,8 @@ fi:
         reassign_title: "Osoita ketju uudelleen"
         description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa ketjun"
         assign: "Osoita"
+        note_label: Huomautus
+        status_label: Tila
       assign_post_modal:
         title: "Osoita viesti"
         description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa tämän viestin"
@@ -89,6 +97,9 @@ fi:
       no_assignments_title: "Sinulla ei ole vielä osoituksia"
       no_assignments_body: >
         Sinulle osoitetut ketjut ja viestit luetellaan tässä. Saat myös ajoittain muistutusilmoituksia osoituksistasi, joita voit muuttaa <a href='%{preferencesUrl}'>käyttäjäasetuksissasi</a>. <br><br> Jos haluat osoittaa ketjun tai viestin itsellesi tai jollekulle toiselle, etsi osoituspainike %{icon} alaosasta.
+      dismiss_assigned_tooltip: "Merkitse kaikki lukemattomat osoitusilmoitukset luetuiksi"
+      assigned_to_group: "osoitettu ryhmälle %{group_name}"
+      assigned_to_you: "osoitettu sinulle"
     admin:
       web_hooks:
         assign_event:
@@ -109,6 +120,9 @@ fi:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Viestimalli
+              description: Jos tämä täytetään, viesti tällä mallilla luodaan, ja käyttäjä osoitetaan sille ketjun sijaan.
             assignees_group:
               label: Osoitettujen ryhmä
             minimum_time_between_assignments:
@@ -116,6 +130,9 @@ fi:
             min_recently_assigned_days:
               label: Hiljattain osoitettujen päivien vähimmäismäärä
               description: Oletusarvo on 14 päivää.
+            skip_new_users_for_days:
+              label: Ohita uudet käyttäjät päivien ajaksi
+              description: Oletusarvo on 0 päivää (käyttäjät voidaan osoittaa heti rekisteröitymisen jälkeen).
             max_recently_assigned_days:
               label: Hiljattain osoitettujen päivien enimmäismäärä
               description: Ensimmäinen yritys sulkea pois käyttäjiä, jotka on osoitettu viimeisten n:n päivän aikana. Jos käyttäjiä ei ole jäljellä, käytetään `min_recently_assigned_days`-asetusta. Oletusarvo on 180 päivää.
@@ -125,3 +142,21 @@ fi:
               label: Käyttäjät työaikana
     notification_reason:
       user: "Näet uusien vastausten määrän, koska tämä ketju on osoitettu sinulle."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} osoitti sinut"
+      titles:
+        assigned: "Osoitettu"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Oletko varma? Sinulla on %{count} lukematon osoitusilmoitus."
+            other: "Oletko varma? Sinulla on %{count} lukematonta osoitusilmoitusta."
+    user_menu:
+      view_all_assigned: "näytä kaikki osoitetut"
+      tabs:
+        assign_list: "Osoitusluettelo"
+        assign_list_with_unread:
+          one: "Osoitusluettelo – %{count} lukematon osoitus"
+          other: "Osoitusluettelo – %{count} lukematonta osoitusta"

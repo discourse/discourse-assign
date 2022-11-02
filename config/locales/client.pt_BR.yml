@@ -21,6 +21,9 @@ pt_BR:
       unassigned_group_from_post: "cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
       reassigned: "reatribuiu %{who} %{when}"
       reassigned_group: "reatribuiu %{who} %{when}"
+      details_change: "detalhes de atribuição alterados para %{who} %{when}"
+      note_change: "observação de atribuição alterada para %{who} %{when}"
+      status_change: "status de atribuição alterados para %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Adicionar o filtro \"não atribuído\" à categoria"
       cant_act: "Você não pode agir em sinalizações que foram atribuídas a outros(as) usuários(as)"
@@ -46,8 +49,11 @@ pt_BR:
         title: "Remover atribuição da postagem"
         help: "Remover atribuição de %{username} da postagem"
       reassign:
+        title: "Editar"
+        title_w_ellipsis: "Editar atribuição..."
         to_self: "Reatribuir a mim"
         to_self_help: "Reatribuir tópico a mim"
+        help: "Editar detalhes da atribuição"
       reassign_modal:
         title: "Reatribuir tópico"
         description: "Insira o nome do usuário(a) a quem você gostaria de reatribuir este tópico"
@@ -56,6 +62,8 @@ pt_BR:
         reassign_title: "Reatribuir tópico"
         description: "Insira o nome do(a) usuário(a) a quem você gostaria da atribuir este tópico"
         assign: "Atribuir"
+        note_label: Observação
+        status_label: Status
       assign_post_modal:
         title: "Atribuir postagem"
         description: "Insira o nome do(a) usuário(a) a quem você gostaria da atribuir esta postagem"
@@ -89,6 +97,9 @@ pt_BR:
       no_assignments_title: "Você não tem atribuições ainda"
       no_assignments_body: >
         Seus tópicos e mensagens atribuídas serão listados aqui. Você receberá uma notificação periódica de lembrete das suas atribuições, que você pode ajustar em suas <a href='%{preferencesUrl}'>preferências de usuário(a)/a>. <br><br> Para atribuir uma mensagem ou tópico a si ou a outra pessoa, procure o botão de atribuir %{icon} na parte inferior.
+      dismiss_assigned_tooltip: "Marcar todas as notificações atribuídas não lidas como lidas"
+      assigned_to_group: "atribuiu a %{group_name}"
+      assigned_to_you: "atribuiu a você"
     admin:
       web_hooks:
         assign_event:
@@ -109,6 +120,9 @@ pt_BR:
       scriptables:
         random_assign:
           fields:
+            post_template:
+              label: Modelo de postagem
+              description: Se preenchida, uma postagem com este modelo será criada e um usuário será atribuído a ela em vez do tópico.
             assignees_group:
               label: Grupo de destinatários
             minimum_time_between_assignments:
@@ -116,6 +130,9 @@ pt_BR:
             min_recently_assigned_days:
               label: Dias mínimos atribuídos recentemente
               description: O padrão é de 14 dias.
+            skip_new_users_for_days:
+              label: Ignorar novos usuários por dias
+              description: O padrão é 0 dias (os usuários podem ser atribuídos imediatamente após a inscrição).
             max_recently_assigned_days:
               label: Dias máximos atribuídos recentemente
               description: Primeira tentativa de excluir usuários(as) atribuídos(as) nos últimos "n" dias. Se não restar usuários(as), é revertido para "min_recently_assigned_days". O padrão é de 180 dias.
@@ -125,3 +142,21 @@ pt_BR:
               label: Usuários(as) em horário de trabalho
     notification_reason:
       user: "Você verá uma contagem de novas respostas porque este tópico foi atribuído a você."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} atribuiu a você"
+      titles:
+        assigned: "Atribuiu"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Tem certeza? Você tem %{count} notificação atribuída não lida."
+            other: "Tem certeza? Você tem %{count} notificações atribuídas não lidas."
+    user_menu:
+      view_all_assigned: "ver todos os atribuídos"
+      tabs:
+        assign_list: "Lista de atribuições"
+        assign_list_with_unread:
+          one: "Lista de atribuições - %{count} atribuição não lida"
+          other: "Lista de atribuições - %{count} atribuições não lidas"

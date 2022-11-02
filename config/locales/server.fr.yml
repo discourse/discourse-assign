@@ -21,6 +21,13 @@ fr:
     remind_assigns_frequency: "Fréquence à laquelle rappeler les attributions aux utilisateurs."
     max_assigned_topics: "Nombre maximal de sujets qui peuvent être attribués à un utilisateur."
     assign_allowed_on_groups: "Les utilisateurs de ces groupes sont autorisés à attribuer des sujets et peuvent se voir attribuer des sujets."
+    enable_assign_status: "Ajouter un champ de statut personnalisable à chaque attribution."
+    assign_statuses: "Liste des statuts disponibles pour chaque attribution. Le premier statut est le statut par défaut appliqué à chaque nouvelle attribution."
+    errors:
+      assign_statuses:
+        too_few: "Il doit y avoir au moins deux statuts différents disponibles."
+        duplicate: "Il existe des valeurs de statut dupliquées."
+        removed_in_use: "Impossible de supprimer un statut de la liste si des attributions existantes utilisent ce statut."
   discourse_assign:
     assigned_to: "Sujet attribué à @%{username}"
     unassigned: "L'attribution du sujet a été annulée"
@@ -79,3 +86,14 @@ fr:
     scriptables:
       random_assign:
         title: Attribution aléatoire
+        no_one: "A tenté d'attribuer aléatoirement un membre du groupe @%{group}, mais personne n'était disponible."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} vous a attribué"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Le statut sélectionné n'est pas valide (il n'est pas inclus dans le paramètre du site assigned_status)."

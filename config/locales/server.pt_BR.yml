@@ -21,6 +21,13 @@ pt_BR:
     remind_assigns_frequency: "Frequência para lembrar usuários sobre tópicos atribuídos."
     max_assigned_topics: "Número máximo de tópicos que podem ser atribuídos a um(a) usuário(a)."
     assign_allowed_on_groups: "Usuários(as) nestes grupos têm permissão para atribuir tópicos e podem receber atribuição de tópicos."
+    enable_assign_status: "Adicione um campo de status personalizável a cada atribuição."
+    assign_statuses: "Lista de status disponíveis para cada atribuição. O primeiro é o status padrão aplicado a cada nova atribuição."
+    errors:
+      assign_statuses:
+        too_few: "Deve haver pelo menos dois status diferentes disponíveis."
+        duplicate: "Existem valores de status duplicados."
+        removed_in_use: "Não é possível remover um status da lista se houver atribuições existentes usando esse status."
   discourse_assign:
     assigned_to: "Tópico atribuído a @%{username}"
     unassigned: "A atribuição do tópico foi removida"
@@ -72,3 +79,14 @@ pt_BR:
     scriptables:
       random_assign:
         title: Atribuição aleatória
+        no_one: "Tentativa de atribuir aleatoriamente a um membro de `@%{group}`, mas ninguém estava disponível."
+  discourse_push_notifications:
+    popup:
+      assigned: "@%{username} atribuiu a você"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "O status selecionado é inválido (não está incluído na configuração do site assign_status)."
