@@ -9,6 +9,10 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
+import MessagesGroupsDropdown from "discourse/components/user-nav/messages-groups-dropdown";
+import UserPrivateMessages from "discourse/controllers/user-private-messages";
+import { computed } from "@ember/object";
+
 import TopicButtonAction, {
   addBulkButton,
 } from "discourse/controllers/topic-bulk-actions";
@@ -944,6 +948,25 @@ export default {
         class: "btn-default",
       });
     }
+
+    MessagesGroupsDropdown.reopen({
+      groupsWithMessages: computed(function () {
+        return this._super("groupsWithMessages").concat([
+          {
+            name: I18n.t("discourse_assign.assigned"),
+            url: `/u/${this.user.username}/messages/assigned`,
+          },
+        ]);
+      }),
+    });
+
+    UserPrivateMessages.reopen({
+      customFilter: computed("router.currentRouteName", function () {
+        return this.router.currentRouteName === "userPrivateMessages.assigned"
+          ? I18n.t("discourse_assign.assigned")
+          : null;
+      }),
+    });
 
     withPluginApi("0.13.0", (api) => includeIsAssignedOnTopic(api));
     withPluginApi("0.11.0", (api) => initialize(api));

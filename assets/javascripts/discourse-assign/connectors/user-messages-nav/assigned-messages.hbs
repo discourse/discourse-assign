@@ -1,4 +1,6 @@
-{{#link-to "userPrivateMessages.assigned" model}}
-  {{d-icon "user-plus" class="glyph"}}
-  {{i18n "discourse_assign.assigned"}}
-{{/link-to}}
+{{#unless this.currentUser.redesigned_user_page_nav_enabled}}
+  {{#link-to "userPrivateMessages.assigned" model}}
+    {{d-icon "user-plus" class="glyph"}}
+    {{i18n "discourse_assign.assigned"}}
+  {{/link-to}}
+{{/unless}}
