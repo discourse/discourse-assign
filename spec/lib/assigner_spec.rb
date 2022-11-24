@@ -43,6 +43,19 @@ RSpec.describe Assigner do
       )
     end
 
+    it "deletes notification for original assignee when reassigning" do
+      Jobs.run_immediately!
+
+      expect {
+        described_class.new(topic, admin).assign(moderator)
+      }.to change { moderator.notifications.count }.by(1)
+
+      expect {
+        described_class.new(topic, admin).assign(moderator_2)
+      }.to change { moderator.notifications.count }.by(-1)
+      .and change { moderator_2.notifications.count }.by(1)
+    end
+
     it "can assign with note" do
       assigner.assign(moderator, note: "tomtom best mom")
 

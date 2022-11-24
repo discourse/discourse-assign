@@ -271,6 +271,15 @@ class ::Assigner
 
     skip_small_action_post = skip_small_action_post || no_assignee_change?(assign_to)
 
+    if topic.assignment.present?
+      Jobs.enqueue(
+        :unassign_notification,
+        topic_id: topic.id,
+        assigned_to_id: topic.assignment.assigned_to_id,
+        assigned_to_type: topic.assignment.assigned_to_type,
+      )
+    end
+
     @target.assignment&.destroy!
 
     assignment =
