@@ -277,6 +277,14 @@ module DiscourseAssign
             HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
           ) as X ON X.user_id = users.id
         SQL
+        .joins(<<~SQL)
+          LEFT JOIN(
+            SELECT DISTINCT ON (user_id) name, user_id
+            FROM user_custom_fields
+            WHERE name = '#{DiscourseCalendar::HOLIDAY_CUSTOM_FIELD}'
+          ) AS ucf on ucf.user_id = users.id
+        SQL
+        .where("ucf.name is NULL")
         .assign_allowed
         .order("X.last_assigned DESC")
         .limit(6)

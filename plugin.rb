@@ -17,6 +17,7 @@ register_asset "stylesheets/mobile/assigns.scss", :mobile
 load File.expand_path("../lib/discourse_assign/engine.rb", __FILE__)
 load File.expand_path("../lib/discourse_assign/helpers.rb", __FILE__)
 load File.expand_path("../lib/validators/assign_statuses_validator.rb", __FILE__)
+load File.expand_path("../lib/discourse_calendar.rb", __FILE__)
 
 Discourse::Application.routes.append do
   mount ::DiscourseAssign::Engine, at: "/assign"
