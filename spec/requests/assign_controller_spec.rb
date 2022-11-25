@@ -94,11 +94,20 @@ RSpec.describe DiscourseAssign::AssignController do
 
   describe "#suggestions" do
     before do
-      SiteSetting.max_assigned_topics = 1
       sign_in(user)
     end
 
+    it "suggests the current user + the last 6 previously assigned users" do
+      assignees = 10.times.map { |_| assign_user_to_post.username }
+
+      get "/assign/suggestions.json"
+
+      suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
+      expect(suggestions).to contain_exactly(user.username, *assignees[4..9])
+    end
+
     it "excludes other users from the suggestions when they already reached the max assigns limit" do
+      SiteSetting.max_assigned_topics = 1
       another_admin = Fabricate(:admin, groups: [default_allowed_group])
       Assigner.new(post.topic, user).assign(another_admin)
 
@@ -106,6 +115,13 @@ RSpec.describe DiscourseAssign::AssignController do
       suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
 
       expect(suggestions).to contain_exactly(user.username)
+    end
+
+    def assign_user_to_post
+      assignee = Fabricate(:user, groups: [default_allowed_group])
+      post = Fabricate(:post)
+      Assigner.new(post.topic, user).assign(assignee)
+      assignee
     end
   end
 
