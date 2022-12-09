@@ -102,7 +102,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
       get "/assign/suggestions.json"
 
-      suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
+      suggestions = response.parsed_body["suggestions"].map { |u| u["username"] }
       expect(suggestions).to contain_exactly(user.username, *assignees[4..9])
     end
 
@@ -112,7 +112,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
       get "/assign/suggestions.json"
 
-      suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
+      suggestions = response.parsed_body["suggestions"].map { |u| u["username"] }
       expect(suggestions).to_not include(user_on_vacation.username)
     end
 
@@ -121,7 +121,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
       get "/assign/suggestions.json"
 
-      suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
+      suggestions = response.parsed_body["suggestions"].map { |u| u["username"] }
       expect(suggestions).to include(user.username)
     end
 
