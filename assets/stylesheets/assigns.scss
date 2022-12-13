@@ -258,3 +258,11 @@
     }
   }
 }
+
+.private-assign {
+  // when assigns are not public, make the description look like a whisper
+  .small-action-custom-message {
+    font-style: italic;
+    color: var(--primary-medium);
+  }
+}
