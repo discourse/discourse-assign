@@ -6,22 +6,7 @@ module DiscourseAssign
     before_action :ensure_logged_in, :ensure_assign_allowed
 
     def suggestions
-      users = [current_user]
-      users +=
-        User
-          .where("users.id <> ?", current_user.id)
-          .joins(<<~SQL)
-          JOIN(
-            SELECT assigned_to_id user_id, MAX(created_at) last_assigned
-            FROM assignments
-            WHERE assignments.assigned_to_type = 'User'
-            GROUP BY assigned_to_id
-            HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
-          ) as X ON X.user_id = users.id
-        SQL
-          .assign_allowed
-          .order("X.last_assigned DESC")
-          .limit(6)
+      users = [current_user, *recent_assignees]
 
       render json: {
                assign_allowed_on_groups:
@@ -278,6 +263,31 @@ module DiscourseAssign
 
     def user_menu_limit
       UsersController::USER_MENU_LIST_LIMIT
+    end
+
+    def recent_assignees
+      User
+        .where("users.id <> ?", current_user.id)
+        .joins(<<~SQL)
+          JOIN(
+            SELECT assigned_to_id user_id, MAX(created_at) last_assigned
+            FROM assignments
+            WHERE assignments.assigned_to_type = 'User'
+            GROUP BY assigned_to_id
+            HAVING COUNT(*) < #{SiteSetting.max_assigned_topics}
+          ) as X ON X.user_id = users.id
+        SQL
+        .joins(<<~SQL)
+          LEFT JOIN(
+            SELECT DISTINCT ON (user_id) name, user_id
+            FROM user_custom_fields
+            WHERE name = '#{DiscourseCalendar::HOLIDAY_CUSTOM_FIELD}'
+          ) AS ucf on ucf.user_id = users.id
+        SQL
+        .where("ucf.name is NULL")
+        .assign_allowed
+        .order("X.last_assigned DESC")
+        .limit(6)
     end
   end
 end
