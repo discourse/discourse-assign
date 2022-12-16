@@ -50,19 +50,16 @@ en:
         help: "Edit assignment details"
       reassign_modal:
         title: "Reassign Topic"
-        description: "Enter the name of the user you'd like to Reassign this topic"
       assign_modal:
         title: "Assign Topic"
         reassign_title: "Reassign Topic"
-        description: "Enter the name of the user you'd like to assign this topic"
         assign: "Assign"
+        assignee_label: Assignee
         note_label: Note
+        optional_label: "(optional)"
         status_label: Status
       assign_post_modal:
         title: "Assign Post"
-        description: "Enter the name of the user you'd like to assign this post"
-      assign_bulk_modal:
-        description: "Enter the name of the user you'd like to assign these topics"
       claim:
         title: "claim"
         help: "Assign topic to yourself"
