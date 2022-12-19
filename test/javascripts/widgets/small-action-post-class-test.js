@@ -4,6 +4,7 @@ import hbs from "htmlbars-inline-precompile";
 import { render } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetPostSmallActionClassesCallbacks } from "discourse/widgets/post-small-action";
 
 discourseModule(
   "Discourse Assign | Integration | Widget | Small Action Post Class",
@@ -11,55 +12,63 @@ discourseModule(
     setupRenderingTest(hooks);
 
     test("Adds private-assign class when assigns are not public", async function (assert) {
-      this.siteSettings.assigns_public = false;
+      try {
+        this.siteSettings.assigns_public = false;
 
-      this.set("args", {
-        id: 10,
-        actionCode: "assigned",
-      });
-
-      withPluginApi("1.6.0", (api) => {
-        api.addPostSmallActionClassesCallback((post) => {
-          if (
-            post.actionCode.includes("assigned") &&
-            !this.siteSettings.assigns_public
-          ) {
-            return ["private-assign"];
-          }
+        this.set("args", {
+          id: 10,
+          actionCode: "assigned",
         });
-      });
 
-      await render(
-        hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
-      );
+        withPluginApi("1.6.0", (api) => {
+          api.addPostSmallActionClassesCallback((post) => {
+            if (
+              post.actionCode.includes("assigned") &&
+              !this.siteSettings.assigns_public
+            ) {
+              return ["private-assign"];
+            }
+          });
+        });
 
-      assert.ok(exists(".small-action.private-assign"));
+        await render(
+          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
+        );
+
+        assert.ok(exists(".small-action.private-assign"));
+      } finally {
+        resetPostSmallActionClassesCallbacks();
+      }
     });
 
     test("Does not add private-assign class when assigns are public", async function (assert) {
-      this.siteSettings.assigns_public = true;
+      try {
+        this.siteSettings.assigns_public = true;
 
-      this.set("args", {
-        id: 10,
-        actionCode: "assigned",
-      });
-
-      withPluginApi("1.6.0", (api) => {
-        api.addPostSmallActionClassesCallback((post) => {
-          if (
-            post.actionCode.includes("assigned") &&
-            !this.siteSettings.assigns_public
-          ) {
-            return ["private-assign"];
-          }
+        this.set("args", {
+          id: 10,
+          actionCode: "assigned",
         });
-      });
 
-      await render(
-        hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
-      );
+        withPluginApi("1.6.0", (api) => {
+          api.addPostSmallActionClassesCallback((post) => {
+            if (
+              post.actionCode.includes("assigned") &&
+              !this.siteSettings.assigns_public
+            ) {
+              return ["private-assign"];
+            }
+          });
+        });
 
-      assert.ok(!exists(".small-action.private-assign"));
+        await render(
+          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
+        );
+
+        assert.ok(!exists(".small-action.private-assign"));
+      } finally {
+        resetPostSmallActionClassesCallbacks();
+      }
     });
   }
 );
