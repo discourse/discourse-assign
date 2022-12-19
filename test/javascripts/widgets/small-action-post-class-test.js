@@ -13,36 +13,6 @@ discourseModule(
 
     test("Adds private-assign class when assigns are not public", async function (assert) {
       try {
-        this.siteSettings.assigns_public = false;
-
-        this.set("args", {
-          id: 10,
-          actionCode: "assigned",
-        });
-
-        withPluginApi("1.6.0", (api) => {
-          api.addPostSmallActionClassesCallback((post) => {
-            if (
-              post.actionCode.includes("assigned") &&
-              !this.siteSettings.assigns_public
-            ) {
-              return ["private-assign"];
-            }
-          });
-        });
-
-        await render(
-          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
-        );
-
-        assert.ok(exists(".small-action.private-assign"));
-      } finally {
-        resetPostSmallActionClassesCallbacks();
-      }
-    });
-
-    test("Does not add private-assign class when assigns are public", async function (assert) {
-      try {
         this.siteSettings.assigns_public = true;
 
         this.set("args", {
@@ -65,7 +35,21 @@ discourseModule(
           hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
         );
 
-        assert.ok(!exists(".small-action.private-assign"));
+        assert.notOk(
+          exists(".small-action.private-assign"),
+          "adds the private-assign class when assigns are public"
+        );
+
+        this.siteSettings.assigns_public = false;
+
+        await render(
+          hbs`<MountWidget @widget="post-small-action" @args={{this.args}} />`
+        );
+
+        assert.ok(
+          exists(".small-action.private-assign"),
+          "adds the private-assign class when assigns are NOT public"
+        );
       } finally {
         resetPostSmallActionClassesCallbacks();
       }
