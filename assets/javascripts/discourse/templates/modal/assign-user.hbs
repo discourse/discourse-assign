@@ -1,31 +1,25 @@
 {{#d-modal-body class="assign"}}
   <div>
-    <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
-    {{email-group-user-chooser
-      autocomplete="off"
-      value=assigneeName
-      onChange=(action "assignUsername")
-      autofocus="autofocus"
-      showUserStatus=true
-      caretIcon="search"
-      options=(hash
-        mobilePlacementStrategy="absolute"
-        filterPlaceholder=placeholderKey
-        includeGroups=true
-        customSearchOptions=(hash assignableGroups=true)
-        groupMembersOf=allowedGroups
-        maximum=1
-        autofocus=autofocus
-        tabindex=1
-      )
-    }}
-    <div class="assign-suggestions">
-      {{#each assignSuggestions as |user|}}
-        <a href {{action "assignUser" user.username }}>
-          {{avatar user imageSize="small"}}
-          {{decorate-username-selector user.username}}
-        </a>
-      {{/each}}
+    <div class="control-group">
+      <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
+      {{email-group-user-chooser
+        autocomplete="off"
+        value=assigneeName
+        onChange=(action "assignUsername")
+        autofocus="autofocus"
+        showUserStatus=true
+        caretIcon="search"
+        options=(hash
+          mobilePlacementStrategy="absolute"
+          filterPlaceholder=placeholderKey
+          includeGroups=true
+          customSearchOptions=(hash assignableGroups=true)
+          groupMembersOf=allowedGroups
+          maximum=1
+          autofocus=autofocus
+          tabindex=1
+        )
+      }}
     </div>
     {{#if this.statusEnabled}}
       <div class="control-group assign-status">

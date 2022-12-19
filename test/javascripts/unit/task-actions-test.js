@@ -21,7 +21,6 @@ discourseModule("Unit | Service | task-actions", function () {
     assert.deepEqual(modalCall[1], {
       title: "discourse_assign.assign_modal.title",
       model: {
-        description: "discourse_assign.assign_modal.description",
         reassign: false,
         username: "tomtom",
         group_name: "cats",
