@@ -6,6 +6,13 @@
 
 fa_IR:
   js:
+    action_codes:
+      assigned: "اختصاص داده شده %{who} %{when}"
+      assigned_group: "اختصاص داده شده %{who} %{when}"
+      assigned_to_post: "%{who} به <a href='%{path}'>نوشته</a> %{when} اختصاص داده شده است"
+      assigned_group_to_post: "%{who} به <a href='%{path}'>نوشته</a> %{when} اختصاص داده شده است"
+      unassigned: "اختصاص داده نشده %{who} %{when}"
+      unassigned_group: "اختصاص داده نشده %{who} %{when}"
     discourse_assign:
       group_everyone: "همه"
       reassign:

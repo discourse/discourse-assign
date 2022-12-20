@@ -6,9 +6,6 @@
 
 sk:
   js:
-    action_codes:
-      assigned: "priradené %{who}%{when}"
-      unassigned: "nepriradené %{who}%{when}"
     discourse_assign:
       assigned: "Priradené"
       group_everyone: "Každý"

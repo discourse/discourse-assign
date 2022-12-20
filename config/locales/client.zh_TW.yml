@@ -6,9 +6,6 @@
 
 zh_TW:
   js:
-    action_codes:
-      assigned: "已指派 %{who} %{when}"
-      unassigned: "取消指派 %{who} %{when}"
     discourse_assign:
       cant_act: "您不能對已經指派給其他使用者的旗標做操作"
       assigned: "已指派"

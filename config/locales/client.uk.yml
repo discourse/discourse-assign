@@ -10,9 +10,6 @@ uk:
       unassigned:
         title: "Непризначені"
         help: "Теми, які не призначені"
-    action_codes:
-      assigned: "призначено %{who} %{when}"
-      unassigned: "скасовано %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Додайте фільтр «непризначені» до категорії"
       cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"

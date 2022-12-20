@@ -11,14 +11,6 @@ ur:
         title: "غیر اسائین کریں"
         help: "عنوانات جو تفویض نہیں کیے گئے ہیں"
     action_codes:
-      assigned: "تفویض %{who} %{when}"
-      assigned_group: "تفویض کردہ %{who} %{when}"
-      assigned_to_post: "تفویض کردہ %{who} سے <a href='%{path}'>پوسٹ</a> %{when}"
-      assigned_group_to_post: "تفویض کردہ %{who} سے <a href='%{path}'>پوسٹ</a> %{when}"
-      unassigned: "غیر تفویض %{who} %{when}"
-      unassigned_group: "غیر تفویض کردہ %{who} %{when}"
-      unassigned_from_post: "<a href='%{path}'>پوسٹ</a> %{when}سے %{who} کو غیر تفویض کیا گیا۔"
-      unassigned_group_from_post: "<a href='%{path}'>پوسٹ</a> %{when}سے %{who} کو غیر تفویض کیا گیا۔"
       reassigned: "%{who} %{when}دوبارہ تفویض کیا گیا۔"
       reassigned_group: "%{who} %{when}دوبارہ تفویض کیا گیا۔"
     discourse_assign:

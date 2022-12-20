@@ -10,9 +10,6 @@ ca:
       unassigned:
         title: "No assignat"
         help: "Temes que no estan assignats"
-    action_codes:
-      assigned: "assignat %{who} %{when}"
-      unassigned: "desassignat %{who} %{when}"
     discourse_assign:
       cant_act: "No podeu actuar sobre banderes assignades a altres usuaris."
       cant_act_unclaimed: "Cal reclamar el tema abans d'actuar sobre les banderes"
