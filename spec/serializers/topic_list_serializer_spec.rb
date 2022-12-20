@@ -80,7 +80,7 @@ RSpec.describe TopicListSerializer do
       end
 
       describe "as a staff" do
-        let(:admin) { Fabricate(:admin, groups: [Group.find_by(name: "staff")]) }
+        let(:admin) { Fabricate(:admin) }
         let(:guardian) { Guardian.new(admin) }
 
         it "should include the right attribute" do

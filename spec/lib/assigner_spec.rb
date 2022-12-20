@@ -17,8 +17,8 @@ RSpec.describe Assigner do
     let(:topic) { post.topic }
     let(:secure_category) { Fabricate(:private_category, group: Fabricate(:group)) }
     let(:secure_topic) { Fabricate(:post).topic.tap { |t| t.update(category: secure_category) } }
-    let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:moderator_2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:moderator) { Fabricate(:moderator) }
+    let(:moderator_2) { Fabricate(:moderator) }
     let(:admin) { Fabricate(:admin) }
     let(:assigner) { described_class.new(topic, moderator_2) }
     let(:assigner_self) { described_class.new(topic, moderator) }
@@ -145,7 +145,7 @@ RSpec.describe Assigner do
 
     context "when assigns_by_staff_mention is set to true" do
       let(:system_user) { Discourse.system_user }
-      let(:moderator) { Fabricate(:admin, username: "modi", groups: [assign_allowed_group]) }
+      let(:moderator) { Fabricate(:admin, username: "modi") }
       let(:post) { Fabricate(:post, raw: "Hey you @system, stay unassigned", user: moderator) }
       let(:topic) { post.topic }
 
@@ -170,7 +170,7 @@ RSpec.describe Assigner do
 
     it "doesn't assign the same user more than once" do
       SiteSetting.assign_mailer = AssignMailer.levels[:always]
-      another_mod = Fabricate(:moderator, groups: [assign_allowed_group])
+      another_mod = Fabricate(:moderator)
 
       Email::Sender.any_instance.expects(:send).once
       expect(assigned_to?(moderator)).to eq(true)
@@ -193,7 +193,7 @@ RSpec.describe Assigner do
         # Assign many posts to reach the limit
         1.upto(described_class::ASSIGNMENTS_PER_TOPIC_LIMIT) do
           other_post = Fabricate(:post, topic: topic)
-          user = Fabricate(:moderator, groups: [assign_allowed_group])
+          user = Fabricate(:moderator)
           status = described_class.new(other_post, admin).assign(user)
           expect(status[:success]).to eq(true)
         end
@@ -556,7 +556,7 @@ RSpec.describe Assigner do
   context "unassign_on_close" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
-    let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:moderator) { Fabricate(:moderator) }
 
     context "topic" do
       let(:assigner) { described_class.new(topic, moderator) }
@@ -653,7 +653,7 @@ RSpec.describe Assigner do
   context "reassign_on_open" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
-    let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:moderator) { Fabricate(:moderator) }
 
     context "topic" do
       let(:assigner) { described_class.new(topic, moderator) }
@@ -705,8 +705,8 @@ RSpec.describe Assigner do
   context "assign_emailer" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
-    let(:moderator) { Fabricate(:moderator, groups: [assign_allowed_group]) }
-    let(:moderator_2) { Fabricate(:moderator, groups: [assign_allowed_group]) }
+    let(:moderator) { Fabricate(:moderator) }
+    let(:moderator_2) { Fabricate(:moderator) }
 
     it "send an email if set to 'always'" do
       SiteSetting.assign_mailer = AssignMailer.levels[:always]

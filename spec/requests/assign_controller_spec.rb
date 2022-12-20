@@ -7,9 +7,7 @@ RSpec.describe DiscourseAssign::AssignController do
   before { SiteSetting.assign_enabled = true }
 
   fab!(:default_allowed_group) { Group.find_by(name: "staff") }
-  let(:user) do
-    Fabricate(:admin, groups: [default_allowed_group], name: "Robin Ward", username: "eviltrout")
-  end
+  let(:user) { Fabricate(:admin, name: "Robin Ward", username: "eviltrout") }
   fab!(:post) { Fabricate(:post) }
   fab!(:user2) do
     Fabricate(:active_user, name: "David Taylor", username: "david", groups: [default_allowed_group])
@@ -127,7 +125,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "excludes other users from the suggestions when they already reached the max assigns limit" do
       SiteSetting.max_assigned_topics = 1
-      another_admin = Fabricate(:admin, groups: [default_allowed_group])
+      another_admin = Fabricate(:admin)
       Assigner.new(post.topic, user).assign(another_admin)
 
       get "/assign/suggestions.json"
