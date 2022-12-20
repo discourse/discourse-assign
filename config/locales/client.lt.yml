@@ -6,9 +6,6 @@
 
 lt:
   js:
-    action_codes:
-      assigned: "priskirta %{who}%{when}"
-      unassigned: "nepriskirta %{who}%{when}"
     discourse_assign:
       assigned: "Priskirta"
       group_everyone: "Visi"

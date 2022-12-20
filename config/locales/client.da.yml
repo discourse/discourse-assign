@@ -10,11 +10,6 @@ da:
       unassigned:
         title: "Ikke tildelt"
         help: "Emner, der ikke er tildelt"
-    action_codes:
-      assigned: "tildelt %{who} %{when}"
-      assigned_to_post: "tildelte %{who} til <a href='%{path}'>indlæg</a> %{when}"
-      assigned_group_to_post: "tildelte %{who} til <a href='%{path}'>indlæg</a> %{when}"
-      unassigned: "fradelt %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Føj 'ikke-tildelt' filter til kategori"
       cant_act: "Du kan ikke handle på markeringsflag, der er tildelt andre brugere"

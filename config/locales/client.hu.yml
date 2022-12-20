@@ -11,14 +11,6 @@ hu:
         title: "Nem kiosztott"
         help: "Témák, amelyek nincsenek kiosztva"
     action_codes:
-      assigned: "kiosztva %{who} részére, %{when}"
-      assigned_group: "kiosztva %{who} részére, %{when}"
-      assigned_to_post: "<a href='%{path}'>bejegyzés</a> kiosztva %{who} részére, %{when}"
-      assigned_group_to_post: "<a href='%{path}'>bejegyzés</a> kiosztva %{who} részére, %{when}"
-      unassigned: "%{who} elvéve, %{when}"
-      unassigned_group: "%{who} elvéve, %{when}"
-      unassigned_from_post: "%{who} elvéve a <a href='%{path}'>bejegyzéstől</a>, %{when}"
-      unassigned_group_from_post: "%{who} elvéve a <a href='%{path}'>bejegyzéstől</a>, %{when}"
       reassigned: "Átadva %{who} részére, %{when}"
       reassigned_group: "Átadva %{who} részére, %{when}"
     discourse_assign:

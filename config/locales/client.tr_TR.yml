@@ -10,9 +10,6 @@ tr_TR:
       unassigned:
         title: "Atanmamışlar"
         help: "Atanmamış konular"
-    action_codes:
-      assigned: "%{when}%{who} atandı"
-      unassigned: "%{when}%{who} atanmamış"
     discourse_assign:
       add_unassigned_filter: "Kategoriye 'atanmamış' filtre ekle"
       cant_act: "Diğer kullanıcılara atanan bildirimler üzerinde hareket edemezsiniz"

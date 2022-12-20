@@ -6,9 +6,6 @@
 
 cs:
   js:
-    action_codes:
-      assigned: "zadáno %{who} %{when}"
-      unassigned: "zadání odebráno %{when}"
     discourse_assign:
       assigned: "Zadáno"
       group_everyone: "Všichni"

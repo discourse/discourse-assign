@@ -11,14 +11,6 @@ pl_PL:
         title: "Nieprzypisany"
         help: "Wątki, które nie są przypisane"
     action_codes:
-      assigned: "przypisany %{who} %{when}"
-      assigned_group: "przypisano %{who} %{when}"
-      assigned_to_post: "przypisano %{who} do <a href='%{path}'>postu</a> %{when}"
-      assigned_group_to_post: "przypisano %{who} do <a href='%{path}'>postu</a> %{when}"
-      unassigned: "nieprzypisany%{who} %{when}"
-      unassigned_group: "nieprzypisany %{who} %{when}"
-      unassigned_from_post: "cofnieto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
-      unassigned_group_from_post: "cofnieto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
       reassigned: "Przypisano ponownie %{who} %{when}"
       reassigned_group: "Przypisano ponownie %{who} %{when}"
     discourse_assign:

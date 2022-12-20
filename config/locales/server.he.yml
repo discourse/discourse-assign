@@ -45,6 +45,7 @@ he:
     flag_assigned: "הנושא של דגל זה מוקצה למשתמש אחר, עמך הסליחה"
     flag_unclaimed: "עליך לדרוש את הנושא הזה בטרם ביצוע פעילות על הדגל"
     topic_assigned_excerpt: "הקצאה של הנושא ‚%{title}’ אליך"
+    topic_group_assigned_excerpt: "הנושא ‚%{title}’ הוקצה לטובת %{group}"
     reminders_frequency:
       never: "אף פעם"
       daily: "יומית"

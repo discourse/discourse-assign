@@ -10,9 +10,6 @@ ko:
       unassigned:
         title: "미 할당"
         help: "할당되지 않은 주제"
-    action_codes:
-      assigned: "할당 된 %{who} %{when}"
-      unassigned: "할당되지 않은 %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "카테고리에 &#39;지정되지 않은&#39;필터 추가"
       cant_act: "다른 사용자에게 할당 된 플래그에는 작동 할 수 없습니다"

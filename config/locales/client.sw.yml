@@ -6,9 +6,6 @@
 
 sw:
   js:
-    action_codes:
-      assigned: "%{who}amepewa %{when}"
-      unassigned: "%{who}hajakabidhiwa %{when}"
     discourse_assign:
       cant_act: "Hauwezi kutumia bendera ambazo zimeshatumiwa na watu wengine"
       cant_act_unclaimed: "Lazima uimiliki mada kabla ya kuweka bendera."
