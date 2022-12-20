@@ -87,6 +87,17 @@
       color: var(--primary-medium);
     }
   }
+
+  .control-group.assignee-error {
+    .select-kit-header {
+      border-color: var(--danger);
+    }
+
+    .error-label {
+      color: var(--danger);
+      font-size: var(--font-down-1);
+    }
+  }
 }
 
 .topic-list-item {

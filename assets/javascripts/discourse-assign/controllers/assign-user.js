@@ -15,10 +15,13 @@ export default Controller.extend(ModalFunctionality, {
   taskActions: service(),
   autofocus: not("capabilities.touch"),
   assigneeName: or("model.username", "model.group_name"),
+  assigneeError: false,
 
   init() {
     this._super(...arguments);
-    this.allowedGroups = [];
+
+    this.set("allowedGroups", []);
+    this.set("assigneeError", false);
 
     ajax("/assign/suggestions").then((data) => {
       if (this.isDestroying || this.isDestroyed) {
@@ -75,6 +78,11 @@ export default Controller.extend(ModalFunctionality, {
   assign() {
     if (this.isBulkAction) {
       return this.bulkAction(this.model.username);
+    }
+
+    if (!this.assigneeName) {
+      this.set("assigneeError", true);
+      return;
     }
 
     let path = "/assign/assign";
@@ -136,6 +144,7 @@ export default Controller.extend(ModalFunctionality, {
   },
 
   setGroupOrUser(name) {
+    this.set("assigneeError", false);
     if (this.allowedGroupsForAssignment.includes(name)) {
       this.setProperties({
         "model.username": null,
