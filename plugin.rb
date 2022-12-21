@@ -378,7 +378,7 @@ after_initialize do
     next results
   end
 
-  add_to_class(:topic_query, :list_messages_assigned) do |user, ignored_assignment_ids: nil|
+  add_to_class(:topic_query, :list_messages_assigned) do |user, ignored_assignment_ids = nil|
     list = default_results(include_pms: true)
 
     where_clause = +"("
