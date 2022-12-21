@@ -66,37 +66,37 @@
   margin-left: 5px;
 }
 
-.assign.modal-body .email-group-user-chooser {
-  display: block;
-  width: 300px;
-  margin-top: 5px;
-}
-
-.assign-user-modal p {
-  margin-top: 0;
-}
-
-.assign-suggestions {
-  margin-top: 15px;
-  margin-bottom: 15px;
-
-  img {
-    margin-right: 5px;
-    cursor: pointer;
+.assign-user-modal {
+  .modal-inner-container {
+    width: 400px;
   }
 
-  .groups {
-    margin-top: 5px;
-    a {
-      margin-right: 5px;
+  label {
+    font-weight: bold;
+
+    .label-optional {
+      color: var(--primary-medium);
+      font-weight: normal;
     }
   }
 
-  .on-holiday {
-    position: absolute;
-    margin-left: -18px;
-    margin-top: 14px;
-    color: var(--primary-medium);
+  .email-group-user-chooser {
+    width: 100%;
+
+    .caret-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  .control-group.assignee-error {
+    .select-kit-header {
+      border-color: var(--danger);
+    }
+
+    .error-label {
+      color: var(--danger);
+      font-size: var(--font-down-1);
+    }
   }
 }
 

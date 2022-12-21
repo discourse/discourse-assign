@@ -46,8 +46,6 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
     assert.ok(menu.rowByValue("assign").exists());
     await menu.selectRowByValue("assign");
     assert.ok(exists(".assign.modal-body"), "assign modal opens");
-
-    await click(".assign-suggestions .avatar");
   });
 });
 
@@ -102,8 +100,6 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     await click("#topic-footer-button-assign");
 
     assert.ok(exists(".assign.modal-body"), "assign modal opens");
-
-    await click(".assign-suggestions .avatar");
   });
 });
 

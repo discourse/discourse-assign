@@ -29,10 +29,6 @@ export default Service.extend({
         this.i18nSuffix(options.targetType) +
         `.${options.isAssigned ? "reassign_title" : "title"}`,
       model: {
-        description:
-          `discourse_assign.${options.isAssigned ? "reassign" : "assign"}` +
-          this.i18nSuffix(options.targetType) +
-          ".description",
         reassign: options.isAssigned,
         username: target.assigned_to_user?.username,
         group_name: target.assigned_to_group?.name,
