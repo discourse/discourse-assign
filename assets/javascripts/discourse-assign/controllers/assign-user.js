@@ -33,6 +33,10 @@ export default Controller.extend(ModalFunctionality, {
     });
   },
 
+  onShow() {
+    this.set("assigneeError", false);
+  },
+
   onClose() {
     if (this.get("model.onClose") && this.get("model.username")) {
       this.get("model.onClose")(this.get("model.username"));
