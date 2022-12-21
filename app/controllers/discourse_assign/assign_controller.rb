@@ -173,7 +173,7 @@ module DiscourseAssign
           TopicQuery.new(
             current_user,
             per_page: user_menu_limit - assign_notifications.size,
-          ).list_messages_assigned(current_user, ignored_assignment_ids: ignored_assignment_ids)
+          ).list_messages_assigned(current_user, ignored_assignment_ids)
       end
 
       if assign_notifications.present?
