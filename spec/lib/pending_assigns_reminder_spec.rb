@@ -4,7 +4,7 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 def assert_reminder_not_created
-  expect { subject.remind(user) }.to change { Post.count }.by(0)
+  expect { subject.remind(user) }.not_to change { Post.count }
 end
 
 RSpec.describe PendingAssignsReminder do
@@ -26,7 +26,7 @@ RSpec.describe PendingAssignsReminder do
   describe "when the user has multiple tasks" do
     let(:system) { Discourse.system_user }
 
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     before do
       add_to_assign_allowed_group(user)

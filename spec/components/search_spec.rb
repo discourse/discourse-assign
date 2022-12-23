@@ -12,8 +12,8 @@ describe Search do
     SiteSetting.assign_enabled = true
   end
 
-  context "Advanced search" do
-    include_context "A group that is allowed to assign"
+  describe "Advanced search" do
+    include_context "with group that is allowed to assign"
 
     let(:post1) { Fabricate(:post) }
     let(:post2) { Fabricate(:post) }

@@ -12,7 +12,7 @@ RSpec.describe Assigner do
   let(:pm_post) { Fabricate(:private_message_post) }
   let(:pm) { pm_post.topic }
 
-  context "assigning and unassigning" do
+  describe "assigning and unassigning" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:secure_category) { Fabricate(:private_category, group: Fabricate(:group)) }
@@ -53,7 +53,7 @@ RSpec.describe Assigner do
       expect {
         described_class.new(topic, admin).assign(moderator_2)
       }.to change { moderator.notifications.count }.by(-1)
-      .and change { moderator_2.notifications.count }.by(1)
+        .and change { moderator_2.notifications.count }.by(1)
     end
 
     it "can assign with note" do
@@ -186,7 +186,7 @@ RSpec.describe Assigner do
       assigner.assign(assignee).fetch(:success)
     end
 
-    context "forbidden reasons" do
+    describe "forbidden reasons" do
       it "doesn't assign if the topic has more than 5 assignments" do
         other_post = nil
 
@@ -487,7 +487,7 @@ RSpec.describe Assigner do
     end
   end
 
-  context "assign_self_regex" do
+  describe "assign_self_regex" do
     fab!(:me) { Fabricate(:admin) }
     fab!(:op) { Fabricate(:post) }
     fab!(:reply) do
@@ -528,7 +528,7 @@ RSpec.describe Assigner do
     end
   end
 
-  context "assign_other_regex" do
+  describe "assign_other_regex" do
     fab!(:me) { Fabricate(:admin) }
     fab!(:other) { Fabricate(:admin) }
     fab!(:op) { Fabricate(:post) }
@@ -553,12 +553,12 @@ RSpec.describe Assigner do
     end
   end
 
-  context "unassign_on_close" do
+  describe "unassign_on_close" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator) }
 
-    context "topic" do
+    context "with topic" do
       let(:assigner) { described_class.new(topic, moderator) }
 
       before do
@@ -595,7 +595,7 @@ RSpec.describe Assigner do
       end
     end
 
-    context "post" do
+    context "with post" do
       let(:post_2) { Fabricate(:post, topic: topic) }
       let(:assigner) { described_class.new(post_2, moderator) }
       let(:post_3) { Fabricate(:post, topic: topic) }
@@ -650,12 +650,12 @@ RSpec.describe Assigner do
     end
   end
 
-  context "reassign_on_open" do
+  describe "reassign_on_open" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator) }
 
-    context "topic" do
+    describe "topic" do
       let(:assigner) { described_class.new(topic, moderator) }
 
       before do
@@ -677,7 +677,7 @@ RSpec.describe Assigner do
       end
     end
 
-    context "post" do
+    context "with post" do
       let(:post_2) { Fabricate(:post, topic: topic) }
       let(:assigner) { described_class.new(post_2, moderator) }
 
@@ -702,7 +702,7 @@ RSpec.describe Assigner do
     end
   end
 
-  context "assign_emailer" do
+  describe "assign_emailer" do
     let(:post) { Fabricate(:post) }
     let(:topic) { post.topic }
     let(:moderator) { Fabricate(:moderator) }
@@ -719,9 +719,9 @@ RSpec.describe Assigner do
     it "doesn't send an email if assignee is a group" do
       SiteSetting.assign_mailer = AssignMailer.levels[:always]
 
-      expect { described_class.new(topic, moderator).assign(assign_allowed_group) }.to change {
+      expect { described_class.new(topic, moderator).assign(assign_allowed_group) }.not_to change {
         ActionMailer::Base.deliveries.size
-      }.by(0)
+      }
     end
 
     it "doesn't send an email if the assigner and assignee are not different" do
@@ -735,17 +735,17 @@ RSpec.describe Assigner do
     it "doesn't send an email if the assigner and assignee are not different" do
       SiteSetting.assign_mailer = AssignMailer.levels[:different_users]
 
-      expect { described_class.new(topic, moderator).assign(moderator) }.to change {
+      expect { described_class.new(topic, moderator).assign(moderator) }.not_to change {
         ActionMailer::Base.deliveries.size
-      }.by(0)
+      }
     end
 
     it "doesn't send an email" do
       SiteSetting.assign_mailer = AssignMailer.levels[:never]
 
-      expect { described_class.new(topic, moderator).assign(moderator_2) }.to change {
+      expect { described_class.new(topic, moderator).assign(moderator_2) }.not_to change {
         ActionMailer::Base.deliveries.size
-      }.by(0)
+      }
     end
   end
 end

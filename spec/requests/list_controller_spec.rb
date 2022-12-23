@@ -12,7 +12,7 @@ describe ListController do
   let(:post) { Fabricate(:post) }
 
   describe "only allow users from allowed groups" do
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     it "filters requests where current_user is not member of an allowed group" do
       sign_in(user)
@@ -43,8 +43,8 @@ describe ListController do
     end
   end
 
-  context "#group_topics_assigned" do
-    include_context "A group that is allowed to assign"
+  describe "#group_topics_assigned" do
+    include_context "with group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -105,8 +105,8 @@ describe ListController do
     end
   end
 
-  context "#sorting messages_assigned and group_topics_assigned" do
-    include_context "A group that is allowed to assign"
+  describe "#sorting messages_assigned and group_topics_assigned" do
+    include_context "with group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -219,8 +219,8 @@ describe ListController do
     end
   end
 
-  context "filtering of topics as per parameter" do
-    include_context "A group that is allowed to assign"
+  describe "filtering of topics as per parameter" do
+    include_context "with group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -302,8 +302,8 @@ describe ListController do
     end
   end
 
-  context "#messages_assigned" do
-    include_context "A group that is allowed to assign"
+  describe "#messages_assigned" do
+    include_context "with group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }

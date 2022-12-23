@@ -16,7 +16,7 @@ RSpec.describe DiscourseAssign::AssignController do
   fab!(:normal_user) { Fabricate(:user) }
   fab!(:normal_admin) { Fabricate(:admin) }
 
-  context "only allow users from allowed groups" do
+  describe "only allow users from allowed groups" do
     before { sign_in(user2) }
 
     it "filters requests where current_user is not member of an allowed group" do
@@ -143,7 +143,7 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   describe "#assign" do
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     before do
       sign_in(user)
@@ -299,7 +299,7 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   describe "#assigned" do
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }
@@ -357,7 +357,7 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   describe "#group_members" do
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     fab!(:post1) { Fabricate(:post) }
     fab!(:post2) { Fabricate(:post) }

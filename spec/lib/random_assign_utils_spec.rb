@@ -20,7 +20,7 @@ describe RandomAssignUtils do
   let!(:automation) { FakeAutomation.new(1) }
 
   describe ".automation_script!" do
-    context "all users of group are on holidays" do
+    context "when all users of group are on holidays" do
       fab!(:topic_1) { Fabricate(:topic) }
       fab!(:group_1) { Fabricate(:group) }
       fab!(:user_1) { Fabricate(:user) }
@@ -49,7 +49,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "all users of group have been assigned recently" do
+    context "when all users of group have been assigned recently" do
       fab!(:topic_1) { Fabricate(:topic) }
       fab!(:group_1) { Fabricate(:group) }
       fab!(:user_1) { Fabricate(:user) }
@@ -78,7 +78,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "no users can be assigned because none are members of assign_allowed_on_groups groups" do
+    context "when no users can be assigned because none are members of assign_allowed_on_groups groups" do
       fab!(:topic_1) { Fabricate(:topic) }
       fab!(:group_1) { Fabricate(:group) }
       fab!(:user_1) { Fabricate(:user) }
@@ -104,7 +104,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "user can be assigned" do
+    context "when user can be assigned" do
       fab!(:group_1) { Fabricate(:group) }
       fab!(:user_1) { Fabricate(:user) }
       fab!(:topic_1) { Fabricate(:topic) }
@@ -114,7 +114,7 @@ describe RandomAssignUtils do
         group_1.add(user_1)
       end
 
-      context "post_template is set" do
+      context "when post_template is set" do
         it "creates a post with the template and assign the user" do
           described_class.automation_script!(
             {},
@@ -135,7 +135,7 @@ describe RandomAssignUtils do
         end
       end
 
-      context "post_template is not set" do
+      context "when post_template is not set" do
         fab!(:post_1) { Fabricate(:post, topic: topic_1) }
 
         it "assigns the user to the topic" do
@@ -156,7 +156,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "all users in working hours" do
+    context "when all users are in working hours" do
       fab!(:topic_1) { Fabricate(:topic) }
       fab!(:group_1) { Fabricate(:group) }
       fab!(:user_1) { Fabricate(:user) }
@@ -189,7 +189,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "assignees_group not provided" do
+    context "when assignees_group is not provided" do
       fab!(:topic_1) { Fabricate(:topic) }
 
       it "raises an error" do
@@ -203,7 +203,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "assignees_group not found" do
+    context "when assignees_group not found" do
       fab!(:topic_1) { Fabricate(:topic) }
 
       it "raises an error" do
@@ -224,7 +224,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "assigned_topic not provided" do
+    context "when assigned_topic not provided" do
       it "raises an error" do
         expect { described_class.automation_script!({}, {}, automation) }.to raise_error(
           /`assigned_topic` not provided/,
@@ -232,7 +232,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "assigned_topic is not found" do
+    context "when assigned_topic is not found" do
       it "raises an error" do
         expect {
           described_class.automation_script!(
@@ -244,8 +244,8 @@ describe RandomAssignUtils do
       end
     end
 
-    context "minimum_time_between_assignments is set" do
-      context "the topic has been assigned recently" do
+    context "when minimum_time_between_assignments is set" do
+      context "when the topic has been assigned recently" do
         fab!(:topic_1) { Fabricate(:topic) }
 
         before do
@@ -277,7 +277,7 @@ describe RandomAssignUtils do
       end
     end
 
-    context "skip_new_users_for_days is set" do
+    context "when skip_new_users_for_days is set" do
       fab!(:topic_1) { Fabricate(:topic) }
       fab!(:post_1) { Fabricate(:post, topic: topic_1) }
       fab!(:group_1) { Fabricate(:group) }
@@ -332,14 +332,14 @@ describe RandomAssignUtils do
   end
 
   describe ".recently_assigned_users_ids" do
-    context "no one has been assigned" do
+    context "when no one has been assigned" do
       it "returns an empty array" do
         assignees_ids = described_class.recently_assigned_users_ids(post.topic_id, 2.months.ago)
         expect(assignees_ids).to eq([])
       end
     end
 
-    context "users have been assigned" do
+    context "when users have been assigned" do
       let(:admin) { Fabricate(:admin) }
       let(:assign_allowed_group) { Group.find_by(name: "staff") }
       let(:user_1) { Fabricate(:user, groups: [assign_allowed_group]) }

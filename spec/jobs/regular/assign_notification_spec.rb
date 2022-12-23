@@ -21,7 +21,7 @@ RSpec.describe Jobs::AssignNotification do
 
     before { assign_allowed_group.add(user1) }
 
-    context "User" do
+    describe "User" do
       it "sends notification alert" do
         messages =
           MessageBus.track_publish("/notification-alert/#{user2.id}") do
@@ -89,7 +89,7 @@ RSpec.describe Jobs::AssignNotification do
       end
     end
 
-    context "Group" do
+    describe "Group" do
       fab!(:user3) { Fabricate(:user, last_seen_at: 1.day.ago) }
       fab!(:user4) { Fabricate(:user, suspended_till: 1.year.from_now) }
       fab!(:group) { Fabricate(:group, name: "Developers") }

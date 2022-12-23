@@ -23,9 +23,9 @@ class RandomAssignUtils
     min_hours = fields.dig("minimum_time_between_assignments", "value").presence
     if min_hours &&
          TopicCustomField
-           .where(name: "assigned_to_id", topic_id: topic_id)
-           .where("created_at < ?", min_hours.to_i.hours.ago)
-           .exists?
+             .where(name: "assigned_to_id", topic_id: topic_id)
+             .where("created_at < ?", min_hours.to_i.hours.ago)
+             .exists?
       log_info(automation, "Topic(#{topic_id}) has already been assigned recently")
       return
     end
