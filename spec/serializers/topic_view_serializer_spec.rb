@@ -9,7 +9,7 @@ RSpec.describe TopicViewSerializer do
   fab!(:post) { Fabricate(:post, topic: topic) }
   let(:guardian) { Guardian.new(user) }
 
-  include_context "A group that is allowed to assign"
+  include_context "with group that is allowed to assign"
 
   before do
     SiteSetting.assign_enabled = true

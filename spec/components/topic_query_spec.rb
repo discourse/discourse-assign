@@ -11,7 +11,7 @@ describe TopicQuery do
   fab!(:user3) { Fabricate(:user) }
   fab!(:user4) { Fabricate(:user) }
 
-  include_context "A group that is allowed to assign"
+  include_context "with group that is allowed to assign"
 
   before do
     add_to_assign_allowed_group(user)
@@ -183,7 +183,7 @@ describe TopicQuery do
     end
   end
 
-  context "assigned filter" do
+  describe "assigned filter" do
     it "filters topics assigned to a user" do
       assigned_topic = Fabricate(:post).topic
       assigned_topic2 = Fabricate(:post).topic

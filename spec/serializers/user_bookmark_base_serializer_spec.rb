@@ -4,7 +4,7 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 describe UserBookmarkBaseSerializer do
-  include_context "A group that is allowed to assign"
+  include_context "with group that is allowed to assign"
 
   before do
     SiteSetting.assign_enabled = true

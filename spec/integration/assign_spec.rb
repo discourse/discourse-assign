@@ -23,7 +23,7 @@ describe "integration tests" do
     let(:channel) { "/private-messages/assigned" }
     fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:everyone]) }
 
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     before do
       add_to_assign_allowed_group(user)
@@ -102,7 +102,7 @@ describe "integration tests" do
     let(:user1) { Fabricate(:user) }
     let(:user2) { Fabricate(:user) }
 
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     before do
       add_to_assign_allowed_group(user1)
@@ -138,13 +138,13 @@ describe "integration tests" do
     end
   end
 
-  context "already assigned" do
+  context "when already assigned" do
     fab!(:post) { Fabricate(:post) }
     fab!(:post_2) { Fabricate(:post, topic: post.topic) }
     let(:topic) { post.topic }
     fab!(:user) { Fabricate(:user) }
 
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     it "does not allow to assign topic if post is already assigned" do
       add_to_assign_allowed_group(user)
@@ -164,7 +164,7 @@ describe "integration tests" do
     end
   end
 
-  context "move post" do
+  describe "move post" do
     fab!(:old_topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: old_topic) }
     fab!(:user) { Fabricate(:user) }

@@ -21,7 +21,7 @@ RSpec.describe Jobs::UnassignNotification do
       expect(message.user_ids).to eq([user.id])
     end
 
-    context "User" do
+    describe "User" do
       it "deletes notifications" do
         Jobs::AssignNotification.new.execute(
           {
@@ -64,7 +64,7 @@ RSpec.describe Jobs::UnassignNotification do
       end
     end
 
-    context "Group" do
+    describe "Group" do
       fab!(:assign_allowed_group) { Group.find_by(name: "staff") }
       fab!(:user3) { Fabricate(:user) }
       fab!(:group) { Fabricate(:group) }

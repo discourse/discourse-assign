@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "plugin" do
+describe DiscourseAssign do
   before { SiteSetting.assign_enabled = true }
 
   describe "events" do

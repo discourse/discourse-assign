@@ -32,7 +32,7 @@ RSpec.describe TopicListSerializer do
   let(:guardian) { Guardian.new(user) }
   let(:serializer) { TopicListSerializer.new(topic_list, scope: guardian) }
 
-  include_context "A group that is allowed to assign"
+  include_context "with group that is allowed to assign"
 
   before do
     SiteSetting.assign_enabled = true

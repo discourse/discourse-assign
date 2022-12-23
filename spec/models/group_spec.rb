@@ -8,7 +8,7 @@ RSpec.describe Group do
 
   before { SiteSetting.assign_enabled = true }
 
-  context "Tracking changes that could affect the allow assign on groups site setting" do
+  describe "Tracking changes that could affect the allow assign on groups site setting" do
     let(:removed_group_setting) { "3|4" }
     let(:group_attribute) { group.id }
 
@@ -38,13 +38,13 @@ RSpec.describe Group do
     end
   end
 
-  context "includes can_show_assigned_tab? method" do
+  describe "includes can_show_assigned_tab? method" do
     let(:admin) { Fabricate(:admin) }
     let(:user) { Fabricate(:user) }
     let(:user1) { Fabricate(:user) }
     let(:user2) { Fabricate(:user) }
 
-    include_context "A group that is allowed to assign"
+    include_context "with group that is allowed to assign"
 
     before do
       add_to_assign_allowed_group(user)

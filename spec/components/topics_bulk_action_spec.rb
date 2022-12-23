@@ -13,7 +13,7 @@ describe TopicsBulkAction do
   let(:user) { Fabricate(:user) }
   let(:user2) { Fabricate(:user) }
 
-  include_context "A group that is allowed to assign"
+  include_context "with group that is allowed to assign"
 
   before { add_to_assign_allowed_group(user) }
 
