@@ -10,7 +10,12 @@ RSpec.describe DiscourseAssign::AssignController do
   let(:user) { Fabricate(:admin, name: "Robin Ward", username: "eviltrout") }
   fab!(:post) { Fabricate(:post) }
   fab!(:user2) do
-    Fabricate(:active_user, name: "David Taylor", username: "david", groups: [default_allowed_group])
+    Fabricate(
+      :active_user,
+      name: "David Taylor",
+      username: "david",
+      groups: [default_allowed_group],
+    )
   end
   let(:non_admin) { Fabricate(:user, groups: [default_allowed_group]) }
   fab!(:normal_user) { Fabricate(:user) }
@@ -91,9 +96,7 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   describe "#suggestions" do
-    before do
-      sign_in(user)
-    end
+    before { sign_in(user) }
 
     it "suggests the current user + the last 6 previously assigned users" do
       assignees = 10.times.map { |_| assign_user_to_post.username }
@@ -106,7 +109,9 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "doesn't suggest users on holiday" do
       user_on_vacation = assign_user_to_post
-      user_on_vacation.upsert_custom_fields(DiscourseAssign::DiscourseCalendar::HOLIDAY_CUSTOM_FIELD => "t")
+      user_on_vacation.upsert_custom_fields(
+        DiscourseAssign::DiscourseCalendar::HOLIDAY_CUSTOM_FIELD => "t",
+      )
 
       get "/assign/suggestions.json"
 
