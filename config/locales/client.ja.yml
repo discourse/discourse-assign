@@ -45,19 +45,14 @@ ja:
         help: "割り当て情報を編集します"
       reassign_modal:
         title: "トピックを再割り当てする"
-        description: "このトピックの再割り当て先のユーザー名を入力します"
       assign_modal:
         title: "トピックを割り当てる"
         reassign_title: "トピックを再割り当てする"
-        description: "このトピックを割り当てるユーザーの名前を入力します"
         assign: "割り当てる"
         note_label: メモ
         status_label: ステータス
       assign_post_modal:
         title: "投稿を割り当てる"
-        description: "この投稿を割り当てるユーザーの名前を入力します"
-      assign_bulk_modal:
-        description: "これらのトピックを割り当てるユーザーの名前を入力します"
       claim:
         title: "引き受ける"
         help: "トピックを自分に割り当てる"

@@ -45,19 +45,14 @@ it:
         help: "Modifica dettagli dell'assegnazione"
       reassign_modal:
         title: "Riassegna argomento"
-        description: "Inserisci il nome dell'utente a cui desideri riassegnare questo argomento"
       assign_modal:
         title: "Assegna Argomento"
         reassign_title: "Riassegna argomento"
-        description: "Inserisci il nome dell'utente a cui desideri assegnare questo argomento"
         assign: "Assegna"
         note_label: Nota
         status_label: Stato
       assign_post_modal:
         title: "Assegna messaggio"
-        description: "Inserisci il nome dell'utente a cui desideri assegnare questo messaggio"
-      assign_bulk_modal:
-        description: "Inserisci il nome dell'utente a cui desideri assegnare questi argomenti"
       claim:
         title: "rivendica"
         help: "Assegna l'argomento a te stesso"

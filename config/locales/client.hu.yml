@@ -42,17 +42,12 @@ hu:
         to_self_help: "Téma átvétele"
       reassign_modal:
         title: "Téma átadása"
-        description: "Írja be annak a felhasználónak a nevét, akinek át akarja adni a témát"
       assign_modal:
         title: "Téma kiosztása"
         reassign_title: "Téma átadása"
-        description: "Írja be annak a felhasználónak a nevét, akinek ki akarja osztani a témát"
         assign: "Kiosztás"
       assign_post_modal:
         title: "Bejegyzés kiosztása"
-        description: "Írja be annak a felhasználónak a nevét, akinek ki akarja osztani a bejegyzést"
-      assign_bulk_modal:
-        description: "Írja be annak a felhasználónak a nevét, akinek ki akarja osztani ezeket a témákat"
       claim:
         title: "lefoglalás"
         help: "Téma kiosztása saját magának"

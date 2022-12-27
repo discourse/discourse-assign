@@ -45,19 +45,14 @@ sv:
         help: "Redigera tilldelningsdetaljer"
       reassign_modal:
         title: "Tilldela om ämne"
-        description: "Ange namnet på användaren du vill omtilldela detta ämne"
       assign_modal:
         title: "Tilldela ämne"
         reassign_title: "Tilldela om ämne"
-        description: "Ange namn på den användare som du vill tilldela detta ämne."
         assign: "Tilldela"
         note_label: Anteckning
         status_label: Status
       assign_post_modal:
         title: "Tilldela inlägg"
-        description: "Ange namn på den användare som du vill tilldela detta ämne"
-      assign_bulk_modal:
-        description: "Ange namnet på den användare som du vill tilldela dessa ämnen"
       claim:
         title: "begär"
         help: "Tilldela ämne till dig själv"

@@ -25,7 +25,6 @@ ca:
         help: "Assigna el tema a l'usuari"
       assign_modal:
         title: "Assigna el tema"
-        description: "Introduïu el nom de l’usuari a qui voleu assignar aquest tema"
         assign: "Assigna"
       claim:
         title: "reclama"

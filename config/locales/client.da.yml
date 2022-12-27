@@ -28,7 +28,6 @@ da:
         help: "Tildel Emne til Bruger"
       assign_modal:
         title: "Tildel Emne"
-        description: "Angiv navnet på den bruger, du vil tildele dette emne"
         assign: "Tildel"
       claim:
         title: "gør krav"

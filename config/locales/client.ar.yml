@@ -45,19 +45,14 @@ ar:
         help: "تعديل تفاصيل التعيين"
       reassign_modal:
         title: "إعادة تعيين الموضوع"
-        description: "أدخل اسم المستخدم الذي ترغب في إعادة تعيين هذا الموضوع إليه"
       assign_modal:
         title: "تعيين الموضوع"
         reassign_title: "إعادة تعيين الموضوع"
-        description: "أدخل اسم المستخدم الذي ترغب في تعيين هذا الموضوع إليه"
         assign: "تعيين"
         note_label: ملاحظة
         status_label: الحالة
       assign_post_modal:
         title: "تعيين المنشور"
-        description: "أدخل اسم المستخدم الذي ترغب في تعيين هذا المنشور إليه"
-      assign_bulk_modal:
-        description: "أدخل اسم المستخدم الذي ترغب في تعيين هذه الموضوعات إليه"
       claim:
         title: "المطالبة بالملكية"
         help: "تعيين الموضوع إلى نفسك"

@@ -45,19 +45,14 @@ fr:
         help: "Modifier les détails de l'attribution"
       reassign_modal:
         title: "Réattribuer le sujet"
-        description: "Saisissez le nom de l'utilisateur auquel réattribuer ce sujet"
       assign_modal:
         title: "Attribuer le sujet"
         reassign_title: "Réattribuer le sujet"
-        description: "Saisissez le nom de l'utilisateur auquel attribuer ce sujet"
         assign: "Attribuer"
         note_label: Note
         status_label: Statut
       assign_post_modal:
         title: "Attribuer un message"
-        description: "Saisissez le nom de l'utilisateur auquel attribuer ce message"
-      assign_bulk_modal:
-        description: "Saisissez le nom de l'utilisateur auquel vous souhaitez attribuer ces sujets"
       claim:
         title: "réserver"
         help: "Attribuer le sujet à vous-même"

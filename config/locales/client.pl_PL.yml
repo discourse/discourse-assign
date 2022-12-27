@@ -42,17 +42,12 @@ pl_PL:
         to_self_help: "Przypisz ponownie temat do mnie"
       reassign_modal:
         title: "Przypisz ponownie temat"
-        description: "Wpisz nazwę użytkownika, któremu chcesz ponownie przypisać ten temat"
       assign_modal:
         title: "Przypisz temat"
         reassign_title: "Przypisz ponownie temat"
-        description: "Wpisz nazwę użytkownika, któremu chcesz przypisać ten wątek"
         assign: "Przypisz"
       assign_post_modal:
         title: "Przypisz post"
-        description: "Wpisz nazwę użytkownika, któremu chcesz przypisać ten post"
-      assign_bulk_modal:
-        description: "Wpisz nazwę użytkownika, któremu chcesz przypisać te tematy"
       claim:
         title: "przejmij"
         help: "Przypisz temat sobie"

@@ -45,19 +45,14 @@ fi:
         help: "Muokkaa osoituksen tietoja"
       reassign_modal:
         title: "Osoita ketju uudelleen"
-        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa tämän ketjun uudelleen"
       assign_modal:
         title: "Osoita ketju"
         reassign_title: "Osoita ketju uudelleen"
-        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa ketjun"
         assign: "Osoita"
         note_label: Huomautus
         status_label: Tila
       assign_post_modal:
         title: "Osoita viesti"
-        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa tämän viestin"
-      assign_bulk_modal:
-        description: "Syötä sen käyttäjän nimi, jolle haluat osoittaa nämä ketjut"
       claim:
         title: "omi"
         help: "Osoita ketju itsellesi"
