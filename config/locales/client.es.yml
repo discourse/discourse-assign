@@ -45,19 +45,14 @@ es:
         help: "Editar detalles de la asignación"
       reassign_modal:
         title: "Reasignar tema"
-        description: "Introduce el nombre del usuario al que quieres reasignar este tema"
       assign_modal:
         title: "Asignar tema"
         reassign_title: "Reasignar tema"
-        description: "Introduce el nombre del usuario al que quieres asignar este tema"
         assign: "Asignar"
         note_label: Nota
         status_label: Estado
       assign_post_modal:
         title: "Asignar publicación"
-        description: "Introduce el nombre del usuario al que quieres asignar esta publicación"
-      assign_bulk_modal:
-        description: "Introduce el nombre del usuario al que quieres asignar estos temas"
       claim:
         title: "reclamar"
         help: "Asignar tema a ti mismo"

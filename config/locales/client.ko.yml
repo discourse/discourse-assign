@@ -24,7 +24,6 @@ ko:
         help: "사용자에게 토픽 할당"
       assign_modal:
         title: "토픽 할당"
-        description: "이 주제를 할당하려는 사용자의 이름을 입력하십시오"
         assign: "할당"
       claim:
         title: "청구"

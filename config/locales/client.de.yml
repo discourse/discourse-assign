@@ -45,19 +45,14 @@ de:
         help: "Zuordnungsdetails bearbeiten"
       reassign_modal:
         title: "Thema neu zuordnen"
-        description: "Gib den Namen des Benutzers ein, dem du dieses Thema neu zuordnen möchtest"
       assign_modal:
         title: "Thema zuordnen"
         reassign_title: "Thema neu zuordnen"
-        description: "Gib den Namen des Benutzers ein, dem du dieses Thema zuordnen möchtest"
         assign: "Zuordnen"
         note_label: Notiz
         status_label: Status
       assign_post_modal:
         title: "Beitrag zuordnen"
-        description: "Gib den Namen des Benutzers ein, dem du diesen Beitrag zuordnen möchtest"
-      assign_bulk_modal:
-        description: "Gib den Namen des Benutzers ein, dem du diese Themen zuordnen möchtest"
       claim:
         title: "übernehmen"
         help: "Thema mir selbst zuordnen"

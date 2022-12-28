@@ -45,19 +45,14 @@ zh_CN:
         help: "编辑分配详细信息"
       reassign_modal:
         title: "重新分配话题"
-        description: "输入您要将此话题重新分配给的用户的名称"
       assign_modal:
         title: "分配话题"
         reassign_title: "重新分配话题"
-        description: "输入您要将此话题分配给的用户的名称"
         assign: "分配"
         note_label: 注释
         status_label: 状态
       assign_post_modal:
         title: "分配帖子"
-        description: "输入您要将此帖子分配给的用户的名称"
-      assign_bulk_modal:
-        description: "输入您要将这些话题分配给的用户的名称"
       claim:
         title: "认领"
         help: "将话题分配给自己"

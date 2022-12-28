@@ -19,6 +19,7 @@ fa_IR:
         title: "ویرایش"
       assign_modal:
         note_label: یادداشت
+        optional_label: "(اختیاری)"
         status_label: وضعیت
       assign_mailer:
         never: "هیچ‌وقت"

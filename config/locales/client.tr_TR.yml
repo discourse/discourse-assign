@@ -24,7 +24,6 @@ tr_TR:
         help: "Kullanıcıya konu ata"
       assign_modal:
         title: "Konu Ata"
-        description: "Bu konuyu atamak istediğiniz kullanıcının adını girin"
         assign: "Ata"
       claim:
         title: "talep"

@@ -45,19 +45,14 @@ pt_BR:
         help: "Editar detalhes da atribuição"
       reassign_modal:
         title: "Reatribuir tópico"
-        description: "Insira o nome do usuário(a) a quem você gostaria de reatribuir este tópico"
       assign_modal:
         title: "Atribuir tópico"
         reassign_title: "Reatribuir tópico"
-        description: "Insira o nome do(a) usuário(a) a quem você gostaria da atribuir este tópico"
         assign: "Atribuir"
         note_label: Observação
         status_label: Status
       assign_post_modal:
         title: "Atribuir postagem"
-        description: "Insira o nome do(a) usuário(a) a quem você gostaria da atribuir esta postagem"
-      assign_bulk_modal:
-        description: "Digite o nome do(a) usuário(a) a quem você gostaria de atribuir estes tópicos"
       claim:
         title: "reivindicar"
         help: "Atribuir tópico a si"

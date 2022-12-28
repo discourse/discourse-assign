@@ -45,19 +45,14 @@ nl:
         help: "Toewijzingsdetails bewerken"
       reassign_modal:
         title: "Topic opnieuw toewijzen"
-        description: "Voer de naam in van de gebruiker waaraan je dit topic wilt toewijzen"
       assign_modal:
         title: "Topic toewijzen"
         reassign_title: "Topic opnieuw toewijzen"
-        description: "Voer de naam in van de gebruiker waaraan je dit topic wilt toewijzen"
         assign: "Toewijzen"
         note_label: Opmerking
         status_label: Status
       assign_post_modal:
         title: "Bericht toewijzen"
-        description: "Voer de naam in van de gebruiker waaraan je dit bericht wilt toewijzen"
-      assign_bulk_modal:
-        description: "Voer de naam in van de gebruiker waaraan je deze topics wilt toewijzen"
       claim:
         title: "claimen"
         help: "Wijs het topic toe aan jezelf"

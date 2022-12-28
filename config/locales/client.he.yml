@@ -56,19 +56,17 @@ he:
         help: "עריכת פרטי משימה"
       reassign_modal:
         title: "הקצאת נושא מחדש"
-        description: "נא להקליד את שם המשתמש להקצאת הנושא אליו מחדש"
       assign_modal:
         title: "הקצאת נושא"
         reassign_title: "הקצאת נושא מחדש"
-        description: "נא להקליד את שם המשתמש להקצאת הנושא"
         assign: "הקצאה"
+        assignee_label: ממונה
+        choose_assignee: נא לבחור משתמש להקצאה.
         note_label: הערה
+        optional_label: "(רשות)"
         status_label: מצב
       assign_post_modal:
         title: "הקצאת פוסט"
-        description: "נא להקליד את שם המשתמש להקצאת הפוסט"
-      assign_bulk_modal:
-        description: "נא להקליד את שם המשתמש להקצאת הנושאים האלו"
       claim:
         title: "דרישה"
         help: "הקצאת נושא לעצמך"
