@@ -17,21 +17,56 @@ tr_TR:
       assigned_group_to_post: "%{when} tarihinde %{who} adlı kullanıcıyı <a href='%{path}'>gönderiye</a> atadı"
       unassigned: "%{when} tarihinde %{who} adlı kullanıcının atamasını kaldırdı"
       unassigned_group: "%{when} tarihinde %{who} adlı kullanıcının atamasını kaldırdı"
+      unassigned_from_post: "%{when} tarihinde %{who} adlı kullanıcının <a href='%{path}'>gönderiden</a> atamasını kaldırdı"
+      unassigned_group_from_post: "%{when} tarihinde %{who} adlı kullanıcının <a href='%{path}'>gönderiden</a> atamasını kaldırdı"
+      reassigned: "%{when} tarihinde %{who} adlı kullanıcıyı tekrar atadı"
+      reassigned_group: "%{when} tarihinde %{who} adlı kullanıcıyı tekrar atadı"
+      details_change: "%{when} tarihinde %{who} adlı kullanıcı için atama bilgilerini değiştirdi"
+      note_change: "%{when} tarihinde %{who} adlı kullanıcı için atama notunu değiştirdi"
+      status_change: "%{when} tarihinde %{who} için atama durumunu değiştirdi"
     discourse_assign:
       add_unassigned_filter: "Kategoriye 'atanmamış' filtre ekle"
       cant_act: "Diğer kullanıcılara atanan bildirimler üzerinde hareket edemezsiniz"
       cant_act_unclaimed: "Raporlara geçmeden önce bu konuyu talep etmelisiniz."
+      topic_search_placeholder: "Konuları başlığa veya gönderi içeriğine göre arayın"
+      sidebar_name_filter_placeholder: "Ad/Kullanıcı Adı"
       assigned: "Atandı"
       group_everyone: "Herkes"
       assigned_to: "Atandı"
+      assigned_to_w_ellipsis: "Şu kişiye atandı..."
+      assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Atamayı kaldır"
+        title_w_ellipsis: "Atamayı kaldır..."
+        help: "%{username} adlı kullanıcının Konudan atamasını kaldır"
       assign:
         title: "Ata"
         help: "Kullanıcıya konu ata"
+      assign_post:
+        title: "Gönderi ata"
+      unassign_post:
+        title: "Gönderiden atamayı kaldır"
+        help: "%{username} adlı kullanıcının Gönderiden atamasını kaldır"
+      reassign:
+        title: "Düzenle"
+        title_w_ellipsis: "Atamayı düzenle..."
+        to_self: "Bana yeniden ata"
+        to_self_help: "Konuyu bana yeniden ata"
+        help: "Atama bilgilerini düzenle"
+      reassign_modal:
+        title: "Konuyu yeniden ata"
       assign_modal:
         title: "Konu Ata"
+        reassign_title: "Konuyu yeniden ata"
         assign: "Ata"
+        assignee_label: Atanan kişi
+        choose_assignee: Atanacak bir kullanıcı seçin.
+        note_label: Not
+        optional_label: "(isteğe bağlı)"
+        status_label: Durum
+      assign_post_modal:
+        title: "Gönderi ata"
       claim:
         title: "talep"
         help: "Konuyu kendinize atayın"
@@ -46,7 +81,80 @@ tr_TR:
         weekly: "Haftalık"
         monthly: "Aylık"
         quarterly: "Üç aylık"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Ata"
+              assignable_levels:
+                title: "Bu grubu kim atayabilir?"
     user:
       messages:
         assigned_title: "Atandı (%{count})"
         assigned: "Atandı"
+      no_assignments_title: "Henüz atamanız yok"
+      no_assignments_body: >
+        Atanan konularınız ve mesajlarınız burada listelenir. Ayrıca, atamalarınızla ilgili periyodik bir anımsatma bildirimi alırsınız; bunu <a href='%{preferencesUrl}'>kullanıcı tercihlerinizden</a> ayarlayabilirsiniz. <br><br>Kendinize veya bir başkasına bir konu veya mesaj atamak için alttaki %{icon} ata düğmesini kullanın.
+      dismiss_assigned_tooltip: "Okunmamış tüm atama bildirimlerini okundu olarak işaretle"
+      assigned_to_group: "%{group_name} adlı gruba atandı"
+      assigned_to_you: "size atandı"
+    admin:
+      web_hooks:
+        assign_event:
+          name: "Etkinlik Ata"
+          details: "Bir kullanıcı bir konuyu atadığında veya atamasını kaldırdığında."
+    search:
+      advanced:
+        in:
+          assigned: "atanmış"
+          unassigned: "atanmamış"
+        assigned:
+          label: "Şu kişiye atandı:"
+    topics:
+      bulk:
+        unassign: "Konuların atamalarını kaldır"
+        assign: "Konuları ata"
+    discourse_automation:
+      scriptables:
+        random_assign:
+          fields:
+            post_template:
+              label: Gönderi şablonu
+              description: Doldurulursa bu şablonla bir gönderi oluşturulur ve gönderiye konu yerine bir kullanıcı atanır.
+            assignees_group:
+              label: Atananlar Grubu
+            minimum_time_between_assignments:
+              label: Atamalar arasındaki minimum saatler
+            min_recently_assigned_days:
+              label: Minimum en son atanan günler
+              description: Varsayılan değer 14 gündür.
+            skip_new_users_for_days:
+              label: Yeni kullanıcıları günlerce atla
+              description: Varsayılan değer 0 gündür (kullanıcılar kaydolduktan hemen sonra atanabilir).
+            max_recently_assigned_days:
+              label: Maksimum en son atanan günler
+              description: Son "n" gün içinde atanan kullanıcıları hariç tutmak için ilk deneme. Kullanıcı kalmamışsa "min_recently_assigned_days" değerine geri dönülür. Varsayılan değer 180 gündür.
+            assigned_topic:
+              label: Atanan Konu Kimliği
+            in_working_hours:
+              label: Çalışma saatlerindeki kullanıcılar
+    notification_reason:
+      user: "Bu konu size atandığı için yeni yanıtların sayısını görürsünüz."
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      popup:
+        assigned: "%{username} sizi atadı"
+      titles:
+        assigned: "Atandı"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Emin misiniz? %{count} okunmamış atama bildiriminiz var."
+            other: "Emin misiniz? %{count} okunmamış atama bildiriminiz var."
+    user_menu:
+      view_all_assigned: "tüm atananları görüntüle"
+      tabs:
+        assign_list: "Atama listesi"
+        assign_list_with_unread:
+          one: "Atama listesi - %{count} okunmamış atama"
+          other: "Atama listesi - %{count} okunmamış atama"
