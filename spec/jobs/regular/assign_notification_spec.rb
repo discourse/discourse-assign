@@ -39,7 +39,9 @@ RSpec.describe Jobs::AssignNotification do
           end
 
         expect(messages.length).to eq(1)
-        expect(messages.first.data[:excerpt]).to eq("assigned you the topic 'Basic topic title'")
+        expect(messages.first.data[:excerpt]).to eq(
+          I18n.t("discourse_assign.topic_assigned_excerpt", title: topic.title),
+        )
       end
 
       it "should publish the right message when private message" do
@@ -120,7 +122,11 @@ RSpec.describe Jobs::AssignNotification do
           end
         expect(messages.length).to eq(1)
         expect(messages.first.data[:excerpt]).to eq(
-          "assigned to Developers the topic 'Basic topic title'",
+          I18n.t(
+            "discourse_assign.topic_group_assigned_excerpt",
+            title: topic.title,
+            group: group.name,
+          ),
         )
 
         messages =
@@ -139,7 +145,11 @@ RSpec.describe Jobs::AssignNotification do
           end
         expect(messages.length).to eq(1)
         expect(messages.first.data[:excerpt]).to eq(
-          "assigned to Developers the topic 'Basic topic title'",
+          I18n.t(
+            "discourse_assign.topic_group_assigned_excerpt",
+            title: topic.title,
+            group: group.name,
+          ),
         )
 
         messages =
