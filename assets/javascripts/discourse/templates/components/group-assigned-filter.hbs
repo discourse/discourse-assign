@@ -1,7 +1,14 @@
 {{#if showAvatar}}
-  {{#link-to "group.assigned.show" filter.username_lower (query-params order=order ascending=ascending search=search)}}
+  {{#link-to
+    "group.assigned.show"
+    filter.username_lower
+    (query-params order=order ascending=ascending search=search)
+  }}
     <div class="assign-image">
-      <a href={{filter.userPath}} data-user-card={{filter.username}}>{{avatar filter imageSize="large"}}</a>
+      <a href={{filter.userPath}} data-user-card={{filter.username}}>{{avatar
+          filter
+          imageSize="large"
+        }}</a>
     </div>
 
     <div class="assign-names">
@@ -14,7 +21,11 @@
     </div>
   {{/link-to}}
 {{else if groupName}}
-  {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending search=search)}}
+  {{#link-to
+    "group.assigned.show"
+    filter
+    (query-params order=order ascending=ascending search=search)
+  }}
     <div class="assign-image">
       {{d-icon "group-plus"}}
     </div>
@@ -27,7 +38,11 @@
     </div>
   {{/link-to}}
 {{else}}
-  {{#link-to "group.assigned.show" filter (query-params order=order ascending=ascending search=search)}}
+  {{#link-to
+    "group.assigned.show"
+    filter
+    (query-params order=order ascending=ascending search=search)
+  }}
     <div class="assign-everyone">
       {{i18n "discourse_assign.group_everyone"}}
     </div>
