@@ -1,13 +1,13 @@
-{{!--
+{{!
   The `~` syntax strip spaces between the elements, making it produce
   `<a class=topic-post-badges>Some text</a><span class=topic-post-badges>`,
   with no space between them.
   This causes the topic-post-badge to be considered the same word as "text"
   at the end of the link, preventing it from line wrapping onto its own line.
---}}
+}}
 {{#if bulkSelectEnabled}}
   <td class="bulk-select topic-list-data">
-    <input type="checkbox" class="bulk-select">
+    <input type="checkbox" class="bulk-select" />
   </td>
 {{/if}}
 <td class="main-link clearfix topic-list-data" colspan="1">
@@ -21,7 +21,13 @@
       {{~topic-featured-link topic}}
     {{~/if}}
     {{~#if showTopicPostBadges}}
-      {{~raw "topic-post-badges" unread=topic.unread unseen=topic.unseen url=topic.lastUnreadUrl newDotText=newDotText}}
+      {{~raw
+        "topic-post-badges"
+        unread=topic.unread
+        unseen=topic.unseen
+        url=topic.lastUnreadUrl
+        newDotText=newDotText
+      }}
     {{~/if}}
   </span>
   <div class="link-bottom-line">
@@ -31,7 +37,13 @@
       {{/unless}}
     {{/unless}}
     {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
-    {{raw "list/action-list" topic=topic postNumbers=topic.liked_post_numbers className="likes" icon="heart"}}
+    {{raw
+      "list/action-list"
+      topic=topic
+      postNumbers=topic.liked_post_numbers
+      className="likes"
+      icon="heart"
+    }}
   </div>
   {{#if expandPinned}}
     {{raw "list/topic-excerpt" topic=topic}}
@@ -44,8 +56,16 @@
 
 {{raw "list/posts-count-column" topic=topic}}
 
-<td class="num views {{topic.viewsHeat}} topic-list-data">{{number topic.views numberKey="views_long"}}</td>
-{{raw "list/activity-column" topic=topic class="num topic-list-data" tagName="td"}}
+<td class="num views {{topic.viewsHeat}} topic-list-data">{{number
+    topic.views
+    numberKey="views_long"
+  }}</td>
+{{raw
+  "list/activity-column"
+  topic=topic
+  class="num topic-list-data"
+  tagName="td"
+}}
 <td class="topic-list-data">
   {{#if topic.assigned_to_user}}
     {{assign-actions-dropdown
@@ -63,9 +83,6 @@
       reassign=reassign
     }}
   {{else}}
-    {{assign-actions-dropdown
-      topic=topic
-      unassign=unassign
-    }}
+    {{assign-actions-dropdown topic=topic unassign=unassign}}
   {{/if}}
 </td>

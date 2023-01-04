@@ -1,6 +1,6 @@
 {{#d-modal-body class="assign"}}
   <div>
-    <div class="control-group {{if this.assigneeError "assignee-error"}}">
+    <div class="control-group {{if this.assigneeError 'assignee-error'}}">
       <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
       {{email-group-user-chooser
         autocomplete="off"
@@ -13,7 +13,9 @@
           mobilePlacementStrategy="absolute"
           filterPlaceholder=placeholderKey
           includeGroups=true
-          customSearchOptions=(hash assignableGroups=true defaultSearchResults=this.assignSuggestions)
+          customSearchOptions=(hash
+            assignableGroups=true defaultSearchResults=this.assignSuggestions
+          )
           groupMembersOf=allowedGroups
           maximum=1
           autofocus=autofocus
@@ -22,7 +24,8 @@
       }}
       {{#if this.assigneeError}}
         <span class="error-label">
-          {{d-icon "exclamation-triangle"}} {{i18n "discourse_assign.assign_modal.choose_assignee"}}
+          {{d-icon "exclamation-triangle"}}
+          {{i18n "discourse_assign.assign_modal.choose_assignee"}}
         </span>
       {{/if}}
     </div>
@@ -41,16 +44,26 @@
 
     <div class="control-group assign-status">
       <label>
-        {{i18n "discourse_assign.assign_modal.note_label"}}&nbsp;<span class="label-optional">{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
+        {{i18n "discourse_assign.assign_modal.note_label"}}&nbsp;<span
+          class="label-optional"
+        >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
       </label>
-      {{textarea id="assign-modal-note" value=model.note key-down=(action "handleTextAreaKeydown")}}
+      {{textarea
+        id="assign-modal-note"
+        value=model.note
+        key-down=(action "handleTextAreaKeydown")
+      }}
     </div>
   </div>
 {{/d-modal-body}}
 
 <div class="modal-footer">
   {{d-button
-    label= (if model.reassign "discourse_assign.reassign.title" "discourse_assign.assign_modal.assign")
+    label=(if
+      model.reassign
+      "discourse_assign.reassign.title"
+      "discourse_assign.assign_modal.assign"
+    )
     icon=inviteIcon
     action=(action "assign")
     class="btn-primary"
