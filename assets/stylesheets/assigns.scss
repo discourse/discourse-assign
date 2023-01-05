@@ -70,6 +70,16 @@
   display: block;
   width: 300px;
   margin-top: 5px;
+
+  //slightly hacky fix for the weird alignment issue going on with the text
+  .select-kit-body .select-kit-row {
+    .name {
+      display: contents;
+    }
+    .identifier {
+      margin-right: 0.5rem;
+    }
+  }
 }
 
 .assign-user-modal p {
