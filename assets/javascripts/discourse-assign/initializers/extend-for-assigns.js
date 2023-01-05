@@ -641,7 +641,7 @@ function initialize(api) {
           const tagName = params.tagName || "a";
           const href =
             tagName === "a"
-              ? `href="${assignedPath}" data-auto-route="true"`
+              ? `href="${getURL(assignedPath)}" data-auto-route="true"`
               : "";
           return `<${tagName} class="assigned-to discourse-tag simple" ${href}>
         ${icon}
