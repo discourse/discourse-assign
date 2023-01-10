@@ -45,7 +45,6 @@ ja:
     flag_assigned: "申し訳ありませんが、その通報のトピックは別のユーザーに割り当てられています"
     flag_unclaimed: "通報に対応する前にそのトピックを引き受ける必要があります"
     topic_assigned_excerpt: "あなたにトピック「%{title}」を割り当てました"
-    topic_group_assigned_excerpt: "%{group} に「%{title}」を割り当てました"
     reminders_frequency:
       never: "通知しない"
       daily: "毎日"

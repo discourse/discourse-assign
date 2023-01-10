@@ -45,7 +45,6 @@ tr_TR:
     flag_assigned: "Maalesef, raporun konusu başka bir kullanıcıya atandı"
     flag_unclaimed: "Raporlama yapmadan önce bu konuyu talep etmelisiniz"
     topic_assigned_excerpt: "size &#39;%{title}&#39; konusunu atadı"
-    topic_group_assigned_excerpt: "%{group} adlı grubu \"%{title}\" konusuna atadı."
     reminders_frequency:
       never: "asla"
       daily: "günlük"

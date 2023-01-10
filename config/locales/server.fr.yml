@@ -45,7 +45,6 @@ fr:
     flag_assigned: "Nous sommes désolés, le sujet de ce signalement est attribué à un autre utilisateur."
     flag_unclaimed: "Vous devez réserver ce sujet avant d'agir sur le signalement"
     topic_assigned_excerpt: "vous a attribué le sujet « %{title} »"
-    topic_group_assigned_excerpt: "a attribué le sujet « %{title} » au groupe %{group}"
     reminders_frequency:
       never: "jamais"
       daily: "chaque jour"

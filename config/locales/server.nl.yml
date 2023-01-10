@@ -45,7 +45,6 @@ nl:
     flag_assigned: "Sorry, het topic van die markering is aan een andere gebruiker toegewezen"
     flag_unclaimed: "Je moet dat topic claimen voordat je actie onderneemt op de markering"
     topic_assigned_excerpt: "heeft het topic '%{title}' aan jou toegewezen"
-    topic_group_assigned_excerpt: "heeft %{group} toegewezen aan het topic '%{title}'"
     reminders_frequency:
       never: "nooit"
       daily: "dagelijks"
