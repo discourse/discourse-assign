@@ -45,7 +45,6 @@ it:
     flag_assigned: "Spiacenti, l'argomento segnalato è già assegnato a un altro utente"
     flag_unclaimed: "Devi rivendicare l'argomento prima di lavorare sulla segnalazione"
     topic_assigned_excerpt: "ti ha assegnato l'argomento '%{title}'"
-    topic_group_assigned_excerpt: "ha assegnato a %{group} l'argomento '%{title}'"
     reminders_frequency:
       never: "mai"
       daily: "giornalmente"

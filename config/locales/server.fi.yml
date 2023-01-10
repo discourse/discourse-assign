@@ -45,7 +45,6 @@ fi:
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle käyttäjälle"
     flag_unclaimed: "Ketju täytyy omia ennen lipun käsittelyä"
     topic_assigned_excerpt: "osoitti sinulle ketjun \"%{title}\""
-    topic_group_assigned_excerpt: "osoitti ketjun \"%{title}\" ryhmälle %{group}"
     reminders_frequency:
       never: "ei koskaan"
       daily: "päivittäin"

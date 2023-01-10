@@ -18,7 +18,7 @@ zh_CN:
       cant_act: "您不能对已分配给其他用户的举报采取行动"
       cant_act_unclaimed: "在对举报采取行动之前，您必须先认领此话题。"
       topic_search_placeholder: "按标题或帖子内容搜索话题"
-      sidebar_name_filter_placeholder: "姓名/用户名"
+      sidebar_name_filter_placeholder: "名称/用户名"
       assigned: "已分配"
       group_everyone: "所有人"
       assigned_to: "已分配给"

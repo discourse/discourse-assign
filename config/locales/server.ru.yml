@@ -45,7 +45,6 @@ ru:
     flag_assigned: "Извините, эта тема с жалобой назначена другому пользователю"
     flag_unclaimed: "Вы должны зарезервировать эту тему прежде чем рассматривать жалобу."
     topic_assigned_excerpt: "назначил вам тему '%{title}'"
-    topic_group_assigned_excerpt: "Тема '%{title}' назначена группе %{group}"
     reminders_frequency:
       never: "никогда"
       daily: "ежедневно"

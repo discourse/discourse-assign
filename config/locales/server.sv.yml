@@ -45,7 +45,6 @@ sv:
     flag_assigned: "Tyvärr har den flaggans ämne tilldelats en annan användare"
     flag_unclaimed: "Du måste göra anspråk på det ämnet innan du gör något åt flaggan"
     topic_assigned_excerpt: "tilldelade ämnet '%{title}' till dig"
-    topic_group_assigned_excerpt: "tilldelad till %{group} ämne '%{title}'"
     reminders_frequency:
       never: "aldrig"
       daily: "dagligen"

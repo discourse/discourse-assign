@@ -45,7 +45,6 @@ ar:
     flag_assigned: "عذرًا، موضوع هذا البلاغ معيَّن إلى مستخدم آخر"
     flag_unclaimed: "يجب عليك المطالبة بملكية هذا الموضوع قبل اتخاذ إجراء بشأن البلاغ"
     topic_assigned_excerpt: "عيَّن الموضوع \"%{title}\" إليك"
-    topic_group_assigned_excerpt: "تم تعيين الموضوع \"%{title}\" إلى المجموعة %{group}"
     reminders_frequency:
       never: "أبدًا"
       daily: "يوميًا"
