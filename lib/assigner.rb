@@ -261,7 +261,7 @@ class ::Assigner
       forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note, status: status)
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
-    if no_assignee_change?(assign_to)
+    if no_assignee_change?(assign_to) && details_change?(note, status)
       return update_details(assign_to, note, status, skip_small_action_post: skip_small_action_post)
     end
 
@@ -534,6 +534,10 @@ class ::Assigner
 
   def no_assignee_change?(assignee)
     @target.assignment&.assigned_to_id == assignee.id
+  end
+
+  def details_change?(note, status)
+    note.present? || @target.assignment&.status != status
   end
 
   def assignment_eq?(assignment, assign_to, type, note, status)
