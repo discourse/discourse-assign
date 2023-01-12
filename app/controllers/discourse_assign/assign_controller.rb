@@ -7,6 +7,8 @@ module DiscourseAssign
 
     def suggestions
       users = [current_user, *recent_assignees]
+      each_serializer =
+        SiteSetting.enable_user_status? ? FoundUserWithStatusSerializer : FoundUserSerializer
 
       render json: {
                assign_allowed_on_groups:
@@ -17,7 +19,7 @@ module DiscourseAssign
                  ActiveModel::ArraySerializer.new(
                    users,
                    scope: guardian,
-                   each_serializer: BasicUserSerializer,
+                   each_serializer: each_serializer,
                  ),
              }
     end
