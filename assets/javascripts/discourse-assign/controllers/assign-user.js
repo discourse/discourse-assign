@@ -1,4 +1,3 @@
-import { next } from "@ember/runloop";
 import Controller, { inject as controller } from "@ember/controller";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 import { action } from "@ember/object";
@@ -36,11 +35,6 @@ export default Controller.extend(ModalFunctionality, {
 
   onShow() {
     this.set("assigneeError", false);
-
-    // Automatically expand user-chooser
-    next(() => {
-      document.querySelector(".assignee-chooser .select-kit-header")?.click();
-    });
   },
 
   onClose() {
