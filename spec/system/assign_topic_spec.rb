@@ -21,13 +21,13 @@ describe "Assign | Assigning topics", type: :system, js: true do
       assign_modal.set_assignee(staff_user)
       assign_modal.confirm
 
-      expect(find("#post_2")).to have_content("Assigned")
+      expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
       expect(find("#topic .assigned-to")).to have_content(staff_user.username)
 
       topic_page.click_unassign_topic
 
-      expect(find("#post_3")).to have_content("Unassigned")
-      expect(page).not_to have_css("#topic .assigned-to")
+      expect(topic_page).to have_assignment_action(3, "unassigned", staff_user)
+      expect(page).to have_no_css("#topic .assigned-to")
     end
 
     context "when unassign_on_close is set to true" do
@@ -40,14 +40,16 @@ describe "Assign | Assigning topics", type: :system, js: true do
         assign_modal.set_assignee(staff_user)
         assign_modal.confirm
 
-        expect(find("#post_2")).to have_content("Assigned")
+        expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
 
         find(".topic-footer-main-buttons .toggle-admin-menu").click
         find(".topic-admin-close").click
 
-        expect(find("#post_3")).to have_content("Closed")
-        expect(page).not_to have_css("#post_4")
-        expect(page).not_to have_css("#topic .assigned-to")
+        expect(find("#post_3")).to have_content(
+          I18n.t("js.action_codes.closed.enabled", when: "just now"),
+        )
+        expect(page).to have_no_css("#post_4")
+        expect(page).to have_no_css("#topic .assigned-to")
       end
 
       it "can assign the previous assignee" do
@@ -57,20 +59,22 @@ describe "Assign | Assigning topics", type: :system, js: true do
         assign_modal.set_assignee(staff_user)
         assign_modal.confirm
 
-        expect(find("#post_2")).to have_content("Assigned")
+        expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
 
         find(".topic-footer-main-buttons .toggle-admin-menu").click
         find(".topic-admin-close").click
 
-        expect(find("#post_3")).to have_content("Closed")
-        expect(page).not_to have_css("#post_4")
-        expect(page).not_to have_css("#topic .assigned-to")
+        expect(find("#post_3")).to have_content(
+          I18n.t("js.action_codes.closed.enabled", when: "just now"),
+        )
+        expect(page).to have_no_css("#post_4")
+        expect(page).to have_no_css("#topic .assigned-to")
 
         topic_page.click_assign_topic
         assign_modal.set_assignee(staff_user)
         assign_modal.confirm
 
-        expect(page).not_to have_css("#post_4")
+        expect(page).to have_no_css("#post_4")
         expect(find("#topic .assigned-to")).to have_content(staff_user.username)
       end
 
@@ -84,19 +88,24 @@ describe "Assign | Assigning topics", type: :system, js: true do
           assign_modal.set_assignee(staff_user)
           assign_modal.confirm
 
-          expect(find("#post_2")).to have_content("Assigned")
+          expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
 
           find(".topic-footer-main-buttons .toggle-admin-menu").click
           find(".topic-admin-close").click
 
-          expect(find("#post_3")).to have_content("Closed")
-          expect(page).not_to have_css("#post_4")
-          expect(page).not_to have_css("#topic .assigned-to")
+          expect(find("#post_3")).to have_content(
+            I18n.t("js.action_codes.closed.enabled", when: "just now"),
+          )
+          expect(page).to have_no_css("#post_4")
+          expect(page).to have_no_css("#topic .assigned-to")
 
           find(".topic-footer-main-buttons .toggle-admin-menu").click
           find(".topic-admin-open").click
 
-          expect(page).not_to have_css("#post_4")
+          expect(find("#post_4")).to have_content(
+            I18n.t("js.action_codes.closed.disabled", when: "just now"),
+          )
+          expect(page).to have_no_css("#post_5")
           expect(find("#topic .assigned-to")).to have_content(staff_user.username)
         end
       end

@@ -16,6 +16,13 @@ module PageObjects
         find("#topic-footer-dropdown-reassign").click
         find("[data-value='reassign']").click
       end
+
+      def has_assignment_action?(post_num, action, assignee)
+        assignee = assignee.is_a?(Group) ? assignee.name : assignee.username
+        find("#post_#{post_num}").has_content?(
+          I18n.t("js.action_codes.#{action}", who: "@#{assignee}", when: "just now"),
+        )
+      end
     end
   end
 end
