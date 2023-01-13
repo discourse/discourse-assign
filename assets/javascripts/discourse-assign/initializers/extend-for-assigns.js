@@ -811,6 +811,11 @@ function initialize(api) {
             });
             this.appEvents.trigger("post-stream:refresh", { id: data.post_id });
           }
+          if (topic.closed) {
+            this.appEvents.trigger("post-stream:refresh", {
+              id: topic.postStream.posts[0].id,
+            });
+          }
         }
         this.appEvents.trigger("header:update-topic", topic);
       });
