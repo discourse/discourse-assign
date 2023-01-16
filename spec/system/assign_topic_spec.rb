@@ -81,7 +81,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
       context "when reassign_on_open is set to true" do
         before { SiteSetting.reassign_on_open = true }
 
-        it "topic gets reassigned on open" do
+        it "reassigns the topic on open" do
           visit "/t/#{topic.id}"
 
           topic_page.click_assign_topic
