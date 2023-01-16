@@ -27,9 +27,6 @@ export default Controller.extend(ModalFunctionality, {
       if (this.isDestroying || this.isDestroyed) {
         return;
       }
-      if (data.suggestions?.length > 0) {
-        data.suggestions[0].isSuggestion = true;
-      }
       this.set("assignSuggestions", data.suggestions);
       this.set("allowedGroups", data.assign_allowed_on_groups);
       this.set("allowedGroupsForAssignment", data.assign_allowed_for_groups);
