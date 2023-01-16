@@ -33,7 +33,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
     context "when unassign_on_close is set to true" do
       before { SiteSetting.unassign_on_close = true }
 
-      it "topic gets unassigned on close" do
+      it "unassigns the topic on close" do
         visit "/t/#{topic.id}"
 
         topic_page.click_assign_topic
