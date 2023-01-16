@@ -17,10 +17,19 @@ module PageObjects
         find("[data-value='reassign']").click
       end
 
-      def has_assignment_action?(post_num, action, assignee)
-        assignee = assignee.is_a?(Group) ? assignee.name : assignee.username
-        find("#post_#{post_num}").has_content?(
-          I18n.t("js.action_codes.#{action}", who: "@#{assignee}", when: "just now"),
+      def has_assigned?(args)
+        has_assignment_action?(action: "assigned", **args)
+      end
+
+      def has_unassigned?(args)
+        has_assignment_action?(action: "unassigned", **args)
+      end
+
+      def has_assignment_action?(args)
+        assignee = args[:group]&.name || args[:user]&.username
+        container = args[:at_post] ? find("#post_#{args[:at_post]}") : page
+        container.has_content?(
+          I18n.t("js.action_codes.#{args[:action]}", who: "@#{assignee}", when: "just now"),
         )
       end
     end

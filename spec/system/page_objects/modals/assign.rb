@@ -3,19 +3,19 @@
 module PageObjects
   module Modals
     class Assign < PageObjects::Modals::Base
-      def set_assignee(assignee)
+      def assignee=(assignee)
         assignee = assignee.is_a?(Group) ? assignee.name : assignee.username
         find(".control-group .multi-select").click
         find(".control-group input").fill_in(with: assignee)
         find("li[data-value='#{assignee}']").click
       end
 
-      def fill_status(status)
+      def status=(status)
         find("#assign-status").click
         find("[data-value='#{status}']").click
       end
 
-      def fill_note(note)
+      def note=(note)
         find("#assign-modal-note").fill_in(with: note)
       end
 

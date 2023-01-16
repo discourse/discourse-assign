@@ -18,15 +18,15 @@ describe "Assign | Assigning topics", type: :system, js: true do
       visit "/t/#{topic.id}"
 
       topic_page.click_assign_topic
-      assign_modal.set_assignee(staff_user)
+      assign_modal.assignee = staff_user
       assign_modal.confirm
 
-      expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
+      expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
       expect(find("#topic .assigned-to")).to have_content(staff_user.username)
 
       topic_page.click_unassign_topic
 
-      expect(topic_page).to have_assignment_action(3, "unassigned", staff_user)
+      expect(topic_page).to have_unassigned(user: staff_user, at_post: 3)
       expect(page).to have_no_css("#topic .assigned-to")
     end
 
@@ -37,10 +37,10 @@ describe "Assign | Assigning topics", type: :system, js: true do
         visit "/t/#{topic.id}"
 
         topic_page.click_assign_topic
-        assign_modal.set_assignee(staff_user)
+        assign_modal.assignee = staff_user
         assign_modal.confirm
 
-        expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
+        expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
 
         find(".topic-footer-main-buttons .toggle-admin-menu").click
         find(".topic-admin-close").click
@@ -56,10 +56,10 @@ describe "Assign | Assigning topics", type: :system, js: true do
         visit "/t/#{topic.id}"
 
         topic_page.click_assign_topic
-        assign_modal.set_assignee(staff_user)
+        assign_modal.assignee = staff_user
         assign_modal.confirm
 
-        expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
+        expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
 
         find(".topic-footer-main-buttons .toggle-admin-menu").click
         find(".topic-admin-close").click
@@ -71,7 +71,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
         expect(page).to have_no_css("#topic .assigned-to")
 
         topic_page.click_assign_topic
-        assign_modal.set_assignee(staff_user)
+        assign_modal.assignee = staff_user
         assign_modal.confirm
 
         expect(page).to have_no_css("#post_4")
@@ -85,10 +85,10 @@ describe "Assign | Assigning topics", type: :system, js: true do
           visit "/t/#{topic.id}"
 
           topic_page.click_assign_topic
-          assign_modal.set_assignee(staff_user)
+          assign_modal.assignee = staff_user
           assign_modal.confirm
 
-          expect(topic_page).to have_assignment_action(2, "assigned", staff_user)
+          expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
 
           find(".topic-footer-main-buttons .toggle-admin-menu").click
           find(".topic-admin-close").click
