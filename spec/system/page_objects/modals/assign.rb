@@ -5,7 +5,6 @@ module PageObjects
     class Assign < PageObjects::Modals::Base
       def assignee=(assignee)
         assignee = assignee.is_a?(Group) ? assignee.name : assignee.username
-        find(".control-group .multi-select").click
         find(".control-group input").fill_in(with: assignee)
         find("li[data-value='#{assignee}']").click
       end
