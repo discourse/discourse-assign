@@ -8,7 +8,7 @@ tr_TR:
   js:
     filters:
       unassigned:
-        title: "Atanmamışlar"
+        title: "Atanmamış"
         help: "Atanmamış konular"
     action_codes:
       assigned: "%{when} tarihinde %{who} adlı kullanıcıyı atadı"
@@ -25,15 +25,15 @@ tr_TR:
       note_change: "%{when} tarihinde %{who} adlı kullanıcı için atama notunu değiştirdi"
       status_change: "%{when} tarihinde %{who} için atama durumunu değiştirdi"
     discourse_assign:
-      add_unassigned_filter: "Kategoriye 'atanmamış' filtre ekle"
-      cant_act: "Diğer kullanıcılara atanan bildirimler üzerinde hareket edemezsiniz"
-      cant_act_unclaimed: "Raporlara geçmeden önce bu konuyu talep etmelisiniz."
+      add_unassigned_filter: "Kategoriye \"atanmamış\" filtresi ekle"
+      cant_act: "Başka kullanıcılara atanmış bayraklar üzerinde işlem yapamazsınız"
+      cant_act_unclaimed: "Bayraklar üzerinde hareket etmeden önce bu konuyu talep etmelisiniz."
       topic_search_placeholder: "Konuları başlığa veya gönderi içeriğine göre arayın"
       sidebar_name_filter_placeholder: "Ad/Kullanıcı Adı"
       assigned: "Atandı"
       group_everyone: "Herkes"
-      assigned_to: "Atandı"
-      assigned_to_w_ellipsis: "Şu kişiye atandı..."
+      assigned_to: "Şuraya atandı:"
+      assigned_to_w_ellipsis: "Şuraya atandı..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
@@ -51,8 +51,8 @@ tr_TR:
       reassign:
         title: "Düzenle"
         title_w_ellipsis: "Atamayı düzenle..."
-        to_self: "Bana yeniden ata"
-        to_self_help: "Konuyu bana yeniden ata"
+        to_self: "Bana geri ata"
+        to_self_help: "Konuyu bana geri ata"
         help: "Atama bilgilerini düzenle"
       reassign_modal:
         title: "Konuyu yeniden ata"
@@ -68,7 +68,7 @@ tr_TR:
       assign_post_modal:
         title: "Gönderi ata"
       claim:
-        title: "talep"
+        title: "al"
         help: "Konuyu kendinize atayın"
       assign_mailer:
         never: "Asla"

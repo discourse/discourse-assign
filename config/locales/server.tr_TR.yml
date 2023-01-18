@@ -10,41 +10,42 @@ tr_TR:
     assigns_public: "Bütün kullanıcıların konu atamalarını görmesine izin ver"
     assigns_user_url_path: "Konuya atanan kullanıcılar (kullanıcı adını değiştirmek için {kullanıcıadı} kullanın)"
     assigns_by_staff_mention: "Bir moderatör başka bir moderatörden bahsederse, konu otomatik olarak atanır"
-    unassign_creates_tracking_post: "Bir konunun atamasını kaldırırsanız, değişikliği takip etmek için size fısıltı gönderilir"
-    assign_self_regex: "Kendi kendine atama yapılabilmesi için geçmesi gereken ifade. Örnek &#39;listem&#39;"
-    assign_other_regex: "Konuları başkalarına atamak için geçmesi gereken ifade. Örnek &#39;listeniz&#39;."
-    unassign_on_group_archive: "Bir mesaj bir grup tarafından arşivlendiğinde, mesajın atamasını kaldırın (tekrar gelen kutusuna taşınırsa yeniden ata)"
-    unassign_on_close: "Bir konu kapatıldığında konunun atamasını kaldır"
-    reassign_on_open: "Bir konu açıldığında önceden atanan kullanıcıları/grupları yeniden atayın"
-    assign_mailer: "Atamalar için e-posta bildirimi gönderildiğinde"
+    unassign_creates_tracking_post: "Bir konunun atamasını kaldırırsanız değişikliği izlemek için bir fısıltı veya küçük bir eylem oluşturulur"
+    assign_self_regex: "Kendi kendine atama için geçmesi gereken regex. Örnek \"listem\""
+    assign_other_regex: "Konuları bahsetme yoluyla başkalarına atamak için geçmesi gereken regex. Örnek \"listeniz\"."
+    unassign_on_group_archive: "Bir mesaj bir grup tarafından arşivlendiğinde, mesajın atamasını kaldırın (gelen kutusuna geri taşınırsa yeniden atayın)"
+    unassign_on_close: "Bir konu kapatıldığında konu atamasını kaldırın"
+    reassign_on_open: "Bir konu açıldığında önceden atanmış kullanıcıları/grupları yeniden atayın"
+    assign_mailer: "Atamalar için bildirim e-postasının ne zaman gönderileceği"
     remind_assigns: "Kullanıcılara bekleyen atamaları hatırlatın."
-    remind_assigns_frequency: "Kullanıcılara atanan konular hakkında hatırlatma sıklığı."
+    remind_assigns_frequency: "Kullanıcılara atanan konuları hatırlatma sıklığı."
     max_assigned_topics: "Bir kullanıcıya atanabilecek maksimum konu sayısı."
-    assign_allowed_on_groups: "Bu gruplardaki kullanıcılar konu atayabilir ve konulara atanabilir."
+    assign_allowed_on_groups: "Bu gruplardaki kullanıcılar konu atayabilir ve kendilerine konu atanabilir."
     enable_assign_status: "Her atamaya özelleştirilebilir bir durum alanı ekleyin."
     assign_statuses: "Her atama için kullanılabilir durumların listesi. İlk durum, her yeni atamaya uygulanan varsayılan durumdur."
     errors:
       assign_statuses:
-        too_few: "En az iki farklı durum mevcut olmalıdır."
+        too_few: "En az iki farklı durum mevcut olmalı."
         duplicate: "Yinelenen durum değerleri mevcut."
         removed_in_use: "Bu durumu kullanan mevcut atamalar varsa durum, listeden kaldırılamaz."
   discourse_assign:
     assigned_to: "@%{username} olarak atanan konu"
     unassigned: "Konu atanmadı"
-    already_claimed: "Bu konu zaten atandı."
-    already_assigned: "Konu zaten %{username}&#39;a atandı"
-    too_many_assigns: "@ %{username} zaten atanmış maksimum konu sayısına ulaştı (%{max})."
-    too_many_assigns_for_topic: "Konu başına %{limit} atama limitine ulaşıldı."
-    forbidden_assign_to: "%{username} atanan izin verilen gruplara ait olmadığı için atanamaz."
-    forbidden_assignee_not_pm_participant: "%{username} bu kişisel mesaja erişimi olmadığı için atanamaz. Onu bu kişisel mesaja davet ederek @%{username} adlı kullanıcıya erişim izni verebilirsiniz."
+    already_claimed: "Bu konu zaten alındı."
+    already_assigned: "Konu zaten @%{username} adlı kullanıcıya atanmış"
+    too_many_assigns: "@%{username} zaten maksimum atanmış konu sayısına ulaşmış (%{max})."
+    too_many_assigns_for_topic: "Konu başına %{limit} atama sınırına ulaşıldı."
+    forbidden_assign_to: "%{username} atanmış izin verilen gruplara ait olmadıkları için atanamaz."
+    forbidden_assignee_not_pm_participant: "@%{username} bu özel mesaja erişimi olmadığı için atanamaz. Bu özel mesaja davet ederek @%{username} erişim izni verebilirsiniz."
     forbidden_assignee_cant_see_topic: "%{username} bu konuya erişimi olmadığı için atanamaz."
     group_already_assigned: "Konu zaten @%{group} grubuna atanmış"
     forbidden_group_assign_to: "%{group} atanan izin verilen gruplara ait olmadığı için atanamaz."
     forbidden_group_assignee_not_pm_participant: "Tüm üyelerin bu kişisel mesaja erişimi olmadığından @%{group} atanamıyor."
     forbidden_group_assignee_cant_see_topic: "Tüm üyelerin bu konuya erişimi olmadığından @%{group} atanamıyor."
-    flag_assigned: "Maalesef, raporun konusu başka bir kullanıcıya atandı"
-    flag_unclaimed: "Raporlama yapmadan önce bu konuyu talep etmelisiniz"
-    topic_assigned_excerpt: "size &#39;%{title}&#39; konusunu atadı"
+    flag_assigned: "Üzgünüz, bu bayrağın konusu başka bir kullanıcıya atanmış"
+    flag_unclaimed: "Bayrak üzerinde işlem yapmadan önce o konuyu talep etmelisiniz"
+    topic_assigned_excerpt: "size \"%{title}\" konusunu atadı."
+    topic_group_assigned_excerpt: "\"%{title}\" konusunu @%{group} adlı gruba atadı"
     reminders_frequency:
       never: "asla"
       daily: "günlük"
@@ -53,24 +54,24 @@ tr_TR:
       quarterly: "üç aylık"
   assign_mailer:
     title: "E-posta Göndericisi Ata"
-    subject_template: "[%{email_prefix}] %{assignee_name} sizi &#39;%{topic_title}&#39; a atadı!"
+    subject_template: "[%{email_prefix}] %{assignee_name} sizi \"%{topic_title}\" konusuna atadı!"
     text_body_template: |
-      Hey,%{assignee_name}sizi bir tartışmaya **atadı**
-      >**%{topic_title}**
+      Merhaba, %{assignee_name} sizi bir tartışmaya **atadı**
+      > **%{topic_title}**
       >
-      >%{topic_excerpt}
+      > %{topic_excerpt}
 
-      Eğer ilgileniyorsanız,aşağıdaki linke tıklayın:
-      [%{topic_link}][%{topic_link}]
+      İlgileniyorsanız aşağıdaki bağlantıya tıklayın:
+      [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
-    title: "Bekleyen %{pending_assignments} atamanız var"
+    title: "%{pending_assignments} bekleyen atamanız var"
     body: |
-      Şuan [%{pending_assignments} atamasına] sahipsiniz. (%{assignments_link}).
+      Şu anda [%{pending_assignments} bekleyen atamanız var](%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}
 
-      Eğer birden fazla atanmış konunuz varsa hatırlatıcı sizin için %{frequency} sıklığında çalışacak.
+      Birden fazla atanmış konunuz varsa bu hatırlatma %{frequency} adresine gönderilir.
     newest: |
       ### En yeni
       %{topic_0}
