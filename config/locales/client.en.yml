@@ -59,6 +59,7 @@ en:
         note_label: Note
         optional_label: "(optional)"
         status_label: Status
+        suggestions: suggestions
       assign_post_modal:
         title: "Assign Post"
       claim:

@@ -94,6 +94,27 @@
     .identifier {
       margin-right: 0.5rem;
     }
+
+    .user-status-message {
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      margin-left: 0.5em;
+
+      .emoji {
+        height: var(--font-up-1);
+        width: var(--font-up-1);
+      }
+    }
+
+    .suggestions-label {
+      color: var(--primary-low-mid);
+      font-size: var(--font-down-2);
+      font-weight: bold;
+      margin-left: auto;
+      margin-right: -0.25em;
+      margin-top: -1em;
+      text-transform: uppercase;
+    }
   }
 
   .control-group.assignee-error {
