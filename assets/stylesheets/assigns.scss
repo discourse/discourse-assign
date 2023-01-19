@@ -83,6 +83,19 @@
   .email-group-user-chooser {
     width: 100%;
 
+    .select-kit-header {
+      outline: 0 !important;
+    }
+    .select-kit-body {
+      position: absolute !important;
+      transform: none !important;
+      max-width: 100%;
+    }
+
+    &-filter.is-expanded {
+      border: 1px solid var(--tertiary);
+    }
+
     .caret-icon {
       color: var(--primary-medium);
     }
@@ -96,6 +109,9 @@
     }
 
     .user-status-message {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       color: var(--primary-medium);
       font-size: var(--font-down-2);
       margin-left: 0.5em;
