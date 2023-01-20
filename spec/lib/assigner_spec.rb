@@ -189,8 +189,11 @@ RSpec.describe Assigner do
       it "doesn't assign if the topic has more than 5 assignments" do
         other_post = nil
 
+        status = described_class.new(topic, admin).assign(Fabricate(:moderator))
+        expect(status[:success]).to eq(true)
+
         # Assign many posts to reach the limit
-        1.upto(described_class::ASSIGNMENTS_PER_TOPIC_LIMIT) do
+        1.upto(described_class::ASSIGNMENTS_PER_TOPIC_LIMIT - 1) do
           other_post = Fabricate(:post, topic: topic)
           user = Fabricate(:moderator)
           status = described_class.new(other_post, admin).assign(user)
@@ -202,6 +205,10 @@ RSpec.describe Assigner do
         status = described_class.new(post, admin).assign(moderator)
         expect(status[:success]).to eq(false)
         expect(status[:reason]).to eq(:too_many_assigns_for_topic)
+
+        # Allows to reassign Topic
+        status = described_class.new(topic, admin).assign(Fabricate(:moderator))
+        expect(status[:success]).to eq(true)
 
         # Delete a post to mark the assignment as inactive
         PostDestroyer.new(admin, other_post).destroy

@@ -71,11 +71,13 @@ end
 #  target_type         :string           not null
 #  active              :boolean          default(TRUE)
 #  note                :string
+#  status              :text
 #
 # Indexes
 #
 #  index_assignments_on_active                               (active)
 #  index_assignments_on_assigned_to_id_and_assigned_to_type  (assigned_to_id,assigned_to_type)
 #  index_assignments_on_target_id_and_target_type            (target_id,target_type) UNIQUE
+#  index_assignments_on_topic_id                             (topic_id)
 #  unique_target_and_assigned                                (assigned_to_id,assigned_to_type,target_id,target_type) UNIQUE
 #
