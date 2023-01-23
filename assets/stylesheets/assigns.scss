@@ -87,6 +87,12 @@
       color: var(--primary-medium);
     }
 
+    .user-wrapper {
+      display: flex;
+      align-items: flex-end;
+      line-height: var(--line-height-small);
+    }
+
     .name {
       display: contents;
     }
@@ -96,23 +102,23 @@
     }
 
     .user-status-message {
-      color: var(--primary-medium);
       font-size: var(--font-down-2);
       margin-left: 0.5em;
 
       .emoji {
-        height: var(--font-up-1);
-        width: var(--font-up-1);
+        height: var(--font-0);
+        width: var(--font-0);
       }
     }
 
     .suggestions-label {
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 0.25em 0.25em 0 0;
       color: var(--primary-low-mid);
-      font-size: var(--font-down-2);
+      font-size: var(--font-down-3);
       font-weight: bold;
-      margin-left: auto;
-      margin-right: -0.25em;
-      margin-top: -1em;
       text-transform: uppercase;
     }
   }
