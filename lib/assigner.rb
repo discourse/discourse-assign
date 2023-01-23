@@ -213,7 +213,8 @@ class ::Assigner
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
     when already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
-    when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT
+    when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT &&
+           !reassign?
       :too_many_assigns_for_topic
     when !can_assign_to?(assign_to)
       :too_many_assigns
@@ -530,6 +531,11 @@ class ::Assigner
     end
 
     false
+  end
+
+  def reassign?
+    return false if !@target.is_a?(Topic)
+    Assignment.exists?(topic_id: @target.id, target: @target, active: true)
   end
 
   def no_assignee_change?(assignee)
