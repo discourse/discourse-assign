@@ -65,6 +65,7 @@ he:
         note_label: הערה
         optional_label: "(רשות)"
         status_label: מצב
+        suggestions: הצעות
       assign_post_modal:
         title: "הקצאת פוסט"
       claim:
