@@ -21,6 +21,7 @@ fa_IR:
         note_label: یادداشت
         optional_label: "(اختیاری)"
         status_label: وضعیت
+        suggestions: پیشنهادها
       assign_mailer:
         never: "هیچ‌وقت"
         always: "همیشه"
