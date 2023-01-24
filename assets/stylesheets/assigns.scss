@@ -71,6 +71,10 @@
     width: 400px;
   }
 
+  .assign.modal-body {
+    overflow-y: unset;
+  }
+
   label {
     font-weight: bold;
 
@@ -104,6 +108,7 @@
       display: flex;
       align-items: flex-end;
       line-height: var(--line-height-small);
+      overflow: hidden;
     }
 
     .name {
