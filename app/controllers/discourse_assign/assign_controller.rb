@@ -289,7 +289,7 @@ module DiscourseAssign
         .where("ucf.name is NULL")
         .assign_allowed
         .order("X.last_assigned DESC")
-        .limit(6)
+        .limit(5)
     end
   end
 end
