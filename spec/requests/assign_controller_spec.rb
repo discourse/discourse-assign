@@ -98,13 +98,13 @@ RSpec.describe DiscourseAssign::AssignController do
   describe "#suggestions" do
     before { sign_in(user) }
 
-    it "suggests the current user + the last 6 previously assigned users" do
+    it "suggests the current user + the last 5 previously assigned users" do
       assignees = 10.times.map { |_| assign_user_to_post.username }
 
       get "/assign/suggestions.json"
 
       suggestions = response.parsed_body["suggestions"].map { |u| u["username"] }
-      expect(suggestions).to contain_exactly(user.username, *assignees[4..9])
+      expect(suggestions).to contain_exactly(user.username, *assignees[5..9])
     end
 
     it "doesn't suggest users on holiday" do
