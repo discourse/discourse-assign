@@ -306,10 +306,9 @@ after_initialize do
             topic_assignments&.find { |assignment| assignment.target_type == "Topic" }
           indirect_assignments =
             topic_assignments&.select { |assignment| assignment.target_type == "Post" }
-          if direct_assignment
-            assigned_to = direct_assignment.assigned_to
-            post.topic.preload_assigned_to(assigned_to)
-          end
+
+          post.topic.preload_assigned_to(direct_assignment&.assigned_to)
+          post.topic.preload_indirectly_assigned_to(nil)
           if indirect_assignments.present?
             indirect_assignment_map =
               indirect_assignments.reduce({}) do |acc, assignment|
