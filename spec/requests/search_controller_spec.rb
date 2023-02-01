@@ -37,4 +37,21 @@ describe SearchController do
     expect(assigned_to_group_data["assign_icon"]).to eq("group-plus")
     expect(assigned_to_group_data["assign_path"]).to eq("/g/#{group.name}/assigned/everyone")
   end
+
+  it "does not result in N+1 queries when search returns multiple results" do
+    SearchIndexer.enable
+    SiteSetting.assigns_public = true
+    post = Fabricate(:post, topic: Fabricate(:topic, title: "this is an awesome title"))
+
+    get "/search/query.json", params: { term: "awesome" }
+
+    initial_sql_queries_count =
+      track_sql_queries { get "/search/query.json", params: { term: "awesome" } }.count
+
+    Fabricate(:post, topic: Fabricate(:topic, title: "this is an awesome title 2"))
+    Fabricate(:post, topic: Fabricate(:topic, title: "this is an awesome title 3"))
+    new_sql_queries_count =
+      track_sql_queries { get "/search/query.json", params: { term: "awesome" } }.count
+    expect(new_sql_queries_count).to eq(initial_sql_queries_count)
+  end
 end
