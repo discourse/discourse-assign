@@ -42,25 +42,16 @@ describe SearchController do
     SearchIndexer.enable
     SiteSetting.assigns_public = true
     post = Fabricate(:post, topic: Fabricate(:topic, title: "this is an awesome title"))
-    post_2 = Fabricate(:post, topic: Fabricate(:topic, title: "this is an awesome title 2"))
-
-    topic = Fabricate(:topic, title: "this is an awesome title 3")
-    post_3 = Fabricate(:post, topic: topic)
 
     get "/search/query.json", params: { term: "awesome" }
 
-    Assigner.new(post.topic, admin).assign(group)
-    Assigner.new(post_2.topic, admin).assign(group)
-    Assigner.new(post_3.topic, admin).assign(group)
     initial_sql_queries_count =
       track_sql_queries { get "/search/query.json", params: { term: "awesome" } }.count
 
-    Assigner.new(post.topic, admin).unassign
-    Assigner.new(post_2.topic, admin).unassign
-    Assigner.new(post_3.topic, admin).unassign
+    Fabricate(:post, topic: Fabricate(:topic, title: "this is an awesome title 2"))
+    Fabricate(:post, topic: Fabricate(:topic, title: "this is an awesome title 3"))
     new_sql_queries_count =
       track_sql_queries { get "/search/query.json", params: { term: "awesome" } }.count
-
-    expect(new_sql_queries_count).to be <= initial_sql_queries_count
+    expect(new_sql_queries_count).to eq(initial_sql_queries_count)
   end
 end
