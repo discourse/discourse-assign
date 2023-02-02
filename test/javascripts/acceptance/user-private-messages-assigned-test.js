@@ -3,7 +3,7 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { currentURL, visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -27,17 +27,6 @@ acceptance("User Private Messages | Discourse Assign", function (needs) {
   });
 
   test("viewing assigned messages", async function (assert) {
-    await visit("/u/eviltrout/messages");
-    await click(".assigned-messages a");
-
-    assert.strictEqual(
-      currentURL(),
-      "/u/eviltrout/messages/assigned",
-      "transitioned to the assigned page"
-    );
-  });
-
-  test("viewing assigned messages when redesigned user page nav has been enabled", async function (assert) {
     updateCurrentUser({ redesigned_user_page_nav_enabled: true });
 
     await visit("/u/eviltrout/messages");
