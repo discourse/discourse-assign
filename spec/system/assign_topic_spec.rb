@@ -30,6 +30,24 @@ describe "Assign | Assigning topics", type: :system, js: true do
       expect(page).to have_no_css("#topic .assigned-to")
     end
 
+    context "when assigns are not public" do
+      before { SiteSetting.assigns_public = false }
+
+      it "assigned small action post has 'private-assign' in class attribute" do
+        visit "/t/#{topic.id}"
+
+        topic_page.click_assign_topic
+        assign_modal.assignee = staff_user
+        assign_modal.confirm
+
+        expect(topic_page).to have_assigned(
+          user: staff_user,
+          at_post: 2,
+          class_attribute: ".private-assign",
+        )
+      end
+    end
+
     context "when unassign_on_close is set to true" do
       before { SiteSetting.unassign_on_close = true }
 
