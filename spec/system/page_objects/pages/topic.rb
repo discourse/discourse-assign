@@ -27,7 +27,10 @@ module PageObjects
 
       def has_assignment_action?(args)
         assignee = args[:group]&.name || args[:user]&.username
-        container = args[:at_post] ? find("#post_#{args[:at_post]}") : page
+
+        container =
+          args[:at_post] ? find("#post_#{args[:at_post]}#{args[:class_attribute] || ""}") : page
+
         container.has_content?(
           I18n.t("js.action_codes.#{args[:action]}", who: "@#{assignee}", when: "just now"),
         )

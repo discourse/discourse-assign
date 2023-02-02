@@ -489,6 +489,12 @@ function initialize(api) {
     }
   }
 
+  api.addPostSmallActionClassesCallback((post) => {
+    if (post.actionCode.includes("assigned") && !siteSettings.assigns_public) {
+      return ["private-assign"];
+    }
+  });
+
   api.addAdvancedSearchOptions(
     api.getCurrentUser() && api.getCurrentUser().can_assign
       ? {
