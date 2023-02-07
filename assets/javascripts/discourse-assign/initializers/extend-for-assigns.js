@@ -650,9 +650,8 @@ function initialize(api) {
               ? `href="${getURL(assignedPath)}" data-auto-route="true"`
               : "";
           return `<${tagName} class="assigned-to discourse-tag simple" ${href}>
-        ${icon}
-        <span title="${escapeExpression(note)}">${name}</span>
-      </${tagName}>`;
+                  ${icon}<span title="${escapeExpression(note)}">${name}</span>
+                  </${tagName}>`;
         })
         .join("");
     }
