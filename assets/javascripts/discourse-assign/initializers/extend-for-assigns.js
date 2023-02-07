@@ -649,9 +649,9 @@ function initialize(api) {
             tagName === "a"
               ? `href="${getURL(assignedPath)}" data-auto-route="true"`
               : "";
-          return `<${tagName} class="assigned-to discourse-tag simple" ${href}>
-                  ${icon}<span title="${escapeExpression(note)}">${name}</span>
-                  </${tagName}>`;
+          return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
+            note
+          )}">${name}</span></${tagName}>`;
         })
         .join("");
     }
