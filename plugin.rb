@@ -14,72 +14,78 @@ register_asset "stylesheets/mobile/assigns.scss", :mobile
 
 %w[user-plus user-times group-plus group-times].each { |i| register_svg_icon(i) }
 
-load File.expand_path("../lib/discourse_assign/engine.rb", __FILE__)
-load File.expand_path("../lib/discourse_assign/helpers.rb", __FILE__)
-load File.expand_path("../lib/validators/assign_statuses_validator.rb", __FILE__)
-load File.expand_path("../lib/discourse_calendar.rb", __FILE__)
-
-Discourse::Application.routes.append do
-  mount ::DiscourseAssign::Engine, at: "/assign"
-  get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
-      :as => "topics_private_messages_assigned",
-      :constraints => {
-        username: ::RouteFormat.username,
-      }
-  get "/topics/messages-assigned/:username" => "list#messages_assigned",
-      :constraints => {
-        username: ::RouteFormat.username,
-      },
-      :as => "messages_assigned"
-  get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned",
-      :constraints => {
-        username: ::RouteFormat.username,
-      },
-      :as => "group_topics_assigned"
-  get "/g/:id/assigned" => "groups#index"
-  get "/g/:id/assigned/:route_type" => "groups#index"
-end
+require_relative "app/models/assign_mailer_site_settings.rb"
+require_relative "app/models/remind_assigns_frequency_site_settings.rb"
+require_relative "lib/validators/assign_statuses_validator.rb"
 
 after_initialize do
-  require File.expand_path("../jobs/scheduled/enqueue_reminders.rb", __FILE__)
-  require File.expand_path("../jobs/regular/remind_user.rb", __FILE__)
-  require File.expand_path("../jobs/regular/assign_notification.rb", __FILE__)
-  require File.expand_path("../jobs/regular/unassign_notification.rb", __FILE__)
-  require "topic_assigner"
-  require "assigner"
-  require "pending_assigns_reminder"
+  module ::DiscourseAssign
+    PLUGIN_NAME = "discourse-assign"
+
+    class Engine < ::Rails::Engine
+      engine_name DiscourseAssign::PLUGIN_NAME
+      isolate_namespace DiscourseAssign
+    end
+  end
+
+  require_relative "app/controllers/discourse_assign/assign_controller.rb"
+  require_relative "app/mailers/assign_mailer.rb"
+  require_relative "app/models/assign_mailer_site_settings.rb"
+  require_relative "app/models/assignment.rb"
+  require_relative "app/models/remind_assigns_frequency_site_settings.rb"
+  require_relative "app/serializers/assigned_group_serializer.rb"
+  require_relative "app/serializers/assigned_topic_serializer.rb"
+  require_relative "app/serializers/group_user_assigned_serializer.rb"
+  require_relative "config/routes.rb"
+  require_relative "jobs/regular/assign_notification.rb"
+  require_relative "jobs/regular/remind_user.rb"
+  require_relative "jobs/regular/unassign_notification.rb"
+  require_relative "jobs/scheduled/enqueue_reminders.rb"
+  require_relative "lib/assigner.rb"
+  require_relative "lib/discourse_assign/discourse_calendar.rb"
+  require_relative "lib/discourse_assign/group_extension.rb"
+  require_relative "lib/discourse_assign/helpers.rb"
+  require_relative "lib/discourse_assign/list_controller_extension.rb"
+  require_relative "lib/discourse_assign/post_extension.rb"
+  require_relative "lib/discourse_assign/topic_extension.rb"
+  require_relative "lib/discourse_assign/web_hook_extension.rb"
+  require_relative "lib/pending_assigns_reminder.rb"
+  require_relative "lib/random_assign_utils.rb"
+  require_relative "lib/topic_assigner.rb"
+  require_relative "lib/validators/assign_statuses_validator.rb"
+
+  Discourse::Application.routes.append do
+    mount ::DiscourseAssign::Engine, at: "/assign"
+
+    get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
+        :as => "topics_private_messages_assigned",
+        :constraints => {
+          username: ::RouteFormat.username,
+        }
+    get "/topics/messages-assigned/:username" => "list#messages_assigned",
+        :constraints => {
+          username: ::RouteFormat.username,
+        },
+        :as => "messages_assigned"
+    get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned",
+        :constraints => {
+          username: ::RouteFormat.username,
+        },
+        :as => "group_topics_assigned"
+    get "/g/:id/assigned" => "groups#index"
+    get "/g/:id/assigned/:route_type" => "groups#index"
+  end
+
+  reloadable_patch do |plugin|
+    Group.class_eval { prepend DiscourseAssign::GroupExtension }
+    Post.class_eval { prepend DiscourseAssign::PostExtension }
+    Topic.class_eval { prepend DiscourseAssign::TopicExtension }
+    WebHook.class_eval { prepend DiscourseAssign::WebHookExtension }
+  end
 
   register_group_param(:assignable_level)
   register_groups_callback_for_users_search_controller_action(:assignable_groups) do |groups, user|
     groups.assignable(user)
-  end
-
-  reloadable_patch do |plugin|
-    class ::Topic
-      has_one :assignment, as: :target, dependent: :destroy
-    end
-
-    class ::Post
-      has_one :assignment, as: :target, dependent: :destroy
-    end
-
-    class ::Group
-      scope :assignable,
-            ->(user) {
-              where(
-                "assignable_level in (:levels) OR
-            (
-              assignable_level = #{ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
-              SELECT group_id FROM group_users WHERE user_id = :user_id)
-            ) OR (
-              assignable_level = #{ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
-              SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
-            )",
-                levels: alias_levels(user),
-                user_id: user && user.id,
-              )
-            }
-    end
   end
 
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
@@ -328,7 +334,6 @@ after_initialize do
   end
 
   # TopicQuery
-  require_dependency "topic_query"
   TopicQuery.add_custom_filter(:assigned) do |results, topic_query|
     name = topic_query.options[:assigned]
     next results if name.blank?
@@ -449,11 +454,6 @@ after_initialize do
   end
 
   # ListController
-  require_dependency "list_controller"
-  class ::ListController
-    generate_message_route(:private_messages_assigned)
-  end
-
   add_to_class(:list_controller, :messages_assigned) do
     user = User.find_by_username(params[:username])
     raise Discourse::NotFound unless user
@@ -921,12 +921,6 @@ after_initialize do
     end
   end
 
-  class ::WebHook
-    def self.enqueue_assign_hooks(event, payload)
-      WebHook.enqueue_hooks(:assign, event, payload: payload) if active_web_hooks("assign").exists?
-    end
-  end
-
   register_search_advanced_filter(/in:assigned/) do |posts|
     posts.where(<<~SQL) if @guardian.can_assign?
         topics.id IN (
@@ -962,8 +956,6 @@ after_initialize do
   end
 
   if defined?(DiscourseAutomation)
-    require "random_assign_utils"
-
     add_automation_scriptable("random_assign") do
       field :assignees_group, component: :group, required: true
       field :assigned_topic, component: :text, required: true
