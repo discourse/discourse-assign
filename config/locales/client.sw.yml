@@ -6,20 +6,30 @@
 
 sw:
   js:
+    action_codes:
+      assigned: "%{who}Amepewa %{when}"
+      assigned_group: "%{who}Amepewa %{when}"
+      unassigned: "%{who}Hajakabidhiwa %{when}"
+      unassigned_group: "%{who}Hajakabidhiwa %{when}"
     discourse_assign:
       cant_act: "Hauwezi kutumia bendera ambazo zimeshatumiwa na watu wengine"
       cant_act_unclaimed: "Lazima uimiliki mada kabla ya kuweka bendera."
       assigned: "Kukabidhi"
       group_everyone: "Kila Mtu"
       assigned_to: "Imekabidhiwa kwa"
+      assigned_to_w_ellipsis: "Imekabidhiwa kwa..."
       unassign:
         title: "Haijakabithiwa"
+        title_w_ellipsis: "Haijakabithiwa..."
       assign:
         title: "Kabidhi"
         help: "Pangia Mada kwa Mtumiaji"
+      reassign:
+        title: "Hariri"
       assign_modal:
         title: "Awadha Mada"
         assign: "Kabidhi"
+        optional_label: "(sio muhimu)"
       claim:
         title: "Miliki"
         help: "Jipe Mada"
@@ -32,7 +42,19 @@ sw:
         weekly: "Kila wiki"
         monthly: "Klla mwezi"
         quarterly: "Kila baada ya miezi mitatu"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Kabidhi"
     user:
       messages:
         assigned_title: "Amekabidhiwa (%{count})"
         assigned: "Imekabidhiwa"
+    search:
+      advanced:
+        assigned:
+          label: "Imekabidhiwa kwa"
+    notifications:
+      titles:
+        assigned: "Kukabidhi"

@@ -8,6 +8,11 @@ bg:
   js:
     discourse_assign:
       group_everyone: "Всички"
+      reassign:
+        title: "Редактирай"
+      assign_modal:
+        optional_label: "(по избор)"
+        status_label: Статус
       assign_mailer:
         never: "Никога"
         always: "Винаги"

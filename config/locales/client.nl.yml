@@ -11,8 +11,19 @@ nl:
         title: "Niet toegewezen"
         help: "Topics die niet zijn toegewezen"
     action_codes:
+      assigned: "Heeft %{who} toegewezen op %{when}"
+      assigned_group: "Heeft %{who} toegewezen op %{when}"
+      assigned_to_post: "Heeft %{who} toegewezen aan <a href='%{path}'>bericht</a> op %{when}"
+      assigned_group_to_post: "Heeft %{who} toegewezen aan <a href='%{path}'>bericht</a> op %{when}"
+      unassigned: "Heeft de toewijzing aan %{who} opgeheven op %{when}"
+      unassigned_group: "Heeft de toewijzing aan %{who} opgeheven op %{when}"
+      unassigned_from_post: "Heeft de toewijzing van %{who} aan <a href='%{path}'>bericht</a> opgeheven op %{when}"
+      unassigned_group_from_post: "Heeft de toewijzing van %{who} aan <a href='%{path}'>bericht</a> opgeheven op %{when}"
       reassigned: "heeft %{who} opnieuw toegewezen op %{when}"
       reassigned_group: "heeft %{who} opnieuw toegewezen op %{when}"
+      details_change: "Heeft de toewijzingsdetails voor %{who} gewijzigd op %{when}"
+      note_change: "Heeft de toewijzingsopmerking voor %{who} gewijzigd op %{when}"
+      status_change: "Heeft de toewijzingsstatus voor %{who} gewijzigd op %{when}"
     discourse_assign:
       add_unassigned_filter: "Filter 'niet toegewezen' toevoegen aan categorie"
       cant_act: "Je kunt geen actie ondernemen voor markeringen die aan andere gebruikers zijn toegewezen"
@@ -50,6 +61,7 @@ nl:
         reassign_title: "Topic opnieuw toewijzen"
         assign: "Toewijzen"
         note_label: Opmerking
+        optional_label: "(optioneel)"
         status_label: Status
       assign_post_modal:
         title: "Bericht toewijzen"

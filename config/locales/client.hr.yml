@@ -9,6 +9,11 @@ hr:
     discourse_assign:
       sidebar_name_filter_placeholder: "Ime/korisnički nadimak"
       group_everyone: "Svi"
+      reassign:
+        title: "Uredi"
+      assign_modal:
+        optional_label: "(opcionalno)"
+        status_label: Statust
       assign_mailer:
         never: "Nikada"
         always: "Uvijek"
@@ -18,3 +23,5 @@ hr:
         weekly: "Tjedno"
         monthly: "Mjesečno"
         quarterly: "Tromjesečno"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"

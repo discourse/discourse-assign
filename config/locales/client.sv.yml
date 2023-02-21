@@ -11,8 +11,19 @@ sv:
         title: "Otilldelat"
         help: "Ämnen som inte är tilldelade"
     action_codes:
+      assigned: "Tilldelat %{who} %{when}"
+      assigned_group: "Tilldelat %{who} %{when}"
+      assigned_to_post: "Tilldelat %{who} för <a href='%{path}'>inlägg</a> %{when}"
+      assigned_group_to_post: "Tilldelat %{who} för <a href='%{path}'>inlägg</a> %{when}"
+      unassigned: "Otilldelat %{who} %{when}"
+      unassigned_group: "Otilldelat %{who} %{when}"
+      unassigned_from_post: "Otilldelat %{who} från <a href='%{path}'>inlägg</a> %{when}"
+      unassigned_group_from_post: "Otilldelat %{who} från <a href='%{path}'>inlägg</a> %{when}"
       reassigned: "Omtilldelad %{who} %{when}"
       reassigned_group: "Omtilldelad %{who} %{when}"
+      details_change: "Ändrade tilldelningsdetaljer för %{who} %{when}"
+      note_change: "Ändrade tilldelningsanteckning för %{who} %{when}"
+      status_change: "Ändrad tilldelningsstatus för %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Lägg till 'otilldelat' som en filterkategori"
       cant_act: "Du kan inte agera på flaggor som har tilldelats andra användare"
@@ -50,6 +61,7 @@ sv:
         reassign_title: "Tilldela om ämne"
         assign: "Tilldela"
         note_label: Anteckning
+        optional_label: "(valfri)"
         status_label: Status
       assign_post_modal:
         title: "Tilldela inlägg"

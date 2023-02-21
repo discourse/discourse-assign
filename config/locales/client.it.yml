@@ -11,8 +11,19 @@ it:
         title: "Non assegnato"
         help: "Argomenti non assegnati"
     action_codes:
+      assigned: "Assegnato a %{who} %{when}"
+      assigned_group: "Assegnato a %{who} %{when}"
+      assigned_to_post: "Assegnato %{who} al <a href='%{path}'>messaggio</a> %{when}"
+      assigned_group_to_post: "Assegnato %{who} al <a href='%{path}'>messaggio</a> %{when}"
+      unassigned: "Assegnazione a %{who} %{when} annullata"
+      unassigned_group: "Assegnazione a %{who} %{when} annullata"
+      unassigned_from_post: "Assegnazione a %{who} del <a href='%{path}' data-auto-route='true'>messaggio</a> annullata %{when}"
+      unassigned_group_from_post: "Assegnazione a %{who} del <a href='%{path}' data-auto-route='true'>messaggio</a> annullata %{when}"
       reassigned: "Riassegnato a %{who} %{when}"
       reassigned_group: "Riassegnato a %{who} %{when}"
+      details_change: "Dettagli di assegnazione modificati per %{who} %{when}"
+      note_change: "Nota di assegnazione modificata per %{who} %{when}"
+      status_change: "Stato di assegnazione modificato per %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Aggiungi il filtro 'non assegnato' alla categoria"
       cant_act: "Non puoi intervenire su segnalazioni assegnate ad altri utenti"
@@ -50,6 +61,7 @@ it:
         reassign_title: "Riassegna argomento"
         assign: "Assegna"
         note_label: Nota
+        optional_label: "(opzionale)"
         status_label: Stato
       assign_post_modal:
         title: "Assegna messaggio"

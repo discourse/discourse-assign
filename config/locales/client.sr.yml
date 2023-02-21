@@ -8,6 +8,8 @@ sr:
   js:
     discourse_assign:
       group_everyone: "Svi"
+      reassign:
+        title: "Izmeni"
       assign_mailer:
         never: "Nikada"
         always: "Uvek"

@@ -8,6 +8,11 @@ bs_BA:
   js:
     discourse_assign:
       group_everyone: "Svatko"
+      reassign:
+        title: "Edit"
+      assign_modal:
+        optional_label: "(opciono)"
+        status_label: Status
       assign_mailer:
         never: "Nikad"
         always: "Uvijek"
@@ -17,3 +22,5 @@ bs_BA:
         weekly: "Popularne Sedmično"
         monthly: "Popularne Mjesečno"
         quarterly: "Kvartalno"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"

@@ -8,6 +8,11 @@ id:
   js:
     discourse_assign:
       group_everyone: "Semua orang"
+      reassign:
+        title: "Ubah"
+      assign_modal:
+        optional_label: "(opsional)"
+        status_label: Status
       assign_mailer:
         never: "Tidak pernah"
         always: "Selalu"

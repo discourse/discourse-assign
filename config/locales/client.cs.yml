@@ -6,17 +6,25 @@
 
 cs:
   js:
+    action_codes:
+      assigned: "Zadáno %{who} %{when}"
+      assigned_group: "Zadáno %{who} %{when}"
     discourse_assign:
       assigned: "Zadáno"
       group_everyone: "Všichni"
       unassign:
         title: "Odebrat zadání"
+        title_w_ellipsis: "Odebrat zadání..."
       assign:
         title: "Zadání"
         help: "Zadat téma uživateli"
+      reassign:
+        title: "Upravit"
       assign_modal:
         title: "Zadat téma"
         assign: "Zadat"
+        optional_label: "(volitelné)"
+        status_label: Stav
       claim:
         help: "Zadat téme sobě"
       assign_mailer:
@@ -28,6 +36,15 @@ cs:
         weekly: "Týdně"
         monthly: "Měsíčně"
         quarterly: "Čtvrtletně"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Zadání"
     user:
       messages:
+        assigned: "Zadáno"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
         assigned: "Zadáno"

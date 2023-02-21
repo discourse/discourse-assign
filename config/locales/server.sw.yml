@@ -23,6 +23,8 @@ sw:
       never: "kamwe"
       daily: "kila siku"
       weekly: "kila wiki"
+      monthly: "klla mwezi"
+      quarterly: "kila baada ya miezi mitatu"
   assign_mailer:
     subject_template: "[%{email_prefix}] %{assignee_name} amekukabidhi '%{topic_title}'!"
     text_body_template: |

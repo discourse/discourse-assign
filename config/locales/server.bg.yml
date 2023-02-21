@@ -10,3 +10,5 @@ bg:
       never: "никога"
       daily: "дневно"
       weekly: "седмично"
+      monthly: "месечно"
+      quarterly: "тримесечно"

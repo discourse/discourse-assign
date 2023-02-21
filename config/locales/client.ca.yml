@@ -10,22 +10,34 @@ ca:
       unassigned:
         title: "No assignat"
         help: "Temes que no estan assignats"
+    action_codes:
+      assigned: "Assignat %{who} %{when}"
+      assigned_group: "Assignat %{who} %{when}"
+      unassigned: "Desassignat %{who} %{when}"
+      unassigned_group: "Desassignat %{who} %{when}"
     discourse_assign:
       cant_act: "No podeu actuar sobre banderes assignades a altres usuaris."
       cant_act_unclaimed: "Cal reclamar el tema abans d'actuar sobre les banderes"
       assigned: "Assignat"
       group_everyone: "Tothom"
       assigned_to: "Assignat a"
+      assigned_to_w_ellipsis: "Assignat a..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Desassigna"
+        title_w_ellipsis: "Desassigna..."
         help: "Desassigna %{username} del tema"
       assign:
         title: "Assigna"
         help: "Assigna el tema a l'usuari"
+      reassign:
+        title: "Edita"
       assign_modal:
         title: "Assigna el tema"
         assign: "Assigna"
+        optional_label: "(opcional)"
+        status_label: Estat
       claim:
         title: "reclama"
         help: "Assigneu-vos el tema"
@@ -39,7 +51,20 @@ ca:
         weekly: "Setmanalment"
         monthly: "Mensualment"
         quarterly: "Trimestralment"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Assigna"
     user:
       messages:
         assigned_title: "Assignats (%{count})"
         assigned: "Assignats"
+    search:
+      advanced:
+        assigned:
+          label: "Assignat a"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Assignat"

@@ -8,6 +8,11 @@ sl:
   js:
     discourse_assign:
       group_everyone: "Vsi"
+      reassign:
+        title: "Uredi"
+      assign_modal:
+        optional_label: "(neobvezno)"
+        status_label: Stanje
       assign_mailer:
         never: "Nikoli"
         always: "Vedno"
@@ -17,3 +22,5 @@ sl:
         weekly: "Tedensko"
         monthly: "Mesečno"
         quarterly: "V četrtletju"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"

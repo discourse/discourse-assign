@@ -10,3 +10,5 @@ fa_IR:
       never: "هیچ‌وقت"
       daily: "روزانه"
       weekly: "هفتگی"
+      monthly: "ماهیانه"
+      quarterly: "فصلی"

@@ -6,9 +6,19 @@
 
 lt:
   js:
+    action_codes:
+      assigned: "Priskirta %{who}%{when}"
+      assigned_group: "Priskirta %{who}%{when}"
+      unassigned: "Nepriskirta %{who}%{when}"
+      unassigned_group: "Nepriskirta %{who}%{when}"
     discourse_assign:
       assigned: "Priskirta"
       group_everyone: "Visi"
+      reassign:
+        title: "Redaguoti"
+      assign_modal:
+        optional_label: "(pasoronktinai)"
+        status_label: Statusas
       assign_mailer:
         never: "Niekada"
         always: "Visada"
@@ -20,4 +30,8 @@ lt:
         quarterly: "Kas ketvirtį"
     user:
       messages:
+        assigned: "Priskirta"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
         assigned: "Priskirta"

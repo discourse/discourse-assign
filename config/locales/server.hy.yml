@@ -20,6 +20,7 @@ hy:
     unassigned: "Թեմայի վերագրումը ետկանչված է"
     already_claimed: "Այդ թեման արդեն պահանջված է:"
     already_assigned: "Թեման արդեն վերագրված է @%{username} -ին"
+    group_already_assigned: "Թեման արդեն վերագրված է @%{group} -ին"
     flag_assigned: "Ներողություն, այդ դրոշակի թեման վերագրված է մեկ այլ օգտատիրոջ"
     flag_unclaimed: "Դուք պետք է պահանջեք այդ թեման՝ մինչ դրոշի հետ որևէ գործողություն ձեռնարկելը:"
     topic_assigned_excerpt: "վերագրել է Ձեզ '%{title}' թեմային"
@@ -27,6 +28,8 @@ hy:
       never: "երբեք"
       daily: "օրը մեկ"
       weekly: "շաբաթական"
+      monthly: "ամսվա Ընթացքում"
+      quarterly: "եռամսյակի Ընթացքում"
   assign_mailer:
     title: "Վերագրել Ուղարկողին"
     subject_template: "[%{email_prefix}] %{assignee_name} -ը վերագրել է Ձեզ '%{topic_title}'!"

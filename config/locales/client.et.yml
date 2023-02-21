@@ -10,13 +10,19 @@ et:
       assigned: "Määratud"
       group_everyone: "Kõik"
       assigned_to: "Määratud kasutajale"
+      assigned_to_w_ellipsis: "Määratud kasutajale..."
       unassign:
         title: "Eemalda määramine"
+        title_w_ellipsis: "Eemalda määramine..."
       assign:
         title: "Määra"
+      reassign:
+        title: "Muuda"
       assign_modal:
         title: "Määra teema"
         assign: "Määra"
+        optional_label: "(valikuline)"
+        status_label: Staatus
       claim:
         help: "Määra teema endale"
       assign_mailer:
@@ -28,6 +34,19 @@ et:
         weekly: "Iganädalaselt"
         monthly: "Igakuiselt"
         quarterly: "Kvartaalselt"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Määra"
     user:
       messages:
+        assigned: "Määratud"
+    search:
+      advanced:
+        assigned:
+          label: "Määratud kasutajale"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
         assigned: "Määratud"

@@ -11,6 +11,14 @@ pl_PL:
         title: "Nieprzypisany"
         help: "Wątki, które nie są przypisane"
     action_codes:
+      assigned: "Przypisano %{who} %{when}"
+      assigned_group: "Przypisano %{who} %{when}"
+      assigned_to_post: "Przypisano %{who} do <a href='%{path}'>postu</a> %{when}"
+      assigned_group_to_post: "Przypisano %{who} do <a href='%{path}'>postu</a> %{when}"
+      unassigned: "Nieprzypisany %{who} %{when}"
+      unassigned_group: "Nieprzypisany %{who} %{when}"
+      unassigned_from_post: "Cofnieto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
+      unassigned_group_from_post: "Cofnieto przypisanie %{who} z <a href='%{path}'>postu</a> %{when}"
       reassigned: "Przypisano ponownie %{who} %{when}"
       reassigned_group: "Przypisano ponownie %{who} %{when}"
     discourse_assign:
@@ -38,6 +46,7 @@ pl_PL:
         title: "Cofnij przypisanie z posta"
         help: "Cofnij przypisanie %{username} z posta"
       reassign:
+        title: "Edytuj"
         to_self: "Przypisz ponownie do mnie"
         to_self_help: "Przypisz ponownie temat do mnie"
       reassign_modal:
@@ -46,6 +55,8 @@ pl_PL:
         title: "Przypisz temat"
         reassign_title: "Przypisz ponownie temat"
         assign: "Przypisz"
+        optional_label: "(opcjonalne)"
+        status_label: Status
       assign_post_modal:
         title: "Przypisz post"
       claim:
@@ -113,6 +124,7 @@ pl_PL:
     notification_reason:
       user: "Zobaczysz liczbę nowych odpowiedzi, ponieważ ten temat został do Ciebie przypisany."
     notifications:
+      assigned: "<span>%{username}</span> %{description}"
       popup:
         assigned: "%{username} przypisał Ciebie"
       titles:

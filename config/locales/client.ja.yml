@@ -11,8 +11,19 @@ ja:
         title: "未割り当て"
         help: "未割り当てのトピック"
     action_codes:
+      assigned: "%{who} を割り当てました: %{when}"
+      assigned_group: "%{who} を割り当てました: %{when}"
+      assigned_to_post: "%{who} を<a href='%{path}'>投稿</a>に割り当てました: %{when}"
+      assigned_group_to_post: "%{who} を<a href='%{path}'>投稿</a>に割り当てました: %{when}"
+      unassigned: "%{who} の割り当てを解除しました: %{when}"
+      unassigned_group: "%{who} の割り当てを解除しました: %{when}"
+      unassigned_from_post: "%{who} を<a href='%{path}'>投稿</a>の割り当てから解除しました: %{when}"
+      unassigned_group_from_post: "%{who} を<a href='%{path}'>投稿</a>の割り当てから解除しました: %{when}"
       reassigned: "%{who} を再割り当てしました: %{when}"
       reassigned_group: "%{who} を再割り当てしました: %{when}"
+      details_change: "が %{who} の割り当て情報を変更しました: %{when}"
+      note_change: "が %{who} の割り当てメモを変更しました: %{when}"
+      status_change: "が %{who} の割り当てステータスを変更しました: %{when}"
     discourse_assign:
       add_unassigned_filter: "カテゴリに「未割り当て」フィルターを追加"
       cant_act: "他のユーザーに割り当てられた通報に対応することはできません"
@@ -50,6 +61,7 @@ ja:
         reassign_title: "トピックを再割り当てする"
         assign: "割り当てる"
         note_label: メモ
+        optional_label: "(オプション)"
         status_label: ステータス
       assign_post_modal:
         title: "投稿を割り当てる"

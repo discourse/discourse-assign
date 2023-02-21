@@ -9,6 +9,11 @@ gl:
     discourse_assign:
       assigned: "Asignado"
       group_everyone: "Todos"
+      reassign:
+        title: "Editar"
+      assign_modal:
+        optional_label: "(opcional)"
+        status_label: Estado
       assign_mailer:
         never: "Nunca"
         always: "Sempre"
@@ -20,4 +25,8 @@ gl:
         quarterly: "Trimestral"
     user:
       messages:
+        assigned: "Asignado"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
         assigned: "Asignado"

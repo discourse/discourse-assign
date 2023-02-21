@@ -8,6 +8,11 @@ ro:
   js:
     discourse_assign:
       group_everyone: "Toată lumea"
+      reassign:
+        title: "Modifică"
+      assign_modal:
+        optional_label: "(opțional)"
+        status_label: Status
       assign_mailer:
         never: "Niciodată"
         always: "Întotdeauna"
@@ -17,3 +22,5 @@ ro:
         weekly: "Săptămânal"
         monthly: "Lunar"
         quarterly: "Trimestrial"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"

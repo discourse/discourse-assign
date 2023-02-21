@@ -10,3 +10,5 @@ ro:
       never: "niciodată"
       daily: "Zilnic"
       weekly: "Săptămânal"
+      monthly: "lunar"
+      quarterly: "trimestrial"

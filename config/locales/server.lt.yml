@@ -12,3 +12,5 @@ lt:
       never: "niekada"
       daily: "kas dieną"
       weekly: "kas savaitę"
+      monthly: "kas mėnesį"
+      quarterly: "kas ketvirtį"

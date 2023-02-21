@@ -9,6 +9,8 @@ be:
     discourse_assign:
       assigned: "прызначаны"
       group_everyone: "усе"
+      reassign:
+        title: "рэдагаваць"
       assign_mailer:
         never: "ніколі"
         always: "заўсёды"
@@ -20,4 +22,7 @@ be:
         quarterly: "штоквартальна"
     user:
       messages:
+        assigned: "прызначаны"
+    notifications:
+      titles:
         assigned: "прызначаны"

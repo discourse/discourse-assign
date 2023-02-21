@@ -10,3 +10,5 @@ gl:
       never: "nunca"
       daily: "diariamente"
       weekly: "semanalmente"
+      monthly: "mensual"
+      quarterly: "trimestral"

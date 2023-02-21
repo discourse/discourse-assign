@@ -10,3 +10,5 @@ sr:
       never: "nikada"
       daily: "svakodnevno"
       weekly: "nedeljno"
+      monthly: "top mesečne"
+      quarterly: "top kvartalne"

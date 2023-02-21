@@ -10,3 +10,5 @@ pt:
       never: "nunca"
       daily: "diariamente"
       weekly: "semanalmente"
+      monthly: "mensal"
+      quarterly: "trimestral"

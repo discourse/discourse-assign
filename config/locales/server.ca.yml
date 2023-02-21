@@ -24,6 +24,7 @@ ca:
     already_claimed: "El tema ja ha estat reclamat."
     already_assigned: "El tema ja és assignat a @%{username}"
     too_many_assigns: "@%{username} ja ha assolit el nombre màxim de temes assignats (%{max})."
+    group_already_assigned: "El tema ja és assignat a @%{group}"
     flag_assigned: "Ho sentim, el tema d'aquesta bandera és assignat a un altre usuari."
     flag_unclaimed: "Cal reclamar el tema abans d'actuar sobre la bandera"
     topic_assigned_excerpt: "us ha assignat el tema '%{title}'"
