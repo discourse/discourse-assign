@@ -8,9 +8,15 @@ vi:
   js:
     discourse_assign:
       cant_act: "Bạn không thể hành động trên các cờ đã được gán cho Thành viên khác"
+      assigned: "Được chỉ định"
       group_everyone: "Mọi người"
       assign:
         help: "Gán chủ đề cho Thành viên"
+      reassign:
+        title: "Sửa"
+      assign_modal:
+        optional_label: "(tùy chọn)"
+        status_label: Trạng thái
       assign_mailer:
         never: "Không"
         always: "Luôn luôn"
@@ -20,3 +26,10 @@ vi:
         weekly: "Hàng tuần"
         monthly: "Hàng tháng"
         quarterly: "Hàng quý"
+    user:
+      messages:
+        assigned: "Được chỉ định"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Được chỉ định"

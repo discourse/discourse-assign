@@ -6,18 +6,28 @@
 
 sk:
   js:
+    action_codes:
+      assigned: "Priradené %{who}%{when}"
+      assigned_group: "Priradené %{who}%{when}"
+      unassigned: "Nepriradené %{who}%{when}"
+      unassigned_group: "Nepriradené %{who}%{when}"
     discourse_assign:
       assigned: "Priradené"
       group_everyone: "Každý"
       assigned_to: "Priradené komu"
+      assigned_to_w_ellipsis: "Priradené komu..."
       unassign:
         title: "Nepriradené"
+        title_w_ellipsis: "Nepriradené..."
       assign:
         title: "Priradiť"
         help: "Priradiť tému používateľovi"
+      reassign:
+        title: "Upraviť"
       assign_modal:
         title: "Priradiť tému"
         assign: "Priraď"
+        optional_label: "(nepovinné)"
       claim:
         title: "prevziať"
         help: "Priradiť tému sebe"
@@ -30,6 +40,18 @@ sk:
         weekly: "Týždenne"
         monthly: "Mesačne"
         quarterly: "Štvrťročne"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Priradiť"
     user:
       messages:
+        assigned: "Priradené"
+    search:
+      advanced:
+        assigned:
+          label: "Priradené komu"
+    notifications:
+      titles:
         assigned: "Priradené"

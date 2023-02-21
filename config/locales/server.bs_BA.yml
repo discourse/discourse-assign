@@ -20,3 +20,5 @@ bs_BA:
       never: "nikad"
       daily: "dnevno"
       weekly: "sedmično"
+      monthly: "mesečno"
+      quarterly: "kvartalno"

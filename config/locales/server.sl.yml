@@ -10,3 +10,5 @@ sl:
       never: "nikoli"
       daily: "dnevno"
       weekly: "tedensko"
+      monthly: "mesečno"
+      quarterly: "v četrtletju"

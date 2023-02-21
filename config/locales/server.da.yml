@@ -22,6 +22,8 @@ da:
     forbidden_assign_to: "@%{username} kan ikke tildeles, da de ikke tilhører tildelte tilladte grupper."
     forbidden_assignee_not_pm_participant: "@%{username} kan ikke tildeles, fordi de ikke har adgang til denne PM. Du kan give @%{username} adgang ved at invitere dem til denne PM."
     forbidden_assignee_cant_see_topic: "@%{username} kan ikke tildeles, fordi der ikke har adgang til dette emne."
+    group_already_assigned: "Emnet er allerede tildelt @%{group}"
+    forbidden_group_assign_to: "@%{group} kan ikke tildeles, da de ikke tilhører tildelte tilladte grupper."
     flag_assigned: "Beklager, dette flag er tildelt til en anden bruger"
     flag_unclaimed: "Du skal gøre krav på emnet, før du handler på markeringsflaget"
     topic_assigned_excerpt: "tildelte dig emnet '%{title}“"

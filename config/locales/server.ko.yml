@@ -25,6 +25,7 @@ ko:
     already_claimed: "그 주제는 이미 주장되었습니다."
     already_assigned: "주제가 이미 @ %{username}에 할당되었습니다."
     too_many_assigns: "@ %{username}이 (가) 이미 지정된 최대 주제 수 (%{max})에 도달했습니다."
+    group_already_assigned: "주제가 이미 @ %{group}에 할당되었습니다."
     flag_assigned: "해당 플래그의 주제가 다른 사용자에게 할당되었습니다."
     flag_unclaimed: "깃발에 행동하기 전에 그 주제를 주장해야합니다"
     topic_assigned_excerpt: "&#39;%{title}&#39;주제를 지정했습니다"

@@ -11,8 +11,15 @@ fr:
         title: "Désattribué"
         help: "Sujets qui ne sont pas attribués"
     action_codes:
+      assigned: "A Attribué %{who} le %{when}"
+      assigned_group: "A Attribué %{who} le %{when}"
+      unassigned: "A Annulé l'Attribution de %{who} le %{when}"
+      unassigned_group: "A Annulé l'Attribution de %{who} le %{when}"
       reassigned: "Réattribution à %{who} le %{when}"
       reassigned_group: "Réattribution à %{who} le %{when}"
+      details_change: "A modifié les détAils de l'Attribution pour %{who} %{when}"
+      note_change: "A modifié lA note de l'Attribution pour %{who} %{when}"
+      status_change: "A modifié le stAtut de l'Attribution pour %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Ajouter le filtre « Non attribués » à la catégorie"
       cant_act: "Vous ne pouvez pas agir sur des signalements qui ont été attribués à d'autres utilisateurs"
@@ -50,6 +57,7 @@ fr:
         reassign_title: "Réattribuer le sujet"
         assign: "Attribuer"
         note_label: Note
+        optional_label: "(facultatif)"
         status_label: Statut
       assign_post_modal:
         title: "Attribuer un message"

@@ -10,6 +10,13 @@ da:
       unassigned:
         title: "Ikke tildelt"
         help: "Emner, der ikke er tildelt"
+    action_codes:
+      assigned: "Tildelt %{who} %{when}"
+      assigned_group: "Tildelt %{who} %{when}"
+      assigned_to_post: "Tildelte %{who} til <a href='%{path}'>indlæg</a> %{when}"
+      assigned_group_to_post: "Tildelte %{who} til <a href='%{path}'>indlæg</a> %{when}"
+      unassigned: "Fradelt %{who} %{when}"
+      unassigned_group: "Fradelt %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Føj 'ikke-tildelt' filter til kategori"
       cant_act: "Du kan ikke handle på markeringsflag, der er tildelt andre brugere"
@@ -19,16 +26,23 @@ da:
       assigned: "Tildelt"
       group_everyone: "Alle"
       assigned_to: "Tildelt til"
+      assigned_to_w_ellipsis: "Tildelt til..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Fjern tildeling"
+        title_w_ellipsis: "Fjern tildeling..."
         help: "Fjern tildelingen til %{username} fra Emne"
       assign:
         title: "Tildel"
         help: "Tildel Emne til Bruger"
+      reassign:
+        title: "Redigér"
       assign_modal:
         title: "Tildel Emne"
         assign: "Tildel"
+        optional_label: "(valgfri)"
+        status_label: Status
       claim:
         title: "gør krav"
         help: "Tildel emne til dig selv"
@@ -43,6 +57,11 @@ da:
         weekly: "Ugentligt"
         monthly: "Månedligt"
         quarterly: "Kvartalvis"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Tildel"
     user:
       messages:
         assigned_title: "Tildelt (%{count})"
@@ -70,3 +89,7 @@ da:
             post_template:
               label: Indlæg skabelon
               description: Hvis den udfyldes, oprettes et indlæg med denne skabelon, og der tildeles en bruger til det i stedet for emnet.
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Tildelt"

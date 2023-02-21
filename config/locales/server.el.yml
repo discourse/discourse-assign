@@ -10,3 +10,5 @@ el:
       never: "ποτέ"
       daily: "καθημερινά"
       weekly: "κάθε εβδομάδα"
+      monthly: "μηνιαίες"
+      quarterly: "τριμηνιαία"

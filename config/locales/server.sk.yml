@@ -10,3 +10,5 @@ sk:
       never: "nikdy"
       daily: "denne"
       weekly: "týždenne"
+      monthly: "mesačne"
+      quarterly: "štvrťročne"

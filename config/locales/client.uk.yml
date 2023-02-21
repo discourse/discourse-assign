@@ -10,6 +10,11 @@ uk:
       unassigned:
         title: "Непризначені"
         help: "Теми, які не призначені"
+    action_codes:
+      assigned: "Призначено %{who} %{when}"
+      assigned_group: "Призначено %{who} %{when}"
+      unassigned: "Скасовано %{who} %{when}"
+      unassigned_group: "Скасовано %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Додайте фільтр «непризначені» до категорії"
       cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"
@@ -17,14 +22,20 @@ uk:
       assigned: "Призначено"
       group_everyone: "Усі"
       assigned_to: "Призначено на"
+      assigned_to_w_ellipsis: "Призначено на..."
       unassign:
         title: "Скасувати призначення"
+        title_w_ellipsis: "Скасувати призначення..."
       assign:
         title: "Призначити"
         help: "Призначити тему користувачеві"
+      reassign:
+        title: "Редагувати"
       assign_modal:
         title: "Призначити тему"
         assign: "Призначити"
+        optional_label: "(опціонально)"
+        status_label: Статус
       claim:
         title: "претензія"
         help: "Призначте тему собі"
@@ -39,7 +50,20 @@ uk:
         weekly: "Щотижня"
         monthly: "Щомісяця"
         quarterly: "Щоквартала"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "Призначити"
     user:
       messages:
         assigned_title: "Призначено (%{count})"
+        assigned: "Призначено"
+    search:
+      advanced:
+        assigned:
+          label: "Призначено на"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
         assigned: "Призначено"

@@ -8,6 +8,11 @@ lv:
   js:
     discourse_assign:
       group_everyone: "Ikviens"
+      reassign:
+        title: "Rediģēt"
+      assign_modal:
+        optional_label: "(pēc izvēles)"
+        status_label: Statuss
       assign_mailer:
         never: "Nekad"
         always: "Vienmēr"

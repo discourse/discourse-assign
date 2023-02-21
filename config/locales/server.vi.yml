@@ -11,3 +11,5 @@ vi:
       never: "không bao giờ"
       daily: "hàng ngày"
       weekly: "hàng tuần"
+      monthly: "hàng tháng"
+      quarterly: "hàng quý"

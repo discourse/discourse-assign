@@ -11,6 +11,14 @@ hu:
         title: "Nem kiosztott"
         help: "Témák, amelyek nincsenek kiosztva"
     action_codes:
+      assigned: "Kiosztva %{who} részére, %{when}"
+      assigned_group: "Kiosztva %{who} részére, %{when}"
+      assigned_to_post: "<a href='%{path}'>Bejegyzés</a> kiosztva %{who} részére, %{when}"
+      assigned_group_to_post: "<a href='%{path}'>Bejegyzés</a> kiosztva %{who} részére, %{when}"
+      unassigned: "%{who} Elvéve, %{when}"
+      unassigned_group: "%{who} Elvéve, %{when}"
+      unassigned_from_post: "%{who} Elvéve a <a href='%{path}'>bejegyzéstől</a>, %{when}"
+      unassigned_group_from_post: "%{who} Elvéve a <a href='%{path}'>bejegyzéstől</a>, %{when}"
       reassigned: "Átadva %{who} részére, %{when}"
       reassigned_group: "Átadva %{who} részére, %{when}"
     discourse_assign:
@@ -38,6 +46,7 @@ hu:
         title: "Elvétel a bejegyzéstől"
         help: "%{username} elvétele a bejegyzéstől"
       reassign:
+        title: "Szerkesztés"
         to_self: "Átvétel"
         to_self_help: "Téma átvétele"
       reassign_modal:
@@ -46,6 +55,8 @@ hu:
         title: "Téma kiosztása"
         reassign_title: "Téma átadása"
         assign: "Kiosztás"
+        optional_label: "(nem kötelező)"
+        status_label: Állapot
       assign_post_modal:
         title: "Bejegyzés kiosztása"
       claim:
@@ -103,3 +114,7 @@ hu:
               label: Felhasználók munkaidőben
     notification_reason:
       user: "Látni fogja az új válaszok számát, mert ezt a témát Önnek osztották ki."
+    notifications:
+      assigned: "<span>%{username}</span>%{description}"
+      titles:
+        assigned: "Kiosztott"

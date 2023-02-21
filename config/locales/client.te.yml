@@ -8,5 +8,9 @@ te:
   js:
     discourse_assign:
       group_everyone: "అందరూ"
+      reassign:
+        title: "సవరణ"
+      assign_modal:
+        optional_label: "(ఐచ్ఛికం)"
       assign_mailer:
         always: "ఎల్లప్పుడూ"

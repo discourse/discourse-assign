@@ -10,3 +10,5 @@ lv:
       never: "nekad"
       daily: "katru dienu"
       weekly: "katru nedēļu"
+      monthly: "mēneša"
+      quarterly: "ceturkšņa"

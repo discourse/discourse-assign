@@ -8,6 +8,11 @@ el:
   js:
     discourse_assign:
       group_everyone: "Όλοι"
+      reassign:
+        title: "Επεξεργασία"
+      assign_modal:
+        optional_label: "(προεραιτικό)"
+        status_label: Κατάσταση
       assign_mailer:
         never: "Ποτέ"
         always: "Πάντα"
@@ -17,3 +22,5 @@ el:
         weekly: "Εβδομαδιαία"
         monthly: "Μηνιαία"
         quarterly: "Τριμηνιαία"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"

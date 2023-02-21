@@ -10,3 +10,5 @@ cs:
       never: "nikdy"
       daily: "denně"
       weekly: "týdně"
+      monthly: "měsíčně"
+      quarterly: "čtvrtletně"

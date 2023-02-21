@@ -10,3 +10,5 @@ hr:
       never: "nikad"
       daily: "dnevno"
       weekly: "tjedno"
+      monthly: "mjesečno"
+      quarterly: "tromjesečno"

@@ -8,6 +8,8 @@ sq:
   js:
     discourse_assign:
       group_everyone: "Të gjithë"
+      reassign:
+        title: "Redakto"
       assign_mailer:
         never: "Asnjëherë"
         always: "Gjithmonë"

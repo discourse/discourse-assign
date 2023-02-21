@@ -10,6 +10,11 @@ ko:
       unassigned:
         title: "미 할당"
         help: "할당되지 않은 주제"
+    action_codes:
+      assigned: "할당 된 %{who} %{when}"
+      assigned_group: "할당 된 %{who} %{when}"
+      unassigned: "할당되지 않은 %{who} %{when}"
+      unassigned_group: "할당되지 않은 %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "카테고리에 &#39;지정되지 않은&#39;필터 추가"
       cant_act: "다른 사용자에게 할당 된 플래그에는 작동 할 수 없습니다"
@@ -17,14 +22,20 @@ ko:
       assigned: "할당됨"
       group_everyone: "모두"
       assigned_to: "다음으로 할당"
+      assigned_to_w_ellipsis: "다음으로 할당..."
       unassign:
         title: "할당 해제"
+        title_w_ellipsis: "할당 해제..."
       assign:
         title: "할당"
         help: "사용자에게 토픽 할당"
+      reassign:
+        title: "수정"
       assign_modal:
         title: "토픽 할당"
         assign: "할당"
+        optional_label: "(선택 사항)"
+        status_label: 상태
       claim:
         title: "청구"
         help: "나에게 토픽 할당"
@@ -39,6 +50,11 @@ ko:
         weekly: "주"
         monthly: "월"
         quarterly: "분기마다"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "할당"
     user:
       messages:
         assigned_title: "할당됨 (%{count})"
@@ -48,3 +64,11 @@ ko:
         assign_event:
           name: "이벤트 할당"
           details: "사용자가 주제를 할당 또는 할당 해제 할 때"
+    search:
+      advanced:
+        assigned:
+          label: "다음으로 할당"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "할당됨"

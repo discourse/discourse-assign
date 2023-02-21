@@ -9,6 +9,12 @@ pt:
     discourse_assign:
       group_everyone: "Todos"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
+      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
+      reassign:
+        title: "Editar"
+      assign_modal:
+        optional_label: "(opcional)"
+        status_label: Estado
       assign_mailer:
         never: "Nunca"
         always: "Sempre"
@@ -18,3 +24,5 @@ pt:
         weekly: "Semanal"
         monthly: "Mensal"
         quarterly: "Trimestral"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"

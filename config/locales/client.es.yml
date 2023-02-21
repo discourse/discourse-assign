@@ -11,8 +11,19 @@ es:
         title: "Sin asignar"
         help: "Temas sin asignar"
     action_codes:
+      assigned: "Asignó a %{who} %{when}"
+      assigned_group: "Asignó a %{who} %{when}"
+      assigned_to_post: "Asignó a %{who} a la <a href='%{path}'>publicación</a> %{when}"
+      assigned_group_to_post: "Asignó a %{who} a la <a href='%{path}'>publicación</a> %{when}"
+      unassigned: "Anuló la asignación de %{who} %{when}"
+      unassigned_group: "Anuló la asignación de %{who} %{when}"
+      unassigned_from_post: "Anuló la asignación de %{who} de <a href='%{path}'>publicación</a> %{when}"
+      unassigned_group_from_post: "Anuló la asignación de %{who} de <a href='%{path}'>publicación</a> %{when}"
       reassigned: "Reasignó a %{who} %{when}"
       reassigned_group: "Reasignó a %{who} %{when}"
+      details_change: "Detalles de asignación cambiados para %{who} %{when}"
+      note_change: "Nota de asignación cambiada para %{who} %{when}"
+      status_change: "Estado de asignación cambiado para %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Añadir filtro «sin asignar» a la categoría"
       cant_act: "No puedes actuar sobre denuncias que han sido asignadas a otros usuarios"
@@ -50,6 +61,7 @@ es:
         reassign_title: "Reasignar tema"
         assign: "Asignar"
         note_label: Nota
+        optional_label: "(opcional)"
         status_label: Estado
       assign_post_modal:
         title: "Asignar publicación"

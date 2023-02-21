@@ -11,8 +11,19 @@ ru:
         title: "Неназначенные"
         help: "Неназначенные темы"
     action_codes:
+      assigned: "Назначил(а) ответственным %{who} %{when}"
+      assigned_group: "Назначил(а) ответственным %{who} %{when}"
+      assigned_to_post: "Назначил(а) ответственного %{who} в <a href='%{path}'>это сообщение</a> %{when}"
+      assigned_group_to_post: "Назначил(а) ответственного %{who} в <a href='%{path}'>это сообщение</a> %{when}"
+      unassigned: "Снял(а) ответственного %{who} %{when}"
+      unassigned_group: "Снял(а) ответственного %{who} %{when}"
+      unassigned_from_post: "Снял(а) ответственного %{who} с <a href='%{path}'>этого сообщения</a> %{when}"
+      unassigned_group_from_post: "Снял(а) ответственного %{who} с <a href='%{path}'>этого сообщения</a> %{when}"
       reassigned: "Переназначено: %{who} %{when}"
       reassigned_group: "Переназначено: %{who} %{when}"
+      details_change: "Изменены детали назначения для %{who} %{when}"
+      note_change: "Изменено примечание назначения для %{who} %{when}"
+      status_change: "Изменён статус назначения для %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Добавить в раздел фильтр 'Неназначенные'"
       cant_act: "Вы не можете работать с жалобами, назначенными другому сотруднику"
@@ -50,6 +61,7 @@ ru:
         reassign_title: "Переназначить тему"
         assign: "Назначить"
         note_label: Примечание
+        optional_label: "(необязательно)"
         status_label: Статус
       assign_post_modal:
         title: "Назначить сообщение"

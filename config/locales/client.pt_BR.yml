@@ -11,8 +11,19 @@ pt_BR:
         title: "Não atribuído"
         help: "Tópicos que não têm atribuição"
     action_codes:
+      assigned: "Atribuiu a %{who} %{when}"
+      assigned_group: "Atribuiu a %{who} %{when}"
+      assigned_to_post: "Atribuiu %{who} a <a href='%{path}'>postagem</a> %{when}"
+      assigned_group_to_post: "Atribuiu %{who} a <a href='%{path}'>postagem</a> %{when}"
+      unassigned: "Removeu atribuição de %{who} %{when}"
+      unassigned_group: "Removeu atribuição de %{who} %{when}"
+      unassigned_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
+      unassigned_group_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
       reassigned: "reatribuiu %{who} %{when}"
       reassigned_group: "reatribuiu %{who} %{when}"
+      details_change: "Detalhes de atribuição alterados para %{who} %{when}"
+      note_change: "Observação de atribuição alterada para %{who} %{when}"
+      status_change: "Status de atribuição alterados para %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Adicionar o filtro \"não atribuído\" à categoria"
       cant_act: "Você não pode agir em sinalizações que foram atribuídas a outros(as) usuários(as)"
@@ -50,6 +61,7 @@ pt_BR:
         reassign_title: "Reatribuir tópico"
         assign: "Atribuir"
         note_label: Observação
+        optional_label: "(opcional)"
         status_label: Status
       assign_post_modal:
         title: "Atribuir postagem"

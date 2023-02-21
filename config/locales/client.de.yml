@@ -11,8 +11,19 @@ de:
         title: "Zuordnung aufgehoben"
         help: "Nicht zugeordnete Themen"
     action_codes:
+      assigned: "%{who} Zugeordnet %{when}"
+      assigned_group: "%{who} Zugeordnet %{when}"
+      assigned_to_post: "%{who} Zu <a href='%{path}'>Beitrag</a> Zugeordnet %{when}"
+      assigned_group_to_post: "%{who} Zu <a href='%{path}'>Beitrag</a> Zugeordnet %{when}"
+      unassigned: "Zuordnung von %{who} aufgehoben %{when}"
+      unassigned_group: "Zuordnung von %{who} aufgehoben %{when}"
+      unassigned_from_post: "Zuordnung von %{who} zu <a href='%{path}'>Beitrag</a> aufgehoben %{when}"
+      unassigned_group_from_post: "Zuordnung von %{who} zu <a href='%{path}'>Beitrag</a> aufgehoben %{when}"
       reassigned: "%{who} %{when} erneut zugeordnet"
       reassigned_group: "%{who} %{when} erneut zugeordnet"
+      details_change: "Zuordnungsdetails geändert für %{who} %{when}"
+      note_change: "Zuordnungsnotiz geändert für %{who} %{when}"
+      status_change: "Zuordnungsstatus geändert für %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Filter „Nicht zugeordnet“ zur Kategorie hinzufügen"
       cant_act: "Du kannst nicht auf Meldungen reagieren, die anderen Benutzern zugeordnet wurden."
@@ -50,6 +61,7 @@ de:
         reassign_title: "Thema neu zuordnen"
         assign: "Zuordnen"
         note_label: Notiz
+        optional_label: "(optional)"
         status_label: Status
       assign_post_modal:
         title: "Beitrag zuordnen"

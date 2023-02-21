@@ -10,3 +10,5 @@ nb_NO:
       never: "aldri"
       daily: "daglig"
       weekly: "ukentlig"
+      monthly: "månedlig"
+      quarterly: "kvartalsvis"

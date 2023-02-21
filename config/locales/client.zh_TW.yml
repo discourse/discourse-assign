@@ -6,19 +6,30 @@
 
 zh_TW:
   js:
+    action_codes:
+      assigned: "已指派 %{who} %{when}"
+      assigned_group: "已指派 %{who} %{when}"
+      unassigned: "取消指派 %{who} %{when}"
+      unassigned_group: "取消指派 %{who} %{when}"
     discourse_assign:
       cant_act: "您不能對已經指派給其他使用者的旗標做操作"
       assigned: "已指派"
       group_everyone: "所有使用者"
       assigned_to: "已指派給"
+      assigned_to_w_ellipsis: "已指派給..."
       unassign:
         title: "取消指派"
+        title_w_ellipsis: "取消指派..."
       assign:
         title: "指派"
         help: "指派主題給使用者"
+      reassign:
+        title: "編輯"
       assign_modal:
         title: "指派主題"
         assign: "指派"
+        optional_label: "(選擇性)"
+        status_label: 狀態
       claim:
         title: "認領"
         help: "指派主題給您自己"
@@ -31,6 +42,19 @@ zh_TW:
         weekly: "周"
         monthly: "月"
         quarterly: "季度"
+      admin:
+        groups:
+          manage:
+            interaction:
+              assign: "指派"
     user:
       messages:
+        assigned: "已指派"
+    search:
+      advanced:
+        assigned:
+          label: "已指派給"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
         assigned: "已指派"
