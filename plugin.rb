@@ -14,33 +14,18 @@ register_asset "stylesheets/mobile/assigns.scss", :mobile
 
 %w[user-plus user-times group-plus group-times].each { |i| register_svg_icon(i) }
 
-require_relative "app/models/assign_mailer_site_settings.rb"
-require_relative "app/models/remind_assigns_frequency_site_settings.rb"
+module ::DiscourseAssign
+  PLUGIN_NAME = "discourse-assign"
+end
+
+require_relative "lib/discourse_assign/engine.rb"
 require_relative "lib/validators/assign_statuses_validator.rb"
 
 after_initialize do
-  module ::DiscourseAssign
-    PLUGIN_NAME = "discourse-assign"
-
-    class Engine < ::Rails::Engine
-      engine_name DiscourseAssign::PLUGIN_NAME
-      isolate_namespace DiscourseAssign
-    end
-  end
-
-  require_relative "app/controllers/discourse_assign/assign_controller.rb"
-  require_relative "app/mailers/assign_mailer.rb"
-  require_relative "app/models/assign_mailer_site_settings.rb"
-  require_relative "app/models/assignment.rb"
-  require_relative "app/models/remind_assigns_frequency_site_settings.rb"
-  require_relative "app/serializers/assigned_group_serializer.rb"
-  require_relative "app/serializers/assigned_topic_serializer.rb"
-  require_relative "app/serializers/group_user_assigned_serializer.rb"
-  require_relative "config/routes.rb"
-  require_relative "jobs/regular/assign_notification.rb"
-  require_relative "jobs/regular/remind_user.rb"
-  require_relative "jobs/regular/unassign_notification.rb"
-  require_relative "jobs/scheduled/enqueue_reminders.rb"
+  require_relative "app/jobs/regular/assign_notification.rb"
+  require_relative "app/jobs/regular/remind_user.rb"
+  require_relative "app/jobs/regular/unassign_notification.rb"
+  require_relative "app/jobs/scheduled/enqueue_reminders.rb"
   require_relative "lib/assigner.rb"
   require_relative "lib/discourse_assign/discourse_calendar.rb"
   require_relative "lib/discourse_assign/group_extension.rb"
@@ -52,29 +37,6 @@ after_initialize do
   require_relative "lib/pending_assigns_reminder.rb"
   require_relative "lib/random_assign_utils.rb"
   require_relative "lib/topic_assigner.rb"
-  require_relative "lib/validators/assign_statuses_validator.rb"
-
-  Discourse::Application.routes.append do
-    mount ::DiscourseAssign::Engine, at: "/assign"
-
-    get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
-        :as => "topics_private_messages_assigned",
-        :constraints => {
-          username: ::RouteFormat.username,
-        }
-    get "/topics/messages-assigned/:username" => "list#messages_assigned",
-        :constraints => {
-          username: ::RouteFormat.username,
-        },
-        :as => "messages_assigned"
-    get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned",
-        :constraints => {
-          username: ::RouteFormat.username,
-        },
-        :as => "group_topics_assigned"
-    get "/g/:id/assigned" => "groups#index"
-    get "/g/:id/assigned/:route_type" => "groups#index"
-  end
 
   reloadable_patch do |plugin|
     Group.class_eval { prepend DiscourseAssign::GroupExtension }
