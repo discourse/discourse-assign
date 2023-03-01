@@ -18,25 +18,25 @@ module ::DiscourseAssign
   PLUGIN_NAME = "discourse-assign"
 end
 
-require_relative "lib/discourse_assign/engine.rb"
-require_relative "lib/validators/assign_statuses_validator.rb"
+require_relative "lib/discourse_assign/engine"
+require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
-  require_relative "app/jobs/regular/assign_notification.rb"
-  require_relative "app/jobs/regular/remind_user.rb"
-  require_relative "app/jobs/regular/unassign_notification.rb"
-  require_relative "app/jobs/scheduled/enqueue_reminders.rb"
-  require_relative "lib/assigner.rb"
-  require_relative "lib/discourse_assign/discourse_calendar.rb"
-  require_relative "lib/discourse_assign/group_extension.rb"
-  require_relative "lib/discourse_assign/helpers.rb"
-  require_relative "lib/discourse_assign/list_controller_extension.rb"
-  require_relative "lib/discourse_assign/post_extension.rb"
-  require_relative "lib/discourse_assign/topic_extension.rb"
-  require_relative "lib/discourse_assign/web_hook_extension.rb"
-  require_relative "lib/pending_assigns_reminder.rb"
-  require_relative "lib/random_assign_utils.rb"
-  require_relative "lib/topic_assigner.rb"
+  require_relative "app/jobs/regular/assign_notification"
+  require_relative "app/jobs/regular/remind_user"
+  require_relative "app/jobs/regular/unassign_notification"
+  require_relative "app/jobs/scheduled/enqueue_reminders"
+  require_relative "lib/assigner"
+  require_relative "lib/discourse_assign/discourse_calendar"
+  require_relative "lib/discourse_assign/group_extension"
+  require_relative "lib/discourse_assign/helpers"
+  require_relative "lib/discourse_assign/list_controller_extension"
+  require_relative "lib/discourse_assign/post_extension"
+  require_relative "lib/discourse_assign/topic_extension"
+  require_relative "lib/discourse_assign/web_hook_extension"
+  require_relative "lib/pending_assigns_reminder"
+  require_relative "lib/random_assign_utils"
+  require_relative "lib/topic_assigner"
 
   reloadable_patch do |plugin|
     Group.class_eval { prepend DiscourseAssign::GroupExtension }
