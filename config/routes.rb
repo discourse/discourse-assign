@@ -9,3 +9,25 @@ DiscourseAssign::Engine.routes.draw do
   get "/members/:group_name" => "assign#group_members"
   get "/user-menu-assigns" => "assign#user_menu_assigns"
 end
+
+Discourse::Application.routes.append do
+  mount ::DiscourseAssign::Engine, at: "/assign"
+
+  get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
+      :as => "topics_private_messages_assigned",
+      :constraints => {
+        username: ::RouteFormat.username,
+      }
+  get "/topics/messages-assigned/:username" => "list#messages_assigned",
+      :constraints => {
+        username: ::RouteFormat.username,
+      },
+      :as => "messages_assigned"
+  get "/topics/group-topics-assigned/:groupname" => "list#group_topics_assigned",
+      :constraints => {
+        username: ::RouteFormat.username,
+      },
+      :as => "group_topics_assigned"
+  get "/g/:id/assigned" => "groups#index"
+  get "/g/:id/assigned/:route_type" => "groups#index"
+end
