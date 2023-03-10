@@ -704,6 +704,7 @@ function initialize(api) {
       if (assignedToUser) {
         assigneeElements.push(
           h("span.assignee", [
+            h("span", `${I18n.t("discourse_assign.topic_to")} `),
             h(
               "a",
               {
@@ -720,6 +721,7 @@ function initialize(api) {
       if (assignedToGroup) {
         assigneeElements.push(
           h("span.assignee", [
+            h("span", `${I18n.t("discourse_assign.topic_to")} `),
             h(
               "a",
               {
@@ -747,7 +749,10 @@ function initialize(api) {
                     href: `${topic.url}/${postNumber}`,
                   },
                 },
-                `#${postNumber} ${assignee.username || assignee.name}`
+                I18n.t("discourse_assign.assign_post_to", {
+                  post_number: postNumber,
+                  username: assignee.username || assignee.name,
+                })
               ),
             ])
           );
@@ -756,7 +761,7 @@ function initialize(api) {
       if (!isEmpty(assigneeElements)) {
         return h("p.assigned-to", [
           assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
-          h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
+          h("span.assign-text", I18n.t("discourse_assign.assigned")),
           assigneeElements,
         ]);
       }
