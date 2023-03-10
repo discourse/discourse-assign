@@ -106,7 +106,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     );
     assert.strictEqual(
       query("#post_1 .assigned-to").innerText,
-      "Assigned toeviltrout#2 Developers",
+      "Assignedtopic toeviltrout#2 Developers",
       "shows assignment and indirect assignments in the first post"
     );
     assert.ok(exists("#post_1 .assigned-to svg.d-icon-user-plus"));
