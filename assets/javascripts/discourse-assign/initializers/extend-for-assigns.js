@@ -16,6 +16,7 @@ import { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
+import RawHtml from "discourse/widgets/raw-html";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -701,38 +702,39 @@ function initialize(api) {
       ];
       const assigneeElements = [];
 
+      const assignedHtml = (username, path) => {
+        return `<span>${htmlSafe(
+          I18n.t("discourse_assign.assigned_topic_to", {
+            username,
+            path,
+          })
+        )}</span>`;
+      };
+
       if (assignedToUser) {
         assigneeElements.push(
-          h("span.assignee", [
-            h("span", `${I18n.t("discourse_assign.topic_to")} `),
-            h(
-              "a",
-              {
-                attributes: {
-                  class: "assigned-to-username",
-                  href: assignedToUserPath(assignedToUser),
-                },
-              },
-              assignedToUser.username
-            ),
-          ])
+          h(
+            "span.assignee",
+            new RawHtml({
+              html: assignedHtml(
+                assignedToUser.username,
+                assignedToUserPath(assignedToUser)
+              ),
+            })
+          )
         );
       }
       if (assignedToGroup) {
         assigneeElements.push(
-          h("span.assignee", [
-            h("span", `${I18n.t("discourse_assign.topic_to")} `),
-            h(
-              "a",
-              {
-                attributes: {
-                  class: "assigned-to-group",
-                  href: assignedToGroupPath(assignedToGroup),
-                },
-              },
-              assignedToGroup.name
-            ),
-          ])
+          h(
+            "span.assignee",
+            new RawHtml({
+              html: assignedHtml(
+                assignedToGroup.name,
+                assignedToGroupPath(assignedToGroup)
+              ),
+            })
+          )
         );
       }
       if (indirectlyAssignedTo) {
@@ -749,7 +751,7 @@ function initialize(api) {
                     href: `${topic.url}/${postNumber}`,
                   },
                 },
-                I18n.t("discourse_assign.assign_post_to", {
+                I18n.t("discourse_assign.assign_post_to_multiple", {
                   post_number: postNumber,
                   username: assignee.username || assignee.name,
                 })
@@ -761,7 +763,9 @@ function initialize(api) {
       if (!isEmpty(assigneeElements)) {
         return h("p.assigned-to", [
           assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
-          h("span.assign-text", I18n.t("discourse_assign.assigned")),
+          assignedToUser || assignedToGroup
+            ? ""
+            : h("span.assign-text", I18n.t("discourse_assign.assigned")),
           assigneeElements,
         ]);
       }
