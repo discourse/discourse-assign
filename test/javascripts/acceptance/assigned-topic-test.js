@@ -136,7 +136,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "shows assignment in the header"
     );
     assert.strictEqual(
-      query("#post_1 .assigned-to").innerText.trim(),
+      query("#post_1 .assigned-to--group").innerText.trim(),
       "Assigned topic to Developers",
       "shows assignment in the first post"
     );

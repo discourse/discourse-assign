@@ -702,8 +702,8 @@ function initialize(api) {
       ];
       const assigneeElements = [];
 
-      const assignedHtml = (username, path) => {
-        return `<span class="assigned-to">${htmlSafe(
+      const assignedHtml = (username, path, type) => {
+        return `<span class="assigned-to--${type}">${htmlSafe(
           I18n.t("discourse_assign.assigned_topic_to", {
             username,
             path,
@@ -718,7 +718,8 @@ function initialize(api) {
             new RawHtml({
               html: assignedHtml(
                 assignedToUser.username,
-                assignedToUserPath(assignedToUser)
+                assignedToUserPath(assignedToUser),
+                "user"
               ),
             })
           )
@@ -731,7 +732,8 @@ function initialize(api) {
             new RawHtml({
               html: assignedHtml(
                 assignedToGroup.name,
-                assignedToGroupPath(assignedToGroup)
+                assignedToGroupPath(assignedToGroup),
+                "group"
               ),
             })
           )
