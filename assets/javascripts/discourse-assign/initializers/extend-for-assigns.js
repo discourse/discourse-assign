@@ -703,7 +703,7 @@ function initialize(api) {
       const assigneeElements = [];
 
       const assignedHtml = (username, path) => {
-        return `<span>${htmlSafe(
+        return `<span class="assigned-to">${htmlSafe(
           I18n.t("discourse_assign.assigned_topic_to", {
             username,
             path,
