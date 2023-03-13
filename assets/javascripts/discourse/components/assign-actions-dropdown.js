@@ -5,9 +5,13 @@ import { action } from "@ember/object";
 export default DropdownSelectBoxComponent.extend({
   classNames: ["assign-actions-dropdown"],
   headerIcon: null,
-  title: "...",
   allowInitialValueMutation: false,
   showFullTitle: true,
+  selectKitOptions: {
+    icon: null,
+    translatedNone: "...",
+    showFullTitle: true,
+  },
 
   computeContent() {
     let options = [];
