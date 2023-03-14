@@ -106,7 +106,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     );
     assert.strictEqual(
       query("#post_1 .assigned-to").innerText,
-      "Assigned toeviltrout#2 Developers",
+      "Assigned topic to eviltrout#2 to Developers",
       "shows assignment and indirect assignments in the first post"
     );
     assert.ok(exists("#post_1 .assigned-to svg.d-icon-user-plus"));
@@ -136,8 +136,8 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "shows assignment in the header"
     );
     assert.strictEqual(
-      query("#post_1 .assigned-to-group").innerText.trim(),
-      "Developers",
+      query("#post_1 .assigned-to--group").innerText.trim(),
+      "Assigned topic to Developers",
       "shows assignment in the first post"
     );
     assert.ok(exists("#post_1 .assigned-to svg.d-icon-group-plus"));
