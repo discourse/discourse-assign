@@ -4,10 +4,13 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 describe ListController do
-  before { SiteSetting.assign_enabled = true }
+  before do
+    SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+    SiteSetting.assign_enabled = true
+  end
 
-  let(:user) { Fabricate(:active_user) }
-  let(:user2) { Fabricate(:user) }
+  fab!(:user) { Fabricate(:active_user) }
+  fab!(:user2) { Fabricate(:user) }
   let(:admin) { Fabricate(:admin) }
   let(:post) { Fabricate(:post) }
 
@@ -327,6 +330,29 @@ describe ListController do
     it "returns empty user-assigned-topics-list for given user not in the assigned_allowed_group" do
       get "/topics/messages-assigned/#{user2.username_lower}.json"
       expect(JSON.parse(response.body)["topic_list"]["topics"]).to be_empty
+    end
+  end
+
+  describe "#private_messages_assigned" do
+    fab!(:group) { Fabricate(:group, users: [user]) }
+    fab!(:pm) { Fabricate(:topic, archetype: Archetype.private_message, category_id: nil) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:pm_post) { Fabricate(:post, topic: pm) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.assign_allowed_on_groups = "#{group.id}"
+      Fabricate(:topic_allowed_user, user: user, topic: pm)
+      Assigner.new(pm, user).assign(user)
+      Assigner.new(topic, user).assign(user)
+    end
+
+    it "returns assigned messages for user" do
+      sign_in(user)
+
+      get "/topics/private-messages-assigned/#{user.username_lower}.json"
+
+      expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to eq([pm.id])
     end
   end
 end
