@@ -40,6 +40,7 @@ after_initialize do
 
   reloadable_patch do |plugin|
     Group.class_eval { prepend DiscourseAssign::GroupExtension }
+    ListController.class_eval { prepend DiscourseAssign::ListControllerExtension }
     Post.class_eval { prepend DiscourseAssign::PostExtension }
     Topic.class_eval { prepend DiscourseAssign::TopicExtension }
     WebHook.class_eval { prepend DiscourseAssign::WebHookExtension }
