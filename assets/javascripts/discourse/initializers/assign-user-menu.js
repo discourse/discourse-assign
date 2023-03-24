@@ -1,4 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
+import UserMenuAssignNotificationsList from "../components/user-menu/assigns-list";
 
 export default {
   name: "assign-user-menu",
@@ -17,24 +18,13 @@ export default {
         }
         api.registerUserMenuTab((UserMenuTab) => {
           return class extends UserMenuTab {
-            get id() {
-              return "assign-list";
-            }
-
-            get panelComponent() {
-              return "user-menu/assigns-list";
-            }
-
-            get icon() {
-              return "user-plus";
-            }
+            id = "assign-list";
+            panelComponent = UserMenuAssignNotificationsList;
+            icon = "user-plus";
+            notificationTypes = ["assigned"];
 
             get count() {
               return this.getUnreadCountForType("assigned");
-            }
-
-            get notificationTypes() {
-              return ["assigned"];
             }
 
             get linkWhenActive() {

@@ -6,6 +6,7 @@ import Notification from "discourse/models/notification";
 import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";
 import Topic from "discourse/models/topic";
+import UserMenuAssignsListEmptyState from "./assigns-list-empty-state";
 
 export default class UserMenuAssignNotificationsList extends UserMenuNotificationsList {
   get dismissTypes() {
@@ -33,7 +34,7 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   get emptyStateComponent() {
-    return "user-menu/assigns-list-empty-state";
+    return UserMenuAssignsListEmptyState;
   }
 
   async fetchItems() {
