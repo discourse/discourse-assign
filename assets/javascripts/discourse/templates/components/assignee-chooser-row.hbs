@@ -6,7 +6,8 @@
     {{#if (and this.item.showUserStatus this.item.status)}}
       <UserStatusMessage
         @status={{this.item.status}}
-        @showDescription={{true}}
+        @onTrigger={{this.stopPropagation}}
+        @onUntrigger={{this.stopPropagation}}
       />
     {{/if}}
   </div>
