@@ -57,7 +57,7 @@ after_initialize do
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) { RemindAssignsFrequencySiteSettings.values }
 
-  add_to_serializer(:group_show, :assignment_count) do
+  add_to_serializer(:group_show, :assignment_count, include_condition: -> { scope.can_assign? }) do
     Topic.joins(<<~SQL).where(<<~SQL, group_id: object.id).where("topics.deleted_at IS NULL").count
         JOIN assignments a
         ON topics.id = a.topic_id AND a.assigned_to_id IS NOT NULL
@@ -74,8 +74,6 @@ after_initialize do
         ))
       SQL
   end
-
-  add_to_serializer(:group_show, "include_assignment_count?") { scope.can_assign? }
 
   add_to_serializer(:group_show, :assignable_level) { object.assignable_level }
 
@@ -484,144 +482,154 @@ after_initialize do
   end
 
   # TopicList serializer
-  add_to_serializer(:topic_list, :assigned_messages_count) do
+  add_to_serializer(
+    :topic_list,
+    :assigned_messages_count,
+    include_condition: -> do
+      options = object.instance_variable_get(:@opts)
+
+      if assigned_user = options.dig(:assigned)
+        scope.can_assign? || assigned_user.downcase == scope.current_user&.username_lower
+      end
+    end,
+  ) do
     TopicQuery
       .new(object.current_user, guardian: scope, limit: false)
       .private_messages_assigned_query(object.current_user)
       .count
   end
 
-  add_to_serializer(:topic_list, "include_assigned_messages_count?") do
-    options = object.instance_variable_get(:@opts)
-
-    if assigned_user = options.dig(:assigned)
-      scope.can_assign? || assigned_user.downcase == scope.current_user&.username_lower
-    end
-  end
-
   # TopicView serializer
-  add_to_serializer(:topic_view, :assigned_to_user, false) do
-    DiscourseAssign::Helpers.build_assigned_to_user(object.topic.assigned_to, object.topic)
-  end
+  add_to_serializer(
+    :topic_view,
+    :assigned_to_user,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User)
+    end,
+  ) { DiscourseAssign::Helpers.build_assigned_to_user(object.topic.assigned_to, object.topic) }
 
-  add_to_serializer(:topic_view, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User)
-  end
+  add_to_serializer(
+    :topic_view,
+    :assigned_to_group,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
+    end,
+  ) { DiscourseAssign::Helpers.build_assigned_to_group(object.topic.assigned_to, object.topic) }
 
-  add_to_serializer(:topic_view, :assigned_to_group, false) do
-    DiscourseAssign::Helpers.build_assigned_to_group(object.topic.assigned_to, object.topic)
-  end
-
-  add_to_serializer(:topic_view, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
-  end
-
-  add_to_serializer(:topic_view, :indirectly_assigned_to) do
+  add_to_serializer(
+    :topic_view,
+    :indirectly_assigned_to,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) &&
+        object.topic.indirectly_assigned_to.present?
+    end,
+  ) do
     DiscourseAssign::Helpers.build_indirectly_assigned_to(
       object.topic.indirectly_assigned_to,
       object.topic,
     )
   end
 
-  add_to_serializer(:topic_view, :include_indirectly_assigned_to?) do
-    (SiteSetting.assigns_public || scope.can_assign?) &&
-      object.topic.indirectly_assigned_to.present?
-  end
+  add_to_serializer(
+    :topic_view,
+    :assignment_note,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assignment.present?
+    end,
+  ) { object.topic.assignment.note }
 
-  add_to_serializer(:topic_view, :assignment_note, false) { object.topic.assignment.note }
-
-  add_to_serializer(:topic_view, :include_assignment_note?, false) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assignment.present?
-  end
-
-  add_to_serializer(:topic_view, :assignment_status, false) { object.topic.assignment.status }
-
-  add_to_serializer(:topic_view, :include_assignment_status?, false) do
-    SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
-      object.topic.assignment.present?
-  end
+  add_to_serializer(
+    :topic_view,
+    :assignment_status,
+    include_condition: -> do
+      SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
+        object.topic.assignment.present?
+    end,
+  ) { object.topic.assignment.status }
 
   # SuggestedTopic serializer
-  add_to_serializer(:suggested_topic, :assigned_to_user, false) do
-    DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
-  end
+  add_to_serializer(
+    :suggested_topic,
+    :assigned_to_user,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+    end,
+  ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
-  add_to_serializer(:suggested_topic, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
-  end
+  add_to_serializer(
+    :suggested_topic,
+    :assigned_to_group,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+    end,
+  ) { DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object) }
 
-  add_to_serializer(:suggested_topic, :assigned_to_group, false) do
-    DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object)
-  end
-
-  add_to_serializer(:suggested_topic, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
-  end
-
-  add_to_serializer(:suggested_topic, :indirectly_assigned_to) do
-    DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object)
-  end
-
-  add_to_serializer(:suggested_topic, :include_indirectly_assigned_to?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
-  end
+  add_to_serializer(
+    :suggested_topic,
+    :indirectly_assigned_to,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
+    end,
+  ) { DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object) }
 
   # TopicListItem serializer
-  add_to_serializer(:topic_list_item, :indirectly_assigned_to) do
-    DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object)
-  end
+  add_to_serializer(
+    :topic_list_item,
+    :indirectly_assigned_to,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
+    end,
+  ) { DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object) }
 
-  add_to_serializer(:topic_list_item, :include_indirectly_assigned_to?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
-  end
+  add_to_serializer(
+    :topic_list_item,
+    :assigned_to_user,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+    end,
+  ) { BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
-  add_to_serializer(:topic_list_item, :assigned_to_user) do
-    BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json
-  end
+  add_to_serializer(
+    :topic_list_item,
+    :assigned_to_group,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+    end,
+  ) { AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
-  add_to_serializer(:topic_list_item, :include_assigned_to_user?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
-  end
-
-  add_to_serializer(:topic_list_item, :assigned_to_group) do
-    AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
-  end
-
-  add_to_serializer(:topic_list_item, :include_assigned_to_group?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
-  end
-
-  add_to_serializer(:topic_list_item, :assignment_status, false) { object.assignment.status }
-
-  add_to_serializer(:topic_list_item, :include_assignment_status?, false) do
-    SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
-      object.assignment.present?
-  end
+  add_to_serializer(
+    :topic_list_item,
+    :assignment_status,
+    include_condition: -> do
+      SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
+        object.assignment.present?
+    end,
+  ) { object.assignment.status }
 
   # SearchTopicListItem serializer
-  add_to_serializer(:search_topic_list_item, :assigned_to_user, false) do
-    DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
-  end
+  add_to_serializer(
+    :search_topic_list_item,
+    :assigned_to_user,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+    end,
+  ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
-  add_to_serializer(:search_topic_list_item, "include_assigned_to_user?") do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
-  end
+  add_to_serializer(
+    :search_topic_list_item,
+    :assigned_to_group,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+    end,
+  ) { AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
-  add_to_serializer(:search_topic_list_item, :assigned_to_group, false) do
-    AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json
-  end
-
-  add_to_serializer(:search_topic_list_item, "include_assigned_to_group?") do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
-  end
-
-  add_to_serializer(:search_topic_list_item, :indirectly_assigned_to) do
-    DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object)
-  end
-
-  add_to_serializer(:search_topic_list_item, :include_indirectly_assigned_to?) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
-  end
+  add_to_serializer(
+    :search_topic_list_item,
+    :indirectly_assigned_to,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.indirectly_assigned_to.present?
+    end,
+  ) { DiscourseAssign::Helpers.build_indirectly_assigned_to(object.indirectly_assigned_to, object) }
 
   # TopicsBulkAction
   TopicsBulkAction.register_operation("assign") do
@@ -648,24 +656,28 @@ after_initialize do
     %w[Post Topic].include?(bookmarkable_type)
   end
 
-  add_to_serializer(:user_bookmark_base, :assigned_to_user, false) do
+  add_to_serializer(
+    :user_bookmark_base,
+    :assigned_to_user,
+    include_condition: -> do
+      return false if !can_have_assignment?
+      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(User)
+    end,
+  ) do
     return if !can_have_assignment?
     BasicUserSerializer.new(assigned_to, scope: scope, root: false).as_json
   end
 
-  add_to_serializer(:user_bookmark_base, "include_assigned_to_user?") do
-    return false if !can_have_assignment?
-    (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(User)
-  end
-
-  add_to_serializer(:user_bookmark_base, :assigned_to_group, false) do
+  add_to_serializer(
+    :user_bookmark_base,
+    :assigned_to_group,
+    include_condition: -> do
+      return false if !can_have_assignment?
+      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(Group)
+    end,
+  ) do
     return if !can_have_assignment?
     AssignedGroupSerializer.new(assigned_to, scope: scope, root: false).as_json
-  end
-
-  add_to_serializer(:user_bookmark_base, "include_assigned_to_group?") do
-    return false if !can_have_assignment?
-    (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(Group)
   end
 
   add_to_serializer(:basic_user, :assign_icon) { "user-plus" }
@@ -675,56 +687,59 @@ after_initialize do
   end
 
   # PostSerializer
-  add_to_serializer(:post, :assigned_to_user) do
-    BasicUserSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
-  end
+  add_to_serializer(
+    :post,
+    :assigned_to_user,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) &&
+        object.assignment&.assigned_to&.is_a?(User) && object.assignment.active
+    end,
+  ) { BasicUserSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json }
 
-  add_to_serializer(:post, "include_assigned_to_user?") do
-    (SiteSetting.assigns_public || scope.can_assign?) &&
-      object.assignment&.assigned_to&.is_a?(User) && object.assignment.active
-  end
-
-  add_to_serializer(:post, :assigned_to_group, false) do
+  add_to_serializer(
+    :post,
+    :assigned_to_group,
+    false,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) &&
+        object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
+    end,
+  ) do
     AssignedGroupSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
   end
 
-  add_to_serializer(:post, "include_assigned_to_group?") do
-    (SiteSetting.assigns_public || scope.can_assign?) &&
-      object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
-  end
+  add_to_serializer(
+    :post,
+    :assignment_note,
+    include_condition: -> do
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assignment.present?
+    end,
+  ) { object.assignment.note }
 
-  add_to_serializer(:post, :assignment_note, false) { object.assignment.note }
-
-  add_to_serializer(:post, :include_assignment_note?, false) do
-    (SiteSetting.assigns_public || scope.can_assign?) && object.assignment.present?
-  end
-
-  add_to_serializer(:post, :assignment_status, false) { object.assignment.status }
-
-  add_to_serializer(:post, :include_assignment_status?, false) do
-    SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
-      object.assignment.present?
-  end
+  add_to_serializer(
+    :post,
+    :assignment_status,
+    include_condition: -> do
+      SiteSetting.enable_assign_status && (SiteSetting.assigns_public || scope.can_assign?) &&
+        object.assignment.present?
+    end,
+  ) { object.assignment.status }
 
   # CurrentUser serializer
   add_to_serializer(:current_user, :can_assign) { object.can_assign? }
 
   # FlaggedTopic serializer
-  add_to_serializer(:flagged_topic, :assigned_to_user) do
-    DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object)
-  end
+  add_to_serializer(
+    :flagged_topic,
+    :assigned_to_user,
+    include_condition: -> { object.assigned_to && object.assigned_to&.is_a?(User) },
+  ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
-  add_to_serializer(:flagged_topic, :include_assigned_to_user?) do
-    object.assigned_to && object.assigned_to&.is_a?(User)
-  end
-
-  add_to_serializer(:flagged_topic, :assigned_to_group) do
-    DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object)
-  end
-
-  add_to_serializer(:flagged_topic, :include_assigned_to_group?) do
-    object.assigned_to && object.assigned_to&.is_a?(Group)
-  end
+  add_to_serializer(
+    :flagged_topic,
+    :assigned_to_group,
+    include_condition: -> { object.assigned_to && object.assigned_to&.is_a?(Group) },
+  ) { DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object) }
 
   # Reviewable
   add_custom_reviewable_filter(
