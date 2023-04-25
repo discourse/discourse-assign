@@ -699,7 +699,6 @@ after_initialize do
   add_to_serializer(
     :post,
     :assigned_to_group,
-    false,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?) &&
         object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
