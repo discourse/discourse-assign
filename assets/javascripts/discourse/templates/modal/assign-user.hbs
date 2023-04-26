@@ -52,7 +52,7 @@
       <Textarea
         id={{"assign-modal-note"}}
         @value={{model.note}}
-        {{on "keyup" (action "handleTextAreaKeyUp")}}
+        {{on "keydown" (action "handleTextAreaKeydown")}}
       />
     </div>
   </div>
