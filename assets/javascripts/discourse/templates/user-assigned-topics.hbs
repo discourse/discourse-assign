@@ -10,7 +10,7 @@
         class="no-blur"
         @value={{readonly search}}
         placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
-        autocomplete={{"off"}}
+        autocomplete="off"
         @type="search"
         {{on "input" (action "onChangeFilter" value="target.value")}}
       />
