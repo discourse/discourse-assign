@@ -1,6 +1,6 @@
 {{#if currentUser.can_assign}}
-  {{#link-to "userActivity.assigned"}}
+  <LinkTo @route="userActivity.assigned">
     {{d-icon "user-plus"}}
     {{i18n "discourse_assign.assigned"}}
-  {{/link-to}}
+  </LinkTo>
 {{/if}}

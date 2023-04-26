@@ -1,20 +1,22 @@
 <section class="user-secondary-navigation group-assignments">
-  {{#mobile-nav
-    class="activity-nav"
-    desktopClass="action-list activity-list nav-stacked"
-  }}
+  <MobileNav
+    @class="activity-nav"
+    @desktopClass="action-list activity-list nav-stacked"
+  >
     {{#if isDesktop}}
       <div class="search-div">
-        {{input
-          type="text"
-          placeholder=(i18n "discourse_assign.sidebar_name_filter_placeholder")
-          value=(readonly filterName)
+        <Input
+          @type="text"
+          placeholder={{i18n
+            "discourse_assign.sidebar_name_filter_placeholder"
+          }}
+          @value={{readonly filterName}}
           class="search"
-          input=(action "onChangeFilterName" value="target.value")
-        }}
+          {{on "input" (action "onChangeFilterName" value="target.value")}}
+        />
       </div>
     {{/if}}
-    {{#load-more selector=".activity-nav li" action=(action "loadMore")}}
+    <LoadMore @selector=".activity-nav li" @action={{action "loadMore"}}>
       {{group-assigned-filter
         showAvatar=false
         filter="everyone"
@@ -44,9 +46,9 @@
           order=order
         }}
       {{/each}}
-      {{conditional-loading-spinner condition=loading}}
-    {{/load-more}}
-  {{/mobile-nav}}
+      <ConditionalLoadingSpinner @condition={{loading}} />
+    </LoadMore>
+  </MobileNav>
 </section>
 <section class="user-content">
   {{outlet}}
