@@ -3,7 +3,7 @@
   <EmailGroupUserChooser
     @value={{additionalFilters.assigned_to}}
     @onChange={{action "updateAssignedTo"}}
-    @autocomplete="off"
+    autocomplete={{"off"}}
     @options={{hash
       maximum=1
       fullWidthWrap=true
