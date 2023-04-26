@@ -12,7 +12,7 @@
           }}
           @value={{readonly filterName}}
           class="search"
-          @input={{action "onChangeFilterName" value="target.value"}}
+          {{on "input" (action "onChangeFilterName" value="target.value")}}
         />
       </div>
     {{/if}}

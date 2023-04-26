@@ -4,9 +4,9 @@
       class="no-blur"
       @value={{readonly search}}
       placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
-      @input={{action "onChangeFilter" value="target.value"}}
       @autocomplete="off"
       @type="search"
+      {{on "input" (action "onChangeFilter" value="target.value")}}
     />
   </div>
 </div>
