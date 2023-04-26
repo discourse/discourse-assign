@@ -1,6 +1,6 @@
 <td class="topic-list-data">
   <div class="main-link">
-    {{topic-status topic=topic}}
+    <TopicStatus @topic={{topic}} />
     {{~#if isPrivateMessage}}
       {{~d-icon "envelope" class="private-message-icon"}}
     {{~/if}}

@@ -6,12 +6,5 @@
       "discourse_assign.admin.groups.manage.interaction.assignable_levels.title"
     }}</label>
 
-  {{combo-box
-    name="alias"
-    valueProperty="value"
-    value=assignableLevel
-    content=assignableLevelOptions
-    class="groups-form-assignable-level"
-    onChange=(action (mut model.assignable_level))
-  }}
+  <ComboBox @name="alias" @valueProperty="value" @value={{assignableLevel}} @content={{assignableLevelOptions}} @class="groups-form-assignable-level" @onChange={{action (mut model.assignable_level)}} />
 </div>

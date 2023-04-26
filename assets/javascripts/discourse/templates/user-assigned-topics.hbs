@@ -6,22 +6,11 @@
 {{else}}
   <div class="topic-search-div">
     <div class="inline-form full-width">
-      {{input
-        class="no-blur"
-        value=(readonly search)
-        placeholder=(i18n "discourse_assign.topic_search_placeholder")
-        input=(action "onChangeFilter" value="target.value")
-        autocomplete="off"
-        type="search"
-      }}
+      <Input class="no-blur" @value={{readonly search}} placeholder={{i18n "discourse_assign.topic_search_placeholder"}} @input={{action "onChangeFilter" value="target.value"}} @autocomplete="off" @type="search" />
     </div>
   </div>
 
-  {{#load-more
-    class="paginated-topics-list"
-    selector=".paginated-topics-list .topic-list tr"
-    action=(action "loadMore")
-  }}
+  <LoadMore @class="paginated-topics-list" @selector=".paginated-topics-list .topic-list tr" @action={{action "loadMore"}}>
     {{basic-assigned-topic-list
       topicList=model
       hideCategory=hideCategory
@@ -39,6 +28,6 @@
       scrollOnLoad=true
     }}
 
-    {{conditional-loading-spinner condition=model.loadingMore}}
-  {{/load-more}}
+    <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+  </LoadMore>
 {{/if}}

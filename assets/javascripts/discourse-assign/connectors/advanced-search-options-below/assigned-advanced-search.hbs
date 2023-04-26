@@ -3,15 +3,11 @@
       "search.advanced.assigned.label"
     }}</label>
   <div class="controls">
-    {{email-group-user-chooser
-      value=searchedTerms.assigned
-      onChange=(action "onChangeAssigned")
-      options=(hash
+    <EmailGroupUserChooser @value={{searchedTerms.assigned}} @onChange={{action "onChangeAssigned"}} @options={{hash
         maximum=1
         excludeCurrentUser=false
         includeGroups=true
         customSearchOptions=(hash assignableGroups=true)
-      )
-    }}
+      }} />
   </div>
 </div>
