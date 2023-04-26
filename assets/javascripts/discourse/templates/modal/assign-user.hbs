@@ -34,7 +34,12 @@
     {{#if this.statusEnabled}}
       <div class="control-group assign-status">
         <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
-        <ComboBox @id="assign-status" @content={{availableStatuses}} @value={{status}} @onChange={{action (mut model.status)}} />
+        <ComboBox
+          @id="assign-status"
+          @content={{availableStatuses}}
+          @value={{status}}
+          @onChange={{action (mut model.status)}}
+        />
       </div>
     {{/if}}
 
@@ -44,7 +49,11 @@
           class="label-optional"
         >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
       </label>
-      <Textarea @id="assign-modal-note" @value={{model.note}} @key-down={{action "handleTextAreaKeydown"}} />
+      <Textarea
+        @id="assign-modal-note"
+        @value={{model.note}}
+        @key-down={{action "handleTextAreaKeydown"}}
+      />
     </div>
   </div>
 </DModalBody>

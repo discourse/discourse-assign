@@ -1,8 +1,19 @@
 <section class="user-secondary-navigation group-assignments">
-  <MobileNav @class="activity-nav" @desktopClass="action-list activity-list nav-stacked">
+  <MobileNav
+    @class="activity-nav"
+    @desktopClass="action-list activity-list nav-stacked"
+  >
     {{#if isDesktop}}
       <div class="search-div">
-        <Input @type="text" placeholder={{i18n "discourse_assign.sidebar_name_filter_placeholder"}} @value={{readonly filterName}} class="search" @input={{action "onChangeFilterName" value="target.value"}} />
+        <Input
+          @type="text"
+          placeholder={{i18n
+            "discourse_assign.sidebar_name_filter_placeholder"
+          }}
+          @value={{readonly filterName}}
+          class="search"
+          @input={{action "onChangeFilterName" value="target.value"}}
+        />
       </div>
     {{/if}}
     <LoadMore @selector=".activity-nav li" @action={{action "loadMore"}}>

@@ -2,7 +2,11 @@
   {{#if hasIncoming}}
     <div class="show-mores">
       <a href class="alert alert-info clickable" {{action showInserted}}>
-        <CountI18n @key="topic_count_" @suffix="latest" @count={{incomingCount}} />
+        <CountI18n
+          @key="topic_count_"
+          @suffix="latest"
+          @count={{incomingCount}}
+        />
       </a>
     </div>
   {{/if}}

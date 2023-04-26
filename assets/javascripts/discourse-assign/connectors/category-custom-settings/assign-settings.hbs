@@ -2,7 +2,11 @@
 <section class="field">
   <div class="enable-accepted-answer">
     <label class="checkbox-label">
-      <Input @type="checkbox" @checked={{readonly category.enable_unassigned_filter}} @change={{action "onChangeSetting" value="target.checked"}} />
+      <Input
+        @type="checkbox"
+        @checked={{readonly category.enable_unassigned_filter}}
+        @change={{action "onChangeSetting" value="target.checked"}}
+      />
       {{i18n "discourse_assign.add_unassigned_filter"}}
     </label>
   </div>

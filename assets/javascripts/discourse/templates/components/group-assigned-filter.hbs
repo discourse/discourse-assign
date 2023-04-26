@@ -1,5 +1,9 @@
 {{#if showAvatar}}
-  <LinkTo @route="group.assigned.show" @model={{filter.username_lower}} @query={{hash order=order ascending=ascending search=search}}>
+  <LinkTo
+    @route="group.assigned.show"
+    @model={{filter.username_lower}}
+    @query={{hash order=order ascending=ascending search=search}}
+  >
     <div class="assign-image">
       <a href={{filter.userPath}} data-user-card={{filter.username}}>{{avatar
           filter
@@ -17,7 +21,11 @@
     </div>
   </LinkTo>
 {{else if groupName}}
-  <LinkTo @route="group.assigned.show" @model={{filter}} @query={{hash order=order ascending=ascending search=search}}>
+  <LinkTo
+    @route="group.assigned.show"
+    @model={{filter}}
+    @query={{hash order=order ascending=ascending search=search}}
+  >
     <div class="assign-image">
       {{d-icon "group-plus"}}
     </div>
@@ -30,7 +38,11 @@
     </div>
   </LinkTo>
 {{else}}
-  <LinkTo @route="group.assigned.show" @model={{filter}} @query={{hash order=order ascending=ascending search=search}}>
+  <LinkTo
+    @route="group.assigned.show"
+    @model={{filter}}
+    @query={{hash order=order ascending=ascending search=search}}
+  >
     <div class="assign-everyone">
       {{i18n "discourse_assign.group_everyone"}}
     </div>
