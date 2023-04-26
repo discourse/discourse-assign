@@ -52,6 +52,7 @@
       <Textarea
         id={{"assign-modal-note"}}
         @value={{model.note}}
+        {{! template-lint-disable no-down-event-binding }}
         {{on "keydown" (action "handleTextAreaKeydown")}}
       />
     </div>
