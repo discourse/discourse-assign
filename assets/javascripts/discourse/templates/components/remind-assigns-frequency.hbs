@@ -6,7 +6,7 @@
       @valueProperty="value"
       @content={{availableFrequencies}}
       @value={{selectedFrequency}}
-      @onChange={{action (mut user.custom_fields.remind_assigns_frequency)}}
+      @onChange={{action "updateSelectedFrequency"}}
     />
   </div>
 {{/if}}

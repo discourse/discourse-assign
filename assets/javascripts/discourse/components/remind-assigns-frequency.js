@@ -1,26 +1,24 @@
 import Component from "@ember/component";
 import I18n from "I18n";
-import discourseComputed from "discourse-common/utils/decorators";
+import { inject as service } from "@ember/service";
+import { action } from "@ember/object";
 
 export default Component.extend({
-  @discourseComputed(
-    "user.custom_fields.remind_assigns_frequency",
-    "siteSettings.remind_assigns_frequency"
-  )
-  selectedFrequency(userAssignsFrequency, siteDefaultAssignsFrequency) {
+  siteSettings: service(),
+
+  get selectedFrequency() {
+    const frequency = this.user.get("custom_fields.remind_assigns_frequency");
     if (
-      this.availableFrequencies
-        .map((freq) => freq.value)
-        .includes(userAssignsFrequency)
+      this.availableFrequencies.map((freq) => freq.value).includes(frequency)
     ) {
-      return userAssignsFrequency;
+      return frequency;
     }
 
-    return siteDefaultAssignsFrequency;
+    return this.siteSettings.remind_assigns_frequency;
   },
 
-  @discourseComputed("user.reminders_frequency")
-  availableFrequencies(userRemindersFrequency) {
+  get availableFrequencies() {
+    const userRemindersFrequency = this.get("user.reminders_frequency");
     return userRemindersFrequency.map((freq) => {
       return {
         name: I18n.t(freq.name),
@@ -28,5 +26,10 @@ export default Component.extend({
         selected: false,
       };
     });
+  },
+
+  @action
+  updateSelectedFrequency(value) {
+    this.user.set("custom_fields.remind_assigns_frequency", value);
   },
 });
