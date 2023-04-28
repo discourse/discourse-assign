@@ -73,7 +73,6 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   handleTextAreaKeydown(value, event) {
-    console.log(event);
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
       this.assign();
     }
