@@ -8,7 +8,6 @@
         onChange=(action "assignUsername")
         autofocus="autofocus"
         showUserStatus=true
-        caretIcon="search"
         options=(hash
           mobilePlacementStrategy="absolute"
           filterPlaceholder=placeholderKey
@@ -21,6 +20,8 @@
           autofocus=autofocus
           tabindex=1
           expandedOnInsert=(not assigneeName)
+          caretUpIcon="search"
+          caretDownIcon="search"
         )
       }}
       {{#if this.assigneeError}}
