@@ -35,7 +35,7 @@
       <div class="control-group assign-status">
         <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
         <ComboBox
-          id="assign-status"
+          @id="assign-status"
           @content={{availableStatuses}}
           @value={{status}}
           @onChange={{action (mut model.status)}}
