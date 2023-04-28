@@ -1,4 +1,4 @@
-<DModalBody @class="assign">
+<DModalBody class="assign">
   <div>
     <div class="control-group {{if this.assigneeError 'assignee-error'}}">
       <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
@@ -35,7 +35,7 @@
       <div class="control-group assign-status">
         <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
         <ComboBox
-          @id="assign-status"
+          id="assign-status"
           @content={{availableStatuses}}
           @value={{status}}
           @onChange={{action (mut model.status)}}
@@ -60,16 +60,16 @@
 </DModalBody>
 
 <div class="modal-footer">
-  {{d-button
-    label=(if
+  <DButton
+    @label={{(if
       model.reassign
       "discourse_assign.reassign.title"
       "discourse_assign.assign_modal.assign"
-    )
-    icon=inviteIcon
-    action=(action "assign")
+    )}}
+    @icon={{inviteIcon}}
+    @action={{(action "assign")}}
     class="btn-primary"
-    disabled=disabled
-  }}
+    @disabled={{disabled}}
+  />
   <DModalCancel @close={{route-action "closeModal"}} />
 </div>
