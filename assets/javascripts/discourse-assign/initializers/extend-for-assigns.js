@@ -4,7 +4,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
 import { h } from "virtual-dom";
-import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
