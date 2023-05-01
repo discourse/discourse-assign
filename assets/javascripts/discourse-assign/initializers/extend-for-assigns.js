@@ -658,24 +658,6 @@ function initialize(api) {
     }
   });
 
-  api.addUserMenuGlyph((widget) => {
-    if (widget.currentUser && widget.currentUser.can_assign) {
-      const glyph = {
-        label: "discourse_assign.assigned",
-        className: "assigned",
-        icon: "user-plus",
-        href: `${widget.currentUser.path}/activity/assigned`,
-      };
-
-      if (queryRegistry("quick-access-panel")) {
-        glyph["action"] = "quickAccess";
-        glyph["actionParam"] = "assignments";
-      }
-
-      return glyph;
-    }
-  });
-
   api.createWidget("assigned-to", {
     html(attrs) {
       let { assignedToUser, assignedToGroup, href } = attrs;
