@@ -60,12 +60,9 @@
     topic.views
     numberKey="views_long"
   }}</td>
-{{raw
-  "list/activity-column"
-  topic=topic
-  class="num topic-list-data"
-  tagName="td"
-}}
+<td>
+  {{raw "list/activity-column" topic=topic class="num topic-list-data"}}
+</td>
 <td class="topic-list-data">
   {{#if topic.assigned_to_user}}
     {{assign-actions-dropdown
