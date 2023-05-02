@@ -627,7 +627,9 @@ after_initialize do
   TopicsBulkAction.register_operation("assign") do
     if @user.can_assign?
       assign_user = User.find_by_username(@operation[:username])
-      topics.each { |topic| Assigner.new(topic, @user).assign(assign_user) }
+      topics.each do |topic|
+        Assigner.new(topic, @user).assign(assign_user, note: @operation[:note])
+      end
     end
   end
 
@@ -638,6 +640,7 @@ after_initialize do
   end
 
   register_permitted_bulk_action_parameter :username
+  register_permitted_bulk_action_parameter :note
 
   add_to_class(:user_bookmark_base_serializer, :assigned_to) do
     @assigned_to ||=

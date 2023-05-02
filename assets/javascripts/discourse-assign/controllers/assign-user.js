@@ -43,10 +43,11 @@ export default Controller.extend(ModalFunctionality, {
     }
   },
 
-  bulkAction(username) {
+  bulkAction(username, note) {
     return this.topicBulkActions.performAndRefresh({
       type: "assign",
       username,
+      note,
     });
   },
 
@@ -81,7 +82,10 @@ export default Controller.extend(ModalFunctionality, {
   @action
   assign() {
     if (this.isBulkAction) {
-      return this.bulkAction(this.model.username);
+      return this.bulkAction(
+        this.get("model.username"),
+        this.get("model.note")
+      );
     }
 
     if (!this.assigneeName) {
@@ -127,10 +131,6 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   assignUser(name) {
-    if (this.isBulkAction) {
-      return this.bulkAction(name);
-    }
-
     this.setGroupOrUser(name);
 
     if (name) {
@@ -140,10 +140,6 @@ export default Controller.extend(ModalFunctionality, {
 
   @action
   assignUsername(selected) {
-    if (this.isBulkAction) {
-      return this.bulkAction(selected.firstObject);
-    }
-
     this.setGroupOrUser(selected.firstObject);
   },
 

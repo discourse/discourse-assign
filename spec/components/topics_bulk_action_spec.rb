@@ -22,7 +22,7 @@ describe TopicsBulkAction do
       TopicsBulkAction.new(
         user,
         [post.topic.id, post1.topic.id],
-        { type: "assign", username: user.username },
+        { type: "assign", username: user.username, note: "foobar" },
       ).perform!
 
       assigned_topics = TopicQuery.new(user, { page: 0 }).list_messages_assigned(user).topics
@@ -30,6 +30,9 @@ describe TopicsBulkAction do
       expect(assigned_topics.length).to eq(2)
 
       expect(assigned_topics).to contain_exactly(post.topic, post1.topic)
+
+      expect(post.topic.assignment.note).to eq "foobar"
+      expect(post1.topic.assignment.note).to eq "foobar"
     end
 
     it "doesn't allows to assign to user not in assign_allowed_group" do

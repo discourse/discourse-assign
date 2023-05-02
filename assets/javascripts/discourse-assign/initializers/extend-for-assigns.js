@@ -945,7 +945,7 @@ export default {
         actions: {
           showReAssign() {
             this.set("assignUser.isBulkAction", true);
-            this.set("assignUser.model", { username: "" });
+            this.set("assignUser.model", { username: "", note: "" });
             this.send("changeBulkTemplate", "modal/assign-user");
           },
           unassignTopics() {
