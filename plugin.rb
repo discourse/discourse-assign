@@ -318,7 +318,7 @@ after_initialize do
     end
 
     user_id = topic_query.guardian.user.id if name == "me"
-    user_id ||= User.where(username_lower: name.downcase).pluck_first(:id)
+    user_id ||= User.where(username_lower: name.downcase).pick(:id)
 
     if user_id
       next(
@@ -329,7 +329,7 @@ after_initialize do
       )
     end
 
-    group_id = Group.where(name: name.downcase).pluck_first(:id)
+    group_id = Group.where(name: name.downcase).pick(:id)
 
     if group_id
       next(
