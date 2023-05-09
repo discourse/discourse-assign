@@ -111,15 +111,15 @@ describe "integration tests" do
 
     it "assigns topic" do
       expect do DiscourseEvent.trigger(:assign_topic, topic, user1, admin) end.to change {
-        Assignment.where(topic: topic).pluck_first(:assigned_to_id)
+        Assignment.where(topic: topic).pick(:assigned_to_id)
       }.from(nil).to(user1.id)
 
       expect do DiscourseEvent.trigger(:assign_topic, topic, user2, admin) end.to_not change {
-        Assignment.where(topic: topic).pluck_first(:assigned_to_id)
+        Assignment.where(topic: topic).pick(:assigned_to_id)
       }.from(user1.id)
 
       expect do DiscourseEvent.trigger(:assign_topic, topic, user2, admin, true) end.to change {
-        Assignment.where(topic: topic).pluck_first(:assigned_to_id)
+        Assignment.where(topic: topic).pick(:assigned_to_id)
       }.from(user1.id).to(user2.id)
     end
 
