@@ -4,7 +4,6 @@ import discourseComputed from "discourse-common/utils/decorators";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import { escapeExpression } from "discourse/lib/utilities";
 import { h } from "virtual-dom";
-import { queryRegistry } from "discourse/widgets/widget";
 import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
@@ -655,24 +654,6 @@ function initialize(api) {
           )}">${name}</span></${tagName}>`;
         })
         .join("");
-    }
-  });
-
-  api.addUserMenuGlyph((widget) => {
-    if (widget.currentUser && widget.currentUser.can_assign) {
-      const glyph = {
-        label: "discourse_assign.assigned",
-        className: "assigned",
-        icon: "user-plus",
-        href: `${widget.currentUser.path}/activity/assigned`,
-      };
-
-      if (queryRegistry("quick-access-panel")) {
-        glyph["action"] = "quickAccess";
-        glyph["actionParam"] = "assignments";
-      }
-
-      return glyph;
     }
   });
 

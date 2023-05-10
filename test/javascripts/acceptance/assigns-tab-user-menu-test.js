@@ -199,9 +199,12 @@ const USER_MENU_ASSIGN_RESPONSE = {
 };
 
 acceptance(
-  "Discourse Assign | experimental user menu | user cannot assign",
+  "Discourse Assign | user menu | user cannot assign",
   function (needs) {
-    needs.user({ redesigned_user_menu_enabled: true, can_assign: false });
+    needs.user({
+      redesigned_user_menu_enabled: true, // TODO(@keegan): Remove after site setting is removed in core
+      can_assign: false,
+    });
     needs.settings({
       assign_enabled: true,
     });
@@ -215,9 +218,12 @@ acceptance(
 );
 
 acceptance(
-  "Discourse Assign | experimental user menu | assign_enabled setting is disabled",
+  "Discourse Assign | user menu | assign_enabled setting is disabled",
   function (needs) {
-    needs.user({ redesigned_user_menu_enabled: true, can_assign: true });
+    needs.user({
+      redesigned_user_menu_enabled: true, // TODO(@keegan): Remove after site setting is removed in core
+      can_assign: false,
+    });
     needs.settings({
       assign_enabled: false,
     });
@@ -230,9 +236,9 @@ acceptance(
   }
 );
 
-acceptance("Discourse Assign | experimental user menu", function (needs) {
+acceptance("Discourse Assign | user menu", function (needs) {
   needs.user({
-    redesigned_user_menu_enabled: true,
+    redesigned_user_menu_enabled: true, // TODO(@keegan): Remove after site setting is removed in core
     can_assign: true,
     grouped_unread_notifications: {
       34: 173, // assigned notification type
