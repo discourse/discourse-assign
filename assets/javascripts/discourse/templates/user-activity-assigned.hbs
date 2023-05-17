@@ -1,1 +1,44 @@
-{{outlet}}
+{{#if doesntHaveAssignments}}
+  <EmptyState
+    @title={{i18n "user.no_assignments_title"}}
+    @body={{emptyStateBody}}
+  />
+{{else}}
+  <div class="topic-search-div">
+    <div class="inline-form full-width">
+      <Input
+        class="no-blur"
+        @value={{readonly search}}
+        placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
+        autocomplete="off"
+        @type="search"
+        {{on "input" (action "onChangeFilter" value="target.value")}}
+      />
+    </div>
+  </div>
+
+  <LoadMore
+    @class="paginated-topics-list"
+    @selector=".paginated-topics-list .topic-list tr"
+    @action={{action "loadMore"}}
+  >
+    {{basic-assigned-topic-list
+      topicList=model
+      hideCategory=hideCategory
+      showPosters=true
+      bulkSelectEnabled=bulkSelectEnabled
+      selected=selected
+      hasIncoming=hasIncoming
+      incomingCount=incomingCount
+      showInserted=(action "showInserted")
+      tagsForUser=tagsForUser
+      changeSort=(action "changeSort")
+      unassign=(action "unassign")
+      reassign=(action "reassign")
+      onScroll=saveScrollPosition
+      scrollOnLoad=true
+    }}
+
+    <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+  </LoadMore>
+{{/if}}

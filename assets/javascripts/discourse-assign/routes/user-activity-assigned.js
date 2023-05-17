@@ -4,11 +4,14 @@ import cookie from "discourse/lib/cookie";
 import { action } from "@ember/object";
 
 export default UserTopicListRoute.extend({
+  templateName: "user-activity-assigned",
+  controllerName: "user-activity-assigned",
+
   userActionType: 16,
   noContentHelpKey: "discourse_assigns.no_assigns",
 
   beforeModel() {
-    if (this.currentUser === undefined) {
+    if (!this.currentUser) {
       cookie("destination_url", window.location.href);
       this.transitionTo("login");
     }
@@ -16,11 +19,10 @@ export default UserTopicListRoute.extend({
 
   model(params) {
     return this.store.findFiltered("topicList", {
-      filter: `topics/messages-assigned/${this.modelFor("user").get(
-        "username_lower"
-      )}`,
+      filter: `topics/messages-assigned/${
+        this.modelFor("user").username_lower
+      }`,
       params: {
-        // core is a bit odd here and is not sending an array, should be fixed
         exclude_category_ids: [-1],
         order: params.order,
         ascending: params.ascending,
@@ -31,16 +33,6 @@ export default UserTopicListRoute.extend({
 
   titleToken() {
     return I18n.t("discourse_assign.assigned");
-  },
-
-  renderTemplate() {
-    this.render("user-activity-assigned");
-    this.render("user-assigned-topics", { into: "user-activity-assigned" });
-  },
-
-  setupController(controller, model) {
-    this._super(controller, model);
-    controller.set("model", model);
   },
 
   @action
