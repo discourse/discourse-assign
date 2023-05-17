@@ -202,7 +202,6 @@ acceptance(
   "Discourse Assign | user menu | user cannot assign",
   function (needs) {
     needs.user({
-      redesigned_user_menu_enabled: true, // TODO(@keegan): Remove after site setting is removed in core
       can_assign: false,
     });
     needs.settings({
@@ -221,7 +220,6 @@ acceptance(
   "Discourse Assign | user menu | assign_enabled setting is disabled",
   function (needs) {
     needs.user({
-      redesigned_user_menu_enabled: true, // TODO(@keegan): Remove after site setting is removed in core
       can_assign: false,
     });
     needs.settings({
@@ -238,7 +236,6 @@ acceptance(
 
 acceptance("Discourse Assign | user menu", function (needs) {
   needs.user({
-    redesigned_user_menu_enabled: true, // TODO(@keegan): Remove after site setting is removed in core
     can_assign: true,
     grouped_unread_notifications: {
       34: 173, // assigned notification type
