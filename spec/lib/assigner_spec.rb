@@ -360,7 +360,7 @@ RSpec.describe Assigner do
     it "triggers error for incorrect type" do
       expect do
         described_class.new(secure_category, moderator).assign(moderator)
-      end.to raise_error(Discourse::InvalidAccess)
+      end.to raise_error(Discourse::InvalidParameters)
     end
 
     describe "updating notes" do
@@ -705,6 +705,37 @@ RSpec.describe Assigner do
         topic.update_status("closed", false, moderator)
         expect(post_2.assignment.reload.active).to be true
       end
+    end
+  end
+
+  describe "invite_on_assign" do
+    let(:admin) { Fabricate(:admin) }
+    let(:topic) { Fabricate(:private_message_topic) }
+    let(:post) { Fabricate(:post, topic: topic) }
+    let(:assigner) { described_class.new(topic, admin) }
+
+    before do
+      SiteSetting.invite_on_assign = true
+      post
+    end
+
+    it "invites user to the PM" do
+      user = Fabricate(:user)
+      assigner.assign(user)
+      expect(topic.allowed_users).to include(user)
+    end
+
+    it "invites group to the PM" do
+      group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:only_admins], messageable_level: Group::ALIAS_LEVELS[:only_admins])
+      assigner.assign(group)
+      expect(topic.allowed_groups).to include(group)
+    end
+
+    it "doesn't invite group to the PM if it's not messageable" do
+      group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:only_admins], messageable_level: Group::ALIAS_LEVELS[:nobody])
+      expect {
+        assigner.assign(group)
+      }.to raise_error(Discourse::InvalidAccess)
     end
   end
 

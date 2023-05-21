@@ -10,6 +10,7 @@ en:
     unassign_on_group_archive: "When a message is archived by a group, unassign message (reassign if moved back to inbox)"
     unassign_on_close: "When a topic is closed unassign topic"
     reassign_on_open: "When a topic is opened reassign previously assigned users/groups"
+    invite_on_assign: "When a personal message is assigned to a user or group, invite them to the PM if they are not already a participant."
     assign_mailer: "When to send notification email for assignments"
     remind_assigns: "Remind users about pending assigns."
     remind_assigns_frequency: "Frequency for reminding users about assigned topics."
