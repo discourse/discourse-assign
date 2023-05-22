@@ -258,6 +258,21 @@ class ::Assigner
   def assign(assign_to, note: nil, skip_small_action_post: false, status: nil)
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
+    if topic.private_message? && SiteSetting.invite_on_assign
+      guardian = Guardian.new(@assigned_by)
+      if assigned_to_type == "Group"
+        unless topic.topic_allowed_groups.exists?(group_id: assign_to.id)
+          guardian.ensure_can_invite_group_to_private_message!(assign_to, topic)
+          topic.invite_group(@assigned_by, assign_to)
+        end
+      else
+        unless topic.topic_allowed_users.exists?(user_id: assign_to.id)
+          guardian.ensure_can_invite_to!(topic)
+          topic.invite(@assigned_by, assign_to.username)
+        end
+      end
+    end
+
     forbidden_reason =
       forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note, status: status)
     return { success: false, reason: forbidden_reason } if forbidden_reason
