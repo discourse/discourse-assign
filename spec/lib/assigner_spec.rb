@@ -726,16 +726,24 @@ RSpec.describe Assigner do
     end
 
     it "invites group to the PM" do
-      group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:only_admins], messageable_level: Group::ALIAS_LEVELS[:only_admins])
+      group =
+        Fabricate(
+          :group,
+          assignable_level: Group::ALIAS_LEVELS[:only_admins],
+          messageable_level: Group::ALIAS_LEVELS[:only_admins],
+        )
       assigner.assign(group)
       expect(topic.allowed_groups).to include(group)
     end
 
     it "doesn't invite group to the PM if it's not messageable" do
-      group = Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:only_admins], messageable_level: Group::ALIAS_LEVELS[:nobody])
-      expect {
-        assigner.assign(group)
-      }.to raise_error(Discourse::InvalidAccess)
+      group =
+        Fabricate(
+          :group,
+          assignable_level: Group::ALIAS_LEVELS[:only_admins],
+          messageable_level: Group::ALIAS_LEVELS[:nobody],
+        )
+      expect { assigner.assign(group) }.to raise_error(Discourse::InvalidAccess)
     end
   end
 
