@@ -266,7 +266,7 @@ class ::Assigner
           topic.invite_group(@assigned_by, assign_to)
         end
       else
-        unless topic.topic_allowed_users.exists?(user_id: assign_to.id)
+        unless topic.all_allowed_users.exists?(id: assign_to.id)
           guardian.ensure_can_invite_to!(topic)
           topic.invite(@assigned_by, assign_to.username)
         end
