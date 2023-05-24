@@ -725,6 +725,14 @@ RSpec.describe Assigner do
       expect(topic.allowed_users).to include(user)
     end
 
+    it "doesn't invite user to the PM when already a member of an allowed group" do
+      user = Fabricate(:user)
+      assign_allowed_group.add(user)
+      topic.allowed_groups << assign_allowed_group
+      assigner.assign(user)
+      expect(topic.allowed_users).not_to include(user)
+    end
+
     it "invites group to the PM" do
       group =
         Fabricate(
