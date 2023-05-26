@@ -15,7 +15,16 @@
     <table class="topic-list assigned-topic-list">
       <tbody class="topic-list-body assigned-topic-list-body">
         {{#each topics as |t|}}
-          <AssignedTopicListItem @topic={{t}} @expandGloballyPinned={{expandGloballyPinned}} @expandAllPinned={{expandAllPinned}} @lastVisitedTopic={{lastVisitedTopic}} @selected={{selected}} @tagsForUser={{tagsForUser}} @unassign={{unassign}} @reassign={{reassign}} />
+          <AssignedTopicListItem
+            @topic={{t}}
+            @expandGloballyPinned={{expandGloballyPinned}}
+            @expandAllPinned={{expandAllPinned}}
+            @lastVisitedTopic={{lastVisitedTopic}}
+            @selected={{selected}}
+            @tagsForUser={{tagsForUser}}
+            @unassign={{unassign}}
+            @reassign={{reassign}}
+          />
         {{/each}}
       </tbody>
     </table>

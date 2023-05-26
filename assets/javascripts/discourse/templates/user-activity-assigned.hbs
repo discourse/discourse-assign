@@ -22,7 +22,22 @@
     @selector=".paginated-topics-list .topic-list tr"
     @action={{action "loadMore"}}
   >
-    <BasicAssignedTopicList @topicList={{model}} @hideCategory={{hideCategory}} @showPosters={{true}} @bulkSelectEnabled={{bulkSelectEnabled}} @selected={{selected}} @hasIncoming={{hasIncoming}} @incomingCount={{incomingCount}} @showInserted={{action "showInserted"}} @tagsForUser={{tagsForUser}} @changeSort={{action "changeSort"}} @unassign={{action "unassign"}} @reassign={{action "reassign"}} @onScroll={{saveScrollPosition}} @scrollOnLoad={{true}} />
+    <BasicAssignedTopicList
+      @topicList={{model}}
+      @hideCategory={{hideCategory}}
+      @showPosters={{true}}
+      @bulkSelectEnabled={{bulkSelectEnabled}}
+      @selected={{selected}}
+      @hasIncoming={{hasIncoming}}
+      @incomingCount={{incomingCount}}
+      @showInserted={{action "showInserted"}}
+      @tagsForUser={{tagsForUser}}
+      @changeSort={{action "changeSort"}}
+      @unassign={{action "unassign"}}
+      @reassign={{action "reassign"}}
+      @onScroll={{saveScrollPosition}}
+      @scrollOnLoad={{true}}
+    />
 
     <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
   </LoadMore>
