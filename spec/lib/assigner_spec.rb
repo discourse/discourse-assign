@@ -740,8 +740,30 @@ RSpec.describe Assigner do
           assignable_level: Group::ALIAS_LEVELS[:only_admins],
           messageable_level: Group::ALIAS_LEVELS[:only_admins],
         )
+      group.add(Fabricate(:user))
       assigner.assign(group)
       expect(topic.allowed_groups).to include(group)
+    end
+
+    it "doesn't invite group if all members have access to the PM already" do
+      user1, user2, user3 = 3.times.collect { Fabricate(:user) }
+      group1, group2, group3 = 3.times.collect do
+        Fabricate(
+          :group,
+          assignable_level: Group::ALIAS_LEVELS[:only_admins],
+          messageable_level: Group::ALIAS_LEVELS[:only_admins],
+        )
+      end
+      group1.add(user1)
+      group1.add(user3)
+      group2.add(user2)
+      group3.add(user3)
+      topic.allowed_groups << group1
+
+      assigner.assign(group2)
+      assigner.assign(group3)
+
+      expect(topic.allowed_groups).to eq([group1, group2])
     end
 
     it "doesn't invite group to the PM if it's not messageable" do
@@ -751,6 +773,7 @@ RSpec.describe Assigner do
           assignable_level: Group::ALIAS_LEVELS[:only_admins],
           messageable_level: Group::ALIAS_LEVELS[:nobody],
         )
+      group.add(Fabricate(:user))
       expect { assigner.assign(group) }.to raise_error(Discourse::InvalidAccess)
     end
   end
