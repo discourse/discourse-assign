@@ -461,10 +461,13 @@ class ::Assigner
 
   def invite_group(group)
     return if topic.topic_allowed_groups.exists?(group_id: group.id)
-    return if topic.all_allowed_users
-                .joins("RIGHT JOIN group_users ON group_users.user_id = users.id")
-                .where("group_users.group_id = ? AND users.id IS NULL", group.id)
-                .empty? # all group members can already see the topic
+    if topic
+         .all_allowed_users
+         .joins("RIGHT JOIN group_users ON group_users.user_id = users.id")
+         .where("group_users.group_id = ? AND users.id IS NULL", group.id)
+         .empty?
+      return # all group members can already see the topic
+    end
 
     guardian.ensure_can_invite_group_to_private_message!(group, topic)
     topic.invite_group(@assigned_by, group)

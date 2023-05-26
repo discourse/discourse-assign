@@ -747,13 +747,14 @@ RSpec.describe Assigner do
 
     it "doesn't invite group if all members have access to the PM already" do
       user1, user2, user3 = 3.times.collect { Fabricate(:user) }
-      group1, group2, group3 = 3.times.collect do
-        Fabricate(
-          :group,
-          assignable_level: Group::ALIAS_LEVELS[:only_admins],
-          messageable_level: Group::ALIAS_LEVELS[:only_admins],
-        )
-      end
+      group1, group2, group3 =
+        3.times.collect do
+          Fabricate(
+            :group,
+            assignable_level: Group::ALIAS_LEVELS[:only_admins],
+            messageable_level: Group::ALIAS_LEVELS[:only_admins],
+          )
+        end
       group1.add(user1)
       group1.add(user3)
       group2.add(user2)
