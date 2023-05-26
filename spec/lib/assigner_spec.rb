@@ -757,7 +757,7 @@ RSpec.describe Assigner do
         end
       group1.add(user1)
       group1.add(user3)
-      group2.add(user2)
+      group2.add(user2, user3)
       group3.add(user3)
       topic.allowed_groups << group1
 
