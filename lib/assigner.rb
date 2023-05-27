@@ -259,18 +259,7 @@ class ::Assigner
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
     if topic.private_message? && SiteSetting.invite_on_assign
-      guardian = Guardian.new(@assigned_by)
-      if assigned_to_type == "Group"
-        unless topic.topic_allowed_groups.exists?(group_id: assign_to.id)
-          guardian.ensure_can_invite_group_to_private_message!(assign_to, topic)
-          topic.invite_group(@assigned_by, assign_to)
-        end
-      else
-        unless topic.all_allowed_users.exists?(id: assign_to.id)
-          guardian.ensure_can_invite_to!(topic)
-          topic.invite(@assigned_by, assign_to.username)
-        end
-      end
+      assigned_to_type == "Group" ? invite_group(assign_to) : invite_user(assign_to)
     end
 
     forbidden_reason =
@@ -462,6 +451,31 @@ class ::Assigner
   end
 
   private
+
+  def invite_user(user)
+    return if topic.all_allowed_users.exists?(id: user.id)
+
+    guardian.ensure_can_invite_to!(topic)
+    topic.invite(@assigned_by, user.username)
+  end
+
+  def invite_group(group)
+    return if topic.topic_allowed_groups.exists?(group_id: group.id)
+    if topic
+         .all_allowed_users
+         .joins("RIGHT JOIN group_users ON group_users.user_id = users.id")
+         .where("group_users.group_id = ? AND users.id IS NULL", group.id)
+         .empty?
+      return # all group members can already see the topic
+    end
+
+    guardian.ensure_can_invite_group_to_private_message!(group, topic)
+    topic.invite_group(@assigned_by, group)
+  end
+
+  def guardian
+    @guardian ||= Guardian.new(@assigned_by)
+  end
 
   def queue_notification(assign_to, skip_small_action_post, assignment)
     Jobs.enqueue(
