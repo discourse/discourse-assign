@@ -20,22 +20,22 @@
 
 <tbody class="topic-list-body assigned-topic-list-body">
   {{#each filteredTopics as |topic|}}
-    {{assigned-topic-list-item
-      topic=topic
-      bulkSelectEnabled=bulkSelectEnabled
-      showTopicPostBadges=showTopicPostBadges
-      hideCategory=hideCategory
-      showPosters=true
-      showLikes=showLikes
-      showOpLikes=showOpLikes
-      expandGloballyPinned=expandGloballyPinned
-      expandAllPinned=expandAllPinned
-      lastVisitedTopic=lastVisitedTopic
-      selected=selected
-      tagsForUser=tagsForUser
-      unassign=unassign
-      reassign=reassign
-    }}
+    <AssignedTopicListItem
+      @topic={{topic}}
+      @bulkSelectEnabled={{bulkSelectEnabled}}
+      @showTopicPostBadges={{showTopicPostBadges}}
+      @hideCategory={{hideCategory}}
+      @showPosters={{true}}
+      @showLikes={{showLikes}}
+      @showOpLikes={{showOpLikes}}
+      @expandGloballyPinned={{expandGloballyPinned}}
+      @expandAllPinned={{expandAllPinned}}
+      @lastVisitedTopic={{lastVisitedTopic}}
+      @selected={{selected}}
+      @tagsForUser={{tagsForUser}}
+      @unassign={{unassign}}
+      @reassign={{reassign}}
+    />
 
     {{raw "list/visited-line" lastVisitedTopic=lastVisitedTopic topic=topic}}
   {{/each}}

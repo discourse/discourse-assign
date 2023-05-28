@@ -28,22 +28,22 @@
   </div>
   <div class="pull-right topic-list-num">
     {{#if topic.assigned_to_user}}
-      {{assign-actions-dropdown
-        topic=topic
-        assignee=topic.assigned_to_user.username
-        unassign=unassign
-        reassign=reassign
-      }}
+      <AssignActionsDropdown
+        @topic={{topic}}
+        @assignee={{topic.assigned_to_user.username}}
+        @unassign={{unassign}}
+        @reassign={{reassign}}
+      />
     {{else if topic.assigned_to_group}}
-      {{assign-actions-dropdown
-        topic=topic
-        assignee=topic.assigned_to_group.name
-        group=true
-        unassign=unassign
-        reassign=reassign
-      }}
+      <AssignActionsDropdown
+        @topic={{topic}}
+        @assignee={{topic.assigned_to_group.name}}
+        @group={{true}}
+        @unassign={{unassign}}
+        @reassign={{reassign}}
+      />
     {{else}}
-      {{assign-actions-dropdown topic=topic unassign=unassign}}
+      <AssignActionsDropdown @topic={{topic}} @unassign={{unassign}} />
     {{/if}}
   </div>
   <div class="clearfix"></div>

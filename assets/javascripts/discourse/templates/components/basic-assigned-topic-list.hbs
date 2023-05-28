@@ -12,24 +12,24 @@
   {{/if}}
 
   {{#if topics}}
-    {{assigned-topic-list
-      showPosters=showPosters
-      hideCategory=hideCategory
-      topics=topics
-      expandExcerpts=expandExcerpts
-      bulkSelectEnabled=bulkSelectEnabled
-      canBulkSelect=canBulkSelect
-      bulkSelectAction=bulkSelectAction
-      selected=selected
-      skipHeader=skipHeader
-      tagsForUser=tagsForUser
-      changeSort=changeSort
-      toggleBulkSelect=toggleBulkSelect
-      unassign=unassign
-      reassign=reassign
-      onScroll=onScroll
-      scrollOnLoad=scrollOnLoad
-    }}
+    <AssignedTopicList
+      @showPosters={{showPosters}}
+      @hideCategory={{hideCategory}}
+      @topics={{topics}}
+      @expandExcerpts={{expandExcerpts}}
+      @bulkSelectEnabled={{bulkSelectEnabled}}
+      @canBulkSelect={{canBulkSelect}}
+      @bulkSelectAction={{bulkSelectAction}}
+      @selected={{selected}}
+      @skipHeader={{skipHeader}}
+      @tagsForUser={{tagsForUser}}
+      @changeSort={{changeSort}}
+      @toggleBulkSelect={{toggleBulkSelect}}
+      @unassign={{unassign}}
+      @reassign={{reassign}}
+      @onScroll={{onScroll}}
+      @scrollOnLoad={{scrollOnLoad}}
+    />
   {{else}}
     {{#unless loadingMore}}
       <div class="alert alert-info">

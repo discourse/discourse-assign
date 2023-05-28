@@ -17,34 +17,34 @@
       </div>
     {{/if}}
     <LoadMore @selector=".activity-nav li" @action={{action "loadMore"}}>
-      {{group-assigned-filter
-        showAvatar=false
-        filter="everyone"
-        routeType=route_type
-        assignmentCount=group.assignment_count
-        search=search
-        ascending=ascending
-        order=order
-      }}
-      {{group-assigned-filter
-        showAvatar=false
-        groupName=group.name
-        filter=group.name
-        routeType=route_type
-        assignmentCount=group.group_assignment_count
-        search=search
-        ascending=ascending
-        order=order
-      }}
+      <GroupAssignedFilter
+        @showAvatar={{false}}
+        @filter="everyone"
+        @routeType={{route_type}}
+        @assignmentCount={{group.assignment_count}}
+        @search={{search}}
+        @ascending={{ascending}}
+        @order={{order}}
+      />
+      <GroupAssignedFilter
+        @showAvatar={{false}}
+        @groupName={{group.name}}
+        @filter={{group.name}}
+        @routeType={{route_type}}
+        @assignmentCount={{group.group_assignment_count}}
+        @search={{search}}
+        @ascending={{ascending}}
+        @order={{order}}
+      />
       {{#each members as |member|}}
-        {{group-assigned-filter
-          showAvatar=true
-          filter=member
-          routeType=route_type
-          search=search
-          ascending=ascending
-          order=order
-        }}
+        <GroupAssignedFilter
+          @showAvatar={{true}}
+          @filter={{member}}
+          @routeType={{route_type}}
+          @search={{search}}
+          @ascending={{ascending}}
+          @order={{order}}
+        />
       {{/each}}
       <ConditionalLoadingSpinner @condition={{loading}} />
     </LoadMore>
