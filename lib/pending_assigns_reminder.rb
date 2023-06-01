@@ -110,7 +110,7 @@ class PendingAssignsReminder
   end
 
   def time_in_words_for(topic)
-    AgeWords.distance_of_time_in_words(
+    FreedomPatches::Rails4.distance_of_time_in_words(
       Time.zone.now,
       topic.assigned_at.to_time,
       false,
