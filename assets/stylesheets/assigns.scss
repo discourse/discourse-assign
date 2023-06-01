@@ -176,10 +176,14 @@
 
 #topic-footer-dropdown-reassign {
   .name {
-    font-weight: normal !important;
+    font-weight: normal;
+    display: flex;
+    align-items: center;
   }
   .avatar {
     margin-right: 0.25em;
+    width: 1.33em;
+    height: 1.33em;
   }
   .d-icon,
   i.fa {
