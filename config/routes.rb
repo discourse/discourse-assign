@@ -10,7 +10,7 @@ DiscourseAssign::Engine.routes.draw do
   get "/user-menu-assigns" => "assign#user_menu_assigns"
 end
 
-Discourse::Application.routes.append do
+Discourse::Application.routes.draw do
   mount ::DiscourseAssign::Engine, at: "/assign"
 
   get "topics/private-messages-assigned/:username" => "list#private_messages_assigned",
