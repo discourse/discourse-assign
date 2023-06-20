@@ -5,84 +5,84 @@
   This causes the topic-post-badge to be considered the same word as "text"
   at the end of the link, preventing it from line wrapping onto its own line.
 }}
-{{#if bulkSelectEnabled}}
+{{#if this.bulkSelectEnabled}}
   <td class="bulk-select topic-list-data">
     <input type="checkbox" class="bulk-select" />
   </td>
 {{/if}}
 <td class="main-link clearfix topic-list-data" colspan="1">
   <span class="link-top-line">
-    {{~raw "topic-status" topic=topic}}
-    {{~#if isPrivateMessage}}
+    {{~raw "topic-status" topic=this.topic}}
+    {{~#if this.isPrivateMessage}}
       {{~d-icon "envelope" class="private-message-icon"}}
     {{~/if}}
-    {{~topic-link topic class="raw-link raw-topic-link"}}
-    {{~#if topic.featured_link}}
-      {{~topic-featured-link topic}}
+    {{~topic-link this.topic class="raw-link raw-topic-link"}}
+    {{~#if this.topic.featured_link}}
+      {{~topic-featured-link this.topic}}
     {{~/if}}
-    {{~#if showTopicPostBadges}}
+    {{~#if this.showTopicPostBadges}}
       {{~raw
         "topic-post-badges"
-        unread=topic.unread
-        unseen=topic.unseen
-        url=topic.lastUnreadUrl
-        newDotText=newDotText
+        unread=this.topic.unread
+        unseen=this.topic.unseen
+        url=this.topic.lastUnreadUrl
+        newDotText=this.newDotText
       }}
     {{~/if}}
   </span>
   <div class="link-bottom-line">
-    {{#unless hideCategory}}
-      {{#unless topic.isPinnedUncategorized}}
-        {{category-link topic.category}}
+    {{#unless this.hideCategory}}
+      {{#unless this.topic.isPinnedUncategorized}}
+        {{category-link this.topic.category}}
       {{/unless}}
     {{/unless}}
-    {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+    {{discourse-tags this.topic mode="list" tagsForUser=this.tagsForUser}}
     {{raw
       "list/action-list"
-      topic=topic
-      postNumbers=topic.liked_post_numbers
+      topic=this.topic
+      postNumbers=this.topic.liked_post_numbers
       className="likes"
       icon="heart"
     }}
   </div>
-  {{#if expandPinned}}
-    {{raw "list/topic-excerpt" topic=topic}}
+  {{#if this.expandPinned}}
+    {{raw "list/topic-excerpt" topic=this.topic}}
   {{/if}}
 </td>
 
-{{#if showPosters}}
-  {{raw "list/posters-column" posters=topic.featuredUsers}}
+{{#if this.showPosters}}
+  {{raw "list/posters-column" posters=this.topic.featuredUsers}}
 {{/if}}
 
-{{raw "list/posts-count-column" topic=topic}}
+{{raw "list/posts-count-column" topic=this.topic}}
 
-<td class="num views {{topic.viewsHeat}} topic-list-data">{{number
-    topic.views
+<td class="num views {{this.topic.viewsHeat}} topic-list-data">{{number
+    this.topic.views
     numberKey="views_long"
   }}</td>
 {{raw
   "list/activity-column"
-  topic=topic
+  topic=this.topic
   class="num topic-list-data"
   tagName="td"
 }}
 <td class="topic-list-data">
-  {{#if topic.assigned_to_user}}
+  {{#if this.topic.assigned_to_user}}
     <AssignActionsDropdown
-      @topic={{topic}}
-      @assignee={{topic.assigned_to_user.username}}
-      @unassign={{unassign}}
-      @reassign={{reassign}}
+      @topic={{this.topic}}
+      @assignee={{this.topic.assigned_to_user.username}}
+      @unassign={{this.unassign}}
+      @reassign={{this.reassign}}
     />
-  {{else if topic.assigned_to_group}}
+  {{else if this.topic.assigned_to_group}}
     <AssignActionsDropdown
-      @topic={{topic}}
-      @assignee={{topic.assigned_to_group.name}}
+      @topic={{this.topic}}
+      @assignee={{this.topic.assigned_to_group.name}}
       @group={{true}}
-      @unassign={{unassign}}
-      @reassign={{reassign}}
+      @unassign={{this.unassign}}
+      @reassign={{this.reassign}}
     />
   {{else}}
-    <AssignActionsDropdown @topic={{topic}} @unassign={{unassign}} />
+    <AssignActionsDropdown @topic={{this.topic}} @unassign={{this.unassign}} />
   {{/if}}
 </td>

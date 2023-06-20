@@ -1,37 +1,37 @@
-<ConditionalLoadingSpinner @condition={{loading}}>
-  {{#if hasIncoming}}
+<ConditionalLoadingSpinner @condition={{this.loading}}>
+  {{#if this.hasIncoming}}
     <div class="show-mores">
-      <a href class="alert alert-info clickable" {{action showInserted}}>
+      <a href class="alert alert-info clickable" {{action this.showInserted}}>
         <CountI18n
           @key="topic_count_"
           @suffix="latest"
-          @count={{incomingCount}}
+          @count={{this.incomingCount}}
         />
       </a>
     </div>
   {{/if}}
 
-  {{#if topics}}
+  {{#if this.topics}}
     <AssignedTopicList
-      @showPosters={{showPosters}}
-      @hideCategory={{hideCategory}}
-      @topics={{topics}}
-      @expandExcerpts={{expandExcerpts}}
-      @bulkSelectEnabled={{bulkSelectEnabled}}
-      @canBulkSelect={{canBulkSelect}}
-      @bulkSelectAction={{bulkSelectAction}}
-      @selected={{selected}}
-      @skipHeader={{skipHeader}}
-      @tagsForUser={{tagsForUser}}
-      @changeSort={{changeSort}}
-      @toggleBulkSelect={{toggleBulkSelect}}
-      @unassign={{unassign}}
-      @reassign={{reassign}}
-      @onScroll={{onScroll}}
-      @scrollOnLoad={{scrollOnLoad}}
+      @showPosters={{this.showPosters}}
+      @hideCategory={{this.hideCategory}}
+      @topics={{this.topics}}
+      @expandExcerpts={{this.expandExcerpts}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @canBulkSelect={{this.canBulkSelect}}
+      @bulkSelectAction={{this.bulkSelectAction}}
+      @selected={{this.selected}}
+      @skipHeader={{this.skipHeader}}
+      @tagsForUser={{this.tagsForUser}}
+      @changeSort={{this.changeSort}}
+      @toggleBulkSelect={{this.toggleBulkSelect}}
+      @unassign={{this.unassign}}
+      @reassign={{this.reassign}}
+      @onScroll={{this.onScroll}}
+      @scrollOnLoad={{this.scrollOnLoad}}
     />
   {{else}}
-    {{#unless loadingMore}}
+    {{#unless this.loadingMore}}
       <div class="alert alert-info">
         {{i18n "choose_topic.none_found"}}
       </div>

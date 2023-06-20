@@ -2,16 +2,16 @@ import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { action } from "@ember/object";
 
-export default DropdownSelectBoxComponent.extend({
-  classNames: ["assign-actions-dropdown"],
-  headerIcon: null,
-  allowInitialValueMutation: false,
-  showFullTitle: true,
-  selectKitOptions: {
+export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
+  classNames = ["assign-actions-dropdown"];
+  headerIcon = null;
+  allowInitialValueMutation = false;
+  showFullTitle = true;
+  selectKitOptions = {
     icon: null,
     translatedNone: "...",
     showFullTitle: true,
-  },
+  };
 
   computeContent() {
     let options = [];
@@ -49,7 +49,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
     return options;
-  },
+  }
 
   @action
   onSelect(id) {
@@ -65,5 +65,5 @@ export default DropdownSelectBoxComponent.extend({
     if (postId) {
       this.unassign(postId, "Post");
     }
-  },
-});
+  }
+}

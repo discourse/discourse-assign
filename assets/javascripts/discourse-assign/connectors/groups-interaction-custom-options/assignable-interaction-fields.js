@@ -15,6 +15,7 @@ export default {
       { name: I18n.t("groups.alias_levels.everyone"), value: 99 },
     ];
 
+    // TODO
     defineProperty(
       component,
       "assignableLevel",

@@ -3,53 +3,58 @@
     @class="activity-nav"
     @desktopClass="action-list activity-list nav-stacked"
   >
-    {{#if isDesktop}}
+    {{#if this.isDesktop}}
       <div class="search-div">
         <Input
           @type="text"
           placeholder={{i18n
             "discourse_assign.sidebar_name_filter_placeholder"
           }}
-          @value={{readonly filterName}}
+          @value={{readonly this.filterName}}
           class="search"
-          {{on "input" (action "onChangeFilterName" value="target.value")}}
+          {{on "input" (action this.onChangeFilterName value="target.value")}}
         />
       </div>
     {{/if}}
+
     <LoadMore @selector=".activity-nav li" @action={{action "loadMore"}}>
       <GroupAssignedFilter
         @showAvatar={{false}}
         @filter="everyone"
-        @routeType={{route_type}}
-        @assignmentCount={{group.assignment_count}}
-        @search={{search}}
-        @ascending={{ascending}}
-        @order={{order}}
+        @routeType={{this.route_type}}
+        @assignmentCount={{this.group.assignment_count}}
+        @search={{this.search}}
+        @ascending={{this.ascending}}
+        @order={{this.order}}
       />
+
       <GroupAssignedFilter
         @showAvatar={{false}}
-        @groupName={{group.name}}
-        @filter={{group.name}}
-        @routeType={{route_type}}
-        @assignmentCount={{group.group_assignment_count}}
-        @search={{search}}
-        @ascending={{ascending}}
-        @order={{order}}
+        @groupName={{this.group.name}}
+        @filter={{this.group.name}}
+        @routeType={{this.route_type}}
+        @assignmentCount={{this.group.group_assignment_count}}
+        @search={{this.search}}
+        @ascending={{this.ascending}}
+        @order={{this.order}}
       />
-      {{#each members as |member|}}
+
+      {{#each this.members as |member|}}
         <GroupAssignedFilter
           @showAvatar={{true}}
           @filter={{member}}
-          @routeType={{route_type}}
-          @search={{search}}
-          @ascending={{ascending}}
-          @order={{order}}
+          @routeType={{this.route_type}}
+          @search={{this.search}}
+          @ascending={{this.ascending}}
+          @order={{this.order}}
         />
       {{/each}}
-      <ConditionalLoadingSpinner @condition={{loading}} />
+
+      <ConditionalLoadingSpinner @condition={{this.loading}} />
     </LoadMore>
   </MobileNav>
 </section>
+
 <section class="user-content">
   {{outlet}}
 </section>

@@ -12,7 +12,7 @@ import { htmlSafe } from "@ember/template";
 
 export default class UserActivityAssigned extends UserTopicsList {
   @service taskActions;
-@controller user;
+  @controller user;
 
   queryParams = ["order", "ascending", "search"];
   order = "";
