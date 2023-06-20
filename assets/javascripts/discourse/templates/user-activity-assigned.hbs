@@ -20,7 +20,7 @@
   <LoadMore
     @class="paginated-topics-list"
     @selector=".paginated-topics-list .topic-list tr"
-    @action={{this.loadMore}}
+    @action={{action "loadMore"}}
   >
     <BasicAssignedTopicList
       @topicList={{this.model}}
