@@ -1,18 +1,18 @@
-{{#if doesntHaveAssignments}}
+{{#if this.doesntHaveAssignments}}
   <EmptyState
     @title={{i18n "user.no_assignments_title"}}
-    @body={{emptyStateBody}}
+    @body={{this.emptyStateBody}}
   />
 {{else}}
   <div class="topic-search-div">
     <div class="inline-form full-width">
       <Input
-        class="no-blur"
-        @value={{readonly search}}
-        placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
-        autocomplete="off"
+        @value={{readonly this.search}}
         @type="search"
         {{on "input" (action "onChangeFilter" value="target.value")}}
+        class="no-blur"
+        placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
+        autocomplete="off"
       />
     </div>
   </div>
@@ -20,25 +20,25 @@
   <LoadMore
     @class="paginated-topics-list"
     @selector=".paginated-topics-list .topic-list tr"
-    @action={{action "loadMore"}}
+    @action={{this.loadMore}}
   >
     <BasicAssignedTopicList
-      @topicList={{model}}
-      @hideCategory={{hideCategory}}
+      @topicList={{this.model}}
+      @hideCategory={{this.hideCategory}}
       @showPosters={{true}}
-      @bulkSelectEnabled={{bulkSelectEnabled}}
-      @selected={{selected}}
-      @hasIncoming={{hasIncoming}}
-      @incomingCount={{incomingCount}}
-      @showInserted={{action "showInserted"}}
-      @tagsForUser={{tagsForUser}}
-      @changeSort={{action "changeSort"}}
-      @unassign={{action "unassign"}}
-      @reassign={{action "reassign"}}
-      @onScroll={{saveScrollPosition}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @selected={{this.selected}}
+      @hasIncoming={{this.hasIncoming}}
+      @incomingCount={{this.incomingCount}}
+      @showInserted={{this.showInserted}}
+      @tagsForUser={{this.tagsForUser}}
+      @changeSort={{this.changeSort}}
+      @unassign={{this.unassign}}
+      @reassign={{this.reassign}}
+      @onScroll={{this.saveScrollPosition}}
       @scrollOnLoad={{true}}
     />
 
-    <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+    <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
   </LoadMore>
 {{/if}}

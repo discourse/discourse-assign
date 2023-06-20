@@ -10,12 +10,12 @@
     />
   </div>
 </div>
+
 <LoadMore
   @class="paginated-topics-list"
   @selector=".paginated-topics-list .topic-list tr"
   @action={{action "loadMore"}}
 >
-
   <BasicAssignedTopicList
     @topicList={{model}}
     @hideCategory={{hideCategory}}

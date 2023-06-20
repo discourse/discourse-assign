@@ -944,23 +944,20 @@ export default {
       });
     }
 
-    withPluginApi("0.13.0", (api) => includeIsAssignedOnTopic(api));
-    withPluginApi("0.11.0", (api) => initialize(api));
-    withPluginApi("0.8.28", (api) => registerTopicFooterButtons(api));
+    withPluginApi("0.13.0", (api) => {
+      includeIsAssignedOnTopic(api);
+      initialize(api);
+      registerTopicFooterButtons(api);
 
-    withPluginApi("0.11.7", (api) => {
       api.addSearchSuggestion("in:assigned");
       api.addSearchSuggestion("in:unassigned");
-    });
 
-    withPluginApi("0.12.2", (api) => {
       api.addGroupPostSmallActionCode("assigned_group");
       api.addGroupPostSmallActionCode("reassigned_group");
       api.addGroupPostSmallActionCode("unassigned_group");
       api.addGroupPostSmallActionCode("assigned_group_to_post");
       api.addGroupPostSmallActionCode("unassigned_group_from_post");
-    });
-    withPluginApi("0.12.3", (api) => {
+
       api.addUserSearchOption("assignableGroups");
     });
   },
