@@ -1,9 +1,5 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import {
-  acceptance,
-  count,
-  exists,
-} from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 import { cloneJSON } from "discourse-common/lib/object";
@@ -26,8 +22,8 @@ acceptance(
       await visit("/u/eviltrout/activity/assigned");
       await options.expand();
 
-      assert.strictEqual(count("li[data-value='unassign']"), 1);
-      assert.strictEqual(count("li[data-value='reassign']"), 1);
+      assert.dom("li[data-value='unassign']").exists({ count: 1 });
+      assert.dom("li[data-value='reassign']").exists({ count: 1 });
     });
   }
 );
@@ -49,12 +45,12 @@ acceptance(
 
     test("It renders the empty state panel", async function (assert) {
       await visit("/u/eviltrout/activity/assigned");
-      assert.ok(exists("div.empty-state"));
+      assert.dom("div.empty-state").exists();
     });
 
     test("It does not render the search form", async function (assert) {
       await visit("/u/eviltrout/activity/assigned");
-      assert.notOk(exists("div.topic-search-div"));
+      assert.dom("div.topic-search-div").doesNotExist();
     });
   }
 );

@@ -1,6 +1,5 @@
 import {
   acceptance,
-  exists,
   query,
   queryAll,
   updateCurrentUser,
@@ -211,7 +210,7 @@ acceptance(
     test("the assigns tab is not shown", async function (assert) {
       await visit("/");
       await click(".d-header-icons .current-user");
-      assert.notOk(exists("#user-menu-button-assign-list"));
+      assert.dom("#user-menu-button-assign-list").doesNotExist();
     });
   }
 );
@@ -229,7 +228,7 @@ acceptance(
     test("the assigns tab is not shown", async function (assert) {
       await visit("/");
       await click(".d-header-icons .current-user");
-      assert.notOk(exists("#user-menu-button-assign-list"));
+      assert.dom("#user-menu-button-assign-list").doesNotExist();
     });
   }
 );
@@ -284,31 +283,24 @@ acceptance("Discourse Assign | user menu", function (needs) {
   test("assigns tab", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user");
-    assert.ok(exists("#user-menu-button-assign-list"), "assigns tab exists");
-    assert.ok(
-      exists("#user-menu-button-assign-list .d-icon-user-plus"),
-      "assigns tab has the user-plus icon"
-    );
-    assert.strictEqual(
-      query(
-        "#user-menu-button-assign-list .badge-notification"
-      ).textContent.trim(),
-      "173",
-      "assigns tab has a count badge"
-    );
+    assert.dom("#user-menu-button-assign-list").exists("assigns tab exists");
+    assert
+      .dom("#user-menu-button-assign-list .d-icon-user-plus")
+      .exists("assigns tab has the user-plus icon");
+    assert
+      .dom("#user-menu-button-assign-list .badge-notification")
+      .hasText("173", "assigns tab has a count badge");
 
     updateCurrentUser({
       grouped_unread_notifications: {},
     });
 
-    assert.notOk(
-      exists("#user-menu-button-assign-list .badge-notification"),
-      "badge count disappears when it goes to zero"
-    );
-    assert.ok(
-      exists("#user-menu-button-assign-list"),
-      "assigns tab still exists"
-    );
+    assert
+      .dom("#user-menu-button-assign-list .badge-notification")
+      .doesNotExist("badge count disappears when it goes to zero");
+    assert
+      .dom("#user-menu-button-assign-list")
+      .exists("assigns tab still exists");
   });
 
   test("clicking on the assign tab when it's already selected navigates to the user's assignments page", async function (assert) {
@@ -335,11 +327,11 @@ acceptance("Discourse Assign | user menu", function (needs) {
       1,
       "there is one unread notification"
     );
-    assert.ok(
+    assert.true(
       notifications[0].classList.contains("unread"),
       "the notification is unread"
     );
-    assert.ok(
+    assert.true(
       notifications[0].classList.contains("assigned"),
       "the notification is of type assigned"
     );
@@ -358,13 +350,13 @@ acceptance("Discourse Assign | user menu", function (needs) {
       "group assign has the right icon"
     );
 
-    assert.ok(
+    assert.true(
       userAssign
         .querySelector("a")
         .href.endsWith("/t/howdy-this-a-test-topic/209/3"),
       "user assign links to the first unread post (last read post + 1)"
     );
-    assert.ok(
+    assert.true(
       groupAssign
         .querySelector("a")
         .href.endsWith(
@@ -382,7 +374,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
       userAssign.querySelector(".item-description img.emoji"),
       "emojis are rendered in user assign"
     );
-    assert.ok(
+    assert.strictEqual(
       userAssign.querySelector(".item-description b").textContent.trim(),
       "my test topic",
       "user assign topic title is trusted"
@@ -423,13 +415,12 @@ acceptance("Discourse Assign | user menu", function (needs) {
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-assign-list");
 
-    assert.ok(
-      exists("#user-menu-button-assign-list .badge-notification"),
-      "badge count is visible before dismissing"
-    );
+    assert
+      .dom("#user-menu-button-assign-list .badge-notification")
+      .exists("badge count is visible before dismissing");
 
     await click(".notifications-dismiss");
-    assert.notOk(markRead, "mark-read request isn't sent");
+    assert.false(markRead, "mark-read request isn't sent");
     assert.strictEqual(
       query(".dismiss-notification-confirmation.modal-body").textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.assigns", { count: 173 }),
@@ -437,12 +428,11 @@ acceptance("Discourse Assign | user menu", function (needs) {
     );
 
     await click(".modal-footer .btn-primary");
-    assert.ok(markRead, "mark-read request is sent");
-    assert.notOk(exists(".notifications-dismiss"), "dismiss button is gone");
-    assert.notOk(
-      exists("#user-menu-button-assign-list .badge-notification"),
-      "badge count is gone after dismissing"
-    );
+    assert.true(markRead, "mark-read request is sent");
+    assert.dom(".notifications-dismiss").doesNotExist("dismiss button is gone");
+    assert
+      .dom("#user-menu-button-assign-list .badge-notification")
+      .doesNotExist("badge count is gone after dismissing");
     assert.strictEqual(
       requestBody,
       "dismiss_types=assigned",
@@ -456,21 +446,20 @@ acceptance("Discourse Assign | user menu", function (needs) {
     await click(".d-header-icons .current-user");
     await click("#user-menu-button-assign-list");
 
-    assert.strictEqual(
-      query(".empty-state-title").textContent.trim(),
-      I18n.t("user.no_assignments_title"),
-      "empty state title is rendered"
-    );
-    const emptyStateBody = query(".empty-state-body");
-    assert.ok(emptyStateBody, "empty state body exists");
-    assert.ok(
-      emptyStateBody.querySelector(".d-icon-user-plus"),
-      "empty state body has user-plus icon"
-    );
-    assert.ok(
-      emptyStateBody
-        .querySelector("a")
-        .href.endsWith("/my/preferences/notifications"),
+    assert
+      .dom(".empty-state-title")
+      .hasText(
+        I18n.t("user.no_assignments_title"),
+        "empty state title is rendered"
+      );
+    assert.dom(".empty-state-body").exists("empty state body exists");
+    assert
+      .dom(".empty-state-body .d-icon-user-plus")
+      .exists("empty state body has user-plus icon");
+    assert.true(
+      query(".empty-state-body a").href.endsWith(
+        "/my/preferences/notifications"
+      ),
       "empty state body has user-plus icon"
     );
   });

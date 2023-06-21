@@ -1,7 +1,6 @@
 import { test } from "qunit";
 import {
   acceptance,
-  exists,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
@@ -99,62 +98,59 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     updateCurrentUser({ can_assign: true });
     await visit("/t/assignment-topic/44");
 
-    assert.strictEqual(
-      query("#topic-title .assigned-to").innerText.trim(),
-      "eviltrout",
-      "shows assignment in the header"
-    );
-    assert.strictEqual(
-      query("#post_1 .assigned-to").innerText,
-      "Assigned topic to eviltrout#2 to Developers",
-      "shows assignment and indirect assignments in the first post"
-    );
-    assert.ok(exists("#post_1 .assigned-to svg.d-icon-user-plus"));
-    assert.strictEqual(
-      query(".discourse-tags .assigned-to[href='/t/28830'] span").title,
-      "Shark Doododooo",
-      "shows topic assign notes"
-    );
-    assert.strictEqual(
-      query(".discourse-tags .assigned-to[href='/p/2'] span").title,
-      '<script>alert("xss")</script>',
-      "shows indirect assign notes"
-    );
-    assert.ok(
-      exists("#topic-footer-dropdown-reassign"),
-      "shows reassign dropdown at the bottom of the topic"
-    );
+    assert
+      .dom("#topic-title .assigned-to")
+      .hasText("eviltrout", "shows assignment in the header");
+    assert
+      .dom("#post_1 .assigned-to")
+      .hasText(
+        "Assigned topic to eviltrout#2 to Developers",
+        "shows assignment and indirect assignments in the first post"
+      );
+    assert.dom("#post_1 .assigned-to svg.d-icon-user-plus").exists();
+    assert
+      .dom(".discourse-tags .assigned-to[href='/t/28830'] span")
+      .hasAttribute("title", "Shark Doododooo", "shows topic assign notes");
+    assert
+      .dom(".discourse-tags .assigned-to[href='/p/2'] span")
+      .hasAttribute(
+        "title",
+        '<script>alert("xss")</script>',
+        "shows indirect assign notes"
+      );
+    assert
+      .dom("#topic-footer-dropdown-reassign")
+      .exists("shows reassign dropdown at the bottom of the topic");
   });
 
   test("Shows group assignment info", async function (assert) {
     updateCurrentUser({ can_assign: true });
     await visit("/t/assignment-topic/45");
 
-    assert.strictEqual(
-      query("#topic-title .assigned-to").innerText.trim(),
-      "Developers",
-      "shows assignment in the header"
-    );
-    assert.strictEqual(
-      query("#post_1 .assigned-to--group").innerText.trim(),
-      "Assigned topic to Developers",
-      "shows assignment in the first post"
-    );
-    assert.ok(exists("#post_1 .assigned-to svg.d-icon-group-plus"));
-    assert.ok(
-      exists("#topic-footer-dropdown-reassign"),
-      "shows reassign dropdown at the bottom of the topic"
-    );
+    assert
+      .dom("#topic-title .assigned-to")
+      .hasText("Developers", "shows assignment in the header");
+    assert
+      .dom("#post_1 .assigned-to--group")
+      .hasText(
+        "Assigned topic to Developers",
+        "shows assignment in the first post"
+      );
+    assert.dom("#post_1 .assigned-to svg.d-icon-group-plus").exists();
+    assert
+      .dom("#topic-footer-dropdown-reassign")
+      .exists("shows reassign dropdown at the bottom of the topic");
   });
 
   test("User without assign ability cannot see footer button", async function (assert) {
     updateCurrentUser({ can_assign: false, admin: false, moderator: false });
     await visit("/t/assignment-topic/45");
 
-    assert.notOk(
-      exists("#topic-footer-dropdown-reassign"),
-      "does not show reassign dropdown at the bottom of the topic"
-    );
+    assert
+      .dom("#topic-footer-dropdown-reassign")
+      .doesNotExist(
+        "does not show reassign dropdown at the bottom of the topic"
+      );
   });
 
   test("Shows assignment notification", async function (assert) {
@@ -166,7 +162,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
       "section.user-content ul.notifications li.item.notification"
     );
 
-    assert.ok(
+    assert.true(
       notification.children[0].classList.contains("assigned"),
       "with correct assigned class"
     );
@@ -201,9 +197,9 @@ acceptance("Discourse Assign | Reassign topic", function (needs) {
     await visit("/t/assignment-topic/44");
     await menu.expand();
 
-    assert.ok(menu.rowByValue("unassign").exists());
-    assert.ok(menu.rowByValue("reassign").exists());
-    assert.ok(menu.rowByValue("reassign-self").exists());
+    assert.true(menu.rowByValue("unassign").exists());
+    assert.true(menu.rowByValue("reassign").exists());
+    assert.true(menu.rowByValue("reassign-self").exists());
   });
 });
 
@@ -225,9 +221,9 @@ acceptance("Discourse Assign | Reassign topic | mobile", function (needs) {
     await visit("/t/assignment-topic/44");
     await menu.expand();
 
-    assert.ok(menu.rowByValue("unassign-mobile").exists());
-    assert.ok(menu.rowByValue("reassign-mobile").exists());
-    assert.ok(menu.rowByValue("reassign-self-mobile").exists());
+    assert.true(menu.rowByValue("unassign-mobile").exists());
+    assert.true(menu.rowByValue("reassign-mobile").exists());
+    assert.true(menu.rowByValue("reassign-self-mobile").exists());
   });
 });
 
@@ -248,6 +244,6 @@ acceptance("Discourse Assign | Reassign topic conditionals", function (needs) {
     await visit("/t/assignment-topic/44");
     await menu.expand();
 
-    assert.notOk(menu.rowByValue("reassign-self").exists());
+    assert.false(menu.rowByValue("reassign-self").exists());
   });
 });

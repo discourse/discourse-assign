@@ -1,9 +1,12 @@
+import { module, test } from "qunit";
+import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import EmberObject from "@ember/object";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { discourseModule } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
+import { getOwner } from "discourse-common/lib/get-owner";
 
-discourseModule("Unit | Controller | assign-user", function () {
+module("Unit | Controller | assign-user", function (hooks) {
+  setupRenderingTest(hooks);
+
   test("assigning a user via suggestions makes API call and closes the modal", async function (assert) {
     pretender.get("/assign/suggestions", () =>
       response({
@@ -16,7 +19,8 @@ discourseModule("Unit | Controller | assign-user", function () {
     pretender.put("/assign/assign", () => response({}));
 
     let modalClosed = false;
-    const controller = this.getController("assign-user", {
+    const controller = getOwner(this).lookup("controller:assign-user");
+    controller.setProperties({
       model: {
         target: EmberObject.create({}),
       },
@@ -29,7 +33,7 @@ discourseModule("Unit | Controller | assign-user", function () {
 
     await controller.assignUser("nat");
 
-    assert.strictEqual(modalClosed, true);
+    assert.true(modalClosed);
   });
 
   test("assigning a user by selector does not close the modal", async function (assert) {
@@ -42,7 +46,8 @@ discourseModule("Unit | Controller | assign-user", function () {
     );
 
     let modalClosed = false;
-    const controller = this.getController("assign-user", {
+    const controller = getOwner(this).lookup("controller:assign-user");
+    controller.setProperties({
       model: {
         target: EmberObject.create({}),
       },
@@ -55,6 +60,6 @@ discourseModule("Unit | Controller | assign-user", function () {
 
     await controller.assignUsername("nat");
 
-    assert.strictEqual(modalClosed, false);
+    assert.false(modalClosed);
   });
 });

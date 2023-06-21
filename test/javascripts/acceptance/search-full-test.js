@@ -1,5 +1,5 @@
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 
@@ -28,11 +28,12 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("assigned");
-    assert.strictEqual(
-      query(".search-query").value,
-      "none in:assigned",
-      'has updated search term to "none in:assigned"'
-    );
+    assert
+      .dom(".search-query")
+      .hasValue(
+        "none in:assigned",
+        'has updated search term to "none in:assigned"'
+      );
   });
 
   test("update in:unassigned filter through advanced search ui", async function (assert) {
@@ -43,11 +44,12 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("unassigned");
-    assert.strictEqual(
-      query(".search-query").value,
-      "none in:unassigned",
-      'has updated search term to "none in:unassigned"'
-    );
+    assert
+      .dom(".search-query")
+      .hasValue(
+        "none in:unassigned",
+        'has updated search term to "none in:unassigned"'
+      );
   });
 
   test("update assigned to through advanced search ui", async function (assert) {
@@ -67,10 +69,11 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
       'has "admin" filled in'
     );
 
-    assert.strictEqual(
-      query(".search-query").value,
-      "none assigned:admin",
-      'has updated search term to "none assigned:admin"'
-    );
+    assert
+      .dom(".search-query")
+      .hasValue(
+        "none assigned:admin",
+        'has updated search term to "none assigned:admin"'
+      );
   });
 });
