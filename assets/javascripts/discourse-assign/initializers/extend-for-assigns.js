@@ -38,8 +38,8 @@ function titleForState(name) {
 
 function defaultTitle(topic) {
   return titleForState(
-    topic.get("topic.assigned_to_user.username") ||
-      topic.get("topic.assigned_to_group.name")
+    topic.get("assigned_to_user.username") ||
+      topic.get("assigned_to_group.name")
   );
 }
 
@@ -194,10 +194,10 @@ function registerTopicFooterButtons(api) {
     },
     priority: 250,
     translatedTitle() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedLabel() {
       return I18n.t("discourse_assign.assign.title");
@@ -238,10 +238,10 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "unassign-mobile-header",
     translatedTitle() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedLabel() {
       const user = this.get("topic.assigned_to_user");
@@ -280,10 +280,10 @@ function registerTopicFooterButtons(api) {
       return "user-times";
     },
     translatedTitle() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.unassign.title");
