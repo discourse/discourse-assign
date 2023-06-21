@@ -31,9 +31,9 @@
     {{~/if}}
   </span>
   <div class="link-bottom-line">
-    {{#unless (and this.hideCategory this.topic.isPinnedUncategorized)}}
-        {{category-link this.topic.category}}
-    {{/unless}}
+    {{#if (or (not this.hideCategory) (not this.topic.isPinnedUncategorized))}}
+      {{category-link this.topic.category}}
+    {{/if}}
     {{discourse-tags this.topic mode="list" tagsForUser=this.tagsForUser}}
     {{raw
       "list/action-list"
