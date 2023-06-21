@@ -31,10 +31,8 @@
     {{~/if}}
   </span>
   <div class="link-bottom-line">
-    {{#unless this.hideCategory}}
-      {{#unless this.topic.isPinnedUncategorized}}
+    {{#unless (and this.hideCategory this.topic.isPinnedUncategorized)}}
         {{category-link this.topic.category}}
-      {{/unless}}
     {{/unless}}
     {{discourse-tags this.topic mode="list" tagsForUser=this.tagsForUser}}
     {{raw
