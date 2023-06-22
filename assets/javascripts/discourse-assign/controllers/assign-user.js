@@ -8,17 +8,19 @@ import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 
-export default Controller.extend(ModalFunctionality, {
-  topicBulkActions: controller(),
-  assignSuggestions: null,
-  allowedGroups: null,
-  taskActions: service(),
-  autofocus: not("capabilities.touch"),
-  assigneeName: or("model.username", "model.group_name"),
-  assigneeError: false,
+export default class AssignUser extends Controller.extend(ModalFunctionality) {
+  @service taskActions;
+  @controller topicBulkActions;
 
-  init() {
-    this._super(...arguments);
+  assignSuggestions = null;
+  allowedGroups = null;
+  assigneeError = false;
+
+  @not("capabilities.touch") autofocus;
+  @or("model.username", "model.group_name") assigneeName;
+
+  constructor() {
+    super(...arguments);
 
     this.set("allowedGroups", []);
     this.set("assigneeError", false);
@@ -31,17 +33,17 @@ export default Controller.extend(ModalFunctionality, {
       this.set("allowedGroups", data.assign_allowed_on_groups);
       this.set("allowedGroupsForAssignment", data.assign_allowed_for_groups);
     });
-  },
+  }
 
   onShow() {
     this.set("assigneeError", false);
-  },
+  }
 
   onClose() {
-    if (this.get("model.onClose") && this.get("model.username")) {
-      this.get("model.onClose")(this.get("model.username"));
+    if (this.model.onClose && this.model.username) {
+      this.model.onClose(this.model.username);
     }
-  },
+  }
 
   bulkAction(username, note) {
     return this.topicBulkActions.performAndRefresh({
@@ -49,19 +51,19 @@ export default Controller.extend(ModalFunctionality, {
       username,
       note,
     });
-  },
+  }
 
   @discourseComputed("siteSettings.enable_assign_status")
   statusEnabled() {
     return this.siteSettings.enable_assign_status;
-  },
+  }
 
   @discourseComputed("siteSettings.assign_statuses")
   availableStatuses() {
     return this.siteSettings.assign_statuses.split("|").map((status) => {
       return { id: status, name: status };
     });
-  },
+  }
 
   @discourseComputed("siteSettings.assign_statuses", "model.status")
   status() {
@@ -70,22 +72,19 @@ export default Controller.extend(ModalFunctionality, {
       this.model.target.assignment_status ||
       this.siteSettings.assign_statuses.split("|")[0]
     );
-  },
+  }
 
   @action
   handleTextAreaKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
       this.assign();
     }
-  },
+  }
 
   @action
   assign() {
     if (this.isBulkAction) {
-      return this.bulkAction(
-        this.get("model.username"),
-        this.get("model.note")
-      );
+      return this.bulkAction(this.model.username, this.model.note);
     }
 
     if (!this.assigneeName) {
@@ -95,18 +94,15 @@ export default Controller.extend(ModalFunctionality, {
 
     let path = "/assign/assign";
 
-    if (isEmpty(this.get("model.username"))) {
+    if (isEmpty(this.model.username)) {
       this.model.target.set("assigned_to_user", null);
     }
 
-    if (isEmpty(this.get("model.group_name"))) {
+    if (isEmpty(this.model.group_name)) {
       this.model.target.set("assigned_to_group", null);
     }
 
-    if (
-      isEmpty(this.get("model.username")) &&
-      isEmpty(this.get("model.group_name"))
-    ) {
+    if (isEmpty(this.model.username) && isEmpty(this.model.group_name)) {
       path = "/assign/unassign";
     }
 
@@ -115,19 +111,19 @@ export default Controller.extend(ModalFunctionality, {
     return ajax(path, {
       type: "PUT",
       data: {
-        username: this.get("model.username"),
-        group_name: this.get("model.group_name"),
-        target_id: this.get("model.target.id"),
-        target_type: this.get("model.targetType"),
-        note: this.get("model.note"),
-        status: this.get("model.status"),
+        username: this.model.username,
+        group_name: this.model.group_name,
+        target_id: this.model.target.id,
+        target_type: this.model.targetType,
+        note: this.model.note,
+        status: this.model.status,
       },
     })
       .then(() => {
-        this.get("model.onSuccess")?.();
+        this.model.onSuccess?.();
       })
       .catch(popupAjaxError);
-  },
+  }
 
   @action
   assignUser(name) {
@@ -136,27 +132,27 @@ export default Controller.extend(ModalFunctionality, {
     if (name) {
       return this.assign();
     }
-  },
+  }
 
   @action
   assignUsername(selected) {
     this.setGroupOrUser(selected.firstObject);
-  },
+  }
 
   setGroupOrUser(name) {
     this.set("assigneeError", false);
+    this.set("model.allowedGroups", this.taskActions.allowedGroups);
+
     if (this.allowedGroupsForAssignment.includes(name)) {
       this.setProperties({
         "model.username": null,
         "model.group_name": name,
-        "model.allowedGroups": this.taskActions.allowedGroups,
       });
     } else {
       this.setProperties({
         "model.username": name,
         "model.group_name": null,
-        "model.allowedGroups": this.taskActions.allowedGroups,
       });
     }
-  },
-});
+  }
+}

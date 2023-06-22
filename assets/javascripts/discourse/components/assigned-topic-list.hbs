@@ -1,0 +1,46 @@
+{{#unless this.skipHeader}}
+  <thead class="topic-list-header assigned-topic-list-header">
+    {{raw
+      "topic-list-header"
+      canBulkSelect=this.canBulkSelect
+      canDoBulkActions=this.canDoBulkActions
+      toggleInTitle=this.toggleInTitle
+      hideCategory=this.hideCategory
+      showPosters=true
+      showLikes=this.showLikes
+      showOpLikes=this.showOpLikes
+      order=this.order
+      ascending=this.ascending
+      sortable=this.sortable
+      listTitle=this.listTitle
+      bulkSelectEnabled=this.bulkSelectEnabled
+    }}
+  </thead>
+{{/unless}}
+
+<tbody class="topic-list-body assigned-topic-list-body">
+  {{#each this.filteredTopics as |topic|}}
+    <AssignedTopicListItem
+      @topic={{topic}}
+      @bulkSelectEnabled={{this.bulkSelectEnabled}}
+      @showTopicPostBadges={{this.showTopicPostBadges}}
+      @hideCategory={{this.hideCategory}}
+      @showPosters={{true}}
+      @showLikes={{this.showLikes}}
+      @showOpLikes={{this.showOpLikes}}
+      @expandGloballyPinned={{this.expandGloballyPinned}}
+      @expandAllPinned={{this.expandAllPinned}}
+      @lastVisitedTopic={{this.lastVisitedTopic}}
+      @selected={{this.selected}}
+      @tagsForUser={{this.tagsForUser}}
+      @unassign={{this.unassign}}
+      @reassign={{this.reassign}}
+    />
+
+    {{raw
+      "list/visited-line"
+      lastVisitedTopic=this.lastVisitedTopic
+      topic=topic
+    }}
+  {{/each}}
+</tbody>

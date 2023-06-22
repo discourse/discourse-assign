@@ -14,6 +14,6 @@ acceptance("Discourse Assign | Assign disabled mobile", function (needs) {
     const menu = selectKit(".topic-footer-mobile-dropdown");
     await menu.expand();
 
-    assert.notOk(menu.rowByValue("assign").exists());
+    assert.false(menu.rowByValue("assign").exists());
   });
 });

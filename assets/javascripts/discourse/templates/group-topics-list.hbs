@@ -2,7 +2,7 @@
   <div class="inline-form full-width">
     <Input
       class="no-blur"
-      @value={{readonly search}}
+      @value={{readonly this.search}}
       placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
       autocomplete="off"
       @type="search"
@@ -10,31 +10,31 @@
     />
   </div>
 </div>
+
 <LoadMore
   @class="paginated-topics-list"
   @selector=".paginated-topics-list .topic-list tr"
   @action={{action "loadMore"}}
 >
-
   <BasicAssignedTopicList
-    @topicList={{model}}
-    @hideCategory={{hideCategory}}
-    @showPosters={{showPosters}}
-    @bulkSelectEnabled={{bulkSelectEnabled}}
-    @canBulkSelect={{canBulkSelect}}
-    @selected={{selected}}
-    @hasIncoming={{hasIncoming}}
-    @incomingCount={{incomingCount}}
+    @topicList={{this.model}}
+    @hideCategory={{this.hideCategory}}
+    @showPosters={{this.showPosters}}
+    @bulkSelectEnabled={{this.bulkSelectEnabled}}
+    @canBulkSelect={{this.canBulkSelect}}
+    @selected={{this.selected}}
+    @hasIncoming={{this.hasIncoming}}
+    @incomingCount={{this.incomingCount}}
     @showInserted={{action "showInserted"}}
-    @tagsForUser={{tagsForUser}}
+    @tagsForUser={{this.tagsForUser}}
     @changeSort={{action "changeSort"}}
     @toggleBulkSelect={{action "toggleBulkSelect"}}
     @bulkSelectAction={{action "refresh"}}
     @unassign={{action "unassign"}}
     @reassign={{action "reassign"}}
-    @onScroll={{saveScrollPosition}}
+    @onScroll={{this.saveScrollPosition}}
     @scrollOnLoad={{true}}
   />
 
-  <ConditionalLoadingSpinner @condition={{model.loadingMore}} />
+  <ConditionalLoadingSpinner @condition={{this.model.loadingMore}} />
 </LoadMore>

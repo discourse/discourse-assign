@@ -3,7 +3,6 @@ import { cloneJSON } from "discourse-common/lib/object";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
-  exists,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { click, visit } from "@ember/test-helpers";
@@ -43,9 +42,9 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
     const menu = selectKit(".topic-footer-mobile-dropdown");
     await menu.expand();
 
-    assert.ok(menu.rowByValue("assign").exists());
+    assert.true(menu.rowByValue("assign").exists());
     await menu.selectRowByValue("assign");
-    assert.ok(exists(".assign.modal-body"), "assign modal opens");
+    assert.dom(".assign.modal-body").exists("assign modal opens");
   });
 });
 
@@ -81,25 +80,23 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
   test("Post contains hidden assign button", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
-    assert.ok(
-      !exists("#post_2 .extra-buttons .d-icon-user-plus"),
-      "assign to post button is hidden"
-    );
+    assert
+      .dom("#post_2 .extra-buttons .d-icon-user-plus")
+      .doesNotExist("assign to post button is hidden");
     await click("#post_2 button.show-more-actions");
 
-    assert.ok(
-      exists("#post_2 .extra-buttons .d-icon-user-plus"),
-      "assign to post button exists"
-    );
+    assert
+      .dom("#post_2 .extra-buttons .d-icon-user-plus")
+      .exists("assign to post button exists");
     await click("#post_2 .extra-buttons .d-icon-user-plus");
-    assert.ok(exists(".assign.modal-body"), "assign modal opens");
+    assert.dom(".assign.modal-body").exists("assign modal opens");
   });
 
   test("Footer dropdown contains button", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
-    assert.ok(exists(".assign.modal-body"), "assign modal opens");
+    assert.dom(".assign.modal-body").exists("assign modal opens");
   });
 });
 
@@ -140,10 +137,9 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
-    assert.ok(
-      exists(".assign.modal-body #assign-status"),
-      "assign status dropdown exists"
-    );
+    assert
+      .dom(".assign.modal-body #assign-status")
+      .exists("assign status dropdown exists");
   });
 });
 
@@ -180,10 +176,9 @@ acceptance("Discourse Assign | Assign Status disabled", function (needs) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
-    assert.notOk(
-      exists(".assign.modal-body #assign-status"),
-      "assign status dropdown doesn't exists"
-    );
+    assert
+      .dom(".assign.modal-body #assign-status")
+      .doesNotExist("assign status dropdown doesn't exists");
   });
 });
 

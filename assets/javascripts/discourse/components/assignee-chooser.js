@@ -1,7 +1,7 @@
 import EmailGroupUserChooser from "select-kit/components/email-group-user-chooser";
 
-export default EmailGroupUserChooser.extend({
+export default class AssigneeChooser extends EmailGroupUserChooser {
   modifyComponentForRow() {
     return "assignee-chooser-row";
-  },
-});
+  }
+}

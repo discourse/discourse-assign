@@ -1,7 +1,6 @@
 import { test } from "qunit";
 import {
   acceptance,
-  query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
@@ -48,10 +47,11 @@ acceptance(
 
       await visit("/t/assignment-topic/44");
 
-      assert.strictEqual(
-        query(".topic-notifications-button .reason span.text").innerText,
-        "You will receive notifications because you are watching this topic."
-      );
+      assert
+        .dom(".topic-notifications-button .reason span.text")
+        .hasText(
+          "You will receive notifications because you are watching this topic."
+        );
     });
 
     test("Show user assign reason when user never tracks topics", async function (assert) {
@@ -61,10 +61,11 @@ acceptance(
 
       await visit("/t/assignment-topic/45");
 
-      assert.strictEqual(
-        query(".topic-notifications-button .reason span.text").innerText,
-        "You will see a count of new replies because this topic was assigned to you."
-      );
+      assert
+        .dom(".topic-notifications-button .reason span.text")
+        .hasText(
+          "You will see a count of new replies because this topic was assigned to you."
+        );
     });
   }
 );

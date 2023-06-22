@@ -26,21 +26,15 @@ const DEPENDENT_KEYS = [
   "topic.assigned_to_user.username",
 ];
 
-function titleForState(name) {
-  if (name) {
-    return I18n.t("discourse_assign.unassign.help", {
-      username: name,
-    });
+function defaultTitle(topic) {
+  const username =
+    topic.assigned_to_user?.username || topic.assigned_to_group?.name;
+
+  if (username) {
+    return I18n.t("discourse_assign.unassign.help", { username });
   } else {
     return I18n.t("discourse_assign.assign.help");
   }
-}
-
-function defaultTitle(topic) {
-  return titleForState(
-    topic.get("topic.assigned_to_user.username") ||
-      topic.get("topic.assigned_to_group.name")
-  );
 }
 
 function includeIsAssignedOnTopic(api) {
@@ -57,7 +51,7 @@ function registerTopicFooterButtons(api) {
     id: "reassign",
 
     action(id) {
-      if (!this.get("currentUser.can_assign")) {
+      if (!this.currentUser?.can_assign) {
         return;
       }
 
@@ -103,8 +97,8 @@ function registerTopicFooterButtons(api) {
     },
 
     noneItem() {
-      const user = this.get("topic.assigned_to_user");
-      const group = this.get("topic.assigned_to_group");
+      const user = this.topic.assigned_to_user;
+      const group = this.topic.assigned_to_group;
       const label = I18n.t("discourse_assign.unassign.title_w_ellipsis");
       const groupLabel = I18n.t("discourse_assign.unassign.title");
 
@@ -149,8 +143,7 @@ function registerTopicFooterButtons(api) {
       ];
       if (
         this.topic.isAssigned() &&
-        this.get("topic.assigned_to_user")?.username !==
-          this.currentUser.username
+        this.topic.assigned_to_user?.username !== this.currentUser.username
       ) {
         content.push({
           id: "reassign-self",
@@ -176,7 +169,7 @@ function registerTopicFooterButtons(api) {
 
     displayed() {
       return (
-        this.get("currentUser.can_assign") &&
+        this.currentUser?.can_assign &&
         !this.site.mobileView &&
         this.topic.isAssigned()
       );
@@ -194,16 +187,16 @@ function registerTopicFooterButtons(api) {
     },
     priority: 250,
     translatedTitle() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedLabel() {
       return I18n.t("discourse_assign.assign.title");
     },
     action() {
-      if (!this.get("currentUser.can_assign")) {
+      if (!this.currentUser?.can_assign) {
         return;
       }
 
@@ -238,14 +231,14 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "unassign-mobile-header",
     translatedTitle() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedLabel() {
-      const user = this.get("topic.assigned_to_user");
-      const group = this.get("topic.assigned_to_group");
+      const user = this.topic.assigned_to_user;
+      const group = this.topic.assigned_to_group;
       const label = I18n.t("discourse_assign.assigned_to_w_ellipsis");
 
       if (user) {
@@ -280,10 +273,10 @@ function registerTopicFooterButtons(api) {
       return "user-times";
     },
     translatedTitle() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedAriaLabel() {
-      return defaultTitle(this);
+      return defaultTitle(this.topic);
     },
     translatedLabel() {
       const label = I18n.t("discourse_assign.unassign.title");
@@ -293,7 +286,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     action() {
-      if (!this.get("currentUser.can_assign")) {
+      if (!this.currentUser?.can_assign) {
         return;
       }
 
@@ -341,7 +334,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     action() {
-      if (!this.get("currentUser.can_assign")) {
+      if (!this.currentUser?.can_assign) {
         return;
       }
 
@@ -366,8 +359,7 @@ function registerTopicFooterButtons(api) {
         this.site.mobileView &&
         this.currentUser?.can_assign &&
         this.topic.isAssigned() &&
-        this.get("topic.assigned_to_user")?.username !==
-          this.currentUser.username
+        this.topic.assigned_to_user?.username !== this.currentUser.username
       );
     },
   });
@@ -391,7 +383,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     action() {
-      if (!this.get("currentUser.can_assign")) {
+      if (!this.currentUser?.can_assign) {
         return;
       }
 
@@ -611,13 +603,13 @@ function initialize(api) {
     };
 
     let assignedToIndirectly;
-    if (topic.get("indirectly_assigned_to")) {
-      assignedToIndirectly = Object.entries(
-        topic.get("indirectly_assigned_to")
-      ).map(([key, value]) => {
-        value.assigned_to.assignedToPostId = key;
-        return value;
-      });
+    if (topic.indirectly_assigned_to) {
+      assignedToIndirectly = Object.entries(topic.indirectly_assigned_to).map(
+        ([key, value]) => {
+          value.assigned_to.assignedToPostId = key;
+          return value;
+        }
+      );
     } else {
       assignedToIndirectly = [];
     }
@@ -821,7 +813,7 @@ function initialize(api) {
     unsubscribe() {
       this._super(...arguments);
 
-      if (!this.get("model.id")) {
+      if (!this.model?.id) {
         return;
       }
 
@@ -899,7 +891,7 @@ export default {
       SearchAdvancedOptions.reopen({
         updateSearchTermForAssignedUsername() {
           const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
-          const userFilter = this.get("searchedTerms.assigned");
+          const userFilter = this.searchedTerms?.assigned;
           let searchTerm = this.searchTerm || "";
           let keyword = "assigned";
 
@@ -944,23 +936,20 @@ export default {
       });
     }
 
-    withPluginApi("0.13.0", (api) => includeIsAssignedOnTopic(api));
-    withPluginApi("0.11.0", (api) => initialize(api));
-    withPluginApi("0.8.28", (api) => registerTopicFooterButtons(api));
+    withPluginApi("0.13.0", (api) => {
+      includeIsAssignedOnTopic(api);
+      initialize(api);
+      registerTopicFooterButtons(api);
 
-    withPluginApi("0.11.7", (api) => {
       api.addSearchSuggestion("in:assigned");
       api.addSearchSuggestion("in:unassigned");
-    });
 
-    withPluginApi("0.12.2", (api) => {
       api.addGroupPostSmallActionCode("assigned_group");
       api.addGroupPostSmallActionCode("reassigned_group");
       api.addGroupPostSmallActionCode("unassigned_group");
       api.addGroupPostSmallActionCode("assigned_group_to_post");
       api.addGroupPostSmallActionCode("unassigned_group_from_post");
-    });
-    withPluginApi("0.12.3", (api) => {
+
       api.addUserSearchOption("assignableGroups");
     });
   },

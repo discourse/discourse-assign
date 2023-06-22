@@ -2,7 +2,7 @@ import Service from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import showModal from "discourse/lib/show-modal";
 
-export default Service.extend({
+export default class TaskActions extends Service {
   i18nSuffix(targetType) {
     switch (targetType) {
       case "Post":
@@ -10,7 +10,7 @@ export default Service.extend({
       case "Topic":
         return "_modal";
     }
-  },
+  }
 
   unassign(targetId, targetType = "Topic") {
     return ajax("/assign/unassign", {
@@ -20,7 +20,7 @@ export default Service.extend({
         target_type: targetType,
       },
     });
-  },
+  }
 
   assign(target, options = { isAssigned: false, targetType: "Topic" }) {
     return showModal("assign-user", {
@@ -37,7 +37,7 @@ export default Service.extend({
         status: target.assignment_status,
       },
     });
-  },
+  }
 
   reassignUserToTopic(user, target, targetType = "Topic") {
     return ajax("/assign/assign", {
@@ -49,5 +49,5 @@ export default Service.extend({
         status: target.assignment_status,
       },
     });
-  },
-});
+  }
+}

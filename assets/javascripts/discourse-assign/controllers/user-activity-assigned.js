@@ -10,23 +10,19 @@ import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
 import { htmlSafe } from "@ember/template";
 
-export default UserTopicsList.extend({
-  user: controller(),
-  taskActions: service(),
-  queryParams: ["order", "ascending", "search"],
-  order: "",
-  ascending: false,
-  search: "",
+export default class UserActivityAssigned extends UserTopicsList {
+  @service taskActions;
+  @controller user;
 
-  _setSearchTerm(searchTerm) {
-    this.set("search", searchTerm);
-    this.refreshModel();
-  },
+  queryParams = ["order", "ascending", "search"];
+  order = "";
+  ascending = false;
+  search = "";
 
   @discourseComputed("model.topics.length", "search")
   doesntHaveAssignments(topicsLength, search) {
     return !search && !topicsLength;
-  },
+  }
 
   @discourseComputed
   emptyStateBody() {
@@ -36,7 +32,12 @@ export default UserTopicsList.extend({
         icon: iconHTML("user-plus"),
       })
     );
-  },
+  }
+
+  _setSearchTerm(searchTerm) {
+    this.set("search", searchTerm);
+    this.refreshModel();
+  }
 
   refreshModel() {
     this.set("loading", true);
@@ -53,21 +54,21 @@ export default UserTopicsList.extend({
       .finally(() => {
         this.set("loading", false);
       });
-  },
+  }
 
   @action
   unassign(targetId, targetType = "Topic") {
     this.taskActions
       .unassign(targetId, targetType)
       .then(() => this.send("changeAssigned"));
-  },
+  }
 
   @action
   reassign(topic) {
     this.taskActions
       .assign(topic)
       .set("model.onSuccess", () => this.send("changeAssigned"));
-  },
+  }
 
   @action
   changeSort(sortBy) {
@@ -78,10 +79,10 @@ export default UserTopicsList.extend({
       this.setProperties({ order: sortBy, ascending: false });
       this.refreshModel();
     }
-  },
+  }
 
   @action
   onChangeFilter(value) {
     discourseDebounce(this, this._setSearchTerm, value, INPUT_DELAY * 2);
-  },
-});
+  }
+}

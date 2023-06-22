@@ -7,21 +7,21 @@ function assignIfEqual(topic, data) {
   }
 }
 
-export default Component.extend({
+export default class FlaggedTopicListener extends Component {
   didInsertElement() {
-    this._super();
+    super.didInsertElement(...arguments);
+
     this.messageBus.subscribe("/staff/topic-assignment", (data) => {
-      let flaggedTopics = this.flaggedTopics;
-      if (flaggedTopics) {
-        flaggedTopics.forEach((ft) => assignIfEqual(ft.topic, data));
+      if (this.flaggedTopics) {
+        this.flaggedTopics.forEach((ft) => assignIfEqual(ft.topic, data));
       } else {
         assignIfEqual(this.topic, data);
       }
     });
-  },
+  }
 
   willDestroyElement() {
-    this._super();
+    super.willDestroyElement(...arguments);
     this.messageBus.unsubscribe("/staff/topic-assignment");
-  },
-});
+  }
+}

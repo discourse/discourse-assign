@@ -6,33 +6,34 @@ import discourseComputed from "discourse-common/utils/decorators";
 import discourseDebounce from "discourse-common/lib/debounce";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 
-export default Controller.extend({
-  router: service(),
-  application: controller(),
-  loading: false,
-  offset: 0,
-  filterName: "",
-  filter: "",
+export default class GroupAssigned extends Controller {
+  @service router;
+  @controller application;
+
+  loading = false;
+  offset = 0;
+  filterName = "";
+  filter = "";
 
   @discourseComputed("router.currentRoute.queryParams.order")
   order(order) {
     return order || "";
-  },
+  }
 
   @discourseComputed("router.currentRoute.queryParams.ascending")
   ascending(ascending) {
     return ascending || false;
-  },
+  }
 
   @discourseComputed("router.currentRoute.queryParams.search")
   search(search) {
     return search || "";
-  },
+  }
 
   @discourseComputed("site.mobileView")
   isDesktop(mobileView) {
     return !mobileView;
-  },
+  }
 
   _setFilter(filter) {
     this.set("loading", true);
@@ -53,7 +54,7 @@ export default Controller.extend({
       .finally(() => {
         this.set("loading", false);
       });
-  },
+  }
 
   findMembers(refresh) {
     if (refresh) {
@@ -77,15 +78,15 @@ export default Controller.extend({
         })
         .finally(() => this.set("loading", false));
     }
-  },
+  }
 
   @action
   loadMore() {
     this.findMembers();
-  },
+  }
 
   @action
   onChangeFilterName(value) {
     discourseDebounce(this, this._setFilter, value, INPUT_DELAY * 2);
-  },
-});
+  }
+}

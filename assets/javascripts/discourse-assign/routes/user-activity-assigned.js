@@ -3,19 +3,19 @@ import UserTopicListRoute from "discourse/routes/user-topic-list";
 import cookie from "discourse/lib/cookie";
 import { action } from "@ember/object";
 
-export default UserTopicListRoute.extend({
-  templateName: "user-activity-assigned",
-  controllerName: "user-activity-assigned",
+export default class UserActivityAssigned extends UserTopicListRoute {
+  templateName = "user-activity-assigned";
+  controllerName = "user-activity-assigned";
 
-  userActionType: 16,
-  noContentHelpKey: "discourse_assigns.no_assigns",
+  userActionType = 16;
+  noContentHelpKey = "discourse_assigns.no_assigns";
 
   beforeModel() {
     if (!this.currentUser) {
       cookie("destination_url", window.location.href);
       this.transitionTo("login");
     }
-  },
+  }
 
   model(params) {
     return this.store.findFiltered("topicList", {
@@ -29,14 +29,14 @@ export default UserTopicListRoute.extend({
         search: params.search,
       },
     });
-  },
+  }
 
   titleToken() {
     return I18n.t("discourse_assign.assigned");
-  },
+  }
 
   @action
   changeAssigned() {
     this.refresh();
-  },
-});
+  }
+}

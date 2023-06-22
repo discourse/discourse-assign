@@ -1,25 +1,25 @@
 <td class="topic-list-data">
   <div class="main-link">
-    <TopicStatus @topic={{topic}} />
-    {{~#if isPrivateMessage}}
+    <TopicStatus @topic={{this.topic}} />
+    {{~#if this.isPrivateMessage}}
       {{~d-icon "envelope" class="private-message-icon"}}
     {{~/if}}
-    {{~topic-link topic}}
-    {{#if topic.unseen}}
+    {{~topic-link this.topic}}
+    {{#if this.topic.unseen}}
       <span class="badge-notification new-topic"></span>
     {{/if}}
-    {{#if topic.hasExcerpt}}
+    {{#if this.topic.hasExcerpt}}
       <div class="topic-excerpt">
-        {{html-safe topic.excerpt}}
-        {{#if topic.excerptTruncated}}
-          {{#unless topic.canClearPin}}<a href={{topic.url}}>{{i18n
+        {{html-safe this.topic.excerpt}}
+        {{#if this.topic.excerptTruncated}}
+          {{#unless this.topic.canClearPin}}<a href={{this.topic.url}}>{{i18n
                 "read_more"
               }}</a>{{/unless}}
         {{/if}}
-        {{#if topic.canClearPin}}
+        {{#if this.topic.canClearPin}}
           <a
             href
-            {{action "clearPin" topic}}
+            {{action "clearPin" this.topic}}
             title={{i18n "topic.clear_pin.help"}}
           >{{i18n "topic.clear_pin.title"}}</a>
         {{/if}}
@@ -27,43 +27,49 @@
     {{/if}}
   </div>
   <div class="pull-right topic-list-num">
-    {{#if topic.assigned_to_user}}
+    {{#if this.topic.assigned_to_user}}
       <AssignActionsDropdown
-        @topic={{topic}}
-        @assignee={{topic.assigned_to_user.username}}
-        @unassign={{unassign}}
-        @reassign={{reassign}}
+        @topic={{this.topic}}
+        @assignee={{this.topic.assigned_to_user.username}}
+        @unassign={{this.unassign}}
+        @reassign={{this.reassign}}
       />
-    {{else if topic.assigned_to_group}}
+    {{else if this.topic.assigned_to_group}}
       <AssignActionsDropdown
-        @topic={{topic}}
-        @assignee={{topic.assigned_to_group.name}}
+        @topic={{this.topic}}
+        @assignee={{this.topic.assigned_to_group.name}}
         @group={{true}}
-        @unassign={{unassign}}
-        @reassign={{reassign}}
+        @unassign={{this.unassign}}
+        @reassign={{this.reassign}}
       />
     {{else}}
-      <AssignActionsDropdown @topic={{topic}} @unassign={{unassign}} />
+      <AssignActionsDropdown
+        @topic={{this.topic}}
+        @unassign={{this.unassign}}
+      />
     {{/if}}
   </div>
   <div class="clearfix"></div>
   <div class="topic-item-stats clearfix">
-    {{discourse-tags topic mode="list" tagsForUser=tagsForUser}}
+    {{discourse-tags this.topic mode="list" tagsForUser=this.tagsForUser}}
     <div class="pull-right topic-list-num">
       {{raw
         "list/activity-column"
-        topic=topic
+        topic=this.topic
         tagName="div"
         class="num activity last"
       }}
       <a
-        href={{topic.lastPostUrl}}
-        title="{{i18n 'last_post'}}: {{html-safe raw-date topic.bumped_at}}"
-      >{{topic.last_poster_username}}</a>
+        href={{this.topic.lastPostUrl}}
+        title="{{i18n 'last_post'}}: {{html-safe
+          raw-date
+          this.topic.bumped_at
+        }}"
+      >{{this.topic.last_poster_username}}</a>
     </div>
-    {{#unless hideCategory}}
+    {{#unless this.hideCategory}}
       <div class="category">
-        {{category-link topic.category}}
+        {{category-link this.topic.category}}
       </div>
     {{/unless}}
     <div class="clearfix"></div>

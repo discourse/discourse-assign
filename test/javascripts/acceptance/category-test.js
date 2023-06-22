@@ -1,4 +1,4 @@
-import { acceptance, exists } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import I18n from "I18n";
@@ -40,7 +40,7 @@ acceptance(
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
-      assert.ok(exists(`#navigation-bar li[title='${title}']`));
+      assert.dom(`#navigation-bar li[title='${title}']`).exists();
     });
   }
 );
@@ -60,7 +60,7 @@ acceptance(
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
-      assert.ok(!exists(`#navigation-bar li[title='${title}']`));
+      assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
     });
   }
 );
@@ -80,7 +80,7 @@ acceptance(
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
-      assert.ok(exists(`#navigation-bar li[title='${title}']`));
+      assert.dom(`#navigation-bar li[title='${title}']`).exists();
     });
   }
 );
@@ -100,7 +100,7 @@ acceptance(
       await visit("/c/test");
 
       const title = I18n.t("filters.unassigned.help");
-      assert.ok(!exists(`#navigation-bar li[title='${title}']`));
+      assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
     });
   }
 );

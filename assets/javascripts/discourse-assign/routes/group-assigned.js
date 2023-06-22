@@ -2,10 +2,10 @@ import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
 import { action } from "@ember/object";
 
-export default DiscourseRoute.extend({
+export default class GroupAssigned extends DiscourseRoute {
   model() {
-    return ajax(`/assign/members/${this.modelFor("group").get("name")}`);
-  },
+    return ajax(`/assign/members/${this.modelFor("group").name}`);
+  }
 
   setupController(controller, model) {
     controller.setProperties({
@@ -19,7 +19,7 @@ export default DiscourseRoute.extend({
     });
 
     controller.findMembers(true);
-  },
+  }
 
   redirect(model, transition) {
     if (transition.to.params.hasOwnProperty("filter")) {
@@ -27,10 +27,10 @@ export default DiscourseRoute.extend({
     } else {
       this.transitionTo("group.assigned.show", "everyone");
     }
-  },
+  }
 
   @action
   changeAssigned() {
     this.refresh();
-  },
-});
+  }
+}

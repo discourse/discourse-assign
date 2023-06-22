@@ -4,7 +4,7 @@
     <label class="checkbox-label">
       <Input
         @type="checkbox"
-        @checked={{readonly category.enable_unassigned_filter}}
+        @checked={{readonly this.category.enable_unassigned_filter}}
         {{on "change" (action "onChangeSetting" value="target.checked")}}
       />
       {{i18n "discourse_assign.add_unassigned_filter"}}

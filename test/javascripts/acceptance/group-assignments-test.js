@@ -1,4 +1,4 @@
-import { acceptance, count } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import AssignedTopics from "../fixtures/assigned-group-assignments-fixtures";
 import GroupMembers from "../fixtures/group-members-fixtures";
@@ -21,11 +21,11 @@ acceptance("Discourse Assign | GroupAssignments", function (needs) {
 
   test("Group Assignments Everyone", async function (assert) {
     await visit("/g/discourse/assigned");
-    assert.strictEqual(count(".topic-list-item"), 1);
+    assert.dom(".topic-list-item").exists({ count: 1 });
   });
 
   test("Group Assignments Ahmedgagan", async function (assert) {
     await visit("/g/discourse/assigned/ahmedgagan6");
-    assert.strictEqual(count(".topic-list-item"), 1);
+    assert.dom(".topic-list-item").exists({ count: 1 });
   });
 });
