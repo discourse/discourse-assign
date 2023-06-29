@@ -125,7 +125,7 @@ module DiscourseAssign
 
       guardian.ensure_can_see_group_members!(group)
 
-      members =
+      users_with_assignments_count =
         User
           .joins("LEFT OUTER JOIN group_users g ON g.user_id = users.id")
           .joins(
@@ -140,25 +140,22 @@ module DiscourseAssign
           .limit(limit)
           .offset(offset)
 
-      members = members.where(<<~SQL, pattern: "%#{params[:filter]}%") if params[:filter]
+      users_with_assignments_count =
+        users_with_assignments_count.where(<<~SQL, pattern: "%#{params[:filter]}%") if params[
           users.name ILIKE :pattern OR users.username_lower ILIKE :pattern
         SQL
-
-      group_assignments =
-        Topic
-          .joins("JOIN assignments a ON a.topic_id = topics.id")
-          .where(<<~SQL, group_id: group.id)
-          a.assigned_to_id = :group_id AND a.assigned_to_type = 'Group' AND a.active
-        SQL
-          .pluck(:topic_id)
-
-      assignments =
-        TopicQuery.new(current_user).group_topics_assigned_results(group).pluck("topics.id")
+        :filter
+      ]
+      group_assignments_count = Assignment.active_for_group(group).count
+      users_assignments_count =
+        users_with_assignments_count.reduce(0) do |sum, assignment|
+          sum + assignment.assignments_count
+        end
 
       render json: {
-               members: serialize_data(members, GroupUserAssignedSerializer),
-               assignment_count: (assignments | group_assignments).count,
-               group_assignment_count: group_assignments.count,
+               members: serialize_data(users_with_assignments_count, GroupUserAssignedSerializer),
+               assignment_count: users_assignments_count + group_assignments_count,
+               group_assignment_count: group_assignments_count,
              }
     end
 
