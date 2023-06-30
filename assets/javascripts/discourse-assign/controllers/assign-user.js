@@ -126,20 +126,7 @@ export default class AssignUser extends Controller.extend(ModalFunctionality) {
   }
 
   @action
-  assignUser(name) {
-    this.setGroupOrUser(name);
-
-    if (name) {
-      return this.assign();
-    }
-  }
-
-  @action
-  assignUsername(selected) {
-    this.setGroupOrUser(selected.firstObject);
-  }
-
-  setGroupOrUser(name) {
+  assignUsername([name]) {
     this.set("assigneeError", false);
     this.set("model.allowedGroups", this.taskActions.allowedGroups);
 
