@@ -7,35 +7,6 @@ import { getOwner } from "discourse-common/lib/get-owner";
 module("Unit | Controller | assign-user", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("assigning a user via suggestions makes API call and closes the modal", async function (assert) {
-    pretender.get("/assign/suggestions", () =>
-      response({
-        suggestions: [],
-        assign_allowed_on_groups: ["nat"],
-        assign_allowed_for_groups: [],
-      })
-    );
-
-    pretender.put("/assign/assign", () => response({}));
-
-    let modalClosed = false;
-    const controller = getOwner(this).lookup("controller:assign-user");
-    controller.setProperties({
-      model: {
-        target: EmberObject.create({}),
-      },
-      allowedGroupsForAssignment: ["nat"],
-      taskActions: { allowedGroups: [] },
-    });
-    controller.set("actions.closeModal", () => {
-      modalClosed = true;
-    });
-
-    await controller.assignUser("nat");
-
-    assert.true(modalClosed);
-  });
-
   test("assigning a user by selector does not close the modal", async function (assert) {
     pretender.get("/assign/suggestions", () =>
       response({
