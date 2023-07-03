@@ -1,7 +1,7 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import { ajax } from "discourse/lib/ajax";
 import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
-import UserMenuAssignItem from "discourse/plugins/discourse-assign/discourse-assign/lib/user-menu/assign-item";
+import UserMenuAssignItem from "../../lib/user-menu/assign-item";
 import Notification from "discourse/models/notification";
 import I18n from "I18n";
 import showModal from "discourse/lib/show-modal";

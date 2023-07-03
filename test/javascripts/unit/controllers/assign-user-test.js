@@ -4,7 +4,7 @@ import EmberObject from "@ember/object";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Controller | assign-user", function (hooks) {
+module("Discourse Assign | Unit | Controller | assign-user", function (hooks) {
   setupRenderingTest(hooks);
 
   test("assigning a user by selector does not close the modal", async function (assert) {

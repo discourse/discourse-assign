@@ -5,7 +5,7 @@ import * as showModal from "discourse/lib/show-modal";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { getOwner } from "discourse-common/lib/get-owner";
 
-module("Unit | Service | task-actions", function (hooks) {
+module("Discourse Assign | Unit | Service | task-actions", function (hooks) {
   setupTest(hooks);
 
   test("assign", function (assert) {

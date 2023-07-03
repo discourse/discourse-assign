@@ -9,7 +9,7 @@ import { cloneJSON } from "discourse-common/lib/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { test } from "qunit";
 
-acceptance("User Private Messages | Discourse Assign", function (needs) {
+acceptance("Discourse Assign | User Private Messages", function (needs) {
   needs.user({
     can_assign: true,
   });
