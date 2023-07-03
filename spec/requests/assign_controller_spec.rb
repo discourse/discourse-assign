@@ -364,56 +364,98 @@ RSpec.describe DiscourseAssign::AssignController do
   describe "#group_members" do
     include_context "with group that is allowed to assign"
 
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
-    fab!(:post3) { Fabricate(:post) }
-
     before do
       add_to_assign_allowed_group(user2)
       add_to_assign_allowed_group(user)
 
-      Assigner.new(post1.topic, user).assign(user)
-      Assigner.new(post2.topic, user).assign(user2)
-      Assigner.new(post3.topic, user).assign(user)
+      topic = Fabricate(:topic)
+      post_in_same_topic = Fabricate(:post, topic: topic)
+
+      Fabricate(:post_assignment, assigned_to: user, target: topic, assigned_by_user: user)
+      Fabricate(
+        :topic_assignment,
+        assigned_to: user,
+        target: post_in_same_topic,
+        assigned_by_user: user,
+      )
+      Fabricate(:topic_assignment, assigned_to: user2, assigned_by_user: user)
+      Fabricate(:topic_assignment, assigned_to: user, assigned_by_user: user)
+
+      Fabricate(:topic_assignment, assigned_to: assign_allowed_group, assigned_by_user: user)
+      Fabricate(:post_assignment, assigned_to: assign_allowed_group, assigned_by_user: user)
     end
 
-    it "list members order by assignments_count" do
-      sign_in(user)
+    describe "members" do
+      describe "without filter" do
+        it "list members ordered by the number of assignments" do
+          sign_in(user)
 
-      get "/assign/members/#{get_assigned_allowed_group_name}.json"
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
-        [user.id, user2.id],
-      )
+          get "/assign/members/#{get_assigned_allowed_group_name}.json"
+          members = JSON.parse(response.body)["members"]
+
+          expect(response.status).to eq(200)
+          expect(members[0]).to include({ "id" => user.id, "assignments_count" => 3 })
+          expect(members[1]).to include({ "id" => user2.id, "assignments_count" => 1 })
+        end
+
+        it "doesn't include members with no assignments" do
+          sign_in(user)
+          add_to_assign_allowed_group(non_admin)
+
+          get "/assign/members/#{get_assigned_allowed_group_name}.json"
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to_not include(
+            non_admin.id,
+          )
+        end
+      end
+
+      describe "with filter" do
+        it "returns members as according to filter" do
+          sign_in(user)
+
+          get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "a" }
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
+            [user.id, user2.id],
+          )
+
+          get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "david" }
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
+            [user2.id],
+          )
+
+          get "/assign/members/#{get_assigned_allowed_group_name}.json",
+              params: {
+                filter: "Taylor",
+              }
+          expect(response.status).to eq(200)
+          expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
+            [user2.id],
+          )
+        end
+      end
     end
 
-    it "doesn't include members with no assignments" do
-      sign_in(user)
-      add_to_assign_allowed_group(non_admin)
+    describe "assignment_count" do
+      it "returns the total number of assignments for group users and the group" do
+        sign_in(user)
 
-      get "/assign/members/#{get_assigned_allowed_group_name}.json"
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
-        [user.id, user2.id],
-      )
+        get "/assign/members/#{get_assigned_allowed_group_name}.json"
+
+        expect(JSON.parse(response.body)["assignment_count"]).to eq(6)
+      end
     end
 
-    it "returns members as according to filter" do
-      sign_in(user)
+    describe "group_assignment_count" do
+      it "returns the number of assignments assigned to the group" do
+        sign_in(user)
 
-      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "a" }
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
-        [user.id, user2.id],
-      )
+        get "/assign/members/#{get_assigned_allowed_group_name}.json"
 
-      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "david" }
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array([user2.id])
-
-      get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "Taylor" }
-      expect(response.status).to eq(200)
-      expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array([user2.id])
+        expect(JSON.parse(response.body)["group_assignment_count"]).to eq(2)
+      end
     end
 
     it "404 error to non-group-members" do

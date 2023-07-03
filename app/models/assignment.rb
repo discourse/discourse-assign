@@ -15,6 +15,8 @@ class Assignment < ActiveRecord::Base
           )
         }
 
+  scope :active_for_group, ->(group) { where(assigned_to: group, active: true) }
+
   before_validation :default_status
 
   validate :validate_status, if: -> { SiteSetting.enable_assign_status }
