@@ -5,8 +5,12 @@ import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import pretender, {
+  parsePostData,
+  response,
+} from "discourse/tests/helpers/create-pretender";
 
 acceptance("Discourse Assign | Assign mobile", function (needs) {
   needs.user();
@@ -67,11 +71,6 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
         ],
       });
     });
-
-    server.put("/assign/assign", () => {
-      debugger;
-      return helper.response({ success: true });
-    });
   });
 
   test("Assiging user to a post", async function (assert) {
@@ -80,15 +79,31 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     assert
       .dom("#post_2 .extra-buttons .d-icon-user-plus")
       .doesNotExist("assign to post button is hidden");
-    await click("#post_2 button.show-more-actions");
 
+    await click("#post_2 button.show-more-actions");
     assert
       .dom("#post_2 .extra-buttons .d-icon-user-plus")
       .exists("assign to post button exists");
+
     await click("#post_2 .extra-buttons .d-icon-user-plus");
     assert.dom(".assign.modal").exists("assign modal opens");
 
-    await pauseTest();
+    const menu = selectKit(".assign.modal .user-chooser");
+    assert.true(menu.isExpanded(), "user selector is expanded");
+
+    await menu.selectRowByIndex(0);
+    assert.strictEqual(menu.header().value(), "eviltrout");
+
+    pretender.put("/assign/assign", ({ requestBody }) => {
+      const body = parsePostData(requestBody);
+      assert.strictEqual(body.target_type, "Post");
+      assert.strictEqual(body.username, "eviltrout");
+      assert.strictEqual(body.note, "a note!");
+      return response({ success: true });
+    });
+
+    await fillIn("#assign-modal-note", "a note!");
+    await click(".assign.modal .btn-primary");
   });
 
   test("Footer dropdown contains button", async function (assert) {
