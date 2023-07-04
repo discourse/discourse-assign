@@ -73,7 +73,7 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     });
   });
 
-  test("Assiging user to a post", async function (assert) {
+  test("Assigning user to a post", async function (assert) {
     await visit("/t/internationalization-localization/280");
 
     assert
