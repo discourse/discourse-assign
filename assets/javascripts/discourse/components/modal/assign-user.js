@@ -33,7 +33,7 @@ export default class AssignUser extends Component {
     });
   }
 
-  // TODO
+  // TODO: update and test
   bulkAction(username, note) {
     return this.topicBulkActions.performAndRefresh({
       type: "assign",
@@ -133,6 +133,8 @@ export default class AssignUser extends Component {
   assignUsername([name]) {
     this.assigneeName = name;
     this.assigneeError = false;
+
+    // TODO: This never worked
     this.args.model.allowedGroups = this.taskActions.allowedGroups;
 
     if (this.allowedGroupsForAssignment.includes(name)) {
