@@ -123,6 +123,8 @@ export default class AssignUser extends Component {
           status: model.status,
         },
       });
+
+      this.args.model.onSuccess?.();
     } catch (error) {
       popupAjaxError(error);
     }

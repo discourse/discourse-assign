@@ -84,10 +84,10 @@ function registerTopicFooterButtons(api) {
           await taskActions.assign(this.topic, {
             targetType: "Topic",
             isAssigned: this.topic.isAssigned(),
-          });
-
-          this.appEvents.trigger("post-stream:refresh", {
-            id: this.topic.postStream.firstPostId,
+            onSuccess: () =>
+              this.appEvents.trigger("post-stream:refresh", {
+                id: this.topic.postStream.firstPostId,
+              }),
           });
           break;
         }
@@ -210,10 +210,11 @@ function registerTopicFooterButtons(api) {
           id: this.topic.postStream.firstPostId,
         });
       } else {
-        await taskActions.assign(this.topic);
-
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
+        await taskActions.assign(this.topic, {
+          onSuccess: () =>
+            this.appEvents.trigger("post-stream:refresh", {
+              id: this.topic.postStream.firstPostId,
+            }),
         });
       }
     },
@@ -392,10 +393,10 @@ function registerTopicFooterButtons(api) {
       await taskActions.assign(this.topic, {
         targetType: "Topic",
         isAssigned: this.topic.isAssigned(),
-      });
-
-      this.appEvents.trigger("post-stream:refresh", {
-        id: this.topic.postStream.firstPostId,
+        onSuccess: () =>
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
+          }),
       });
     },
     dropdown() {
@@ -437,7 +438,7 @@ function initialize(api) {
       },
       before: "top",
     });
-    if (api.getCurrentUser() && api.getCurrentUser().can_assign) {
+    if (api.getCurrentUser()?.can_assign) {
       api.addPostMenuButton("assign", (post) => {
         if (post.firstPost) {
           return;
@@ -486,7 +487,7 @@ function initialize(api) {
   });
 
   api.addAdvancedSearchOptions(
-    api.getCurrentUser() && api.getCurrentUser().can_assign
+    api.getCurrentUser()?.can_assign
       ? {
           inOptionsForUsers: [
             {

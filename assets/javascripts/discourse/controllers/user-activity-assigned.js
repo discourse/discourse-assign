@@ -63,9 +63,10 @@ export default class UserActivityAssigned extends UserTopicsList {
   }
 
   @action
-  async reassign(topic) {
-    await this.taskActions.assign(topic);
-    this.send("changeAssigned");
+  reassign(topic) {
+    this.taskActions.assign(topic, {
+      onSuccess: () => this.send("changeAssigned"),
+    });
   }
 
   @action

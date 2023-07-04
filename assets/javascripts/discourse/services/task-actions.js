@@ -15,15 +15,16 @@ export default class TaskActions extends Service {
     });
   }
 
-  assign(target, options = { isAssigned: false, targetType: "Topic" }) {
+  assign(target, { isAssigned = false, targetType = "Topic", onSuccess }) {
     return this.modal.show(AssignUser, {
       model: {
-        reassign: options.isAssigned,
+        reassign: isAssigned,
         username: target.assigned_to_user?.username,
         group_name: target.assigned_to_group?.name,
-        target,
-        targetType: options.targetType,
         status: target.assignment_status,
+        target,
+        targetType,
+        onSuccess,
       },
     });
   }
