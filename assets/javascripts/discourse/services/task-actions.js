@@ -1,9 +1,37 @@
 import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import AssignUser from "../components/modal/assign-user";
+import { tracked } from "@glimmer/tracking";
 
 export default class TaskActions extends Service {
   @service modal;
+
+  @tracked allowedGroups;
+  @tracked allowedGroupsForAssignment;
+  #suggestionsPromise;
+  @tracked _suggestions;
+
+  get suggestions() {
+    if (this._suggestions) {
+      return this._suggestions;
+    }
+
+    this.#suggestionsPromise ||= this.#fetchSuggestions();
+
+    return null;
+  }
+
+  async #fetchSuggestions() {
+    const data = await ajax("/assign/suggestions");
+
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this._suggestions = data.suggestions;
+    this.allowedGroups = data.assign_allowed_on_groups;
+    this.allowedGroupsForAssignment = data.assign_allowed_for_groups;
+  }
 
   unassign(targetId, targetType = "Topic") {
     return ajax("/assign/unassign", {

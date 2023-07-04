@@ -11,9 +11,10 @@
           mobilePlacementStrategy="absolute"
           includeGroups=true
           customSearchOptions=(hash
-            assignableGroups=true defaultSearchResults=this.assignSuggestions
+            assignableGroups=true
+            defaultSearchResults=this.taskActions.suggestions
           )
-          groupMembersOf=this.allowedGroups
+          groupMembersOf=this.taskActions.allowedGroups
           maximum=1
           autofocus=(not this.capabilities.touch)
           tabindex=1

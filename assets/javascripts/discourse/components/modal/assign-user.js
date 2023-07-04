@@ -12,26 +12,9 @@ export default class AssignUser extends Component {
   @service siteSettings;
   @service capabilities;
 
-  @tracked assignSuggestions = null;
-  @tracked allowedGroups = [];
-  @tracked allowedGroupsForAssignment = [];
   @tracked assigneeError = false;
   @tracked assigneeName =
     this.args.model.username || this.args.model.group_name;
-
-  constructor() {
-    super(...arguments);
-
-    // TODO: move to a dedicated service
-    ajax("/assign/suggestions").then((data) => {
-      if (this.isDestroying || this.isDestroyed) {
-        return;
-      }
-      this.assignSuggestions = data.suggestions;
-      this.allowedGroups = data.assign_allowed_on_groups;
-      this.allowedGroupsForAssignment = data.assign_allowed_for_groups;
-    });
-  }
 
   // TODO: update and test
   bulkAction(username, note) {
@@ -134,10 +117,7 @@ export default class AssignUser extends Component {
     this.assigneeName = name;
     this.assigneeError = false;
 
-    // TODO: This never worked
-    this.args.model.allowedGroups = this.taskActions.allowedGroups;
-
-    if (this.allowedGroupsForAssignment.includes(name)) {
+    if (this.taskActions.allowedGroupsForAssignment.includes(name)) {
       this.args.model.username = null;
       this.args.model.group_name = name;
     } else {
