@@ -50,7 +50,7 @@ function registerTopicFooterButtons(api) {
   registerTopicFooterDropdown({
     id: "reassign",
 
-    action(id) {
+    async action(id) {
       if (!this.currentUser?.can_assign) {
         return;
       }
@@ -61,36 +61,34 @@ function registerTopicFooterButtons(api) {
         case "unassign": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions.unassign(this.topic.id).then(() => {
-            this.appEvents.trigger("post-stream:refresh", {
-              id: this.topic.postStream.firstPostId,
-            });
+
+          await taskActions.unassign(this.topic.id);
+
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
           });
           break;
         }
         case "reassign-self": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions
-            .reassignUserToTopic(this.currentUser, this.topic)
-            .then(() => {
-              this.appEvents.trigger("post-stream:refresh", {
-                id: this.topic.postStream.firstPostId,
-              });
-            });
+
+          await taskActions.reassignUserToTopic(this.currentUser, this.topic);
+
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
+          });
           break;
         }
         case "reassign": {
-          taskActions
-            .assign(this.topic, {
-              targetType: "Topic",
-              isAssigned: this.topic.isAssigned(),
-            })
-            .set("model.onSuccess", () => {
-              this.appEvents.trigger("post-stream:refresh", {
-                id: this.topic.postStream.firstPostId,
-              });
-            });
+          await taskActions.assign(this.topic, {
+            targetType: "Topic",
+            isAssigned: this.topic.isAssigned(),
+          });
+
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
+          });
           break;
         }
       }
@@ -195,7 +193,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       return I18n.t("discourse_assign.assign.title");
     },
-    action() {
+    async action() {
       if (!this.currentUser?.can_assign) {
         return;
       }
@@ -205,16 +203,17 @@ function registerTopicFooterButtons(api) {
       if (this.topic.isAssigned()) {
         this.set("topic.assigned_to_user", null);
         this.set("topic.assigned_to_group", null);
-        taskActions.unassign(this.topic.id, "Topic").then(() => {
-          this.appEvents.trigger("post-stream:refresh", {
-            id: this.topic.postStream.firstPostId,
-          });
+
+        await taskActions.unassign(this.topic.id, "Topic");
+
+        this.appEvents.trigger("post-stream:refresh", {
+          id: this.topic.postStream.firstPostId,
         });
       } else {
-        taskActions.assign(this.topic).set("model.onSuccess", () => {
-          this.appEvents.trigger("post-stream:refresh", {
-            id: this.topic.postStream.firstPostId,
-          });
+        await taskActions.assign(this.topic);
+
+        this.appEvents.trigger("post-stream:refresh", {
+          id: this.topic.postStream.firstPostId,
         });
       }
     },
@@ -333,7 +332,7 @@ function registerTopicFooterButtons(api) {
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
-    action() {
+    async action() {
       if (!this.currentUser?.can_assign) {
         return;
       }
@@ -342,10 +341,11 @@ function registerTopicFooterButtons(api) {
 
       this.set("topic.assigned_to_user", null);
       this.set("topic.assigned_to_group", null);
-      taskActions.reassignUserToTopic(this.currentUser, this.topic).then(() => {
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
-        });
+
+      await taskActions.reassignUserToTopic(this.currentUser, this.topic);
+
+      this.appEvents.trigger("post-stream:refresh", {
+        id: this.topic.postStream.firstPostId,
       });
     },
     dropdown() {
@@ -382,23 +382,21 @@ function registerTopicFooterButtons(api) {
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
-    action() {
+    async action() {
       if (!this.currentUser?.can_assign) {
         return;
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      taskActions
-        .assign(this.topic, {
-          targetType: "Topic",
-          isAssigned: this.topic.isAssigned(),
-        })
-        .set("model.onSuccess", () => {
-          this.appEvents.trigger("post-stream:refresh", {
-            id: this.topic.postStream.firstPostId,
-          });
-        });
+      await taskActions.assign(this.topic, {
+        targetType: "Topic",
+        isAssigned: this.topic.isAssigned(),
+      });
+
+      this.appEvents.trigger("post-stream:refresh", {
+        id: this.topic.postStream.firstPostId,
+      });
     },
     dropdown() {
       return this.currentUser?.can_assign && this.topic.isAssigned();
