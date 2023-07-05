@@ -4,109 +4,86 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 RSpec.describe DiscourseAssign::AssignController do
-  before { SiteSetting.assign_enabled = true }
+  before do
+    SiteSetting.assign_enabled = true
+    SiteSetting.assign_allowed_on_groups = "#{allowed_group.id}|#{staff_group.id}"
+  end
 
   fab!(:staff_group) { Group.find_by(name: "staff") }
-  fab!(:admin) { Fabricate(:admin, name: "Robin Ward", username: "eviltrout") }
+  fab!(:non_allowed_group) { Fabricate(:group) }
+  fab!(:allowed_group) { Fabricate(:group) }
+
+  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user2) { Fabricate(:user, groups: [staff_group]) }
+  fab!(:allowed_user) { Fabricate(:user, name: "Mads Mikkelsen", groups: [allowed_group]) }
+  fab!(:non_admin_staff) { Fabricate(:user, groups: [staff_group]) }
+  fab!(:user_in_non_allowed_group) { Fabricate(:user, groups: [non_allowed_group]) }
+
   fab!(:post) { Fabricate(:post) }
-  fab!(:user2) do
-    Fabricate(
-      :active_user,
-      name: "David Taylor",
-      username: "david",
-      groups: [staff_group],
-    )
-  end
-  fab!(:non_admin) { Fabricate(:user, groups: [staff_group]) }
-  fab!(:normal_user) { Fabricate(:user) }
-  fab!(:normal_admin) { Fabricate(:admin) }
 
-  describe "only allow users from allowed groups" do
+  describe "only allow users from allowed groups to assign" do
     it "filters requests where current_user is not member of an allowed group" do
-      SiteSetting.assign_allowed_on_groups = ""
-
-      sign_in(user2)
+      sign_in(user_in_non_allowed_group)
 
       put "/assign/assign.json",
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            username: user2.username,
+            username: admin.username,
           }
 
       expect(response.status).to eq(403)
     end
 
     it "filters requests where assigned group is not allowed" do
-      sign_in(user2)
+      sign_in(admin)
 
       put "/assign/assign.json",
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            group_name: staff_group.name,
+            group_name: non_allowed_group.name,
           }
 
       expect(response.status).to eq(400)
-    end
-
-    describe "#suggestions" do
-      before { sign_in(admin) }
-
-      it "includes users in allowed groups" do
-        allowed_group = Group.find_by(name: "everyone")
-        allowed_group.add(user2)
-
-        defaults = "#{staff_group.id}|#{allowed_group.id}"
-
-        SiteSetting.assign_allowed_on_groups = defaults
-        Assigner.new(post.topic, admin).assign(user2)
-
-        get "/assign/suggestions.json"
-        suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
-
-        expect(suggestions).to contain_exactly(user2.username, admin.username)
-      end
-
-      it "does not include users from disallowed groups" do
-        allowed_group = Group.find_by(name: "everyone")
-        allowed_group.add(user2)
-        SiteSetting.assign_allowed_on_groups = staff_group.id.to_s
-        Assigner.new(post.topic, admin).assign(user2)
-
-        get "/assign/suggestions.json"
-        suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }.sort
-
-        expect(suggestions).to eq(%w[david eviltrout])
-      end
-
-      it "does include only visible assign_allowed_on_groups" do
-        sign_in(non_admin) # Need to use non-admin to test. Admins can see all groups
-
-        visible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
-        visible_group.add(non_admin)
-        invisible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
-
-        SiteSetting.assign_allowed_on_groups = "#{visible_group.id}|#{invisible_group.id}"
-
-        get "/assign/suggestions.json"
-        assign_allowed_on_groups = JSON.parse(response.body)["assign_allowed_on_groups"]
-
-        expect(assign_allowed_on_groups).to contain_exactly(visible_group.name)
-      end
     end
   end
 
   describe "#suggestions" do
     before { sign_in(admin) }
 
+    it "only includes users in allowed groups and not disallowed groups" do
+      Assigner.new(post.topic, admin).assign(allowed_user)
+
+      get "/assign/suggestions.json"
+      suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
+
+      expect(suggestions).to contain_exactly(allowed_user.username, admin.username)
+      expect(suggestions).to_not include(user_in_non_allowed_group)
+    end
+
+    it "does include only visible assign_allowed_on_groups" do
+      sign_in(non_admin_staff) # Need to use non-admin to test. Admins can see all groups
+
+      visible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
+      visible_group.add(non_admin_staff)
+      invisible_group = Fabricate(:group, visibility_level: Group.visibility_levels[:members])
+
+      SiteSetting.assign_allowed_on_groups = "#{visible_group.id}|#{invisible_group.id}"
+
+      get "/assign/suggestions.json"
+      assign_allowed_on_groups = JSON.parse(response.body)["assign_allowed_on_groups"]
+
+      expect(assign_allowed_on_groups).to contain_exactly(visible_group.name)
+    end
+
     it "suggests the current user + the last 5 previously assigned users" do
-      assignees = 10.times.map { |_| assign_user_to_post.username }
+      assignees = 6.times.map { |_| assign_user_to_post.username }
 
       get "/assign/suggestions.json"
 
       suggestions = response.parsed_body["suggestions"].map { |u| u["username"] }
-      expect(suggestions).to contain_exactly(admin.username, *assignees[5..9])
+      expect(suggestions).to contain_exactly(admin.username, *assignees[1..5])
     end
 
     it "doesn't suggest users on holiday" do
@@ -132,8 +109,8 @@ RSpec.describe DiscourseAssign::AssignController do
 
     it "excludes other users from the suggestions when they already reached the max assigns limit" do
       SiteSetting.max_assigned_topics = 1
-      another_admin = Fabricate(:admin)
-      Assigner.new(post.topic, admin).assign(another_admin)
+      another_user = Fabricate(:user)
+      Fabricate(:post_assignment, assigned_to: another_user, assigned_by_user: admin)
 
       get "/assign/suggestions.json"
       suggestions = JSON.parse(response.body)["suggestions"].map { |u| u["username"] }
@@ -142,9 +119,8 @@ RSpec.describe DiscourseAssign::AssignController do
     end
 
     def assign_user_to_post
-      assignee = Fabricate(:user, groups: [staff_group])
-      post = Fabricate(:post)
-      Assigner.new(post.topic, admin).assign(assignee)
+      assignee = Fabricate(:user, groups: [allowed_group])
+      Fabricate(:post_assignment, assigned_to: assignee, assigned_by_user: admin)
       assignee
     end
   end
@@ -154,7 +130,6 @@ RSpec.describe DiscourseAssign::AssignController do
 
     before do
       sign_in(admin)
-      add_to_assign_allowed_group(user2)
       SiteSetting.enable_assign_status = true
     end
 
@@ -163,11 +138,11 @@ RSpec.describe DiscourseAssign::AssignController do
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            username: user2.username,
+            username: allowed_user.username,
           }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(allowed_user.id)
     end
 
     it "assigns topic with note to a user" do
@@ -175,7 +150,7 @@ RSpec.describe DiscourseAssign::AssignController do
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            username: user2.username,
+            username: allowed_user.username,
             note: "do dis pls",
           }
 
@@ -187,7 +162,7 @@ RSpec.describe DiscourseAssign::AssignController do
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            username: user2.username,
+            username: allowed_user.username,
             status: "In Progress",
           }
 
@@ -199,7 +174,7 @@ RSpec.describe DiscourseAssign::AssignController do
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            username: user2.username,
+            username: allowed_user.username,
           }
 
       expect(post.topic.reload.assignment.status).to eq("New")
@@ -222,22 +197,22 @@ RSpec.describe DiscourseAssign::AssignController do
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            username: user2.username,
+            username: allowed_user.username,
           }
 
       expect(response.status).to eq(200)
-      expect(post.topic.reload.assignment.assigned_to_id).to eq(user2.id)
+      expect(post.topic.reload.assignment.assigned_to_id).to eq(allowed_user.id)
 
       put "/assign/assign.json",
           params: {
             target_id: post.topic_id,
             target_type: "Topic",
-            username: user2.username,
+            username: allowed_user.username,
           }
 
       expect(response.status).to eq(400)
       expect(JSON.parse(response.body)["error"]).to eq(
-        I18n.t("discourse_assign.already_assigned", username: user2.username),
+        I18n.t("discourse_assign.already_assigned", username: allowed_user.username),
       )
     end
 
@@ -306,41 +281,34 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   describe "#assigned" do
-    include_context "with group that is allowed to assign"
+    fab!(:topic1) { Fabricate(:topic, bumped_at: 1.hour.from_now) }
+    fab!(:topic2) { Fabricate(:topic, bumped_at: 2.hour.from_now) }
+    fab!(:topic3) { Fabricate(:topic, bumped_at: 3.hour.from_now) }
 
-    fab!(:post1) { Fabricate(:post) }
-    fab!(:post2) { Fabricate(:post) }
-    fab!(:post3) { Fabricate(:post) }
+    fab!(:assignments) do
+      Fabricate(:topic_assignment, target: topic1, assigned_to: allowed_user, assigned_by_user: admin )
+      Fabricate(:topic_assignment, target: topic2, assigned_to: admin, assigned_by_user: admin )
+      Fabricate(:topic_assignment, target: topic3, assigned_to: allowed_user, assigned_by_user: admin )
+    end
 
     before do
-      add_to_assign_allowed_group(user2)
-
-      freeze_time 1.hour.from_now
-      Assigner.new(post1.topic, admin).assign(admin)
-
-      freeze_time 1.hour.from_now
-      Assigner.new(post2.topic, admin).assign(user2)
-
-      freeze_time 1.hour.from_now
-      Assigner.new(post3.topic, admin).assign(admin)
-
       sign_in(admin)
     end
 
-    it "lists topics ordered by user" do
+    it "lists topics ordered by user id" do
       get "/assign/assigned.json"
       expect(JSON.parse(response.body)["topics"].map { |t| t["id"] }).to match_array(
-        [post2.topic_id, post1.topic_id, post3.topic_id],
+        [topic2.id, topic1.id, topic3.id],
       )
 
       get "/assign/assigned.json", params: { limit: 2 }
       expect(JSON.parse(response.body)["topics"].map { |t| t["id"] }).to match_array(
-        [post3.topic_id, post2.topic_id],
+        [topic3.id, topic2.id],
       )
 
       get "/assign/assigned.json", params: { offset: 2 }
       expect(JSON.parse(response.body)["topics"].map { |t| t["id"] }).to match_array(
-        [post1.topic_id],
+        [topic1.id],
       )
     end
 
@@ -364,29 +332,24 @@ RSpec.describe DiscourseAssign::AssignController do
   end
 
   describe "#group_members" do
-    include_context "with group that is allowed to assign"
-
-    before do
-      add_to_assign_allowed_group(user2)
-      add_to_assign_allowed_group(admin)
-    end
+    fab!(:other_allowed_user) { Fabricate(:user, groups: [allowed_group]) }
 
     fab!(:topic) { Fabricate(:topic) }
     fab!(:post_in_same_topic) { Fabricate(:post, topic: topic) }
 
     fab!(:assignments) do
-      Fabricate(:post_assignment, assigned_to: admin, target: topic, assigned_by_user: admin)
+      Fabricate(:post_assignment, assigned_to: other_allowed_user, target: topic, assigned_by_user: admin)
       Fabricate(
         :topic_assignment,
-        assigned_to: admin,
+        assigned_to: other_allowed_user,
         target: post_in_same_topic,
         assigned_by_user: admin,
       )
-      Fabricate(:topic_assignment, assigned_to: user2, assigned_by_user: admin)
-      Fabricate(:topic_assignment, assigned_to: admin, assigned_by_user: admin)
+      Fabricate(:topic_assignment, assigned_to: allowed_user, assigned_by_user: admin)
+      Fabricate(:topic_assignment, assigned_to: other_allowed_user, assigned_by_user: admin)
 
-      Fabricate(:topic_assignment, assigned_to: assign_allowed_group, assigned_by_user: admin)
-      Fabricate(:post_assignment, assigned_to: assign_allowed_group, assigned_by_user: admin)
+      Fabricate(:topic_assignment, assigned_to: allowed_group, assigned_by_user: admin)
+      Fabricate(:post_assignment, assigned_to: allowed_group, assigned_by_user: admin)
     end
 
     describe "members" do
@@ -394,22 +357,22 @@ RSpec.describe DiscourseAssign::AssignController do
         it "list members ordered by the number of assignments" do
           sign_in(admin)
 
-          get "/assign/members/#{get_assigned_allowed_group_name}.json"
+          get "/assign/members/#{allowed_group.name}.json"
           members = JSON.parse(response.body)["members"]
 
           expect(response.status).to eq(200)
-          expect(members[0]).to include({ "id" => admin.id, "assignments_count" => 3 })
-          expect(members[1]).to include({ "id" => user2.id, "assignments_count" => 1 })
+          expect(members[0]).to include({ "id" => other_allowed_user.id, "assignments_count" => 3 })
+          expect(members[1]).to include({ "id" => allowed_user.id, "assignments_count" => 1 })
         end
 
         it "doesn't include members with no assignments" do
           sign_in(admin)
-          add_to_assign_allowed_group(non_admin)
+          allowed_group.add(non_admin_staff)
 
-          get "/assign/members/#{get_assigned_allowed_group_name}.json"
+          get "/assign/members/#{allowed_group.name}.json"
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to_not include(
-            non_admin.id,
+            non_admin_staff.id,
           )
         end
       end
@@ -418,25 +381,25 @@ RSpec.describe DiscourseAssign::AssignController do
         it "returns members as according to filter" do
           sign_in(admin)
 
-          get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "a" }
+          get "/assign/members/#{allowed_group.name}.json", params: { filter: "a" }
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
-            [admin.id, user2.id],
+            [other_allowed_user.id, allowed_user.id],
           )
 
-          get "/assign/members/#{get_assigned_allowed_group_name}.json", params: { filter: "david" }
+          get "/assign/members/#{allowed_group.name}.json", params: { filter: "#{allowed_user.username}" }
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
-            [user2.id],
+            [allowed_user.id],
           )
 
-          get "/assign/members/#{get_assigned_allowed_group_name}.json",
+          get "/assign/members/#{allowed_group.name}.json",
               params: {
-                filter: "Taylor",
+                filter: "#{allowed_user.name}",
               }
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
-            [user2.id],
+            [allowed_user.id],
           )
         end
       end
@@ -446,7 +409,7 @@ RSpec.describe DiscourseAssign::AssignController do
       it "returns the total number of assignments for group users and the group" do
         sign_in(admin)
 
-        get "/assign/members/#{get_assigned_allowed_group_name}.json"
+        get "/assign/members/#{allowed_group.name}.json"
 
         expect(JSON.parse(response.body)["assignment_count"]).to eq(6)
       end
@@ -456,28 +419,34 @@ RSpec.describe DiscourseAssign::AssignController do
       it "returns the number of assignments assigned to the group" do
         sign_in(admin)
 
-        get "/assign/members/#{get_assigned_allowed_group_name}.json"
+        get "/assign/members/#{allowed_group.name}.json"
 
         expect(JSON.parse(response.body)["group_assignment_count"]).to eq(2)
       end
     end
 
     it "404 error to non-group-members" do
+      normal_user = Fabricate(:user)
+
       sign_in(normal_user)
 
-      get "/assign/members/#{get_assigned_allowed_group_name}.json"
+      get "/assign/members/#{allowed_group.name}.json"
       expect(response.status).to eq(403)
     end
 
     it "allows non-member-admin" do
-      sign_in(normal_admin)
+      non_member_admin = Fabricate(:admin)
 
-      get "/assign/members/#{get_assigned_allowed_group_name}.json"
+      sign_in(non_member_admin)
+
+      get "/assign/members/#{allowed_group.name}.json"
       expect(response.status).to eq(200)
     end
   end
 
   describe "#user_menu_assigns" do
+    fab!(:non_member_admin) { Fabricate(:admin) }
+
     fab!(:unread_assigned_topic) { Fabricate(:post).topic }
     fab!(:read_assigned_topic) { Fabricate(:post).topic }
 
@@ -502,7 +471,7 @@ RSpec.describe DiscourseAssign::AssignController do
         read_assigned_post,
         unread_assigned_post_in_same_topic,
         read_assigned_post_in_same_topic,
-      ].each { |target| Assigner.new(target, normal_admin).assign(admin) }
+      ].each { |target| Assigner.new(target, non_member_admin).assign(admin) }
 
       Notification
         .where(
@@ -521,8 +490,8 @@ RSpec.describe DiscourseAssign::AssignController do
         )
         .update_all(read: true)
 
-      Assigner.new(another_user_read_assigned_topic, normal_admin).assign(user2)
-      Assigner.new(another_user_unread_assigned_topic, normal_admin).assign(user2)
+      Assigner.new(another_user_read_assigned_topic, non_member_admin).assign(user2)
+      Assigner.new(another_user_unread_assigned_topic, non_member_admin).assign(user2)
       Notification.where(
         notification_type: Notification.types[:assigned],
         read: false,
