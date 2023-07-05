@@ -11,7 +11,6 @@ import SearchAdvancedOptions from "discourse/components/search-advanced-options"
 import TopicButtonAction, {
   addBulkButton,
 } from "discourse/controllers/topic-bulk-actions";
-import { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
@@ -913,25 +912,27 @@ export default {
       });
 
       TopicButtonAction.reopen({
-        assignUser: controller("assign-user"),
         actions: {
           showReAssign() {
-            this.set("assignUser.isBulkAction", true);
-            this.set("assignUser.model", { username: "", note: "" });
-            this.send("changeBulkTemplate", "modal/assign-user");
+            const controller = getOwner(this).lookup("controller:bulk-assign");
+            controller.set("model", { username: "", note: "" });
+            this.send("changeBulkTemplate", "modal/bulk-assign");
           },
+
           unassignTopics() {
             this.performAndRefresh({ type: "unassign" });
           },
         },
       });
+
       addBulkButton("showReAssign", "assign", {
         icon: "user-plus",
-        class: "btn-default",
+        class: "btn-default assign-topics",
       });
+
       addBulkButton("unassignTopics", "unassign", {
         icon: "user-times",
-        class: "btn-default",
+        class: "btn-default unassign-topics",
       });
     }
 

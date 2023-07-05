@@ -2,6 +2,8 @@ import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import AssignUser from "../components/modal/assign-user";
 import { tracked } from "@glimmer/tracking";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class TaskActions extends Service {
   @service modal;
@@ -43,6 +45,7 @@ export default class TaskActions extends Service {
     });
   }
 
+  // TODO: rename to `showAssignModal`
   assign(target, { isAssigned = false, targetType = "Topic", onSuccess }) {
     return this.modal.show(AssignUser, {
       model: {
@@ -67,5 +70,38 @@ export default class TaskActions extends Service {
         status: target.assignment_status,
       },
     });
+  }
+
+  async performAssign(model) {
+    if (isEmpty(model.username)) {
+      model.target.set("assigned_to_user", null);
+    }
+
+    if (isEmpty(model.group_name)) {
+      model.target.set("assigned_to_group", null);
+    }
+
+    let path = "/assign/assign";
+    if (isEmpty(model.username) && isEmpty(model.group_name)) {
+      path = "/assign/unassign";
+    }
+
+    try {
+      await ajax(path, {
+        type: "PUT",
+        data: {
+          username: model.username,
+          group_name: model.group_name,
+          target_id: model.target.id,
+          target_type: model.targetType,
+          note: model.note,
+          status: model.status,
+        },
+      });
+
+      model.onSuccess?.();
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }

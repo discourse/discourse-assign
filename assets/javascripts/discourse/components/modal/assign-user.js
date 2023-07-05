@@ -1,29 +1,10 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
-import { isEmpty } from "@ember/utils";
-import { ajax } from "discourse/lib/ajax";
-import { popupAjaxError } from "discourse/lib/ajax-error";
 import I18n from "I18n";
 
 export default class AssignUser extends Component {
   @service taskActions;
-  @service siteSettings;
-  @service capabilities;
-
-  @tracked assigneeError = false;
-  @tracked assigneeName =
-    this.args.model.username || this.args.model.group_name;
-
-  // TODO: update and test
-  bulkAction(username, note) {
-    return this.topicBulkActions.performAndRefresh({
-      type: "assign",
-      username,
-      note,
-    });
-  }
 
   get title() {
     let i18nSuffix;
@@ -44,85 +25,9 @@ export default class AssignUser extends Component {
     );
   }
 
-  get availableStatuses() {
-    return this.siteSettings.assign_statuses
-      .split("|")
-      .map((status) => ({ id: status, name: status }));
-  }
-
-  get status() {
-    return (
-      this.args.model.status ||
-      this.args.model.target.assignment_status ||
-      this.siteSettings.assign_statuses.split("|")[0]
-    );
-  }
-
-  @action
-  handleTextAreaKeydown(event) {
-    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
-      this.assign();
-    }
-  }
-
   @action
   async assign() {
-    const { model } = this.args;
-
-    if (this.isBulkAction) {
-      return this.bulkAction(model.username, model.note);
-    }
-
-    if (!this.assigneeName) {
-      this.assigneeError = true;
-      return;
-    }
-
-    if (isEmpty(model.username)) {
-      model.target.set("assigned_to_user", null);
-    }
-
-    if (isEmpty(model.group_name)) {
-      model.target.set("assigned_to_group", null);
-    }
-
-    let path = "/assign/assign";
-    if (isEmpty(model.username) && isEmpty(model.group_name)) {
-      path = "/assign/unassign";
-    }
-
     this.args.closeModal();
-
-    try {
-      await ajax(path, {
-        type: "PUT",
-        data: {
-          username: model.username,
-          group_name: model.group_name,
-          target_id: model.target.id,
-          target_type: model.targetType,
-          note: model.note,
-          status: model.status,
-        },
-      });
-
-      model.onSuccess?.();
-    } catch (error) {
-      popupAjaxError(error);
-    }
-  }
-
-  @action
-  assignUsername([name]) {
-    this.assigneeName = name;
-    this.assigneeError = false;
-
-    if (this.taskActions.allowedGroupsForAssignment.includes(name)) {
-      this.args.model.username = null;
-      this.args.model.group_name = name;
-    } else {
-      this.args.model.username = name;
-      this.args.model.group_name = null;
-    }
+    await this.taskActions.performAssign(this.args.model);
   }
 }
