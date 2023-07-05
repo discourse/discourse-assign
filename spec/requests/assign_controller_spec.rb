@@ -14,8 +14,7 @@ RSpec.describe DiscourseAssign::AssignController do
   fab!(:allowed_group) { Fabricate(:group) }
 
   fab!(:admin) { Fabricate(:admin) }
-  fab!(:user2) { Fabricate(:user, groups: [staff_group]) }
-  fab!(:allowed_user) { Fabricate(:user, name: "Mads Mikkelsen", groups: [allowed_group]) }
+  fab!(:allowed_user) { Fabricate(:user, username: "mads", name: "Mads", groups: [allowed_group]) }
   fab!(:non_admin_staff) { Fabricate(:user, groups: [staff_group]) }
   fab!(:user_in_non_allowed_group) { Fabricate(:user, groups: [non_allowed_group]) }
 
@@ -286,14 +285,22 @@ RSpec.describe DiscourseAssign::AssignController do
     fab!(:topic3) { Fabricate(:topic, bumped_at: 3.hour.from_now) }
 
     fab!(:assignments) do
-      Fabricate(:topic_assignment, target: topic1, assigned_to: allowed_user, assigned_by_user: admin )
-      Fabricate(:topic_assignment, target: topic2, assigned_to: admin, assigned_by_user: admin )
-      Fabricate(:topic_assignment, target: topic3, assigned_to: allowed_user, assigned_by_user: admin )
+      Fabricate(
+        :topic_assignment,
+        target: topic1,
+        assigned_to: allowed_user,
+        assigned_by_user: admin,
+      )
+      Fabricate(:topic_assignment, target: topic2, assigned_to: admin, assigned_by_user: admin)
+      Fabricate(
+        :topic_assignment,
+        target: topic3,
+        assigned_to: allowed_user,
+        assigned_by_user: admin,
+      )
     end
 
-    before do
-      sign_in(admin)
-    end
+    before { sign_in(admin) }
 
     it "lists topics ordered by user id" do
       get "/assign/assigned.json"
@@ -307,9 +314,7 @@ RSpec.describe DiscourseAssign::AssignController do
       )
 
       get "/assign/assigned.json", params: { offset: 2 }
-      expect(JSON.parse(response.body)["topics"].map { |t| t["id"] }).to match_array(
-        [topic1.id],
-      )
+      expect(JSON.parse(response.body)["topics"].map { |t| t["id"] }).to match_array([topic1.id])
     end
 
     context "with custom allowed groups" do
@@ -338,7 +343,12 @@ RSpec.describe DiscourseAssign::AssignController do
     fab!(:post_in_same_topic) { Fabricate(:post, topic: topic) }
 
     fab!(:assignments) do
-      Fabricate(:post_assignment, assigned_to: other_allowed_user, target: topic, assigned_by_user: admin)
+      Fabricate(
+        :post_assignment,
+        assigned_to: other_allowed_user,
+        target: topic,
+        assigned_by_user: admin,
+      )
       Fabricate(
         :topic_assignment,
         assigned_to: other_allowed_user,
@@ -387,7 +397,10 @@ RSpec.describe DiscourseAssign::AssignController do
             [other_allowed_user.id, allowed_user.id],
           )
 
-          get "/assign/members/#{allowed_group.name}.json", params: { filter: "#{allowed_user.username}" }
+          get "/assign/members/#{allowed_group.name}.json",
+              params: {
+                filter: "#{allowed_user.username}",
+              }
           expect(response.status).to eq(200)
           expect(JSON.parse(response.body)["members"].map { |m| m["id"] }).to match_array(
             [allowed_user.id],
@@ -490,12 +503,12 @@ RSpec.describe DiscourseAssign::AssignController do
         )
         .update_all(read: true)
 
-      Assigner.new(another_user_read_assigned_topic, non_member_admin).assign(user2)
-      Assigner.new(another_user_unread_assigned_topic, non_member_admin).assign(user2)
+      Assigner.new(another_user_read_assigned_topic, non_member_admin).assign(allowed_user)
+      Assigner.new(another_user_unread_assigned_topic, non_member_admin).assign(allowed_user)
       Notification.where(
         notification_type: Notification.types[:assigned],
         read: false,
-        user_id: user2.id,
+        user_id: allowed_user.id,
         topic_id: another_user_read_assigned_topic,
       ).update_all(read: true)
     end
