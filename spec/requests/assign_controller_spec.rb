@@ -344,17 +344,19 @@ RSpec.describe DiscourseAssign::AssignController do
 
     fab!(:assignments) do
       Fabricate(
-        :post_assignment,
+        :topic_assignment,
         assigned_to: other_allowed_user,
         target: topic,
         assigned_by_user: admin,
       )
+
       Fabricate(
-        :topic_assignment,
+        :post_assignment,
         assigned_to: other_allowed_user,
         target: post_in_same_topic,
         assigned_by_user: admin,
       )
+
       Fabricate(:topic_assignment, assigned_to: allowed_user, assigned_by_user: admin)
       Fabricate(:topic_assignment, assigned_to: other_allowed_user, assigned_by_user: admin)
 
