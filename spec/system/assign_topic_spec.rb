@@ -21,6 +21,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
       assign_modal.assignee = staff_user
       assign_modal.confirm
 
+      expect(assign_modal).to be_closed
       expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
       expect(find("#topic .assigned-to")).to have_content(staff_user.username)
 
@@ -40,6 +41,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
         assign_modal.assignee = staff_user
         assign_modal.confirm
 
+        expect(assign_modal).to be_closed
         expect(topic_page).to have_assigned(
           user: staff_user,
           at_post: 2,
@@ -58,9 +60,10 @@ describe "Assign | Assigning topics", type: :system, js: true do
         assign_modal.assignee = staff_user
         assign_modal.confirm
 
+        expect(assign_modal).to be_closed
         expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
 
-        find(".topic-footer-main-buttons .toggle-admin-menu").click
+        find("#topic-footer-buttons .toggle-admin-menu").click
         find(".topic-admin-close").click
 
         expect(find("#post_3")).to have_content(
@@ -77,9 +80,10 @@ describe "Assign | Assigning topics", type: :system, js: true do
         assign_modal.assignee = staff_user
         assign_modal.confirm
 
+        expect(assign_modal).to be_closed
         expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
 
-        find(".topic-footer-main-buttons .toggle-admin-menu").click
+        find("#topic-footer-buttons .toggle-admin-menu").click
         find(".topic-admin-close").click
 
         expect(find("#post_3")).to have_content(
@@ -106,9 +110,10 @@ describe "Assign | Assigning topics", type: :system, js: true do
           assign_modal.assignee = staff_user
           assign_modal.confirm
 
+          expect(assign_modal).to be_closed
           expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
 
-          find(".topic-footer-main-buttons .toggle-admin-menu").click
+          find("#topic-footer-buttons .toggle-admin-menu").click
           find(".topic-admin-close").click
 
           expect(find("#post_3")).to have_content(
@@ -117,7 +122,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
           expect(page).to have_no_css("#post_4")
           expect(page).to have_no_css("#topic .assigned-to")
 
-          find(".topic-footer-main-buttons .toggle-admin-menu").click
+          find("#topic-footer-buttons .toggle-admin-menu").click
           find(".topic-admin-open").click
 
           expect(find("#post_4")).to have_content(
