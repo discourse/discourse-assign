@@ -422,7 +422,9 @@ acceptance("Discourse Assign | user menu", function (needs) {
     await click(".notifications-dismiss");
     assert.false(markRead, "mark-read request isn't sent");
     assert.strictEqual(
-      query(".dismiss-notification-confirmation.modal-body").textContent.trim(),
+      query(
+        ".dismiss-notification-confirmation .modal-body"
+      ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.assigns", { count: 173 }),
       "dismiss confirmation modal is shown"
     );
@@ -493,5 +495,16 @@ acceptance("Discourse Assign | user menu", function (needs) {
       assign.textContent.replace(/\s+/g, " ").trim(),
       "topicModelTransformer Howdy this my test topic with emoji !"
     );
+  });
+
+  test("renders the confirmation modal when dismiss assign notifications", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user");
+    await click("#user-menu-button-assign-list");
+    await click(".notifications-dismiss");
+    assert.false(markRead, "a request to the server is not made");
+    assert
+      .dom(".dismiss-notification-confirmation .modal-body")
+      .exists("the dismiss notification confirmation modal is present");
   });
 });
