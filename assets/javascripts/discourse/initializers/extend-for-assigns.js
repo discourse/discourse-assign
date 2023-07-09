@@ -80,7 +80,7 @@ function registerTopicFooterButtons(api) {
           break;
         }
         case "reassign": {
-          await taskActions.assign(this.topic, {
+          await taskActions.showAssignModal(this.topic, {
             targetType: "Topic",
             isAssigned: this.topic.isAssigned(),
             onSuccess: () =>
@@ -209,7 +209,7 @@ function registerTopicFooterButtons(api) {
           id: this.topic.postStream.firstPostId,
         });
       } else {
-        await taskActions.assign(this.topic, {
+        await taskActions.showAssignModal(this.topic, {
           onSuccess: () =>
             this.appEvents.trigger("post-stream:refresh", {
               id: this.topic.postStream.firstPostId,
@@ -389,7 +389,7 @@ function registerTopicFooterButtons(api) {
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      await taskActions.assign(this.topic, {
+      await taskActions.showAssignModal(this.topic, {
         targetType: "Topic",
         isAssigned: this.topic.isAssigned(),
         onSuccess: () =>
@@ -463,13 +463,15 @@ function initialize(api) {
           };
         }
       });
+
       api.attachWidgetAction("post", "assignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.assign(this.model, {
+        taskActions.showAssignModal(this.model, {
           isAssigned: false,
           targetType: "Post",
         });
       });
+
       api.attachWidgetAction("post", "unassignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
         taskActions.unassign(this.model.id, "Post").then(() => {

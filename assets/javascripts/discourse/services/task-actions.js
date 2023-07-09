@@ -45,8 +45,10 @@ export default class TaskActions extends Service {
     });
   }
 
-  // TODO: rename to `showAssignModal`
-  assign(target, { isAssigned = false, targetType = "Topic", onSuccess }) {
+  showAssignModal(
+    target,
+    { isAssigned = false, targetType = "Topic", onSuccess }
+  ) {
     return this.modal.show(AssignUser, {
       model: {
         reassign: isAssigned,

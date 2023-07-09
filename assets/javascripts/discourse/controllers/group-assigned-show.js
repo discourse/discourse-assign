@@ -50,7 +50,7 @@ export default class GroupAssignedShow extends UserTopicsList {
 
   @action
   reassign(topic) {
-    this.taskActions.assign(topic, {
+    this.taskActions.showAssignModal(topic, {
       onSuccess: () => this.send("changeAssigned"),
     });
   }
