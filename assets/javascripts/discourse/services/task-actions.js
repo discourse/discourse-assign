@@ -74,7 +74,7 @@ export default class TaskActions extends Service {
     });
   }
 
-  async performAssign(model) {
+  async assign(model) {
     if (isEmpty(model.username)) {
       model.target.set("assigned_to_user", null);
     }

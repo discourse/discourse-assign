@@ -28,6 +28,6 @@ export default class AssignUser extends Component {
   @action
   async onSubmit() {
     this.args.closeModal();
-    await this.taskActions.performAssign(this.args.model);
+    await this.taskActions.assign(this.args.model);
   }
 }
