@@ -91,8 +91,13 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     const menu = selectKit(".assign.modal .user-chooser");
     assert.true(menu.isExpanded(), "user selector is expanded");
 
+    await click(".assign.modal .btn-primary");
+    assert.dom(".error-label").includesText("Choose a user to assign");
+
+    await menu.expand();
     await menu.selectRowByIndex(0);
     assert.strictEqual(menu.header().value(), "eviltrout");
+    assert.dom(".error-label").doesNotExist();
 
     pretender.put("/assign/assign", ({ requestBody }) => {
       const body = parsePostData(requestBody);
@@ -104,6 +109,8 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
 
     await fillIn("#assign-modal-note", "a note!");
     await click(".assign.modal .btn-primary");
+
+    assert.dom(".assign.modal").doesNotExist("assign modal closes");
   });
 
   test("Footer dropdown contains button", async function (assert) {

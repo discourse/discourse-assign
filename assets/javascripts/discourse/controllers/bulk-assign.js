@@ -5,6 +5,9 @@ export default class BulkAssign extends Controller {
   @controller topicBulkActions;
 
   model;
+  formApi = {
+    submit() {},
+  };
 
   @action
   closeModal() {}

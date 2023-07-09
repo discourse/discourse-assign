@@ -2,14 +2,15 @@
   <AssignUserForm
     @model={{this.model}}
     @closeModal={{this.closeModal}}
-    @assign={{this.assign}}
+    @onSubmit={{this.assign}}
+    @formApi={{this.formApi}}
   />
 </div>
 
 <div>
   <DButton
     class="btn-primary"
-    @action={{this.assign}}
+    @action={{this.formApi.submit}}
     @label={{if
       this.model.reassign
       "discourse_assign.reassign.title"

@@ -12,6 +12,12 @@ export default class AssignUserForm extends Component {
   @tracked assigneeName =
     this.args.model.username || this.args.model.group_name;
 
+  constructor() {
+    super(...arguments);
+
+    this.args.formApi.submit = this.assign;
+  }
+
   get availableStatuses() {
     return this.siteSettings.assign_statuses
       .split("|")

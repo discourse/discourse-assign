@@ -54,6 +54,10 @@ acceptance("Discourse Assign | Bulk actions", function (needs) {
     const menu = selectKit(".topic-bulk-actions-modal .user-chooser");
     assert.true(menu.isExpanded(), "user selector is expanded");
 
+    await click(".topic-bulk-actions-modal .btn-primary");
+    assert.dom(".error-label").includesText("Choose a user to assign");
+
+    await menu.expand();
     await menu.selectRowByIndex(0);
     assert.strictEqual(menu.header().value(), "eviltrout");
 

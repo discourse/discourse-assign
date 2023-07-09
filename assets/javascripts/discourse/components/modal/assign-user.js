@@ -6,6 +6,10 @@ import I18n from "I18n";
 export default class AssignUser extends Component {
   @service taskActions;
 
+  formApi = {
+    sumbit() {},
+  };
+
   get title() {
     let i18nSuffix;
 
