@@ -40,7 +40,7 @@ export default class AssignUserForm extends Component {
       return;
     }
 
-    await this.args.assign();
+    await this.args.onSubmit();
   }
 
   @action
