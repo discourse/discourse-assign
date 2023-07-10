@@ -12,9 +12,6 @@ export default class BulkAssign extends Controller {
   };
 
   @action
-  closeModal() {}
-
-  @action
   async assign() {
     return this.topicBulkActions.performAndRefresh({
       type: "assign",
