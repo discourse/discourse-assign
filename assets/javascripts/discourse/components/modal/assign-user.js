@@ -7,7 +7,7 @@ export default class AssignUser extends Component {
   @service taskActions;
 
   formApi = {
-    sumbit() {},
+    submit() {},
   };
 
   get title() {
