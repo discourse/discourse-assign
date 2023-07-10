@@ -24,9 +24,7 @@ export default class AssignUser extends Component {
     }
 
     return I18n.t(
-      "discourse_assign.assign" +
-        i18nSuffix +
-        `.${this.args.model.reassign ? "reassign_title" : "title"}`
+      `discourse_assign.assign${i18nSuffix}.${this.args.model.reassign ? "reassign_title" : "title"}`
     );
   }
 
