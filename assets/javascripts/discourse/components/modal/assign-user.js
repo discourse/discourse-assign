@@ -6,6 +6,7 @@ import I18n from "I18n";
 export default class AssignUser extends Component {
   @service taskActions;
 
+  // `submit` property will be mutated by the `AssignUserForm` component
   formApi = {
     submit() {},
   };
