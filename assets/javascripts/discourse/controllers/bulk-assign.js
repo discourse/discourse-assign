@@ -5,6 +5,8 @@ export default class BulkAssign extends Controller {
   @controller topicBulkActions;
 
   model;
+
+  // `submit` property will be mutated by the `AssignUserForm` component
   formApi = {
     submit() {},
   };
