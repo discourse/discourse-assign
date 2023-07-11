@@ -8,13 +8,11 @@ import { getOwner } from "discourse-common/lib/get-owner";
 import { htmlSafe } from "@ember/template";
 import getURL from "discourse-common/lib/get-url";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
-import TopicButtonAction, {
-  addBulkButton,
-} from "discourse/controllers/topic-bulk-actions";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import RawHtml from "discourse/widgets/raw-html";
+import BulkAssign from "../components/bulk-actions/assign-user";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -912,30 +910,6 @@ export default {
           }
         },
       });
-
-      TopicButtonAction.reopen({
-        actions: {
-          showReAssign() {
-            const controller = getOwner(this).lookup("controller:bulk-assign");
-            controller.set("model", { username: "", note: "" });
-            this.send("changeBulkTemplate", "modal/bulk-assign");
-          },
-
-          unassignTopics() {
-            this.performAndRefresh({ type: "unassign" });
-          },
-        },
-      });
-
-      addBulkButton("showReAssign", "assign", {
-        icon: "user-plus",
-        class: "btn-default assign-topics",
-      });
-
-      addBulkButton("unassignTopics", "unassign", {
-        icon: "user-times",
-        class: "btn-default unassign-topics",
-      });
     }
 
     withPluginApi("0.13.0", (api) => {
@@ -953,6 +927,15 @@ export default {
       api.addGroupPostSmallActionCode("unassigned_group_from_post");
 
       api.addUserSearchOption("assignableGroups");
+
+      api.addBulkActionButton({
+        label: "topics.bulk.assign",
+        icon: "user-plus",
+        class: "btn-default assign-topics",
+        action() {
+          this.activeComponent = BulkAssign;
+        },
+      });
     });
   },
 };

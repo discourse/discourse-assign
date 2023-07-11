@@ -1,10 +1,8 @@
-import Controller, { inject as controller } from "@ember/controller";
+import Component from "@glimmer/component";
 import { action } from "@ember/object";
 
-export default class BulkAssign extends Controller {
-  @controller topicBulkActions;
-
-  model;
+export default class AssignUser extends Component {
+  model = {};
 
   // `submit` property will be mutated by the `AssignUserForm` component
   formApi = {
@@ -13,7 +11,7 @@ export default class BulkAssign extends Controller {
 
   @action
   async assign() {
-    return this.topicBulkActions.performAndRefresh({
+    return this.args.performAndRefresh({
       type: "assign",
       username: this.model.username,
       note: this.model.note,
