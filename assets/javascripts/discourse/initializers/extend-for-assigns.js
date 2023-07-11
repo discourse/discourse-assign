@@ -936,6 +936,15 @@ export default {
           this.activeComponent = BulkAssign;
         },
       });
+
+      api.addBulkActionButton({
+        label: "topics.bulk.unassign",
+        icon: "user-times",
+        class: "btn-default unassign-topics",
+        action() {
+          this.performAndRefresh({ type: "unassign" });
+        },
+      });
     });
   },
 };
