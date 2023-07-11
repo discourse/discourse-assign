@@ -11,7 +11,6 @@ import SearchAdvancedOptions from "discourse/components/search-advanced-options"
 import TopicButtonAction, {
   addBulkButton,
 } from "discourse/controllers/topic-bulk-actions";
-import { inject as controller } from "@ember/controller";
 import I18n from "I18n";
 import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
@@ -50,7 +49,7 @@ function registerTopicFooterButtons(api) {
   registerTopicFooterDropdown({
     id: "reassign",
 
-    action(id) {
+    async action(id) {
       if (!this.currentUser?.can_assign) {
         return;
       }
@@ -61,36 +60,34 @@ function registerTopicFooterButtons(api) {
         case "unassign": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions.unassign(this.topic.id).then(() => {
-            this.appEvents.trigger("post-stream:refresh", {
-              id: this.topic.postStream.firstPostId,
-            });
+
+          await taskActions.unassign(this.topic.id);
+
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
           });
           break;
         }
         case "reassign-self": {
           this.set("topic.assigned_to_user", null);
           this.set("topic.assigned_to_group", null);
-          taskActions
-            .reassignUserToTopic(this.currentUser, this.topic)
-            .then(() => {
-              this.appEvents.trigger("post-stream:refresh", {
-                id: this.topic.postStream.firstPostId,
-              });
-            });
+
+          await taskActions.reassignUserToTopic(this.currentUser, this.topic);
+
+          this.appEvents.trigger("post-stream:refresh", {
+            id: this.topic.postStream.firstPostId,
+          });
           break;
         }
         case "reassign": {
-          taskActions
-            .assign(this.topic, {
-              targetType: "Topic",
-              isAssigned: this.topic.isAssigned(),
-            })
-            .set("model.onSuccess", () => {
+          await taskActions.showAssignModal(this.topic, {
+            targetType: "Topic",
+            isAssigned: this.topic.isAssigned(),
+            onSuccess: () =>
               this.appEvents.trigger("post-stream:refresh", {
                 id: this.topic.postStream.firstPostId,
-              });
-            });
+              }),
+          });
           break;
         }
       }
@@ -195,7 +192,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       return I18n.t("discourse_assign.assign.title");
     },
-    action() {
+    async action() {
       if (!this.currentUser?.can_assign) {
         return;
       }
@@ -205,16 +202,18 @@ function registerTopicFooterButtons(api) {
       if (this.topic.isAssigned()) {
         this.set("topic.assigned_to_user", null);
         this.set("topic.assigned_to_group", null);
-        taskActions.unassign(this.topic.id, "Topic").then(() => {
-          this.appEvents.trigger("post-stream:refresh", {
-            id: this.topic.postStream.firstPostId,
-          });
+
+        await taskActions.unassign(this.topic.id, "Topic");
+
+        this.appEvents.trigger("post-stream:refresh", {
+          id: this.topic.postStream.firstPostId,
         });
       } else {
-        taskActions.assign(this.topic).set("model.onSuccess", () => {
-          this.appEvents.trigger("post-stream:refresh", {
-            id: this.topic.postStream.firstPostId,
-          });
+        await taskActions.showAssignModal(this.topic, {
+          onSuccess: () =>
+            this.appEvents.trigger("post-stream:refresh", {
+              id: this.topic.postStream.firstPostId,
+            }),
         });
       }
     },
@@ -333,7 +332,7 @@ function registerTopicFooterButtons(api) {
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
-    action() {
+    async action() {
       if (!this.currentUser?.can_assign) {
         return;
       }
@@ -342,10 +341,11 @@ function registerTopicFooterButtons(api) {
 
       this.set("topic.assigned_to_user", null);
       this.set("topic.assigned_to_group", null);
-      taskActions.reassignUserToTopic(this.currentUser, this.topic).then(() => {
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
-        });
+
+      await taskActions.reassignUserToTopic(this.currentUser, this.topic);
+
+      this.appEvents.trigger("post-stream:refresh", {
+        id: this.topic.postStream.firstPostId,
       });
     },
     dropdown() {
@@ -382,23 +382,21 @@ function registerTopicFooterButtons(api) {
         `<span class="unassign-label"><span class="text">${label}</span></span>`
       );
     },
-    action() {
+    async action() {
       if (!this.currentUser?.can_assign) {
         return;
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
 
-      taskActions
-        .assign(this.topic, {
-          targetType: "Topic",
-          isAssigned: this.topic.isAssigned(),
-        })
-        .set("model.onSuccess", () => {
+      await taskActions.showAssignModal(this.topic, {
+        targetType: "Topic",
+        isAssigned: this.topic.isAssigned(),
+        onSuccess: () =>
           this.appEvents.trigger("post-stream:refresh", {
             id: this.topic.postStream.firstPostId,
-          });
-        });
+          }),
+      });
     },
     dropdown() {
       return this.currentUser?.can_assign && this.topic.isAssigned();
@@ -439,7 +437,7 @@ function initialize(api) {
       },
       before: "top",
     });
-    if (api.getCurrentUser() && api.getCurrentUser().can_assign) {
+    if (api.getCurrentUser()?.can_assign) {
       api.addPostMenuButton("assign", (post) => {
         if (post.firstPost) {
           return;
@@ -465,13 +463,15 @@ function initialize(api) {
           };
         }
       });
+
       api.attachWidgetAction("post", "assignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.assign(this.model, {
+        taskActions.showAssignModal(this.model, {
           isAssigned: false,
           targetType: "Post",
         });
       });
+
       api.attachWidgetAction("post", "unassignPost", function () {
         const taskActions = getOwner(this).lookup("service:task-actions");
         taskActions.unassign(this.model.id, "Post").then(() => {
@@ -488,7 +488,7 @@ function initialize(api) {
   });
 
   api.addAdvancedSearchOptions(
-    api.getCurrentUser() && api.getCurrentUser().can_assign
+    api.getCurrentUser()?.can_assign
       ? {
           inOptionsForUsers: [
             {
@@ -914,25 +914,27 @@ export default {
       });
 
       TopicButtonAction.reopen({
-        assignUser: controller("assign-user"),
         actions: {
           showReAssign() {
-            this.set("assignUser.isBulkAction", true);
-            this.set("assignUser.model", { username: "", note: "" });
-            this.send("changeBulkTemplate", "modal/assign-user");
+            const controller = getOwner(this).lookup("controller:bulk-assign");
+            controller.set("model", { username: "", note: "" });
+            this.send("changeBulkTemplate", "modal/bulk-assign");
           },
+
           unassignTopics() {
             this.performAndRefresh({ type: "unassign" });
           },
         },
       });
+
       addBulkButton("showReAssign", "assign", {
         icon: "user-plus",
-        class: "btn-default",
+        class: "btn-default assign-topics",
       });
+
       addBulkButton("unassignTopics", "unassign", {
         icon: "user-times",
-        class: "btn-default",
+        class: "btn-default unassign-topics",
       });
     }
 

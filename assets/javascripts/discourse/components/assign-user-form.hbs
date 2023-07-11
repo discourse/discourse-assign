@@ -1,0 +1,57 @@
+<div class="control-group {{if this.assigneeError 'assignee-error'}}">
+  <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
+  <AssigneeChooser
+    autocomplete="off"
+    @value={{this.assigneeName}}
+    @onChange={{this.assignUsername}}
+    @showUserStatus={{true}}
+    @options={{hash
+      mobilePlacementStrategy="absolute"
+      includeGroups=true
+      customSearchOptions=(hash
+        assignableGroups=true defaultSearchResults=this.taskActions.suggestions
+      )
+      groupMembersOf=this.taskActions.allowedGroups
+      maximum=1
+      autofocus=(not this.capabilities.touch)
+      tabindex=1
+      expandedOnInsert=(not this.assigneeName)
+      caretUpIcon="search"
+      caretDownIcon="search"
+    }}
+  />
+
+  {{#if this.assigneeError}}
+    <span class="error-label">
+      {{d-icon "exclamation-triangle"}}
+      {{i18n "discourse_assign.assign_modal.choose_assignee"}}
+    </span>
+  {{/if}}
+</div>
+
+{{#if this.siteSettings.enable_assign_status}}
+  <div class="control-group assign-status">
+    <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
+    <ComboBox
+      @id="assign-status"
+      @content={{this.availableStatuses}}
+      @value={{this.status}}
+      @onChange={{action (mut @model.status)}}
+    />
+  </div>
+{{/if}}
+
+<div class="control-group assign-status">
+  <label>
+    {{i18n "discourse_assign.assign_modal.note_label"}}&nbsp;<span
+      class="label-optional"
+    >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
+  </label>
+
+  <Textarea
+    id="assign-modal-note"
+    @value={{@model.note}}
+    {{! template-lint-disable no-down-event-binding }}
+    {{on "keydown" this.handleTextAreaKeydown}}
+  />
+</div>

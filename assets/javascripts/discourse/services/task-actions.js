@@ -1,15 +1,38 @@
-import Service from "@ember/service";
+import Service, { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import showModal from "discourse/lib/show-modal";
+import AssignUser from "../components/modal/assign-user";
+import { tracked } from "@glimmer/tracking";
+import { isEmpty } from "@ember/utils";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 
 export default class TaskActions extends Service {
-  i18nSuffix(targetType) {
-    switch (targetType) {
-      case "Post":
-        return "_post_modal";
-      case "Topic":
-        return "_modal";
+  @service modal;
+
+  @tracked allowedGroups;
+  @tracked allowedGroupsForAssignment;
+  #suggestionsPromise;
+  @tracked _suggestions;
+
+  get suggestions() {
+    if (this._suggestions) {
+      return this._suggestions;
     }
+
+    this.#suggestionsPromise ||= this.#fetchSuggestions();
+
+    return null;
+  }
+
+  async #fetchSuggestions() {
+    const data = await ajax("/assign/suggestions");
+
+    if (this.isDestroying || this.isDestroyed) {
+      return;
+    }
+
+    this._suggestions = data.suggestions;
+    this.allowedGroups = data.assign_allowed_on_groups;
+    this.allowedGroupsForAssignment = data.assign_allowed_for_groups;
   }
 
   unassign(targetId, targetType = "Topic") {
@@ -22,19 +45,19 @@ export default class TaskActions extends Service {
     });
   }
 
-  assign(target, options = { isAssigned: false, targetType: "Topic" }) {
-    return showModal("assign-user", {
-      title:
-        "discourse_assign.assign" +
-        this.i18nSuffix(options.targetType) +
-        `.${options.isAssigned ? "reassign_title" : "title"}`,
+  showAssignModal(
+    target,
+    { isAssigned = false, targetType = "Topic", onSuccess }
+  ) {
+    return this.modal.show(AssignUser, {
       model: {
-        reassign: options.isAssigned,
+        reassign: isAssigned,
         username: target.assigned_to_user?.username,
         group_name: target.assigned_to_group?.name,
-        target,
-        targetType: options.targetType,
         status: target.assignment_status,
+        target,
+        targetType,
+        onSuccess,
       },
     });
   }
@@ -49,5 +72,38 @@ export default class TaskActions extends Service {
         status: target.assignment_status,
       },
     });
+  }
+
+  async assign(model) {
+    if (isEmpty(model.username)) {
+      model.target.set("assigned_to_user", null);
+    }
+
+    if (isEmpty(model.group_name)) {
+      model.target.set("assigned_to_group", null);
+    }
+
+    let path = "/assign/assign";
+    if (isEmpty(model.username) && isEmpty(model.group_name)) {
+      path = "/assign/unassign";
+    }
+
+    try {
+      await ajax(path, {
+        type: "PUT",
+        data: {
+          username: model.username,
+          group_name: model.group_name,
+          target_id: model.target.id,
+          target_type: model.targetType,
+          note: model.note,
+          status: model.status,
+        },
+      });
+
+      model.onSuccess?.();
+    } catch (error) {
+      popupAjaxError(error);
+    }
   }
 }

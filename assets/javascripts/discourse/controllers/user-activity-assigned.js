@@ -57,17 +57,16 @@ export default class UserActivityAssigned extends UserTopicsList {
   }
 
   @action
-  unassign(targetId, targetType = "Topic") {
-    this.taskActions
-      .unassign(targetId, targetType)
-      .then(() => this.send("changeAssigned"));
+  async unassign(targetId, targetType = "Topic") {
+    await this.taskActions.unassign(targetId, targetType);
+    this.send("changeAssigned");
   }
 
   @action
   reassign(topic) {
-    this.taskActions
-      .assign(topic)
-      .set("model.onSuccess", () => this.send("changeAssigned"));
+    this.taskActions.showAssignModal(topic, {
+      onSuccess: () => this.send("changeAssigned"),
+    });
   }
 
   @action
