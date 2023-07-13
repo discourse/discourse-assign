@@ -179,15 +179,14 @@
     font-weight: normal;
     display: flex;
     align-items: center;
+    gap: 0.25em;
   }
   .avatar {
-    margin-right: 0.25em;
     width: 1.33em;
     height: 1.33em;
   }
   .d-icon,
   i.fa {
-    margin-right: 0.25em;
     color: var(--primary-medium);
   }
 }
