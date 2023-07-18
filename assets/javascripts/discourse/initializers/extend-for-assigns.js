@@ -933,8 +933,8 @@ export default {
           label: "topics.bulk.assign",
           icon: "user-plus",
           class: "btn-default assign-topics",
-          action() {
-            this.activeComponent = BulkAssign;
+          action({ setComponent }) {
+            setComponent(BulkAssign);
           },
         });
 
@@ -942,8 +942,8 @@ export default {
           label: "topics.bulk.unassign",
           icon: "user-times",
           class: "btn-default unassign-topics",
-          action() {
-            this.performAndRefresh({ type: "unassign" });
+          action({ performAndRefresh }) {
+            performAndRefresh({ type: "unassign" });
           },
         });
       } else {
