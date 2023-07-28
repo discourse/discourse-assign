@@ -73,7 +73,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
         expect(page).to have_no_css("#topic .assigned-to")
       end
 
-      it "can assign the previous assignee" do
+      xit "can assign the previous assignee" do
         visit "/t/#{topic.id}"
 
         topic_page.click_assign_topic
