@@ -20,6 +20,8 @@ module Jobs
       Group.assign_allowed_groups.pluck(:id).join(",")
     end
 
+    REMINDER_BUFFER_MINUTES = 10
+
     def user_ids
       global_frequency = SiteSetting.remind_assigns_frequency
       frequency =
@@ -46,7 +48,7 @@ module Jobs
         AND #{frequency} > 0
         AND (
           last_reminder.value IS NULL OR
-          last_reminder.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})
+          last_reminder.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency}) + ('1 MINUTE'::INTERVAL * #{REMINDER_BUFFER_MINUTES})
         )
         AND assignments.updated_at::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})
         AND assignments.assigned_to_type = 'User'

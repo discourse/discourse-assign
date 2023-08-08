@@ -3,12 +3,13 @@
 require "rails_helper"
 
 RSpec.describe Jobs::EnqueueReminders do
-  let(:assign_allowed_group) { Group.find_by(name: "staff") }
-  let(:user) { Fabricate(:user, groups: [assign_allowed_group]) }
+  fab!(:assign_allowed_group) { Fabricate(:group) }
+  fab!(:user) { Fabricate(:user, groups: [assign_allowed_group]) }
 
   before do
     SiteSetting.remind_assigns_frequency = RemindAssignsFrequencySiteSettings::MONTHLY_MINUTES
     SiteSetting.assign_enabled = true
+    SiteSetting.assign_allowed_on_groups = "#{assign_allowed_group.id}"
   end
 
   describe "#execute" do
@@ -47,6 +48,16 @@ RSpec.describe Jobs::EnqueueReminders do
     end
 
     describe "assignment frequency" do
+      it "enqueues a reminder if the user reminder frequency is 1 day and the last reminded at is almost 1 day" do
+        user.custom_fields[PendingAssignsReminder::REMINDERS_FREQUENCY] = RemindAssignsFrequencySiteSettings::DAILY_MINUTES
+        user.custom_fields[PendingAssignsReminder::REMINDED_AT] = 1.days.ago
+        user.save
+
+        assign_multiple_tasks_to(user, assigned_on: 1.day.ago - 1.minute)
+
+        assert_reminders_enqueued(1)
+      end
+
       it "does not enqueue a reminder if it's too soon" do
         user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 1.days.ago)
         assign_multiple_tasks_to(user)
