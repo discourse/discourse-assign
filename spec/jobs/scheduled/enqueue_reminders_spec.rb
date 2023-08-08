@@ -36,47 +36,6 @@ RSpec.describe Jobs::EnqueueReminders do
       assert_reminders_enqueued(0)
     end
 
-    it "does not enqueue a reminder if it's too soon" do
-      user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 2.days.ago)
-      assign_multiple_tasks_to(user)
-
-      assert_reminders_enqueued(0)
-    end
-
-    it "enqueues a reminder if the user was reminded more than a month ago" do
-      user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 31.days.ago)
-      assign_multiple_tasks_to(user)
-
-      assert_reminders_enqueued(1)
-    end
-
-    it "does not enqueue reminders if the remind frequency is set to never" do
-      SiteSetting.remind_assigns_frequency = 0
-      assign_multiple_tasks_to(user)
-
-      assert_reminders_enqueued(0)
-    end
-
-    it "does not enqueue reminders if the topic was just assigned to the user" do
-      just_assigned = DateTime.now
-      assign_multiple_tasks_to(user, assigned_on: just_assigned)
-
-      assert_reminders_enqueued(0)
-    end
-
-    it "enqueues a reminder when the user overrides the global frequency" do
-      SiteSetting.remind_assigns_frequency = 0
-      user.custom_fields.merge!(
-        PendingAssignsReminder::REMINDERS_FREQUENCY =>
-          RemindAssignsFrequencySiteSettings::DAILY_MINUTES,
-      )
-      user.save_custom_fields
-
-      assign_multiple_tasks_to(user)
-
-      assert_reminders_enqueued(1)
-    end
-
     it "doesn't count assigns from deleted topics" do
       deleted_post = Fabricate(:post)
       assign_one_task_to(user, post: deleted_post)
@@ -85,6 +44,49 @@ RSpec.describe Jobs::EnqueueReminders do
       deleted_post.topic.trash!
 
       assert_reminders_enqueued(0)
+    end
+
+    describe "assignment frequency" do
+      it "does not enqueue a reminder if it's too soon" do
+        user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 1.days.ago)
+        assign_multiple_tasks_to(user)
+
+        assert_reminders_enqueued(0)
+      end
+
+      it "enqueues a reminder if the user was reminded more than a month ago" do
+        user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 31.days.ago)
+        assign_multiple_tasks_to(user)
+
+        assert_reminders_enqueued(1)
+      end
+
+      it "does not enqueue reminders if the remind frequency is set to never" do
+        SiteSetting.remind_assigns_frequency = 0
+        assign_multiple_tasks_to(user)
+
+        assert_reminders_enqueued(0)
+      end
+
+      it "does not enqueue reminders if the topic was just assigned to the user" do
+        just_assigned = DateTime.now
+        assign_multiple_tasks_to(user, assigned_on: just_assigned)
+
+        assert_reminders_enqueued(0)
+      end
+
+      it "enqueues a reminder when the user overrides the global frequency" do
+        SiteSetting.remind_assigns_frequency = 0
+        user.custom_fields.merge!(
+          PendingAssignsReminder::REMINDERS_FREQUENCY =>
+            RemindAssignsFrequencySiteSettings::DAILY_MINUTES,
+        )
+        user.save_custom_fields
+
+        assign_multiple_tasks_to(user)
+
+        assert_reminders_enqueued(1)
+      end
     end
 
     def assert_reminders_enqueued(expected_amount)
