@@ -49,7 +49,9 @@ RSpec.describe Jobs::EnqueueReminders do
 
     describe "assignment frequency" do
       it "enqueues a reminder if the user reminder frequency is 1 day and the last reminded at is almost 1 day" do
-        user.custom_fields[PendingAssignsReminder::REMINDERS_FREQUENCY] = RemindAssignsFrequencySiteSettings::DAILY_MINUTES
+        user.custom_fields[
+          PendingAssignsReminder::REMINDERS_FREQUENCY
+        ] = RemindAssignsFrequencySiteSettings::DAILY_MINUTES
         user.custom_fields[PendingAssignsReminder::REMINDED_AT] = 1.days.ago
         user.save
 
