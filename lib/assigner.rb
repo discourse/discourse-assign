@@ -335,7 +335,7 @@ class ::Assigner
     end
 
     # Create a webhook event
-    if WebHook.active_web_hooks(:assign).exists?
+    if WebHook.active_web_hooks(:assigned).exists?
       assigned_to_type = :assigned
       payload = {
         type: assigned_to_type,
@@ -413,7 +413,7 @@ class ::Assigner
       end
 
       # Create a webhook event
-      if WebHook.active_web_hooks(:assign).exists?
+      if WebHook.active_web_hooks(:unassigned).exists?
         type = :unassigned
         payload = {
           type: type,

@@ -105,7 +105,8 @@ en:
         groups:
           assign: "Assign Events"
         event_details:
-          assign: "When an user assigns or unassigns a topic"
+          assigned: "When an user assigns a topic"
+          unassigned: "When an user unassigns a topic"
     search:
       advanced:
         in:

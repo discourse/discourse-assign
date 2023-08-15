@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 Fabricator(:assign_web_hook, from: :web_hook) do
-  transient assign_hook: WebHookEventType.find_by(name: "assign")
+  transient assigned_hook: WebHookEventType.find_by(name: "assigned"),
+            unassigned_hook: WebHookEventType.find_by(name: "unassigned")
 
-  after_build { |web_hook, transients| web_hook.web_hook_event_types = [transients[:assign_hook]] }
+  after_build do |web_hook, transients|
+    web_hook.web_hook_event_types = [transients[:assigned_hook], transients[:unassigned_hook]]
+  end
 end
