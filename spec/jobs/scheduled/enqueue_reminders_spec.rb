@@ -52,16 +52,20 @@ RSpec.describe Jobs::EnqueueReminders do
         user.custom_fields[
           PendingAssignsReminder::REMINDERS_FREQUENCY
         ] = RemindAssignsFrequencySiteSettings::DAILY_MINUTES
-        user.custom_fields[PendingAssignsReminder::REMINDED_AT] = 1.days.ago
+        user.custom_fields[PendingAssignsReminder::REMINDED_AT] = 1.days.ago +
+          (Jobs::EnqueueReminders::REMINDER_BUFFER_MINUTES - 1)
         user.save
 
-        assign_multiple_tasks_to(user, assigned_on: 1.day.ago - 1.minute)
+        assign_multiple_tasks_to(user, assigned_on: 2.day.ago)
 
         assert_reminders_enqueued(1)
       end
 
       it "does not enqueue a reminder if it's too soon" do
-        user.upsert_custom_fields(PendingAssignsReminder::REMINDED_AT => 1.days.ago)
+        user.upsert_custom_fields(
+          PendingAssignsReminder::REMINDED_AT =>
+            1.days.ago + Jobs::EnqueueReminders::REMINDER_BUFFER_MINUTES,
+        )
         assign_multiple_tasks_to(user)
 
         assert_reminders_enqueued(0)
