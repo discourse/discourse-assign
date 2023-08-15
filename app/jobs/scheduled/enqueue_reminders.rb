@@ -20,7 +20,7 @@ module Jobs
       Group.assign_allowed_groups.pluck(:id).join(",")
     end
 
-    REMINDER_BUFFER_MINUTES = 60
+    REMINDER_BUFFER_MINUTES = 120
 
     def user_ids
       global_frequency = SiteSetting.remind_assigns_frequency
