@@ -16,6 +16,7 @@ zh_CN:
     unassign_on_group_archive: "当消息被群组归档时，取消分配消息（如果移回收件箱则重新分配）"
     unassign_on_close: "当话题被关闭时取消分配话题"
     reassign_on_open: "当话题被打开后，重新分配给之前分配的用户/群组"
+    invite_on_assign: "将个人消息分配给用户或群组时，如果他们还不是参与者，请邀请他们加入 PM。"
     assign_mailer: "何时发送任务分配的通知电子邮件"
     remind_assigns: "提醒用户存在待处理的分配。"
     remind_assigns_frequency: "就已分配的话题提醒用户的频率。"
@@ -45,6 +46,7 @@ zh_CN:
     flag_assigned: "抱歉，该举报的话题已被分配给其他用户"
     flag_unclaimed: "在对举报采取行动之前，您必须先认领该话题。"
     topic_assigned_excerpt: "向您分配了话题 '%{title}'"
+    topic_group_assigned_excerpt: "将话题“%{title}”分配给 @%{group}"
     reminders_frequency:
       never: "永不"
       daily: "每天"
