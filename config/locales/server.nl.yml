@@ -16,6 +16,7 @@ nl:
     unassign_on_group_archive: "Wanneer een bericht wordt gearchiveerd door een groep, toewijzing van bericht opheffen (opnieuw toewijzen bij terug plaatsen naar inbox)"
     unassign_on_close: "Wanneer een topic wordt gesloten, toewijzing van topic opheffen"
     reassign_on_open: "Wanneer een topic wordt geopend, eerder toegewezen gebruikers/groepen opnieuw toewijzen"
+    invite_on_assign: "Wanneer een persoonlijk bericht is toegewezen aan een gebruiker of groep, nodig deze dan uit voor het PB als deze nog geen deelnemer is."
     assign_mailer: "Wanneer een e-mailmelding sturen voor toewijzingen"
     remind_assigns: "Gebruikers aan wachtende toewijzingen herinneren"
     remind_assigns_frequency: "Frequentie voor het herinneren van gebruikers aan toegewezen topics."
@@ -45,6 +46,7 @@ nl:
     flag_assigned: "Sorry, het topic van die markering is aan een andere gebruiker toegewezen"
     flag_unclaimed: "Je moet dat topic claimen voordat je actie onderneemt op de markering"
     topic_assigned_excerpt: "heeft het topic '%{title}' aan jou toegewezen"
+    topic_group_assigned_excerpt: "Topic '%{title}' toegewezen aan @%{group}"
     reminders_frequency:
       never: "nooit"
       daily: "dagelijks"

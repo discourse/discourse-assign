@@ -33,6 +33,9 @@ zh_CN:
       assigned: "已分配"
       group_everyone: "所有人"
       assigned_to: "已分配给"
+      assigned_topic_to: "将话题分配给 <a href='%{path}'>%{username}</a>"
+      assign_post_to: "将 #%{post_number} 分配给 %{username}"
+      assign_post_to_multiple: "将 #%{post_number} 分配给 %{username}"
       assigned_to_w_ellipsis: "已分配给…"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
@@ -60,9 +63,12 @@ zh_CN:
         title: "分配话题"
         reassign_title: "重新分配话题"
         assign: "分配"
+        assignee_label: 受理人
+        choose_assignee: 选择要分配的用户。
         note_label: 注释
         optional_label: "（可选）"
         status_label: 状态
+        suggestions: 建议
       assign_post_modal:
         title: "分配帖子"
       claim:

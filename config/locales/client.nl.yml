@@ -33,6 +33,9 @@ nl:
       assigned: "Toegewezen"
       group_everyone: "Iedereen"
       assigned_to: "Toegewezen aan"
+      assigned_topic_to: "Topic toegewezen aan <a href='%{path}'>%{username}</a>"
+      assign_post_to: "#%{post_number} toegewezen aan %{username}"
+      assign_post_to_multiple: "#%{post_number} aan %{username}\" # assign_post_to_multiple gebruikt in lijstvorm, bijvoorbeeld: \"Topic toegewezen aan gebruikersnaam0, [#2 aan gebruikersnaam1], [#10 aan gebruikersnaam2]"
       assigned_to_w_ellipsis: "Toegewezen aan..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
@@ -60,9 +63,12 @@ nl:
         title: "Topic toewijzen"
         reassign_title: "Topic opnieuw toewijzen"
         assign: "Toewijzen"
+        assignee_label: Toegewezen persoon
+        choose_assignee: Kies een gebruiker om toe te wijzen.
         note_label: Opmerking
         optional_label: "(optioneel)"
         status_label: Status
+        suggestions: suggesties
       assign_post_modal:
         title: "Bericht toewijzen"
       claim:

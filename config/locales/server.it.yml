@@ -16,6 +16,7 @@ it:
     unassign_on_group_archive: "Quando un messaggio viene archiviato da un gruppo, annullare l'assegnazione (riassegnare se viene spostato nuovamente nella posta in arrivo)"
     unassign_on_close: "Quando un argomento viene chiuso annullare l'assegnazione"
     reassign_on_open: "Quando viene riaperto un argomento, riassegna utenti/gruppi assegnati in precedenza"
+    invite_on_assign: "Quando un messaggio personale viene assegnato a un utente o gruppo, invitalo ai MP se non è già un partecipante."
     assign_mailer: "Quando inviare email di notifica per le assegnazioni"
     remind_assigns: "Ricorda agli utenti le assegnazioni in sospeso."
     remind_assigns_frequency: "Frequenza per ricordare agli utenti gli argomenti assegnati."
@@ -45,6 +46,7 @@ it:
     flag_assigned: "Spiacenti, l'argomento segnalato è già assegnato a un altro utente"
     flag_unclaimed: "Devi rivendicare l'argomento prima di lavorare sulla segnalazione"
     topic_assigned_excerpt: "ti ha assegnato l'argomento '%{title}'"
+    topic_group_assigned_excerpt: "assegnato l'argomento \"%{title}\" a @%{group}"
     reminders_frequency:
       never: "mai"
       daily: "giornalmente"
