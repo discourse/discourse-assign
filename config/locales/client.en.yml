@@ -29,9 +29,8 @@ en:
       assigned_to: "Assigned to"
       assigned_topic_to: "Assigned topic to <a href='%{path}'>%{username}</a>"
       assign_post_to: "Assigned #%{post_number} to %{username}"
-      assign_post_to_multiple:
-        "#%{post_number} to %{username}"
-        # assign_post_to_multiple used in list form, example: "Assigned topic to username0, [#2 to username1], [#10 to username2]"
+      # assign_post_to_multiple used in list form, example: "Assigned topic to username0, [#2 to username1], [#10 to username2]"
+      assign_post_to_multiple: "#%{post_number} to %{username}"
       assigned_to_w_ellipsis: "Assigned to..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
