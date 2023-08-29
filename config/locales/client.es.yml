@@ -35,7 +35,6 @@ es:
       assigned_to: "Asignado a"
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Asignado #%{post_number} a %{username}"
-      assign_post_to_multiple: "#%{post_number} a %{username}\" # assign_post_to_multiple se utiliza en forma de lista, ejemplo: «Tema asignado a username0, [#2 to username1], [#10 to username2]"
       assigned_to_w_ellipsis: "Asignado a..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"

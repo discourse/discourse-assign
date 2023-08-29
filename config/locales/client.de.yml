@@ -35,7 +35,6 @@ de:
       assigned_to: "Zugeordnet zu"
       assigned_topic_to: "Thema zugeordnet zu <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} %{username} zugeordnet"
-      assign_post_to_multiple: "#%{post_number} zu %{username} # assign_post_to_multiple in Listenform, z. B.: „Thema zugeordnet zu username0, [#2 zu username1], [#10 zu username2]“"
       assigned_to_w_ellipsis: "Zugeordnet zu …"
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"

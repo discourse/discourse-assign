@@ -12,13 +12,13 @@ fi:
         help: "Ketjut, joita ei ole osoitettu"
     action_codes:
       assigned: "Osoitti käyttäjälle %{who} %{when}"
-      assigned_group: "Osoitti käyttäjälle %{who} %{when}"
+      assigned_group: "Osoitti ryhmälle %{who} %{when}"
       assigned_to_post: "Osoitti käyttäjän %{who} <a href='%{path}'>viestiin</a> %{when}"
       assigned_group_to_post: "Osoitti käyttäjän %{who} <a href='%{path}'>viestiin</a> %{when}"
       unassigned: "Perui osoituksen käyttäjälle %{who} %{when}"
-      unassigned_group: "Perui osoituksen käyttäjälle %{who} %{when}"
+      unassigned_group: "Perui osoituksen ryhmälle %{who} %{when}"
       unassigned_from_post: "Perui käyttäjän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
-      unassigned_group_from_post: "Perui käyttäjän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
+      unassigned_group_from_post: "Perui ryhmän %{who} osoituksen <a href='%{path}'>viestiin</a> %{when}"
       reassigned: "Osoitti uudelleen käyttäjälle %{who} %{when}"
       reassigned_group: "Osoitti uudelleen käyttäjälle %{who} %{when}"
       details_change: "Muutti osoitustiedot käyttäjälle %{who} %{when}"
@@ -33,6 +33,8 @@ fi:
       assigned: "Osoitettu"
       group_everyone: "Kaikki"
       assigned_to: "Osoitettu käyttäjälle"
+      assigned_topic_to: "Osoitti ketjun käyttäjälle <a href='%{path}'>%{username}</a>"
+      assign_post_to: "Osoitti viestin %{post_number} käyttäjälle %{username}"
       assigned_to_w_ellipsis: "Osoitettu käyttäjälle..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
@@ -60,9 +62,12 @@ fi:
         title: "Osoita ketju"
         reassign_title: "Osoita ketju uudelleen"
         assign: "Osoita"
+        assignee_label: Osoituksensaaja
+        choose_assignee: Valitse osoitettava käyttäjä.
         note_label: Huomautus
         optional_label: "(valinnainen)"
         status_label: Tila
+        suggestions: ehdotukset
       assign_post_modal:
         title: "Osoita viesti"
       claim:

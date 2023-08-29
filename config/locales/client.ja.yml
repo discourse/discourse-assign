@@ -35,7 +35,6 @@ ja:
       assigned_to: "割り当て先"
       assigned_topic_to: "トピックを <a href='%{path}'>%{username}</a> に割り当てました"
       assign_post_to: "#%{post_number} を %{username} に割り当てました"
-      assign_post_to_multiple: "#%{post_number} を %{username}\" # assign_post_to_multiple をリスト形式で使用します。例: \"トピックを username0, [#2 to username1], [#10 to username2] に割り当てました"
       assigned_to_w_ellipsis: "割り当て先..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"

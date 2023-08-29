@@ -16,6 +16,7 @@ fi:
     unassign_on_group_archive: "Kun ryhmä arkistoi yksityiskeskustelun, peru viestin osoitus (osoitetaan uudelleen, jos siirretään takaisin saapuneisiin)"
     unassign_on_close: "Peru ketjun osoitus, kun ketju suljetaan"
     reassign_on_open: "Kun ketju avataan, osoita aikaisemmin osoitetut käyttäjät/ryhmät uudelleen"
+    invite_on_assign: "Kun henkilökohtainen viesti osoitetaan käyttäjälle tai ryhmälle, kutsu hänet yksityisviestiin, jos hän ei vielä ole osallistuja."
     assign_mailer: "Milloin lähetetään ilmoituksia osoituksista"
     remind_assigns: "Muistuta käyttäjiä odottavista osoituksista."
     remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus."
@@ -45,6 +46,7 @@ fi:
     flag_assigned: "Pahoittelut, lipun ketju on osoitettu toiselle käyttäjälle"
     flag_unclaimed: "Ketju täytyy omia ennen lipun käsittelyä"
     topic_assigned_excerpt: "osoitti sinulle ketjun \"%{title}\""
+    topic_group_assigned_excerpt: "osoitti ketjun %{title} ryhmälle @%{group}"
     reminders_frequency:
       never: "ei koskaan"
       daily: "päivittäin"
