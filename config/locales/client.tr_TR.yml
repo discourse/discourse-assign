@@ -35,7 +35,6 @@ tr_TR:
       assigned_to: "Şuraya atandı:"
       assigned_topic_to: "Konu <a href='%{path}'>%{username}</a> adlı kullanıcıya atandı"
       assign_post_to: "#%{post_number}, %{username} adlı kullanıcıya atandı"
-      assign_post_to_multiple: "%{username} adlı kullanıcıya #%{post_number} \" # assign_post_to_multiple liste formunda kullanıldı, örnek: \"Konu username0'a atandı, [#2, username1'e], [#10, username2'ye]"
       assigned_to_w_ellipsis: "Şuraya atandı..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"

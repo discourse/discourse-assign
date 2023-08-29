@@ -35,7 +35,6 @@ pt_BR:
       assigned_to: "Atribuiu a"
       assigned_topic_to: "Tópico atribuído a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Atribuiu #%{post_number} a %{username}"
-      assign_post_to_multiple: "#%{post_number} para %{username}\" # assign_post_to_multiple usado no formulário da lista, por exemplo: \"Tópico atribuído a username0, [#2 para username1], [#10 para username2]"
       assigned_to_w_ellipsis: "Atribuiu a..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"

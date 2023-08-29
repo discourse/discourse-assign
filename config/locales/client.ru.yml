@@ -35,7 +35,6 @@ ru:
       assigned_to: "Назначено:"
       assigned_topic_to: "Назначил(а) тему пользователю <a href='%{path}'>%{username}</a>"
       assign_post_to: "Назначил(а) ответственным %{username} в сообщение #%{post_number}"
-      assign_post_to_multiple: "#%{post_number} пользователю %{username}\" # assign_post_to_multiple used in list form, example: \"Assigned topic to username0, [#2 to username1], [#10 to username2]"
       assigned_to_w_ellipsis: "Назначено..."
       assign_notification: "<p><span>%{username}</span> %{description}</p>"
       assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
