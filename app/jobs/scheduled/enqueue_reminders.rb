@@ -2,6 +2,8 @@
 
 module Jobs
   class EnqueueReminders < ::Jobs::Scheduled
+    REMINDER_BUFFER_MINUTES ||= 120
+
     every 1.day
 
     def execute(_args)
@@ -19,8 +21,6 @@ module Jobs
     def allowed_group_ids
       Group.assign_allowed_groups.pluck(:id).join(",")
     end
-
-    REMINDER_BUFFER_MINUTES = 120
 
     def user_ids
       global_frequency = SiteSetting.remind_assigns_frequency
