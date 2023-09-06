@@ -9,6 +9,7 @@ Fabricator(:topic_assignment, class_name: :assignment) do
 end
 
 Fabricator(:post_assignment, class_name: :assignment) do
+  transient :post
   topic { |attrs| attrs[:post]&.topic || Fabricate(:topic) }
   target { |attrs| attrs[:post] || Fabricate(:post, topic: attrs[:topic]) }
   target_type "Post"

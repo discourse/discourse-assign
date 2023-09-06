@@ -239,11 +239,8 @@ class ::Assigner
     end
 
     @target.assignment.update!(note: note, status: status)
-
-    queue_notification(assign_to, skip_small_action_post, @target.assignment)
-
-    assignment = @target.assignment
-    publish_assignment(assignment, assign_to, note, status)
+    queue_notification(@target.assignment)
+    publish_assignment(@target.assignment, assign_to, note, status)
 
     # email is skipped, for now
 
@@ -276,31 +273,28 @@ class ::Assigner
 
     skip_small_action_post = skip_small_action_post || no_assignee_change?(assign_to)
 
-    if topic.assignment.present?
+    if @target.assignment
       Jobs.enqueue(
         :unassign_notification,
         topic_id: topic.id,
-        assigned_to_id: topic.assignment.assigned_to_id,
-        assigned_to_type: topic.assignment.assigned_to_type,
+        assigned_to_id: @target.assignment.assigned_to_id,
+        assigned_to_type: @target.assignment.assigned_to_type,
+        assignment_id: @target.assignment.id,
       )
+      @target.assignment.destroy!
     end
-
-    @target.assignment&.destroy!
 
     assignment =
       @target.create_assignment!(
-        assigned_to_id: assign_to.id,
-        assigned_to_type: assigned_to_type,
-        assigned_by_user_id: @assigned_by.id,
-        topic_id: topic.id,
+        assigned_to: assign_to,
+        assigned_by_user: @assigned_by,
+        topic: topic,
         note: note,
         status: status,
       )
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
-
-    queue_notification(assign_to, skip_small_action_post, assignment)
-
+    queue_notification(assignment)
     publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?
@@ -370,6 +364,7 @@ class ::Assigner
         topic_id: topic.id,
         assigned_to_id: assignment.assigned_to.id,
         assigned_to_type: assignment.assigned_to_type,
+        assignment_id: assignment.id,
       )
 
       assigned_to = assignment.assigned_to
@@ -461,17 +456,8 @@ class ::Assigner
     @guardian ||= Guardian.new(@assigned_by)
   end
 
-  def queue_notification(assign_to, skip_small_action_post, assignment)
-    Jobs.enqueue(
-      :assign_notification,
-      topic_id: topic.id,
-      post_id: topic_target? ? first_post.id : @target.id,
-      assigned_to_id: assign_to.id,
-      assigned_to_type: assign_to.is_a?(User) ? "User" : "Group",
-      assigned_by_id: @assigned_by.id,
-      skip_small_action_post: skip_small_action_post,
-      assignment_id: assignment.id,
-    )
+  def queue_notification(assignment)
+    Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
   end
 
   def add_small_action_post(action_code, assign_to, text)
