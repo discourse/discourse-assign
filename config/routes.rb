@@ -7,7 +7,6 @@ DiscourseAssign::Engine.routes.draw do
   get "/suggestions" => "assign#suggestions"
   get "/assigned" => "assign#assigned"
   get "/members/:group_name" => "assign#group_members"
-  get "/user-menu-assigns" => "assign#user_menu_assigns"
 end
 
 Discourse::Application.routes.draw do

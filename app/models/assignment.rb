@@ -15,7 +15,9 @@ class Assignment < ActiveRecord::Base
           )
         end
 
-  scope :active_for_group, ->(group) { where(assigned_to: group, active: true) }
+  scope :active_for_group, ->(group) { active.where(assigned_to: group) }
+  scope :active, -> { where(active: true) }
+  scope :inactive, -> { where(active: false) }
 
   before_validation :default_status
 
@@ -38,11 +40,31 @@ class Assignment < ActiveRecord::Base
   end
 
   def assigned_to_user?
-    assigned_to_type == "User"
+    assigned_to.is_a?(User)
   end
 
   def assigned_to_group?
-    assigned_to_type == "Group"
+    assigned_to.is_a?(Group)
+  end
+
+  def assigned_users
+    Array.wrap(assigned_to.try(:users) || assigned_to)
+  end
+
+  def post
+    return target.posts.find_by(post_number: 1) if target.is_a?(Topic)
+    target
+  end
+
+  def create_missing_notifications!(mark_as_read: false)
+    assigned_users.each do |user|
+      next if user.notifications.for_assignment(self).exists?
+      DiscourseAssign::CreateNotification.call(
+        assignment: self,
+        user: user,
+        mark_as_read: mark_as_read || assigned_by_user == user,
+      )
+    end
   end
 
   private

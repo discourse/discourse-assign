@@ -1,3 +1,4 @@
+import { getOwner } from "@ember/application";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { h } from "virtual-dom";
@@ -7,7 +8,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
-import { getOwner } from "discourse-common/lib/get-owner";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";

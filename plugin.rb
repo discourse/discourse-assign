@@ -26,10 +26,12 @@ after_initialize do
   require_relative "app/jobs/regular/unassign_notification"
   require_relative "app/jobs/scheduled/enqueue_reminders"
   require_relative "lib/assigner"
+  require_relative "lib/discourse_assign/create_notification"
   require_relative "lib/discourse_assign/discourse_calendar"
   require_relative "lib/discourse_assign/group_extension"
   require_relative "lib/discourse_assign/helpers"
   require_relative "lib/discourse_assign/list_controller_extension"
+  require_relative "lib/discourse_assign/notification_extension"
   require_relative "lib/discourse_assign/post_extension"
   require_relative "lib/discourse_assign/topic_extension"
   require_relative "lib/discourse_assign/web_hook_extension"
@@ -38,11 +40,12 @@ after_initialize do
   require_relative "lib/topic_assigner"
 
   reloadable_patch do |plugin|
-    Group.class_eval { prepend DiscourseAssign::GroupExtension }
-    ListController.class_eval { prepend DiscourseAssign::ListControllerExtension }
-    Post.class_eval { prepend DiscourseAssign::PostExtension }
-    Topic.class_eval { prepend DiscourseAssign::TopicExtension }
-    WebHook.class_eval { prepend DiscourseAssign::WebHookExtension }
+    Group.prepend(DiscourseAssign::GroupExtension)
+    ListController.prepend(DiscourseAssign::ListControllerExtension)
+    Post.prepend(DiscourseAssign::PostExtension)
+    Topic.prepend(DiscourseAssign::TopicExtension)
+    WebHook.prepend(DiscourseAssign::WebHookExtension)
+    Notification.prepend(DiscourseAssign::NotificationExtension)
   end
 
   register_group_param(:assignable_level)
@@ -201,7 +204,8 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
-        assignments = Assignment.strict_loading.where(topic: topics, active: true).includes(:target)
+        assignments =
+          Assignment.strict_loading.active.where(topic: topics).includes(:target, :assigned_to)
         assignments_map = assignments.group_by(&:topic_id)
 
         user_ids =
@@ -836,20 +840,12 @@ after_initialize do
     next if !info[:group]
 
     Assignment
-      .where(topic_id: topic.id, active: false)
+      .inactive
+      .where(topic: topic)
       .find_each do |assignment|
         next unless assignment.target
         assignment.update!(active: true)
-        Jobs.enqueue(
-          :assign_notification,
-          topic_id: topic.id,
-          post_id: assignment.target_type.is_a?(Topic) ? topic.first_post.id : assignment.target.id,
-          assigned_to_id: assignment.assigned_to_id,
-          assigned_to_type: assignment.assigned_to_type,
-          assigned_by_id: assignment.assigned_by_user_id,
-          skip_small_action_post: true,
-          assignment_id: assignment.id,
-        )
+        Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
       end
   end
 
@@ -863,30 +859,28 @@ after_initialize do
     next if !info[:group]
 
     Assignment
-      .where(topic_id: topic.id, active: true)
+      .active
+      .where(topic: topic)
       .find_each do |assignment|
         assignment.update!(active: false)
         Jobs.enqueue(
           :unassign_notification,
           topic_id: topic.id,
-          assigned_to_id: assignment.assigned_to.id,
+          assigned_to_id: assignment.assigned_to_id,
           assigned_to_type: assignment.assigned_to_type,
+          assignment_id: assignment.id,
         )
       end
   end
 
-  on(:user_removed_from_group) do |user, group|
-    assign_allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").map(&:to_i)
-
-    if assign_allowed_groups.include?(group.id)
-      groups = GroupUser.where(user: user).pluck(:group_id)
-
-      if (groups & assign_allowed_groups).empty?
-        topics = Topic.joins(:assignment).where("assignments.assigned_to_id = ?", user.id)
-
-        topics.each { |topic| Assigner.new(topic, Discourse.system_user).unassign }
-      end
+  on(:user_added_to_group) do |user, group, automatic:|
+    group.assignments.active.find_each do |assignment|
+      Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
     end
+  end
+
+  on(:user_removed_from_group) do |user, group|
+    user.notifications.for_assignment(group.assignments.select(:id)).destroy_all
   end
 
   on(:post_moved) do |post, original_topic_id|

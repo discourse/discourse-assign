@@ -1,10 +1,5 @@
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
-import { ajax } from "discourse/lib/ajax";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
-import Notification from "discourse/models/notification";
-import Topic from "discourse/models/topic";
 import I18n from "I18n";
-import UserMenuAssignItem from "../../lib/user-menu/assign-item";
 import UserMenuAssignsListEmptyState from "./assigns-list-empty-state";
 
 export default class UserMenuAssignNotificationsList extends UserMenuNotificationsList {
@@ -56,25 +51,10 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   async fetchItems() {
-    const data = await ajax("/assign/user-menu-assigns.json");
-    const content = [];
-
-    const notifications = data.notifications.map((n) => Notification.create(n));
-    await Notification.applyTransformations(notifications);
-    notifications.forEach((notification) => {
-      content.push(
-        new UserMenuNotificationItem({
-          notification,
-          currentUser: this.currentUser,
-          siteSettings: this.siteSettings,
-          site: this.site,
-        })
-      );
-    });
-
-    const topics = data.topics.map((t) => Topic.create(t));
-    await Topic.applyTransformations(topics);
-    content.push(...topics.map((assign) => new UserMenuAssignItem({ assign })));
-    return content;
+    // sorting by `data.message` length to group single user assignments and
+    // group assignments, then by `created_at` to keep chronological order.
+    return (await super.fetchItems())
+      .sortBy("notification.data.message", "notification.created_at")
+      .reverse();
   }
 }
