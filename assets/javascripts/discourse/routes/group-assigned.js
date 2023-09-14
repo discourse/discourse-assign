@@ -28,9 +28,4 @@ export default class GroupAssigned extends DiscourseRoute {
       this.transitionTo("group.assigned.show", "everyone");
     }
   }
-
-  @action
-  changeAssigned() {
-    this.refresh();
-  }
 }

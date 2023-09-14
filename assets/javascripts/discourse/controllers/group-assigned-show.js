@@ -8,6 +8,7 @@ import { action } from "@ember/object";
 
 export default class GroupAssignedShow extends UserTopicsList {
   @service taskActions;
+  @service router;
   @controller user;
 
   queryParams = ["order", "ascending", "search"];
@@ -45,13 +46,13 @@ export default class GroupAssignedShow extends UserTopicsList {
   @action
   async unassign(targetId, targetType = "Topic") {
     await this.taskActions.unassign(targetId, targetType);
-    this.send("changeAssigned");
+    this.router.refresh();
   }
 
   @action
   reassign(topic) {
     this.taskActions.showAssignModal(topic, {
-      onSuccess: () => this.send("changeAssigned"),
+      onSuccess: () => this.router.refresh(),
     });
   }
 

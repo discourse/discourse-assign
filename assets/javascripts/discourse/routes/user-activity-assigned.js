@@ -34,9 +34,4 @@ export default class UserActivityAssigned extends UserTopicListRoute {
   titleToken() {
     return I18n.t("discourse_assign.assigned");
   }
-
-  @action
-  changeAssigned() {
-    this.refresh();
-  }
 }
