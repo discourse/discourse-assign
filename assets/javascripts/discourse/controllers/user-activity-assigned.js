@@ -57,19 +57,6 @@ export default class UserActivityAssigned extends UserTopicsList {
   }
 
   @action
-  async unassign(targetId, targetType = "Topic") {
-    await this.taskActions.unassign(targetId, targetType);
-    this.send("changeAssigned");
-  }
-
-  @action
-  reassign(topic) {
-    this.taskActions.showAssignModal(topic, {
-      onSuccess: () => this.send("changeAssigned"),
-    });
-  }
-
-  @action
   changeSort(sortBy) {
     if (sortBy === this.order) {
       this.toggleProperty("ascending");
