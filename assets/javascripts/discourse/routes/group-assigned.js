@@ -1,6 +1,5 @@
 import DiscourseRoute from "discourse/routes/discourse";
 import { ajax } from "discourse/lib/ajax";
-import { action } from "@ember/object";
 
 export default class GroupAssigned extends DiscourseRoute {
   model() {
