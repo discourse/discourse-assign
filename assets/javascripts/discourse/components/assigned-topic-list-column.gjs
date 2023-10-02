@@ -3,7 +3,7 @@ import AssignActionsDropdown from "./assign-actions-dropdown";
 import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
 
-export default class AssignedTopicListColumn_Test extends Component {
+export default class AssignedTopicListColumn extends Component {
   <template>
     <td class="topic-list-data">
       {{#if @topic.assigned_to_user}}
