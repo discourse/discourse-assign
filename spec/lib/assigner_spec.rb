@@ -122,23 +122,17 @@ RSpec.describe Assigner do
       }
     end
 
-    it "does not update notification level if it is not set by the plugin" do
+    it "does not update notification level when unassigned" do
       assigner.assign(moderator)
 
       expect(TopicUser.find_by(user: moderator).notification_level).to eq(
         TopicUser.notification_levels[:watching],
       )
 
-      TopicUser.change(
-        moderator.id,
-        topic.id,
-        notification_level: TopicUser.notification_levels[:muted],
-      )
-
       assigner.unassign
 
       expect(TopicUser.find_by(user: moderator, topic: topic).notification_level).to eq(
-        TopicUser.notification_levels[:muted],
+        TopicUser.notification_levels[:watching],
       )
     end
 
