@@ -39,7 +39,7 @@ RSpec.describe Assigner do
       expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([])
 
       expect(TopicUser.find_by(user: moderator).notification_level).to eq(
-        TopicUser.notification_levels[:tracking],
+        TopicUser.notification_levels[:watching],
       )
     end
 
