@@ -16,6 +16,7 @@ pt_BR:
     unassign_on_group_archive: "Quando uma mensagem é arquivada por um grupo, remover a atribuição da mensagem (reatribuir se for movida de volta para a caixa de entrada)"
     unassign_on_close: "Quando um tópico for fechado, remover a atribuição do tópico"
     reassign_on_open: "Quando um tópico for aberto, reatribuir grupos/usuários(as) atribuídos anteriormente"
+    invite_on_assign: "Quando uma mensagem pessoal for atribuída a um(a) usuário(a) ou grupo, convide para a MP caso ainda seja um(a) participante."
     assign_mailer: "Quando enviar e-mail de notificação por atribuições"
     remind_assigns: "Lembrar usuários sobre atribuições pendentes."
     remind_assigns_frequency: "Frequência para lembrar usuários sobre tópicos atribuídos."
@@ -45,6 +46,7 @@ pt_BR:
     flag_assigned: "Desculpe, aquele tópico da sinalização está designado à outro usuário"
     flag_unclaimed: "Você precisa reivindicar aquele tópico antes de atuar na sinalização"
     topic_assigned_excerpt: "Você foi atribuído(a) ao tópico \"%{title}\""
+    topic_group_assigned_excerpt: "tópico \"%{title}\" atribuído a @%{group}"
     reminders_frequency:
       never: "nunca"
       daily: "diariamente"

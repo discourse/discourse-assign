@@ -1,7 +1,6 @@
 import I18n from "I18n";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import cookie from "discourse/lib/cookie";
-import { action } from "@ember/object";
 
 export default class UserActivityAssigned extends UserTopicListRoute {
   templateName = "user-activity-assigned";
@@ -33,10 +32,5 @@ export default class UserActivityAssigned extends UserTopicListRoute {
 
   titleToken() {
     return I18n.t("discourse_assign.assigned");
-  }
-
-  @action
-  changeAssigned() {
-    this.refresh();
   }
 }

@@ -16,11 +16,16 @@ pl_PL:
     unassign_on_group_archive: "Kiedy wpis jest archiwizowany przez grupę, cofnij przypisanie wiadomości (po ponowieniu przypisania jest ona przenoszona z powrotem do skrzynki odbiorczej)"
     unassign_on_close: "Kiedy temat zostaje zamknięty, cofnij jego przypisanie"
     reassign_on_open: "Kiedy temat jest otwierany, przydziel ponownie poprzednio przypisanych użytkowników/grupy"
+    invite_on_assign: "Gdy osobista wiadomość jest przypisana do użytkownika lub grupy, zaproś ich na PW, jeśli nie są jeszcze uczestnikami."
     assign_mailer: "Kiedy wysyłać powiadomienia e-mail dotyczące przypisań"
     remind_assigns: "Przypominaj użytkownikom o oczekujących przypisaniach."
     remind_assigns_frequency: "Częstotliwość przypominania użytkownikom o przypisanych tematach."
     max_assigned_topics: "Maksymalna liczba tematów, które można przypisać użytkownikowi."
     assign_allowed_on_groups: "Użytkownicy w tych grupach mają prawo do przypisywania tematów i mogą być przypisani do tematów."
+    enable_assign_status: "Dodaj konfigurowalne pole stanu do każdego przypisania."
+    errors:
+      assign_statuses:
+        duplicate: "Istnieją zduplikowane wartości statusu."
   discourse_assign:
     assigned_to: "Temat przypisany do @%{username}"
     unassigned: "Cofnięto przypisanie tematu"
@@ -79,6 +84,14 @@ pl_PL:
     scriptables:
       random_assign:
         title: Przypisanie losowe
+        no_one: "Próbowano losowo przypisać członka `@%{group}`, ale nikt nie był dostępny."
   discourse_push_notifications:
     popup:
       assigned: "@%{username} przypisał Ciebie"
+  activerecord:
+    errors:
+      models:
+        assignment:
+          attributes:
+            status:
+              invalid: "Wybrany status jest nieprawidłowy (nie jest zawarty w ustawieniu witryny assigned_status)."

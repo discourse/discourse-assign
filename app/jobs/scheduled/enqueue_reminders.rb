@@ -2,6 +2,8 @@
 
 module Jobs
   class EnqueueReminders < ::Jobs::Scheduled
+    REMINDER_BUFFER_MINUTES ||= 120
+
     every 1.day
 
     def execute(_args)
@@ -46,7 +48,7 @@ module Jobs
         AND #{frequency} > 0
         AND (
           last_reminder.value IS NULL OR
-          last_reminder.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})
+          last_reminder.value::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency}) + ('1 MINUTE'::INTERVAL * #{REMINDER_BUFFER_MINUTES})
         )
         AND assignments.updated_at::TIMESTAMP <= CURRENT_TIMESTAMP - ('1 MINUTE'::INTERVAL * #{frequency})
         AND assignments.assigned_to_type = 'User'
