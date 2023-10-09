@@ -102,8 +102,9 @@ en:
     admin:
       web_hooks:
         assign_event:
-          name: "Assign Event"
-          details: "When a user assigns or unassigns a topic."
+          group_name: "Assign Events"
+          assigned: "When an user assigns a topic"
+          unassigned: "When an user unassigns a topic"
     search:
       advanced:
         in:
