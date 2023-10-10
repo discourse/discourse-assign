@@ -101,11 +101,6 @@ fr:
       dismiss_assigned_tooltip: "Marquer toutes les notifications d'attribution non lues comme lues"
       assigned_to_group: "attribué à %{group_name}"
       assigned_to_you: "attribué à vous"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Événement d'attribution"
-          details: "Lorsqu'un utilisateur attribue ou annule l'attribution d'un sujet."
     search:
       advanced:
         in:

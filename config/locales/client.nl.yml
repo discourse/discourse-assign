@@ -101,11 +101,6 @@ nl:
       dismiss_assigned_tooltip: "Alle ongelezen toewijzingsmeldingen markeren als gelezen"
       assigned_to_group: "toegewezen aan %{group_name}"
       assigned_to_you: "aan jou toegewezen"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Toewijzingsgebeurtenis"
-          details: "Wanneer een gebruiker een topic toewijst of de toewijzing ervan opheft."
     search:
       advanced:
         in:

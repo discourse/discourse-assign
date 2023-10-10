@@ -101,11 +101,6 @@ pt:
       dismiss_assigned_tooltip: "Marcar como lidas todas as notificações não atribuídas não lidas"
       assigned_to_group: "atribuiu a %{group_name}"
       assigned_to_you: "atribuiu a você"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Atribuir evento"
-          details: "Quando um(a) usuário(a) atribui ou cancela atribuição de um tópico."
     search:
       advanced:
         in:

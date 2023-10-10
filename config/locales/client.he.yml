@@ -105,8 +105,9 @@ he:
     admin:
       web_hooks:
         assign_event:
-          name: "הקצאת אירוע"
-          details: "כאשר משתמש מקצה או מבטל הקצאה של נושא."
+          group_name: "הקצאת אירועים"
+          assigned: "בעת הקצאת נושא על ידי משתמש"
+          unassigned: "בעת ביטול הקצאת נושא על ידי משתמש"
     search:
       advanced:
         in:

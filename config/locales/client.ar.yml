@@ -101,11 +101,6 @@ ar:
       dismiss_assigned_tooltip: "وضع علامة مقروءة على كل إشعارات التعيين"
       assigned_to_group: "معيَّن إلى %{group_name}"
       assigned_to_you: "معيَّنة إليك"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "تعيين الحدث"
-          details: "عندما يعيِّن مستخدم موضوعًا أو يلغي تعيينه."
     search:
       advanced:
         in:

@@ -66,11 +66,6 @@ da:
       messages:
         assigned_title: "Tildelt (%{count})"
         assigned: "Tildelt"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Tildel Begivenhed"
-          details: "Når en bruger tildeler eller fradeler et emne."
     search:
       advanced:
         in:

@@ -101,11 +101,6 @@ es:
       dismiss_assigned_tooltip: "Marcar todas las notificaciones de asignación no leídas como leídas"
       assigned_to_group: "asignada a %{group_name}"
       assigned_to_you: "asignada a ti"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Asignar evento"
-          details: "Cuando un usuario asigna o anula la asignación de un tema."
     search:
       advanced:
         in:
