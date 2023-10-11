@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # name: discourse-assign
-# about: Assign users to topics
+# about: Provides the ability to assign topics and individual posts to a user or group.
+# meta_topic_id: 58044
 # version: 1.0.1
 # authors: Sam Saffron
 # url: https://github.com/discourse/discourse-assign
