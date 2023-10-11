@@ -101,11 +101,6 @@ de:
       dismiss_assigned_tooltip: "Alle ungelesenen Zuordnungsbenachrichtigungen als gelesen markieren"
       assigned_to_group: "%{group_name} zugeordnet"
       assigned_to_you: "dir zugeordnet"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Ereignis zuordnen"
-          details: "Wenn ein Benutzer ein Thema zuordnet oder die Zuordnung aufhebt."
     search:
       advanced:
         in:

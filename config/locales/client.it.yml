@@ -101,11 +101,6 @@ it:
       dismiss_assigned_tooltip: "Imposta tutte le notifiche di assegnazione non lette come lette"
       assigned_to_group: "assegnato a %{group_name}"
       assigned_to_you: "assegnato a te"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Evento di assegnazione"
-          details: "Quando un utente assegna o annulla l'assegnazione di un argomento."
     search:
       advanced:
         in:

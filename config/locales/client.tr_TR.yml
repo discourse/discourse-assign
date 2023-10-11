@@ -101,11 +101,6 @@ tr_TR:
       dismiss_assigned_tooltip: "Okunmamış tüm atama bildirimlerini okundu olarak işaretle"
       assigned_to_group: "%{group_name} adlı gruba atandı"
       assigned_to_you: "size atandı"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Etkinlik Ata"
-          details: "Bir kullanıcı bir konuyu atadığında veya atamasını kaldırdığında."
     search:
       advanced:
         in:

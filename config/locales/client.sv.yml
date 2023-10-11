@@ -96,11 +96,6 @@ sv:
       dismiss_assigned_tooltip: "Markera alla olästa tilldelningsmeddelanden som lästa"
       assigned_to_group: "tilldelad till %{group_name}"
       assigned_to_you: "tilldelad till dig"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Tilldela händelse"
-          details: "När en användare tilldelar eller återtar tilldelning för ett ämne."
     search:
       advanced:
         in:

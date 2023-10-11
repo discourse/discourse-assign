@@ -59,11 +59,6 @@ ko:
       messages:
         assigned_title: "할당됨 (%{count})"
         assigned: "할당됨"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "이벤트 할당"
-          details: "사용자가 주제를 할당 또는 할당 해제 할 때"
     search:
       advanced:
         assigned:

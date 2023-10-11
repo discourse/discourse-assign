@@ -101,11 +101,6 @@ ru:
       dismiss_assigned_tooltip: "Пометить все непрочитанные уведомления о назначении как прочитанные"
       assigned_to_group: "назначен(а) группе %{group_name}"
       assigned_to_you: "назначен(а) вам"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Событие назначения"
-          details: "При назначении или отмене назначения ответственного в тему"
     search:
       advanced:
         in:

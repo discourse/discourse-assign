@@ -104,8 +104,9 @@ zh_CN:
     admin:
       web_hooks:
         assign_event:
-          name: "分配事件"
-          details: "当用户分配或取消分配话题时。"
+          group_name: "分配事件"
+          assigned: "当用户分配主题时"
+          unassigned: "当用户取消分配主题时"
     search:
       advanced:
         in:

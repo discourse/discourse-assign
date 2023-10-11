@@ -101,11 +101,6 @@ fi:
       dismiss_assigned_tooltip: "Merkitse kaikki lukemattomat osoitusilmoitukset luetuiksi"
       assigned_to_group: "osoitettu ryhmälle %{group_name}"
       assigned_to_you: "osoitettu sinulle"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Osoitustapahtuma"
-          details: "Kun käyttäjä osoittaa ketjun tai peruu ketjun osoituksen."
     search:
       advanced:
         in:

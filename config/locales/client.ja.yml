@@ -101,11 +101,6 @@ ja:
       dismiss_assigned_tooltip: "すべての未読の割り当てを既読にします"
       assigned_to_group: "が %{group_name} に割り当てました"
       assigned_to_you: "があなたに割り当てました"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "割り当てイベント"
-          details: "ユーザーがトピックを割り当てたか割り当てを解除したとき。"
     search:
       advanced:
         in:

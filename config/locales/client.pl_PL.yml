@@ -100,11 +100,6 @@ pl_PL:
       dismiss_assigned_tooltip: "Oznacz wszystkie nieprzeczytane powiadomienia o przypisaniu jako przeczytane"
       assigned_to_group: "przypisany do %{group_name}"
       assigned_to_you: "przypisany do Ciebie"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Przypisz wydarzenie"
-          details: "Gdy użytkownik przypisuje lub cofa przypisanie tematu."
     search:
       advanced:
         in:
