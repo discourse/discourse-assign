@@ -372,22 +372,6 @@ class ::Assigner
         assigned_to_type: assignment.assigned_to_type,
       )
 
-      if assignment.assigned_to_user?
-        if TopicUser.exists?(
-             user_id: assignment.assigned_to_id,
-             topic: topic,
-             notification_level: TopicUser.notification_levels[:watching],
-             notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
-           )
-          TopicUser.change(
-            assignment.assigned_to_id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-            notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
-          )
-        end
-      end
-
       assigned_to = assignment.assigned_to
 
       if SiteSetting.unassign_creates_tracking_post && !silent
