@@ -12,7 +12,7 @@ export default class extends EmberObject {
     if (ASSIGN_LIST_ROUTES.includes(this.router.currentRouteName)) {
       return rawRenderGlimmer(
         this,
-        "div.assign-topic-buttons",
+        "td.assign-topic-buttons",
         <template><AssignedTopicListColumn @topic={{@data.topic}} /></template>,
         { topic: this.topic }
       );
