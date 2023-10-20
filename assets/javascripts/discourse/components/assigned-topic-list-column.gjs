@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 
 export default class AssignedTopicListColumn extends Component {
   <template>
-    <td class="topic-list-data">
       {{#if @topic.assigned_to_user}}
         <AssignActionsDropdown
           @topic={{@topic}}
@@ -24,7 +23,6 @@ export default class AssignedTopicListColumn extends Component {
       {{else}}
         <AssignActionsDropdown @topic={{@topic}} @unassign={{this.unassign}} />
       {{/if}}
-    </td>
   </template>
 
   @service taskActions;
