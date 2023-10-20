@@ -530,7 +530,7 @@ class ::Assigner
         ""
       end
     return "unassigned#{suffix}" if assignment.assigned_to_user?
-    return "unassigned_group#{suffix}" if assignment.assigned_to_group?
+    "unassigned_group#{suffix}" if assignment.assigned_to_group?
   end
 
   def already_assigned?(assign_to, type, note, status)

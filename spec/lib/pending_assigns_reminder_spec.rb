@@ -4,10 +4,12 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 def assert_reminder_not_created
-  expect { subject.remind(user) }.not_to change { Post.count }
+  expect { reminder.remind(user) }.not_to change { Post.count }
 end
 
 RSpec.describe PendingAssignsReminder do
+  subject(:reminder) { described_class.new }
+
   before { SiteSetting.assign_enabled = true }
 
   let(:user) { Fabricate(:user) }
@@ -48,7 +50,7 @@ RSpec.describe PendingAssignsReminder do
 
     it "creates a reminder for a particular user and sets the timestamp of the last reminder" do
       freeze_time
-      subject.remind(user)
+      reminder.remind(user)
 
       post = Post.last
 
@@ -71,8 +73,8 @@ RSpec.describe PendingAssignsReminder do
     end
 
     it "deletes previous reminders when creating a new one" do
-      subject.remind(user)
-      subject.remind(user)
+      reminder.remind(user)
+      reminder.remind(user)
 
       reminders_count =
         Topic
@@ -84,7 +86,7 @@ RSpec.describe PendingAssignsReminder do
     end
 
     it "doesn't delete reminders from a different user" do
-      subject.remind(user)
+      reminder.remind(user)
       another_user = Fabricate(:user)
       add_to_assign_allowed_group(another_user)
       3.times do
@@ -92,7 +94,7 @@ RSpec.describe PendingAssignsReminder do
         Assigner.new(post.topic, user).assign(another_user)
       end
 
-      subject.remind(another_user)
+      reminder.remind(another_user)
 
       reminders_count =
         Topic
@@ -104,9 +106,9 @@ RSpec.describe PendingAssignsReminder do
     end
 
     it "doesn't delete reminders if they have replies" do
-      subject.remind(user)
+      reminder.remind(user)
       Fabricate(:post, topic: Topic.last)
-      subject.remind(user)
+      reminder.remind(user)
 
       reminders_count =
         Topic
@@ -123,7 +125,7 @@ RSpec.describe PendingAssignsReminder do
       @post5 = Fabricate(:post)
       Assigner.new(@post5.topic, user).assign(user)
 
-      subject.remind(user)
+      reminder.remind(user)
 
       post = Post.last
       topic = post.topic
@@ -133,7 +135,7 @@ RSpec.describe PendingAssignsReminder do
       @post5.topic.update_status("closed", true, Discourse.system_user)
       expect(@post5.topic.closed).to eq(true)
 
-      subject.remind(user)
+      reminder.remind(user)
 
       post = Post.last
       topic = post.topic
