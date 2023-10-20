@@ -5,7 +5,7 @@ module DiscourseAssign
     def self.prepended(base)
       base.class_eval do
         scope :assignable,
-              ->(user) {
+              ->(user) do
                 where(
                   "assignable_level in (:levels) OR
                   (
@@ -18,7 +18,7 @@ module DiscourseAssign
                   levels: alias_levels(user),
                   user_id: user&.id,
                 )
-              }
+              end
       end
     end
   end

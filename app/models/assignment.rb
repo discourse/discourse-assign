@@ -9,11 +9,11 @@ class Assignment < ActiveRecord::Base
   belongs_to :target, polymorphic: true
 
   scope :joins_with_topics,
-        -> {
+        -> do
           joins(
             "INNER JOIN topics ON topics.id = assignments.target_id AND assignments.target_type = 'Topic' AND topics.deleted_at IS NULL",
           )
-        }
+        end
 
   scope :active_for_group, ->(group) { where(assigned_to: group, active: true) }
 
