@@ -1,5 +1,5 @@
-import DiscourseRoute from "discourse/routes/discourse";
 import { findOrResetCachedTopicList } from "discourse/lib/cached-topic-list";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class GroupAssignedShow extends DiscourseRoute {
   model(params) {

@@ -1,6 +1,6 @@
-import I18n from "I18n";
-import UserTopicListRoute from "discourse/routes/user-topic-list";
 import cookie from "discourse/lib/cookie";
+import UserTopicListRoute from "discourse/routes/user-topic-list";
+import I18n from "I18n";
 
 export default class UserActivityAssigned extends UserTopicListRoute {
   templateName = "user-activity-assigned";

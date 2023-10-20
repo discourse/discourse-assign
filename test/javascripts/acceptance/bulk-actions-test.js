@@ -1,11 +1,11 @@
-import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
-import { test } from "qunit";
 import { click, fillIn, visit } from "@ember/test-helpers";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { test } from "qunit";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import { acceptance, query } from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import I18n from "I18n";
 
 acceptance("Discourse Assign | Bulk actions", function (needs) {

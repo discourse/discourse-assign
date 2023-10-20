@@ -1,7 +1,7 @@
 import EmberObject from "@ember/object";
+import { inject as service } from "@ember/service";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
 import AssignedTopicListColumn from "../components/assigned-topic-list-column";
-import { inject as service } from "@ember/service";
 
 const ASSIGN_LIST_ROUTES = ["userActivity.assigned", "group.assigned.show"];
 

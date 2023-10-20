@@ -1,6 +1,6 @@
-import DiscourseRoute from "discourse/routes/discourse";
-import { ajax } from "discourse/lib/ajax";
 import { inject as service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class GroupAssigned extends DiscourseRoute {
   @service router;

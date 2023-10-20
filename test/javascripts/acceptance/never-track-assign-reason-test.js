@@ -1,11 +1,11 @@
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
 import { cloneJSON } from "discourse-common/lib/object";
-import topicFixtures from "discourse/tests/fixtures/topic";
 
 acceptance(
   "Discourse Assign | Never track topics assign reason",

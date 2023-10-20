@@ -1,14 +1,14 @@
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "I18n";
-import topicFixtures from "discourse/tests/fixtures/topic";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import NotificationFixture from "../fixtures/notifications-fixtures";
 
 function assignCurrentUserToTopic(needs) {

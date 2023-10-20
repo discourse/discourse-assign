@@ -1,17 +1,17 @@
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import { h } from "virtual-dom";
+import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import discourseComputed from "discourse-common/utils/decorators";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import { escapeExpression } from "discourse/lib/utilities";
-import { h } from "virtual-dom";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { htmlSafe } from "@ember/template";
-import getURL from "discourse-common/lib/get-url";
-import SearchAdvancedOptions from "discourse/components/search-advanced-options";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
+import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
+import { getOwner } from "discourse-common/lib/get-owner";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
 
 const PLUGIN_ID = "discourse-assign";

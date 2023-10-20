@@ -1,14 +1,14 @@
-import UserTopicsList from "discourse/controllers/user-topics-list";
-import discourseComputed from "discourse-common/utils/decorators";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { inject as controller } from "@ember/controller";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { inject as service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
+import UserTopicsList from "discourse/controllers/user-topics-list";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import { htmlSafe } from "@ember/template";
 
 export default class UserActivityAssigned extends UserTopicsList {
   @service taskActions;
