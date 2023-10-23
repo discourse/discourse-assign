@@ -1,13 +1,13 @@
+import { click, currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   acceptance,
   query,
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { click, currentURL, visit } from "@ember/test-helpers";
-import { test } from "qunit";
 import I18n from "I18n";
-import { withPluginApi } from "discourse/lib/plugin-api";
 
 const USER_MENU_ASSIGN_RESPONSE = {
   notifications: [

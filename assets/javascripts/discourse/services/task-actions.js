@@ -1,9 +1,9 @@
-import Service, { inject as service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import AssignUser from "../components/modal/assign-user";
 import { tracked } from "@glimmer/tracking";
+import Service, { inject as service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import AssignUser from "../components/modal/assign-user";
 
 export default class TaskActions extends Service {
   @service modal;

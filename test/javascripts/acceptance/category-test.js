@@ -1,8 +1,8 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import I18n from "I18n";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import I18n from "I18n";
 
 function stubCategory(needs, customFields) {
   needs.site({
