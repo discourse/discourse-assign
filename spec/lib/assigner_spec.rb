@@ -765,7 +765,7 @@ RSpec.describe Assigner do
       assigner.assign(group2)
       assigner.assign(group3)
 
-      expect(topic.allowed_groups).to eq([group1, group2])
+      expect(topic.allowed_groups).to match_array([group1, group2])
     end
 
     it "doesn't invite group to the PM if it's not messageable" do
