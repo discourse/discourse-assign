@@ -167,9 +167,11 @@ after_initialize do
 
   on(:unassign_topic) { |topic, unassigning_user| Assigner.new(topic, unassigning_user).unassign }
 
-  Site.preloaded_category_custom_fields << "enable_unassigned_filter"
-  if self.respond_to?(:register_category_list_preloaded_category_custom_fields)
-    register_category_list_preloaded_category_custom_fields("enable_unassigned_filter")
+  if respond_to?(:register_preloaded_category_custom_fields)
+    register_preloaded_category_custom_fields("enable_unassigned_filter")
+  else
+    # TODO: Drop the if-statement and this if-branch in Discourse v3.2
+    Site.preloaded_category_custom_fields << "enable_unassigned_filter"
   end
 
   BookmarkQuery.on_preload do |bookmarks, bookmark_query|
