@@ -1,3 +1,5 @@
+import { set } from "@ember/object";
+import { sort } from "@ember/object/computed";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
 import I18n from "I18n";
 import UserMenuAssignsListEmptyState from "./assigns-list-empty-state";
@@ -51,10 +53,20 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   async fetchItems() {
-    // sorting by `data.message` length to group single user assignments and
-    // group assignments, then by `created_at` to keep chronological order.
-    return (await super.fetchItems())
-      .sortBy("notification.data.message", "notification.created_at")
-      .reverse();
+    return new SortedItems(await super.fetchItems()).sortedItems;
+  }
+}
+
+class SortedItems {
+  itemsSorting = [
+    "notification.read",
+    "notification.data.message:desc",
+    "notification.created_at:desc",
+  ];
+
+  @sort("items", "itemsSorting") sortedItems;
+
+  constructor(items) {
+    set(this, "items", items);
   }
 }
