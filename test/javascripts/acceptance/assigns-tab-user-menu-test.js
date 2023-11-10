@@ -268,7 +268,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
       "dismiss confirmation modal is shown"
     );
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     assert.true(markRead, "mark-read request is sent");
     assert.dom(".notifications-dismiss").doesNotExist("dismiss button is gone");
     assert
