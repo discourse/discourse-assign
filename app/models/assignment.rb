@@ -56,13 +56,13 @@ class Assignment < ActiveRecord::Base
     target
   end
 
-  def create_missing_notifications!(mark_as_read: false)
+  def create_missing_notifications!
     assigned_users.each do |user|
       next if user.notifications.for_assignment(self).exists?
       DiscourseAssign::CreateNotification.call(
         assignment: self,
         user: user,
-        mark_as_read: mark_as_read || assigned_by_user == user,
+        mark_as_read: assigned_by_user == user,
       )
     end
   end
