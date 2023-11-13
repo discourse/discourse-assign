@@ -83,14 +83,11 @@ RSpec.describe Assignment do
   end
 
   describe "#create_missing_notifications!" do
-    subject(:create_missing_notifications) do
-      assignment.create_missing_notifications!(mark_as_read: mark_as_read)
-    end
+    subject(:create_missing_notifications) { assignment.create_missing_notifications! }
 
     let(:assignment) do
       Fabricate(:topic_assignment, assigned_to: assigned_to, assigned_by_user: assigned_by_user)
     end
-    let(:mark_as_read) { false }
     let(:assigned_by_user) { Fabricate(:user) }
 
     context "when assigned to a user" do
@@ -113,8 +110,8 @@ RSpec.describe Assignment do
       end
 
       context "when notification does not exist yet" do
-        context "when `mark_as_read` is true" do
-          let(:mark_as_read) { true }
+        context "when user is the one that assigned" do
+          let(:assigned_by_user) { assigned_to }
 
           it "creates the missing notification" do
             DiscourseAssign::CreateNotification.expects(:call).with(
@@ -126,29 +123,14 @@ RSpec.describe Assignment do
           end
         end
 
-        context "when `mark_as_read` is false" do
-          context "when user is the one that assigned" do
-            let(:assigned_by_user) { assigned_to }
-
-            it "creates the missing notification" do
-              DiscourseAssign::CreateNotification.expects(:call).with(
-                assignment: assignment,
-                user: assigned_to,
-                mark_as_read: true,
-              )
-              create_missing_notifications
-            end
-          end
-
-          context "when user is not the one that assigned" do
-            it "creates the missing notification" do
-              DiscourseAssign::CreateNotification.expects(:call).with(
-                assignment: assignment,
-                user: assigned_to,
-                mark_as_read: false,
-              )
-              create_missing_notifications
-            end
+        context "when user is not the one that assigned" do
+          it "creates the missing notification" do
+            DiscourseAssign::CreateNotification.expects(:call).with(
+              assignment: assignment,
+              user: assigned_to,
+              mark_as_read: false,
+            )
+            create_missing_notifications
           end
         end
       end
