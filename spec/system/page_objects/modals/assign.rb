@@ -19,7 +19,7 @@ module PageObjects
       end
 
       def confirm
-        find(".d-modal__footer .btn-primary").click
+        find(".modal-footer .btn-primary").click
       end
     end
   end
