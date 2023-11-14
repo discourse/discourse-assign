@@ -42,6 +42,8 @@ et:
     user:
       messages:
         assigned: "Määratud"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:

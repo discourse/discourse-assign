@@ -36,8 +36,6 @@ nl:
       assigned_topic_to: "Topic toegewezen aan <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} toegewezen aan %{username}"
       assigned_to_w_ellipsis: "Toegewezen aan..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Toewijzing opheffen"
         title_w_ellipsis: "Toewijzing opheffen..."
@@ -99,8 +97,8 @@ nl:
       no_assignments_body: >
         Je toegewezen topics en berichten worden hier weergegeven. Ook ontvang je periodiek een herinneringsmelding over je toewijzingen, die je kunt aanpassen in je <a href='%{preferencesUrl}'>gebruikersvoorkeuren</a>. <br><br> Om een topic of bericht aan jezelf of iemand anders toe te wijzen, zoek je de knop %{icon} Toewijzen onderaan.
       dismiss_assigned_tooltip: "Alle ongelezen toewijzingsmeldingen markeren als gelezen"
-      assigned_to_group: "toegewezen aan %{group_name}"
-      assigned_to_you: "aan jou toegewezen"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:

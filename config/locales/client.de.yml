@@ -36,8 +36,6 @@ de:
       assigned_topic_to: "Thema zugeordnet zu <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} %{username} zugeordnet"
       assigned_to_w_ellipsis: "Zugeordnet zu …"
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Zuordnung aufheben"
         title_w_ellipsis: "Zuordnung aufheben …"
@@ -99,8 +97,8 @@ de:
       no_assignments_body: >
         Deine zugeordneten Themen und Nachrichten werden hier aufgelistet. Außerdem erhältst du regelmäßig eine Erinnerungsbenachrichtigung betreffend deine Zuordnungen, die du in deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> anpassen kannst. <br><br> Um dir selbst oder einer anderen Person ein Thema oder eine Nachricht zuzuordnen, verwende die Zuordnungsschaltfläche %{icon} unten.
       dismiss_assigned_tooltip: "Alle ungelesenen Zuordnungsbenachrichtigungen als gelesen markieren"
-      assigned_to_group: "%{group_name} zugeordnet"
-      assigned_to_you: "dir zugeordnet"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:

@@ -31,5 +31,8 @@ fa_IR:
         weekly: "هفتگی"
         monthly: "ماهانه"
         quarterly: "فصلی"
+    user:
+      assignment_description:
+        topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"

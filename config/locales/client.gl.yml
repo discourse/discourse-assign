@@ -26,6 +26,8 @@ gl:
     user:
       messages:
         assigned: "Asignado"
+      assignment_description:
+        topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:

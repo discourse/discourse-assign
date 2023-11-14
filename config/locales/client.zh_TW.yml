@@ -50,6 +50,8 @@ zh_TW:
     user:
       messages:
         assigned: "已指派"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:

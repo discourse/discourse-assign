@@ -59,6 +59,8 @@ uk:
       messages:
         assigned_title: "Призначено (%{count})"
         assigned: "Призначено"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:
