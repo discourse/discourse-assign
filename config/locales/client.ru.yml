@@ -36,8 +36,6 @@ ru:
       assigned_topic_to: "Назначил(а) тему пользователю <a href='%{path}'>%{username}</a>"
       assign_post_to: "Назначил(а) ответственным %{username} в сообщение #%{post_number}"
       assigned_to_w_ellipsis: "Назначено..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Снять ответственного"
         title_w_ellipsis: "Отменить назначение..."
@@ -99,8 +97,8 @@ ru:
       no_assignments_body: >
         Здесь будут перечислены назначенные вами темы и сообщения. Вы также будете получать периодические напоминания о ваших назначениях, которые вы можете изменить в <a href='%{preferencesUrl}'>настройках пользователя</a>. <br><br> Чтобы назначить тему или сообщение себе или кому-то ещё, используйте кнопку %{icon}, расположенную в нижней части темы.
       dismiss_assigned_tooltip: "Пометить все непрочитанные уведомления о назначении как прочитанные"
-      assigned_to_group: "назначен(а) группе %{group_name}"
-      assigned_to_you: "назначен(а) вам"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:

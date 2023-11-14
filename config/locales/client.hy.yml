@@ -52,6 +52,8 @@ hy:
       messages:
         assigned_title: "Վերագրված (%{count})"
         assigned: "Վերագրված"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:

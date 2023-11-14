@@ -22,5 +22,8 @@ sl:
         weekly: "Tedensko"
         monthly: "Mesečno"
         quarterly: "V četrtletju"
+    user:
+      assignment_description:
+        topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"

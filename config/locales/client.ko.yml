@@ -59,6 +59,8 @@ ko:
       messages:
         assigned_title: "할당됨 (%{count})"
         assigned: "할당됨"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:

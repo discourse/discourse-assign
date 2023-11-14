@@ -36,8 +36,6 @@ es:
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Asignado #%{post_number} a %{username}"
       assigned_to_w_ellipsis: "Asignado a..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Anular asignación"
         title_w_ellipsis: "Anular asignación..."
@@ -99,8 +97,8 @@ es:
       no_assignments_body: >
         Tus temas y mensajes asignados aparecerán aquí. También recibirás una notificación periódica de recordatorio de tus asignaciones, que puedes ajustar en tus <a href='%{preferencesUrl}'>preferencias de usuario</a>. <br><br> Para asignar un tema o mensaje a ti mismo o a otra persona, busca el botón %{icon} de asignar en la parte inferior.
       dismiss_assigned_tooltip: "Marcar todas las notificaciones de asignación no leídas como leídas"
-      assigned_to_group: "asignada a %{group_name}"
-      assigned_to_you: "asignada a ti"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:

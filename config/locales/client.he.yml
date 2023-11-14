@@ -37,8 +37,6 @@ he:
       assign_post_to: "מס׳ %{post_number} הוקצה לטובת %{username}"
       assign_post_to_multiple: "מס׳ %{post_number} אל %{username}"
       assigned_to_w_ellipsis: "מוקצה לטובת..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "ביטול הקצאה"
         title_w_ellipsis: "ביטול הקצאה..."
@@ -100,8 +98,15 @@ he:
       no_assignments_body: >
         הנושאים שמוקצים אליך יופיעו כאן. תישלחנה אליך הודעות תזכורת מדי פעם בפעם כדי להזכיר לך את המטלות שלך, ניתן להגדיר אותן <a href='%{preferencesUrl}'>בהעדפות המשתמש</a> שלך. <br><br> כדי להקצות נושא או הודעה לעצמך או למישהו אחר יש לחפש את הכפתור %{icon} הקצאה למטה.
       dismiss_assigned_tooltip: "סימון כל התראות ההקצאה שלא נקראו כהתראות שנקראו"
-      assigned_to_group: "מוקצה לטובת %{group_name}"
-      assigned_to_you: "מוקצה לך"
+      assigned_to_group:
+        post: "הפוסט הוקצה לטובת %{group_name}"
+        topic: "הנושא הוקצה לטובת %{group_name}"
+      assigned_to_you:
+        post: "הפוסט הוקצה לך"
+        topic: "הנושא הוקצה לך"
+      assignment_description:
+        post: "%{topic_title} (מס׳ %{post_number})"
+        topic: "%{topic_title}"
     admin:
       web_hooks:
         assign_event:

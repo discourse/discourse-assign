@@ -51,6 +51,8 @@ sw:
       messages:
         assigned_title: "Amekabidhiwa (%{count})"
         assigned: "Imekabidhiwa"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:

@@ -19,3 +19,6 @@ sq:
         weekly: "Javore"
         monthly: "Mujore"
         quarterly: "Tremujorsh"
+    user:
+      assignment_description:
+        topic: "%{topic_title}"

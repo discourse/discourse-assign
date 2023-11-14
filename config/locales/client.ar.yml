@@ -36,8 +36,6 @@ ar:
       assigned_topic_to: "تم تعيين الموضوع إلى المستخدم <a href='%{path}'>%{username}</a>"
       assign_post_to: "تم تعيين المنشور #%{post_number} إلى المستخدم %{username}"
       assigned_to_w_ellipsis: "معيَّنة إلى..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "إلغاء التعيين"
         title_w_ellipsis: "إلغاء تعيين..."
@@ -99,8 +97,8 @@ ar:
       no_assignments_body: >
         سيتم إدراج الموضوعات والرسائل المعيَّنة إليك هنا. ستتلقى أيضًا إشعار تذكير دوريًا بتعييناتك، والذي يمكنك تعديله في <a href='%{preferencesUrl}'>تفضيلات المستخدم</a>. <br><br> لتعيين موضوع أو رسالة إلى نفسك أو إلى شخص آخر، ابحث عن %{icon} في الأسفل.
       dismiss_assigned_tooltip: "وضع علامة مقروءة على كل إشعارات التعيين"
-      assigned_to_group: "معيَّن إلى %{group_name}"
-      assigned_to_you: "معيَّنة إليك"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:

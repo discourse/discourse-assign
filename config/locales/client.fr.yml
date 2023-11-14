@@ -36,8 +36,6 @@ fr:
       assigned_topic_to: "A attribué le message à <a href='%{path}'>%{username}</a>"
       assign_post_to: "A attribué %{post_number} à %{username}"
       assigned_to_w_ellipsis: "Attribué à…"
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Annuler l'attribution"
         title_w_ellipsis: "Annuler l'attribution…"
@@ -99,8 +97,8 @@ fr:
       no_assignments_body: >
         Vos sujets et messages attribués seront répertoriés ici. Vous recevrez également une notification de rappel périodique de vos attributions que vous pouvez ajuster dans vos <a href='%{preferencesUrl}'>préférences d'utilisateur</a>. <br><br> Pour attribuer un sujet ou un message à vous-même ou à quelqu'un d'autre, recherchez le bouton d'attribution %{icon} en bas de l'écran.
       dismiss_assigned_tooltip: "Marquer toutes les notifications d'attribution non lues comme lues"
-      assigned_to_group: "attribué à %{group_name}"
-      assigned_to_you: "attribué à vous"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:
