@@ -262,13 +262,13 @@ acceptance("Discourse Assign | user menu", function (needs) {
     assert.false(markRead, "mark-read request isn't sent");
     assert.strictEqual(
       query(
-        ".dismiss-notification-confirmation .modal-body"
+        ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
       I18n.t("notifications.dismiss_confirmation.body.assigns", { count: 173 }),
       "dismiss confirmation modal is shown"
     );
 
-    await click(".modal-footer .btn-primary");
+    await click(".d-modal__footer .btn-primary");
     assert.true(markRead, "mark-read request is sent");
     assert.dom(".notifications-dismiss").doesNotExist("dismiss button is gone");
     assert
@@ -312,7 +312,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
     await click(".notifications-dismiss");
     assert.false(markRead, "a request to the server is not made");
     assert
-      .dom(".dismiss-notification-confirmation .modal-body")
+      .dom(".dismiss-notification-confirmation .d-modal__body")
       .exists("the dismiss notification confirmation modal is present");
   });
 });
