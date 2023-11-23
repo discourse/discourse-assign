@@ -195,7 +195,7 @@ class ::Assigner
     topic.posts.where(post_number: 1).first
   end
 
-  def forbidden_reasons(assign_to:, type:, note:, status:)
+  def forbidden_reasons(assign_to:, type:, note:, status:, allow_self_reassign:)
     case
     when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
       if topic.private_message?
@@ -211,7 +211,7 @@ class ::Assigner
       end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-    when already_assigned?(assign_to, type, note, status)
+    when !allow_self_reassign && already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT &&
            !reassign?
@@ -252,7 +252,13 @@ class ::Assigner
     { success: true }
   end
 
-  def assign(assign_to, note: nil, skip_small_action_post: false, status: nil)
+  def assign(
+    assign_to,
+    note: nil,
+    skip_small_action_post: false,
+    status: nil,
+    allow_self_reassign: false
+  )
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
     if topic.private_message? && SiteSetting.invite_on_assign
@@ -260,7 +266,13 @@ class ::Assigner
     end
 
     forbidden_reason =
-      forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note, status: status)
+      forbidden_reasons(
+        assign_to: assign_to,
+        type: assigned_to_type,
+        note: note,
+        status: status,
+        allow_self_reassign: allow_self_reassign,
+      )
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
     if no_assignee_change?(assign_to) && details_change?(note, status)
@@ -271,7 +283,8 @@ class ::Assigner
     action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
     action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
 
-    skip_small_action_post = skip_small_action_post || no_assignee_change?(assign_to)
+    skip_small_action_post =
+      skip_small_action_post || (!allow_self_reassign && no_assignee_change?(assign_to))
 
     if @target.assignment
       Jobs.enqueue(
