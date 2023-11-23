@@ -182,6 +182,28 @@ RSpec.describe RandomAssignUtils do
       end
     end
 
+    context "when in a group of one person" do
+      let(:fields) do
+        {
+          "assignees_group" => {
+            "value" => group_1.id,
+          },
+          "assigned_topic" => {
+            "value" => topic_1.id,
+          },
+        }
+      end
+
+      context "when user is already assigned" do
+        before { described_class.automation_script!(ctx, fields, automation) }
+
+        it "reassigns them" do
+          expect { auto_assign }.to change { topic_1.reload.assignment.id }
+          expect(topic_1.assignment.assigned_to).to eq(user_1)
+        end
+      end
+    end
+
     context "when assignees_group is not provided" do
       let(:fields) { { "assigned_topic" => { "value" => topic_1.id } } }
 

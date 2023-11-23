@@ -264,33 +264,47 @@ RSpec.describe Assigner do
         expect(second_assign[:success]).to eq(true)
       end
 
-      it "fails to assign when the assigned user and note is the same" do
-        assigner = described_class.new(topic, moderator_2)
-        assigner.assign(moderator, note: "note me down")
+      context "when 'allow_self_reassign' is false" do
+        subject(:assign) do
+          assigner.assign(moderator, note: other_note, allow_self_reassign: self_reassign)
+        end
 
-        assign = assigner.assign(moderator, note: "note me down")
+        let(:self_reassign) { false }
+        let(:assigner) { described_class.new(topic, moderator_2) }
+        let(:note) { "note me down" }
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:already_assigned)
+        before { assigner.assign(moderator, note: note) }
+
+        context "when the assigned user and the note is the same" do
+          let(:other_note) { note }
+
+          it "fails to assign" do
+            expect(assign).to match(success: false, reason: :already_assigned)
+          end
+        end
+
+        context "when the assigned user is the same but the note is different" do
+          let(:other_note) { "note me down again" }
+
+          it "allows assignment" do
+            expect(assign).to match(success: true)
+          end
+        end
       end
 
-      it "fails to assign when the assigned user and note is the same" do
-        assigner = described_class.new(post, moderator_2)
-        assigner.assign(moderator, note: "note me down")
+      context "when 'allow_self_reassign' is true" do
+        subject(:assign) { assigner.assign(moderator, allow_self_reassign: self_reassign) }
 
-        assign = assigner.assign(moderator, note: "note me down")
+        let(:self_reassign) { true }
+        let(:assigner) { described_class.new(topic, moderator_2) }
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:already_assigned)
-      end
+        context "when the assigned user is the same" do
+          before { assigner.assign(moderator) }
 
-      it "allows assign when the assigned user is same but note is different" do
-        assigner = described_class.new(topic, moderator_2)
-        assigner.assign(moderator, note: "note me down")
-
-        assign = assigner.assign(moderator, note: "note me down again")
-
-        expect(assign[:success]).to eq(true)
+          it "allows assignment" do
+            expect(assign).to match(success: true)
+          end
+        end
       end
 
       it "fails to assign when the assigned user cannot view the pm" do

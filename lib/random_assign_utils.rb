@@ -87,7 +87,7 @@ class RandomAssignUtils
     return create_post_template if post_template
     Assigner
       .new(topic, Discourse.system_user)
-      .assign(assigned_user)
+      .assign(assigned_user, allow_self_reassign: true)
       .then do |result|
         next if result[:success]
         no_one!
@@ -104,7 +104,7 @@ class RandomAssignUtils
       ).create!
     Assigner
       .new(post, Discourse.system_user)
-      .assign(assigned_user)
+      .assign(assigned_user, allow_self_reassign: true)
       .then do |result|
         next if result[:success]
         PostDestroyer.new(Discourse.system_user, post).destroy
