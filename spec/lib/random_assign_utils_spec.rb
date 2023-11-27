@@ -207,10 +207,12 @@ RSpec.describe RandomAssignUtils do
     end
 
     context "when assigned_topic is not found" do
-      let(:fields) { { "assigned_topic" => { "value" => 1 } } }
+      let(:fields) do
+        { "assigned_topic" => { "value" => -1 }, "assignees_group" => { "value" => group_1.id } }
+      end
 
       it "raises an error" do
-        expect { auto_assign }.to raise_error(/Topic\(1\) not found/)
+        expect { auto_assign }.to raise_error(/Topic\(-1\) not found/)
       end
     end
 
