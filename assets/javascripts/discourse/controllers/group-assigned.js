@@ -47,7 +47,11 @@ export default class GroupAssigned extends Controller {
     })
       .then((result) => {
         if (this.router.currentRoute.params.filter !== "everyone") {
-          this.transitionToRoute("group.assigned.show", groupName, "everyone");
+          this.router.transitionTo(
+            "group.assigned.show",
+            groupName,
+            "everyone"
+          );
         }
         this.set("members", result.members);
       })
