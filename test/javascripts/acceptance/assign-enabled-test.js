@@ -151,12 +151,35 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
   });
 
   test("Modal contains status dropdown", async function (assert) {
+    pretender.put("/assign/assign", ({ requestBody }) => {
+      const body = parsePostData(requestBody);
+      assert.strictEqual(body.target_type, "Topic");
+      assert.strictEqual(body.target_id, "280");
+      assert.strictEqual(body.username, "eviltrout");
+      assert.strictEqual(body.status, "In Progress");
+
+      return response({ success: true });
+    });
+
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
     assert
       .dom(".assign.d-modal #assign-status")
       .exists("assign status dropdown exists");
+
+    const statusDropdown = selectKit("#assign-status");
+    assert.strictEqual(statusDropdown.header().value(), "New");
+
+    await statusDropdown.expand();
+    await statusDropdown.selectRowByValue("In Progress");
+    assert.strictEqual(statusDropdown.header().value(), "In Progress");
+
+    const menu = selectKit(".assign.d-modal .user-chooser");
+    await menu.expand();
+    await menu.selectRowByIndex(0);
+
+    await click(".assign.d-modal .btn-primary");
   });
 });
 
