@@ -661,6 +661,7 @@ after_initialize do
   end
 
   register_permitted_bulk_action_parameter :username
+  register_permitted_bulk_action_parameter :status
   register_permitted_bulk_action_parameter :note
 
   add_to_class(:user_bookmark_base_serializer, :assigned_to) do
