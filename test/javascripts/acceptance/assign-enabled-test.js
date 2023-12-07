@@ -44,7 +44,7 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
 
     assert.true(menu.rowByValue("assign").exists());
     await menu.selectRowByValue("assign");
-    assert.dom(".assign.modal").exists("assign modal opens");
+    assert.dom(".assign.d-modal").exists("assign modal opens");
   });
 });
 
@@ -86,12 +86,12 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
       .exists("assign to post button exists");
 
     await click("#post_2 .extra-buttons .d-icon-user-plus");
-    assert.dom(".assign.modal").exists("assign modal opens");
+    assert.dom(".assign.d-modal").exists("assign modal opens");
 
-    const menu = selectKit(".assign.modal .user-chooser");
+    const menu = selectKit(".assign.d-modal .user-chooser");
     assert.true(menu.isExpanded(), "user selector is expanded");
 
-    await click(".assign.modal .btn-primary");
+    await click(".assign.d-modal .btn-primary");
     assert.dom(".error-label").includesText("Choose a user to assign");
 
     await menu.expand();
@@ -108,16 +108,16 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     });
 
     await fillIn("#assign-modal-note", "a note!");
-    await click(".assign.modal .btn-primary");
+    await click(".assign.d-modal .btn-primary");
 
-    assert.dom(".assign.modal").doesNotExist("assign modal closes");
+    assert.dom(".assign.d-modal").doesNotExist("assign modal closes");
   });
 
   test("Footer dropdown contains button", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
-    assert.dom(".assign.modal").exists("assign modal opens");
+    assert.dom(".assign.d-modal").exists("assign modal opens");
   });
 });
 
@@ -155,7 +155,7 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
     await click("#topic-footer-button-assign");
 
     assert
-      .dom(".assign.modal #assign-status")
+      .dom(".assign.d-modal #assign-status")
       .exists("assign status dropdown exists");
   });
 });
@@ -190,7 +190,7 @@ acceptance("Discourse Assign | Assign Status disabled", function (needs) {
     await click("#topic-footer-button-assign");
 
     assert
-      .dom(".assign.modal #assign-status")
+      .dom(".assign.d-modal #assign-status")
       .doesNotExist("assign status dropdown doesn't exists");
   });
 });
