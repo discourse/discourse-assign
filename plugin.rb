@@ -645,7 +645,11 @@ after_initialize do
     if @user.can_assign?
       assign_user = User.find_by_username(@operation[:username])
       topics.each do |topic|
-        Assigner.new(topic, @user).assign(assign_user, note: @operation[:note])
+        Assigner.new(topic, @user).assign(
+          assign_user,
+          status: @operation[:status],
+          note: @operation[:note],
+        )
       end
     end
   end
