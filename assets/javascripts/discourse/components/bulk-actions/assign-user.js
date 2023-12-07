@@ -14,6 +14,7 @@ export default class AssignUser extends Component {
     return this.args.performAndRefresh({
       type: "assign",
       username: this.model.username,
+      status: this.model.status,
       note: this.model.note,
     });
   }
