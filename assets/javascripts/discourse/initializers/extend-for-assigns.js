@@ -616,7 +616,6 @@ function initialize(api) {
         topicAssignee,
         assignedToIndirectly.map((assigned) => ({
           assignee: assigned.assigned_to,
-          status: assigned.assignment_status,
           note: assigned.assignment_note,
         }))
       )
