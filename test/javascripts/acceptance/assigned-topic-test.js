@@ -159,11 +159,11 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     await visit("/u/eviltrout/notifications");
 
     const notification = query(
-      "section.user-content ul.notifications li.item.notification"
+      "section.user-content .user-notifications-list li.notification"
     );
 
     assert.true(
-      notification.children[0].classList.contains("assigned"),
+      notification.classList.contains("assigned"),
       "with correct assigned class"
     );
 
