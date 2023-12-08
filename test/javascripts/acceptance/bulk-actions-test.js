@@ -13,7 +13,10 @@ acceptance("Discourse Assign | Bulk actions", function (needs) {
     moderator: true,
     can_assign: true,
   });
-  needs.settings({ assign_enabled: true });
+  needs.settings({
+    assign_enabled: true,
+    enable_assign_status: true,
+  });
 
   needs.pretender((server, helper) => {
     server.get("/assign/suggestions", () => {
@@ -35,6 +38,22 @@ acceptance("Discourse Assign | Bulk actions", function (needs) {
   });
 
   test("Assigning users to topics", async function (assert) {
+    pretender.put("/topics/bulk", ({ requestBody }) => {
+      const body = parsePostData(requestBody);
+      assert.deepEqual(body.operation, {
+        type: "assign",
+        username: "eviltrout",
+        status: "In Progress",
+        note: "a note!",
+      });
+      assert.deepEqual(body["topic_ids[]"], [
+        topic1.dataset.topicId,
+        topic2.dataset.topicId,
+      ]);
+
+      return response({ success: true });
+    });
+
     await visit("/latest");
     await click("button.bulk-select");
 
@@ -61,22 +80,15 @@ acceptance("Discourse Assign | Bulk actions", function (needs) {
     await menu.selectRowByIndex(0);
     assert.strictEqual(menu.header().value(), "eviltrout");
 
-    pretender.put("/topics/bulk", ({ requestBody }) => {
-      const body = parsePostData(requestBody);
-      assert.deepEqual(body.operation, {
-        type: "assign",
-        username: "eviltrout",
-        note: "a note!",
-      });
-      assert.deepEqual(body["topic_ids[]"], [
-        topic1.dataset.topicId,
-        topic2.dataset.topicId,
-      ]);
-
-      return response({ success: true });
-    });
-
     await fillIn("#assign-modal-note", "a note!");
+
+    const statusDropdown = selectKit("#assign-status");
+    assert.strictEqual(statusDropdown.header().value(), "New");
+
+    await statusDropdown.expand();
+    await statusDropdown.selectRowByValue("In Progress");
+    assert.strictEqual(statusDropdown.header().value(), "In Progress");
+
     await click(".topic-bulk-actions-modal .btn-primary");
   });
 });

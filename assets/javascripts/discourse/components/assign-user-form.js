@@ -26,9 +26,7 @@ export default class AssignUserForm extends Component {
 
   get status() {
     return (
-      this.args.model.status ||
-      this.args.model.target.assignment_status ||
-      this.siteSettings.assign_statuses.split("|")[0]
+      this.args.model.status || this.siteSettings.assign_statuses.split("|")[0]
     );
   }
 

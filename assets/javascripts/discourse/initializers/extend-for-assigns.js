@@ -616,7 +616,6 @@ function initialize(api) {
         topicAssignee,
         assignedToIndirectly.map((assigned) => ({
           assignee: assigned.assigned_to,
-          status: assigned.assignment_status,
           note: assigned.assignment_note,
         }))
       )
@@ -928,57 +927,23 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      if (api.addBulkActionButton) {
-        api.addBulkActionButton({
-          label: "topics.bulk.assign",
-          icon: "user-plus",
-          class: "btn-default assign-topics",
-          action({ setComponent }) {
-            setComponent(BulkAssign);
-          },
-        });
+      api.addBulkActionButton({
+        label: "topics.bulk.assign",
+        icon: "user-plus",
+        class: "btn-default assign-topics",
+        action({ setComponent }) {
+          setComponent(BulkAssign);
+        },
+      });
 
-        api.addBulkActionButton({
-          label: "topics.bulk.unassign",
-          icon: "user-times",
-          class: "btn-default unassign-topics",
-          action({ performAndRefresh }) {
-            performAndRefresh({ type: "unassign" });
-          },
-        });
-      } else {
-        // TODO: Remove this path after core 3.1.0.beta7 is released
-        const {
-          default: TopicButtonAction,
-          addBulkButton,
-        } = require("discourse/controllers/topic-bulk-actions");
-
-        TopicButtonAction.reopen({
-          actions: {
-            showReAssign() {
-              const controller = getOwner(this).lookup(
-                "controller:bulk-assign"
-              );
-              controller.set("model", { username: "", note: "" });
-              this.send("changeBulkTemplate", "modal/bulk-assign");
-            },
-
-            unassignTopics() {
-              this.performAndRefresh({ type: "unassign" });
-            },
-          },
-        });
-
-        addBulkButton("showReAssign", "assign", {
-          icon: "user-plus",
-          class: "btn-default assign-topics",
-        });
-
-        addBulkButton("unassignTopics", "unassign", {
-          icon: "user-times",
-          class: "btn-default unassign-topics",
-        });
-      }
+      api.addBulkActionButton({
+        label: "topics.bulk.unassign",
+        icon: "user-times",
+        class: "btn-default unassign-topics",
+        action({ performAndRefresh }) {
+          performAndRefresh({ type: "unassign" });
+        },
+      });
     });
   },
 };
