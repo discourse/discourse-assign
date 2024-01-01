@@ -34,7 +34,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
     context "when assigns are not public" do
       before { SiteSetting.assigns_public = false }
 
-      it "assigned small action post has 'private-assign' in class attribute" do
+      it "assigned small action post has 'private-assign' in class attribute", capture_log: true do
         visit "/t/#{topic.id}"
 
         topic_page.click_assign_topic
