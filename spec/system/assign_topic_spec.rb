@@ -73,7 +73,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
         expect(page).to have_no_css("#topic .assigned-to")
       end
 
-      xit "can assign the previous assignee" do
+      it "can assign the previous assignee", capture_log: true do
         visit "/t/#{topic.id}"
 
         topic_page.click_assign_topic
@@ -103,7 +103,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
       context "when reassign_on_open is set to true" do
         before { SiteSetting.reassign_on_open = true }
 
-        skip "reassigns the topic on open" do
+        it "reassigns the topic on open", capture_log: true do
           visit "/t/#{topic.id}"
 
           topic_page.click_assign_topic
