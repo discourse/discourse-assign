@@ -52,7 +52,7 @@ after_initialize do
 
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
   register_editable_user_custom_field frequency_field
-  User.register_custom_field_type frequency_field, :integer
+  register_user_custom_field_type(frequency_field, :integer, max_length: 10)
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) { RemindAssignsFrequencySiteSettings.values }
 
