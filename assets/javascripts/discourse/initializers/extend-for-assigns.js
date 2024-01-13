@@ -409,7 +409,7 @@ function registerTopicFooterButtons(api) {
 }
 
 function initialize(api) {
-  const siteSettings = api.container.lookup("site-settings:main");
+  const siteSettings = api.container.lookup("service:site-settings");
   const currentUser = api.getCurrentUser();
 
   if (siteSettings.assigns_public || currentUser?.can_assign) {
@@ -878,12 +878,12 @@ export default {
   name: "extend-for-assign",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (!siteSettings.assign_enabled) {
       return;
     }
 
-    const currentUser = container.lookup("current-user:main");
+    const currentUser = container.lookup("service:current-user");
     if (currentUser?.can_assign) {
       SearchAdvancedOptions.reopen({
         updateSearchTermForAssignedUsername() {

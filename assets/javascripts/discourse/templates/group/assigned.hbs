@@ -1,18 +1,18 @@
 <section class="user-secondary-navigation group-assignments">
   <MobileNav
-    @class="activity-nav"
     @desktopClass="action-list activity-list nav-stacked"
+    class="activity-nav"
   >
     {{#if this.isDesktop}}
       <div class="search-div">
         <Input
+          {{on "input" (action this.onChangeFilterName value="target.value")}}
           @type="text"
+          @value={{readonly this.filterName}}
           placeholder={{i18n
             "discourse_assign.sidebar_name_filter_placeholder"
           }}
-          @value={{readonly this.filterName}}
           class="search"
-          {{on "input" (action this.onChangeFilterName value="target.value")}}
         />
       </div>
     {{/if}}

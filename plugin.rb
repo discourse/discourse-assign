@@ -92,13 +92,10 @@ after_initialize do
   end
 
   add_to_class(:user, :can_assign?) do
-    @can_assign ||=
-      begin
-        return true if admin?
-        allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").compact
-        allowed_groups.present? && groups.where(id: allowed_groups).exists? ? :true : :false
-      end
-    @can_assign == :true
+    return @can_assign if defined?(@can_assign)
+
+    allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").compact
+    @can_assign = admin? || (allowed_groups.present? && groups.where(id: allowed_groups).exists?)
   end
 
   add_to_serializer(:current_user, :never_auto_track_topics) do
@@ -513,7 +510,7 @@ after_initialize do
     :topic_view,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to.is_a?(User)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.topic.assigned_to, object.topic) }
 
@@ -521,7 +518,7 @@ after_initialize do
     :topic_view,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to.is_a?(Group)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_group(object.topic.assigned_to, object.topic) }
 
@@ -561,7 +558,7 @@ after_initialize do
     :suggested_topic,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(User)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
@@ -569,7 +566,7 @@ after_initialize do
     :suggested_topic,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(Group)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object) }
 
@@ -594,7 +591,7 @@ after_initialize do
     :topic_list_item,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(User)
     end,
   ) { BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
@@ -602,7 +599,7 @@ after_initialize do
     :topic_list_item,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(Group)
     end,
   ) { AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
@@ -620,7 +617,7 @@ after_initialize do
     :search_topic_list_item,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(User)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
@@ -628,7 +625,7 @@ after_initialize do
     :search_topic_list_item,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(Group)
     end,
   ) { AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
@@ -678,7 +675,7 @@ after_initialize do
     :assigned_to_user,
     include_condition: -> do
       return false if !can_have_assignment?
-      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to.is_a?(User)
     end,
   ) do
     return if !can_have_assignment?
@@ -690,7 +687,7 @@ after_initialize do
     :assigned_to_group,
     include_condition: -> do
       return false if !can_have_assignment?
-      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to.is_a?(Group)
     end,
   ) do
     return if !can_have_assignment?
@@ -709,7 +706,7 @@ after_initialize do
     :assigned_to_user,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?) &&
-        object.assignment&.assigned_to&.is_a?(User) && object.assignment.active
+        object.assignment&.assigned_to.is_a?(User) && object.assignment.active
     end,
   ) { BasicUserSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json }
 
@@ -718,7 +715,7 @@ after_initialize do
     :assigned_to_group,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?) &&
-        object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
+        object.assignment&.assigned_to.is_a?(Group) && object.assignment.active
     end,
   ) do
     AssignedGroupSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
@@ -748,13 +745,13 @@ after_initialize do
   add_to_serializer(
     :flagged_topic,
     :assigned_to_user,
-    include_condition: -> { object.assigned_to && object.assigned_to&.is_a?(User) },
+    include_condition: -> { object.assigned_to && object.assigned_to.is_a?(User) },
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
   add_to_serializer(
     :flagged_topic,
     :assigned_to_group,
-    include_condition: -> { object.assigned_to && object.assigned_to&.is_a?(Group) },
+    include_condition: -> { object.assigned_to && object.assigned_to.is_a?(Group) },
   ) { DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object) }
 
   # Reviewable
