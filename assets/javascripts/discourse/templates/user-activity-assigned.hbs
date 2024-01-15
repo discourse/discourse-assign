@@ -7,20 +7,20 @@
   <div class="topic-search-div">
     <div class="inline-form full-width">
       <Input
+        {{on "input" (action "onChangeFilter" value="target.value")}}
         @value={{readonly this.search}}
         @type="search"
-        {{on "input" (action "onChangeFilter" value="target.value")}}
-        class="no-blur"
         placeholder={{i18n "discourse_assign.topic_search_placeholder"}}
         autocomplete="off"
+        class="no-blur"
       />
     </div>
   </div>
 
   <LoadMore
-    @class="paginated-topics-list"
     @selector=".paginated-topics-list .topic-list tr"
     @action={{action "loadMore"}}
+    class="paginated-topics-list"
   >
     <BasicTopicList
       @topicList={{this.model}}
