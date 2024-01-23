@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse – Zuordnen"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ de:
       assigned_to: "Zugeordnet zu"
       assigned_topic_to: "Thema zugeordnet zu <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} %{username} zugeordnet"
+      assign_post_to_multiple: "#%{post_number} zu %{username}"
       assigned_to_w_ellipsis: "Zugeordnet zu …"
       unassign:
         title: "Zuordnung aufheben"
@@ -97,8 +103,21 @@ de:
       no_assignments_body: >
         Deine zugeordneten Themen und Nachrichten werden hier aufgelistet. Außerdem erhältst du regelmäßig eine Erinnerungsbenachrichtigung betreffend deine Zuordnungen, die du in deinen <a href='%{preferencesUrl}'>Benutzereinstellungen</a> anpassen kannst. <br><br> Um dir selbst oder einer anderen Person ein Thema oder eine Nachricht zuzuordnen, verwende die Zuordnungsschaltfläche %{icon} unten.
       dismiss_assigned_tooltip: "Alle ungelesenen Zuordnungsbenachrichtigungen als gelesen markieren"
+      assigned_to_group:
+        post: "Beitrag zugeordnet zu %{group_name}"
+        topic: "Thema zugeordnet zu %{group_name}"
+      assigned_to_you:
+        post: "Beitrag wurde dir zugeordnet"
+        topic: "Thema wurde dir zugeordnet"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Ereignisse zuordnen"
+          assigned: "Wenn ein Benutzer ein Thema zuordnet"
+          unassigned: "Wenn ein Benutzer die Zuordnung eines Themas aufhebt"
     search:
       advanced:
         in:

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse-osoitus"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ fi:
       assigned_to: "Osoitettu käyttäjälle"
       assigned_topic_to: "Osoitti ketjun käyttäjälle <a href='%{path}'>%{username}</a>"
       assign_post_to: "Osoitti viestin %{post_number} käyttäjälle %{username}"
+      assign_post_to_multiple: "#%{post_number} käyttäjälle %{username}"
       assigned_to_w_ellipsis: "Osoitettu käyttäjälle..."
       unassign:
         title: "Peru osoitus"
@@ -97,8 +103,21 @@ fi:
       no_assignments_body: >
         Sinulle osoitetut ketjut ja viestit luetellaan tässä. Saat myös ajoittain muistutusilmoituksia osoituksistasi, joita voit muuttaa <a href='%{preferencesUrl}'>käyttäjäasetuksissasi</a>. <br><br> Jos haluat osoittaa ketjun tai viestin itsellesi tai jollekulle toiselle, etsi osoituspainike %{icon} alaosasta.
       dismiss_assigned_tooltip: "Merkitse kaikki lukemattomat osoitusilmoitukset luetuiksi"
+      assigned_to_group:
+        post: "viesti osoitettu ryhmälle %{group_name}"
+        topic: "ketju osoitettu ryhmälle %{group_name}"
+      assigned_to_you:
+        post: "viesti osoitettu sinulle"
+        topic: "ketju osoitettu sinulle"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Osoitustapahtumat"
+          assigned: "Kun käyttäjä osoittaa ketjun"
+          unassigned: "Kun käyttäjä peruu ketjun osoituksen"
     search:
       advanced:
         in:

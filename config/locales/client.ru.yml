@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ru:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse для Assign"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ ru:
       assigned_to: "Назначено:"
       assigned_topic_to: "Назначил(а) тему пользователю <a href='%{path}'>%{username}</a>"
       assign_post_to: "Назначил(а) ответственным %{username} в сообщение #%{post_number}"
+      assign_post_to_multiple: "#%{post_number} для пользователя %{username}"
       assigned_to_w_ellipsis: "Назначено..."
       unassign:
         title: "Снять ответственного"
@@ -97,8 +103,21 @@ ru:
       no_assignments_body: >
         Здесь будут перечислены назначенные вами темы и сообщения. Вы также будете получать периодические напоминания о ваших назначениях, которые вы можете изменить в <a href='%{preferencesUrl}'>настройках пользователя</a>. <br><br> Чтобы назначить тему или сообщение себе или кому-то ещё, используйте кнопку %{icon}, расположенную в нижней части темы.
       dismiss_assigned_tooltip: "Пометить все непрочитанные уведомления о назначении как прочитанные"
+      assigned_to_group:
+        post: "публикация назначена группе %{group_name}"
+        topic: "тема назначена группе %{group_name}"
+      assigned_to_you:
+        post: "публикация, назначенная вам"
+        topic: "тема, назначенная вам"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Назначение событий"
+          assigned: "Когда пользователь назначает тему"
+          unassigned: "Когда пользователь отменяет назначение темы"
     search:
       advanced:
         in:

@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Atama"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ tr_TR:
       assigned_to: "Şuraya atandı:"
       assigned_topic_to: "Konu <a href='%{path}'>%{username}</a> adlı kullanıcıya atandı"
       assign_post_to: "#%{post_number}, %{username} adlı kullanıcıya atandı"
+      assign_post_to_multiple: "%{username} adlı kullanıcıya #%{post_number}"
       assigned_to_w_ellipsis: "Şuraya atandı..."
       unassign:
         title: "Atamayı kaldır"
@@ -97,8 +103,21 @@ tr_TR:
       no_assignments_body: >
         Atanan konularınız ve mesajlarınız burada listelenir. Ayrıca, atamalarınızla ilgili periyodik bir anımsatma bildirimi alırsınız; bunu <a href='%{preferencesUrl}'>kullanıcı tercihlerinizden</a> ayarlayabilirsiniz. <br><br>Kendinize veya bir başkasına bir konu veya mesaj atamak için alttaki %{icon} ata düğmesini kullanın.
       dismiss_assigned_tooltip: "Okunmamış tüm atama bildirimlerini okundu olarak işaretle"
+      assigned_to_group:
+        post: "gönderi %{group_name} adlı gruba atandı"
+        topic: "konu %{group_name} adlı gruba atandı"
+      assigned_to_you:
+        post: "gönderi size atandı"
+        topic: "konu size atandı"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Etkinlik Ata"
+          assigned: "Bir kullanıcı bir konu atadığında"
+          unassigned: "Bir kullanıcı bir konunun atamasını kaldırdığında"
     search:
       advanced:
         in:
