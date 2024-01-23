@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ar:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "تعيين Discourse"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ ar:
       assigned_to: "معيَّنة إلى"
       assigned_topic_to: "تم تعيين الموضوع إلى المستخدم <a href='%{path}'>%{username}</a>"
       assign_post_to: "تم تعيين المنشور #%{post_number} إلى المستخدم %{username}"
+      assign_post_to_multiple: "#%{post_number} إلى %{username}"
       assigned_to_w_ellipsis: "معيَّنة إلى..."
       unassign:
         title: "إلغاء التعيين"
@@ -97,8 +103,21 @@ ar:
       no_assignments_body: >
         سيتم إدراج الموضوعات والرسائل المعيَّنة إليك هنا. ستتلقى أيضًا إشعار تذكير دوريًا بتعييناتك، والذي يمكنك تعديله في <a href='%{preferencesUrl}'>تفضيلات المستخدم</a>. <br><br> لتعيين موضوع أو رسالة إلى نفسك أو إلى شخص آخر، ابحث عن %{icon} في الأسفل.
       dismiss_assigned_tooltip: "وضع علامة مقروءة على كل إشعارات التعيين"
+      assigned_to_group:
+        post: "تم تعيين المنشور إلى %{group_name}"
+        topic: "تم تعيين الموضوع إلى %{group_name}"
+      assigned_to_you:
+        post: "تم تعيين المنشور إليك"
+        topic: "تم تعيين الموضوع إليك"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "أحداث التعيين"
+          assigned: "عندما يقوم المستخدم بتعيين موضوع"
+          unassigned: "عندما يلغي المستخدم تعيين موضوع"
     search:
       advanced:
         in:

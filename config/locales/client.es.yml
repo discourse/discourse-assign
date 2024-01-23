@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 es:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Asignación de Discourse"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ es:
       assigned_to: "Asignado a"
       assigned_topic_to: "Tema asignado a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Asignado #%{post_number} a %{username}"
+      assign_post_to_multiple: "#%{post_number} a %{username}"
       assigned_to_w_ellipsis: "Asignado a..."
       unassign:
         title: "Anular asignación"
@@ -97,8 +103,21 @@ es:
       no_assignments_body: >
         Tus temas y mensajes asignados aparecerán aquí. También recibirás una notificación periódica de recordatorio de tus asignaciones, que puedes ajustar en tus <a href='%{preferencesUrl}'>preferencias de usuario</a>. <br><br> Para asignar un tema o mensaje a ti mismo o a otra persona, busca el botón %{icon} de asignar en la parte inferior.
       dismiss_assigned_tooltip: "Marcar todas las notificaciones de asignación no leídas como leídas"
+      assigned_to_group:
+        post: "publicación asignada a %{group_name}"
+        topic: "tema asignado a %{group_name}"
+      assigned_to_you:
+        post: "publicación asignada a ti"
+        topic: "tema asignado a ti"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Asignar eventos"
+          assigned: "Cuando un usuario asigna un tema"
+          unassigned: "Cuando un usuario anula la asignación de un tema"
     search:
       advanced:
         in:

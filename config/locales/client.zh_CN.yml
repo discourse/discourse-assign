@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse 分配"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ zh_CN:
       assigned_to: "已分配给"
       assigned_topic_to: "将话题分配给 <a href='%{path}'>%{username}</a>"
       assign_post_to: "将 #%{post_number} 分配给 %{username}"
+      assign_post_to_multiple: "#%{post_number} 被分配给 %{username}"
       assigned_to_w_ellipsis: "已分配给…"
       unassign:
         title: "取消分配"
@@ -97,7 +103,14 @@ zh_CN:
       no_assignments_body: >
         分配给您的话题和消息将在此处列出。您还将收到关于您的任务分配的定期提醒通知，您可以在<a href='%{preferencesUrl}'>用户偏好设置</a>中进行调整。 <br><br>要将话题或消息分配给自己或其他人，请查找底部的 %{icon} 分配按钮。
       dismiss_assigned_tooltip: "将所有未读分配通知标记为已读"
+      assigned_to_group:
+        post: "帖子被分配给 %{group_name}"
+        topic: "话题被分配给 %{group_name}"
+      assigned_to_you:
+        post: "帖子被分配给您"
+        topic: "话题被分配给您"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
     admin:
       web_hooks:

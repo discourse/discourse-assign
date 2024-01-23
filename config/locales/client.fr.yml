@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 fr:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Affectation de Discourse"
   js:
     filters:
       unassigned:
@@ -35,6 +40,7 @@ fr:
       assigned_to: "Attribué à"
       assigned_topic_to: "A attribué le message à <a href='%{path}'>%{username}</a>"
       assign_post_to: "A attribué %{post_number} à %{username}"
+      assign_post_to_multiple: "#%{post_number} à %{username}"
       assigned_to_w_ellipsis: "Attribué à…"
       unassign:
         title: "Annuler l'attribution"
@@ -97,8 +103,21 @@ fr:
       no_assignments_body: >
         Vos sujets et messages attribués seront répertoriés ici. Vous recevrez également une notification de rappel périodique de vos attributions que vous pouvez ajuster dans vos <a href='%{preferencesUrl}'>préférences d'utilisateur</a>. <br><br> Pour attribuer un sujet ou un message à vous-même ou à quelqu'un d'autre, recherchez le bouton d'attribution %{icon} en bas de l'écran.
       dismiss_assigned_tooltip: "Marquer toutes les notifications d'attribution non lues comme lues"
+      assigned_to_group:
+        post: "message attribué à %{group_name}"
+        topic: "sujet attribué à %{group_name}"
+      assigned_to_you:
+        post: "message attribué à vous"
+        topic: "sujet attribué à vous"
       assignment_description:
+        post: "%{topic_title} (#%{post_number})"
         topic: "%{topic_title}"
+    admin:
+      web_hooks:
+        assign_event:
+          group_name: "Événements d'attribution"
+          assigned: "Lorsqu'un utilisateur attribue un sujet"
+          unassigned: "Lorsqu'un utilisateur annule l'attribution d'un sujet"
     search:
       advanced:
         in:

@@ -5,13 +5,40 @@
 # https://translate.discourse.org/
 
 cs:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Assign"
   js:
+    filters:
+      unassigned:
+        title: "Nepřiděleno"
+        help: "Témata, která nejsou přidělena"
     action_codes:
       assigned: "Zadáno %{who} %{when}"
       assigned_group: "Zadáno %{who} %{when}"
+      assigned_to_post: "Uživateli %{who} přidělen <a href='%{path}'>příspěvek</a> %{when}"
+      assigned_group_to_post: "Skupině %{who} přidělen <a href='%{path}'>příspěvek</a> %{when}"
+      unassigned: "%{who} zrušeno přidělení %{when}"
+      unassigned_group: "%{who} zrušeno přidělení %{when}"
+      unassigned_from_post: "Uživateli %{who} zrušeno přidělení <a href='%{path}'>příspěvku</a> %{when}"
+      unassigned_group_from_post: "Skupině %{who} zrušeno přidělení <a href='%{path}'>příspěvku</a> %{when}"
+      reassigned: "Uživateli %{who} znovu přiděleno %{when}"
+      reassigned_group: "Skupině %{who} znovu přiděleno %{when}"
+      details_change: "Změněny podrobnosti přidělení pro %{who} %{when}"
+      note_change: "Změněna poznámka přidělení pro %{who} %{when}"
+      status_change: "Změněn stav přidělení pro %{who} %{when}"
     discourse_assign:
+      add_unassigned_filter: "Přidat do kategorie filtr \"Nepřiděleno\""
+      cant_act: "Nemůžete reagovat na nahlášení, která byla přiřazena jiným uživatelům"
+      cant_act_unclaimed: "Než začnete reagovat na nahlášení, musíte si toto téma nárokovat."
+      topic_search_placeholder: "Hledat témata podle názvu nebo obsahu příspěvku"
+      sidebar_name_filter_placeholder: "Jméno/Uživatelské jméno"
       assigned: "Zadáno"
       group_everyone: "Všichni"
+      assigned_to: "Přiděleno"
+      assigned_topic_to: "Téma přiděleno <a href='%{path}'>%{username}</a>"
       unassign:
         title: "Odebrat zadání"
         title_w_ellipsis: "Odebrat zadání..."
