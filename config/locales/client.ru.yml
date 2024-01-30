@@ -9,7 +9,7 @@ ru:
     admin:
       site_settings:
         categories:
-          discourse_assign: "Discourse для Assign"
+          discourse_assign: "Плагин Discourse «Назначение»"
   js:
     filters:
       unassigned:
