@@ -9,7 +9,7 @@ zh_CN:
     admin:
       site_settings:
         categories:
-          discourse_assign: "Discourse 分配"
+          discourse_assign: "Discourse Assign"
   js:
     filters:
       unassigned:
