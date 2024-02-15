@@ -1,8 +1,8 @@
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { visit } from "@ember/test-helpers";
+import { test } from "qunit";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import AssignedTopics from "../fixtures/assigned-group-assignments-fixtures";
 import GroupMembers from "../fixtures/group-members-fixtures";
-import { test } from "qunit";
 
 acceptance("Discourse Assign | GroupAssignments", function (needs) {
   needs.user();

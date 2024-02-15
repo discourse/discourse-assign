@@ -1,13 +1,13 @@
-import I18n from "I18n";
+import { currentURL, visit } from "@ember/test-helpers";
+import { test } from "qunit";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { currentURL, visit } from "@ember/test-helpers";
-import AssignedTopics from "../fixtures/assigned-topics-fixtures";
-import { cloneJSON } from "discourse-common/lib/object";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { test } from "qunit";
+import { cloneJSON } from "discourse-common/lib/object";
+import I18n from "I18n";
+import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 
 acceptance("Discourse Assign | User Private Messages", function (needs) {
   needs.user({

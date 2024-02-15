@@ -66,12 +66,8 @@
   margin-left: 5px;
 }
 
-.modal.assign {
-  .modal-inner-container {
-    width: 400px;
-  }
-
-  .modal-body {
+.d-modal.assign {
+  .d-modal__body {
     overflow-y: unset;
   }
 

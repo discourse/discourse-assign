@@ -31,8 +31,6 @@ ur:
       group_everyone: "ہر کوئی"
       assigned_to: "جس کو اسائین کیا گیا"
       assigned_to_w_ellipsis: "کو تفویض..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "غیر اسائین کریں"
         title_w_ellipsis: "غیر تفویض کریں..."
@@ -87,11 +85,8 @@ ur:
       no_assignments_title: "آپ کے پاس ابھی تک کوئی اسائنمنٹ نہیں ہے"
       no_assignments_body: >
         آپ کے تفویض کردہ عنوانات اور پیغامات یہاں درج ہوں گے۔ آپ کو اپنے اسائنمنٹس کی وقفے وقفہ سے یاد دہانی کا نوٹیفکیشن بھی ملے گا ، جسے آپ اپنی <a href='%{preferencesUrl}'>صارف ترجیحات</a>میں ایڈجسٹ کرسکتے ہیں۔ <br><br> اپنے آپ کو یا کسی اور کو موضوع یا پیغام تفویض کرنے کے لئے ، %{icon} تفویض والے بٹن کو تلاش کریں۔
-    admin:
-      web_hooks:
-        assign_event:
-          name: "واقعہ تفویض کریں"
-          details: "جب کوئی صارف کسی موضوع کو تفویض یا غیر متعین کرتا ہے۔"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:

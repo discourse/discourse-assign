@@ -36,8 +36,6 @@ pt:
       assigned_topic_to: "Tópico atribuído a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Atribuiu #%{post_number} a %{username}"
       assigned_to_w_ellipsis: "Atribuído(a) a..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Cancelar atribuição"
         title_w_ellipsis: "Cancelar atribuição..."
@@ -99,13 +97,8 @@ pt:
       no_assignments_body: >
         Seus tópicos e mensagens atribuídos serão listados aqui. Você receberá uma notificação periódica com um lembrete das suas atribuições, que pode ser ajustada nas suas <a href='%{preferencesUrl}'>preferências do(a) usuário(a)</a>. <br><br> Para atribuir um tópico ou mensagem a si ou a outra pessoa, procure o botão de atribuir %{icon} na parte inferior.
       dismiss_assigned_tooltip: "Marcar como lidas todas as notificações não atribuídas não lidas"
-      assigned_to_group: "atribuiu a %{group_name}"
-      assigned_to_you: "atribuiu a você"
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Atribuir evento"
-          details: "Quando um(a) usuário(a) atribui ou cancela atribuição de um tópico."
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         in:

@@ -379,7 +379,7 @@ RSpec.describe DiscourseAssign::AssignController do
 
         it "doesn't include members with no assignments" do
           sign_in(admin)
-          allowed_group.add(non_admin_staff)
+          allowed_group.users << non_admin_staff
 
           get "/assign/members/#{allowed_group.name}.json"
           expect(response.status).to eq(200)
@@ -456,140 +456,6 @@ RSpec.describe DiscourseAssign::AssignController do
 
       get "/assign/members/#{allowed_group.name}.json"
       expect(response.status).to eq(200)
-    end
-  end
-
-  describe "#user_menu_assigns" do
-    fab!(:non_member_admin) { Fabricate(:admin) }
-
-    fab!(:unread_assigned_topic) { Fabricate(:post).topic }
-    fab!(:read_assigned_topic) { Fabricate(:post).topic }
-
-    fab!(:unread_assigned_post) { Fabricate(:post, topic: Fabricate(:post).topic) }
-    fab!(:read_assigned_post) { Fabricate(:post, topic: Fabricate(:post).topic) }
-
-    fab!(:read_assigned_post_in_same_topic) { Fabricate(:post, topic: Fabricate(:post).topic) }
-    fab!(:unread_assigned_post_in_same_topic) do
-      Fabricate(:post, topic: read_assigned_post_in_same_topic.topic)
-    end
-
-    fab!(:another_user_unread_assigned_topic) { Fabricate(:post).topic }
-    fab!(:another_user_read_assigned_topic) { Fabricate(:post).topic }
-
-    before do
-      Jobs.run_immediately!
-
-      [
-        unread_assigned_topic,
-        read_assigned_topic,
-        unread_assigned_post,
-        read_assigned_post,
-        unread_assigned_post_in_same_topic,
-        read_assigned_post_in_same_topic,
-      ].each { |target| Assigner.new(target, non_member_admin).assign(admin) }
-
-      Notification
-        .where(
-          notification_type: Notification.types[:assigned],
-          read: false,
-          user_id: admin.id,
-          topic_id: [
-            read_assigned_topic.id,
-            read_assigned_post.topic.id,
-            read_assigned_post_in_same_topic.topic.id,
-          ],
-        )
-        .where.not(
-          topic_id: read_assigned_post_in_same_topic.topic.id,
-          post_number: unread_assigned_post_in_same_topic.post_number,
-        )
-        .update_all(read: true)
-
-      Assigner.new(another_user_read_assigned_topic, non_member_admin).assign(allowed_user)
-      Assigner.new(another_user_unread_assigned_topic, non_member_admin).assign(allowed_user)
-      Notification.where(
-        notification_type: Notification.types[:assigned],
-        read: false,
-        user_id: allowed_user.id,
-        topic_id: another_user_read_assigned_topic,
-      ).update_all(read: true)
-    end
-
-    context "when logged out" do
-      it "responds with 403" do
-        get "/assign/user-menu-assigns.json"
-        expect(response.status).to eq(403)
-      end
-    end
-
-    context "when logged in" do
-      before { sign_in(admin) }
-
-      it "responds with 403 if the current user can't assign" do
-        admin.update!(admin: false)
-        admin.group_users.where(group_id: staff_group.id).destroy_all
-        get "/assign/user-menu-assigns.json"
-        expect(response.status).to eq(403)
-      end
-
-      it "responds with 404 if the assign_enabled setting is disabled" do
-        SiteSetting.assign_enabled = false
-        get "/assign/user-menu-assigns.json"
-        expect(response.status).to eq(404)
-      end
-
-      it "sends an array of unread assigned notifications" do
-        get "/assign/user-menu-assigns.json"
-        expect(response.status).to eq(200)
-
-        notifications = response.parsed_body["notifications"]
-        expect(notifications.map { |n| [n["topic_id"], n["post_number"]] }).to match_array(
-          [
-            [unread_assigned_topic.id, 1],
-            [unread_assigned_post.topic.id, unread_assigned_post.post_number],
-            [
-              unread_assigned_post_in_same_topic.topic.id,
-              unread_assigned_post_in_same_topic.post_number,
-            ],
-          ],
-        )
-      end
-
-      it "responds with an array of assigned topics that are not associated with any of the unread assigned notifications" do
-        get "/assign/user-menu-assigns.json"
-        expect(response.status).to eq(200)
-
-        topics = response.parsed_body["topics"]
-        expect(topics.map { |t| t["id"] }).to eq(
-          [
-            read_assigned_post_in_same_topic.topic.id,
-            read_assigned_post.topic.id,
-            read_assigned_topic.id,
-          ],
-        )
-      end
-
-      it "fills up the remaining of the UsersController::USER_MENU_LIST_LIMIT limit with assigned topics" do
-        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 3) do
-          get "/assign/user-menu-assigns.json"
-        end
-        expect(response.status).to eq(200)
-
-        notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(3)
-        topics = response.parsed_body["topics"]
-        expect(topics.size).to eq(0)
-
-        stub_const(UsersController, "USER_MENU_LIST_LIMIT", 4) do
-          get "/assign/user-menu-assigns.json"
-        end
-        expect(response.status).to eq(200)
-
-        notifications = response.parsed_body["notifications"]
-        expect(notifications.size).to eq(3)
-        topics = response.parsed_body["topics"]
-        expect(topics.size).to eq(1)
-      end
     end
   end
 end

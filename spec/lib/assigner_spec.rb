@@ -39,7 +39,7 @@ RSpec.describe Assigner do
       expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([])
 
       expect(TopicUser.find_by(user: moderator).notification_level).to eq(
-        TopicUser.notification_levels[:tracking],
+        TopicUser.notification_levels[:watching],
       )
     end
 
@@ -122,23 +122,17 @@ RSpec.describe Assigner do
       }
     end
 
-    it "does not update notification level if it is not set by the plugin" do
+    it "does not update notification level when unassigned" do
       assigner.assign(moderator)
 
       expect(TopicUser.find_by(user: moderator).notification_level).to eq(
         TopicUser.notification_levels[:watching],
       )
 
-      TopicUser.change(
-        moderator.id,
-        topic.id,
-        notification_level: TopicUser.notification_levels[:muted],
-      )
-
       assigner.unassign
 
       expect(TopicUser.find_by(user: moderator, topic: topic).notification_level).to eq(
-        TopicUser.notification_levels[:muted],
+        TopicUser.notification_levels[:watching],
       )
     end
 
@@ -270,33 +264,47 @@ RSpec.describe Assigner do
         expect(second_assign[:success]).to eq(true)
       end
 
-      it "fails to assign when the assigned user and note is the same" do
-        assigner = described_class.new(topic, moderator_2)
-        assigner.assign(moderator, note: "note me down")
+      context "when 'allow_self_reassign' is false" do
+        subject(:assign) do
+          assigner.assign(moderator, note: other_note, allow_self_reassign: self_reassign)
+        end
 
-        assign = assigner.assign(moderator, note: "note me down")
+        let(:self_reassign) { false }
+        let(:assigner) { described_class.new(topic, moderator_2) }
+        let(:note) { "note me down" }
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:already_assigned)
+        before { assigner.assign(moderator, note: note) }
+
+        context "when the assigned user and the note is the same" do
+          let(:other_note) { note }
+
+          it "fails to assign" do
+            expect(assign).to match(success: false, reason: :already_assigned)
+          end
+        end
+
+        context "when the assigned user is the same but the note is different" do
+          let(:other_note) { "note me down again" }
+
+          it "allows assignment" do
+            expect(assign).to match(success: true)
+          end
+        end
       end
 
-      it "fails to assign when the assigned user and note is the same" do
-        assigner = described_class.new(post, moderator_2)
-        assigner.assign(moderator, note: "note me down")
+      context "when 'allow_self_reassign' is true" do
+        subject(:assign) { assigner.assign(moderator, allow_self_reassign: self_reassign) }
 
-        assign = assigner.assign(moderator, note: "note me down")
+        let(:self_reassign) { true }
+        let(:assigner) { described_class.new(topic, moderator_2) }
 
-        expect(assign[:success]).to eq(false)
-        expect(assign[:reason]).to eq(:already_assigned)
-      end
+        context "when the assigned user is the same" do
+          before { assigner.assign(moderator) }
 
-      it "allows assign when the assigned user is same but note is different" do
-        assigner = described_class.new(topic, moderator_2)
-        assigner.assign(moderator, note: "note me down")
-
-        assign = assigner.assign(moderator, note: "note me down again")
-
-        expect(assign[:success]).to eq(true)
+          it "allows assignment" do
+            expect(assign).to match(success: true)
+          end
+        end
       end
 
       it "fails to assign when the assigned user cannot view the pm" do
@@ -765,7 +773,7 @@ RSpec.describe Assigner do
       assigner.assign(group2)
       assigner.assign(group3)
 
-      expect(topic.allowed_groups).to eq([group1, group2])
+      expect(topic.allowed_groups).to match_array([group1, group2])
     end
 
     it "doesn't invite group to the PM if it's not messageable" do

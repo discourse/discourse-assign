@@ -1,4 +1,7 @@
+import { htmlSafe } from "@ember/template";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { emojiUnescape } from "discourse/lib/text";
+import I18n from "I18n";
 import UserMenuAssignNotificationsList from "../components/user-menu/assigns-list";
 
 export default {
@@ -6,16 +9,74 @@ export default {
 
   initialize(container) {
     withPluginApi("1.2.0", (api) => {
-      if (api.registerUserMenuTab) {
-        const siteSettings = container.lookup("service:site-settings");
-        if (!siteSettings.assign_enabled) {
-          return;
-        }
+      const siteSettings = container.lookup("service:site-settings");
+      if (!siteSettings.assign_enabled) {
+        return;
+      }
 
-        const currentUser = api.getCurrentUser();
-        if (!currentUser?.can_assign) {
-          return;
-        }
+      const currentUser = api.getCurrentUser();
+      if (!currentUser?.can_assign) {
+        return;
+      }
+
+      if (api.registerNotificationTypeRenderer) {
+        api.registerNotificationTypeRenderer(
+          "assigned",
+          (NotificationItemBase) => {
+            return class extends NotificationItemBase {
+              get linkTitle() {
+                if (this.isGroup()) {
+                  return I18n.t(
+                    `user.assigned_to_group.${this.postOrTopic()}`,
+                    {
+                      group_name: this.notification.data.display_username,
+                    }
+                  );
+                }
+                return I18n.t(`user.assigned_to_you.${this.postOrTopic()}`);
+              }
+
+              get icon() {
+                return this.isGroup() ? "group-plus" : "user-plus";
+              }
+
+              get label() {
+                if (!this.isGroup()) {
+                  return "";
+                }
+                return this.notification.data.display_username;
+              }
+
+              get description() {
+                return htmlSafe(
+                  emojiUnescape(
+                    I18n.t(
+                      `user.assignment_description.${this.postOrTopic()}`,
+                      {
+                        topic_title: this.notification.fancy_title,
+                        post_number: this.notification.post_number,
+                      }
+                    )
+                  )
+                );
+              }
+
+              isGroup() {
+                return (
+                  this.notification.data.message ===
+                  "discourse_assign.assign_group_notification"
+                );
+              }
+
+              postOrTopic() {
+                return this.notification.post_number === 1 ? "topic" : "post";
+              }
+            };
+          }
+        );
+      }
+
+      if (api.registerUserMenuTab) {
         api.registerUserMenuTab((UserMenuTab) => {
           return class extends UserMenuTab {
             id = "assign-list";

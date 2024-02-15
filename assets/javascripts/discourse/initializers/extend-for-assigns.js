@@ -1,17 +1,17 @@
+import { getOwner } from "@ember/application";
+import { htmlSafe } from "@ember/template";
+import { isEmpty } from "@ember/utils";
+import { h } from "virtual-dom";
+import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import discourseComputed from "discourse-common/utils/decorators";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import { escapeExpression } from "discourse/lib/utilities";
-import { h } from "virtual-dom";
-import { getOwner } from "discourse-common/lib/get-owner";
-import { htmlSafe } from "@ember/template";
-import getURL from "discourse-common/lib/get-url";
-import SearchAdvancedOptions from "discourse/components/search-advanced-options";
-import I18n from "I18n";
-import { isEmpty } from "@ember/utils";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
+import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
+import getURL from "discourse-common/lib/get-url";
+import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
+import discourseComputed from "discourse-common/utils/decorators";
+import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
 
 const PLUGIN_ID = "discourse-assign";
@@ -409,7 +409,7 @@ function registerTopicFooterButtons(api) {
 }
 
 function initialize(api) {
-  const siteSettings = api.container.lookup("site-settings:main");
+  const siteSettings = api.container.lookup("service:site-settings");
   const currentUser = api.getCurrentUser();
 
   if (siteSettings.assigns_public || currentUser?.can_assign) {
@@ -616,7 +616,6 @@ function initialize(api) {
         topicAssignee,
         assignedToIndirectly.map((assigned) => ({
           assignee: assigned.assigned_to,
-          status: assigned.assignment_status,
           note: assigned.assignment_note,
         }))
       )
@@ -879,12 +878,12 @@ export default {
   name: "extend-for-assign",
 
   initialize(container) {
-    const siteSettings = container.lookup("site-settings:main");
+    const siteSettings = container.lookup("service:site-settings");
     if (!siteSettings.assign_enabled) {
       return;
     }
 
-    const currentUser = container.lookup("current-user:main");
+    const currentUser = container.lookup("service:current-user");
     if (currentUser?.can_assign) {
       SearchAdvancedOptions.reopen({
         updateSearchTermForAssignedUsername() {
@@ -928,57 +927,23 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      if (api.addBulkActionButton) {
-        api.addBulkActionButton({
-          label: "topics.bulk.assign",
-          icon: "user-plus",
-          class: "btn-default assign-topics",
-          action({ setComponent }) {
-            setComponent(BulkAssign);
-          },
-        });
+      api.addBulkActionButton({
+        label: "topics.bulk.assign",
+        icon: "user-plus",
+        class: "btn-default assign-topics",
+        action({ setComponent }) {
+          setComponent(BulkAssign);
+        },
+      });
 
-        api.addBulkActionButton({
-          label: "topics.bulk.unassign",
-          icon: "user-times",
-          class: "btn-default unassign-topics",
-          action({ performAndRefresh }) {
-            performAndRefresh({ type: "unassign" });
-          },
-        });
-      } else {
-        // TODO: Remove this path after core 3.1.0.beta7 is released
-        const {
-          default: TopicButtonAction,
-          addBulkButton,
-        } = require("discourse/controllers/topic-bulk-actions");
-
-        TopicButtonAction.reopen({
-          actions: {
-            showReAssign() {
-              const controller = getOwner(this).lookup(
-                "controller:bulk-assign"
-              );
-              controller.set("model", { username: "", note: "" });
-              this.send("changeBulkTemplate", "modal/bulk-assign");
-            },
-
-            unassignTopics() {
-              this.performAndRefresh({ type: "unassign" });
-            },
-          },
-        });
-
-        addBulkButton("showReAssign", "assign", {
-          icon: "user-plus",
-          class: "btn-default assign-topics",
-        });
-
-        addBulkButton("unassignTopics", "unassign", {
-          icon: "user-times",
-          class: "btn-default unassign-topics",
-        });
-      }
+      api.addBulkActionButton({
+        label: "topics.bulk.unassign",
+        icon: "user-times",
+        class: "btn-default unassign-topics",
+        action({ performAndRefresh }) {
+          performAndRefresh({ type: "unassign" });
+        },
+      });
     });
   },
 };

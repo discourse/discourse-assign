@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Discourse Assign"
   js:
     filters:
       unassigned:
@@ -32,8 +37,6 @@ en:
       # assign_post_to_multiple used in list form, example: "Assigned topic to username0, [#2 to username1], [#10 to username2]"
       assign_post_to_multiple: "#%{post_number} to %{username}"
       assigned_to_w_ellipsis: "Assigned to..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Unassign"
         title_w_ellipsis: "Unassign..."
@@ -97,13 +100,21 @@ en:
         <br><br>
         To assign a topic or message to yourself or to someone else, look for the %{icon} assign button at the bottom.
       dismiss_assigned_tooltip: "Mark all unread assign notifications as read"
-      assigned_to_group: "assigned to %{group_name}"
-      assigned_to_you: "assigned to you"
+      assigned_to_group:
+        post: "post assigned to %{group_name}"
+        topic: "topic assigned to %{group_name}"
+      assigned_to_you:
+        post: "post assigned to you"
+        topic: "topic assigned to you"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
     admin:
       web_hooks:
         assign_event:
-          name: "Assign Event"
-          details: "When a user assigns or unassigns a topic."
+          group_name: "Assign Events"
+          assigned: "When an user assigns a topic"
+          unassigned: "When an user unassigns a topic"
     search:
       advanced:
         in:

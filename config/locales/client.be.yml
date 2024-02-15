@@ -23,6 +23,8 @@ be:
     user:
       messages:
         assigned: "прызначаны"
+      assignment_description:
+        topic: "%{topic_title}"
     notifications:
       titles:
         assigned: "прызначаны"

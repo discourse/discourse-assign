@@ -1,8 +1,10 @@
-import DiscourseRoute from "discourse/routes/discourse";
+import { inject as service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { action } from "@ember/object";
+import DiscourseRoute from "discourse/routes/discourse";
 
 export default class GroupAssigned extends DiscourseRoute {
+  @service router;
+
   model() {
     return ajax(`/assign/members/${this.modelFor("group").name}`);
   }
@@ -22,15 +24,8 @@ export default class GroupAssigned extends DiscourseRoute {
   }
 
   redirect(model, transition) {
-    if (transition.to.params.hasOwnProperty("filter")) {
-      this.transitionTo("group.assigned.show", transition.to.params.filter);
-    } else {
-      this.transitionTo("group.assigned.show", "everyone");
+    if (!transition.to.params.hasOwnProperty("filter")) {
+      this.router.transitionTo("group.assigned.show", "everyone");
     }
-  }
-
-  @action
-  changeAssigned() {
-    this.refresh();
   }
 }

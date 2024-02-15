@@ -22,19 +22,11 @@ RSpec.describe Jobs::UnassignNotification do
     end
 
     describe "User" do
-      it "deletes notifications" do
-        Jobs::AssignNotification.new.execute(
-          {
-            topic_id: topic.id,
-            post_id: post.id,
-            assigned_to_id: user2.id,
-            assigned_to_type: "User",
-            assigned_by_id: user1.id,
-            skip_small_action_post: false,
-            assignment_id: 4519,
-          },
-        )
+      fab!(:assignment) { Fabricate(:topic_assignment, topic: topic, assigned_to: user2) }
 
+      before { assignment.create_missing_notifications! }
+
+      it "deletes notifications" do
         expect {
           described_class.new.execute(
             {
@@ -42,6 +34,7 @@ RSpec.describe Jobs::UnassignNotification do
               post_id: post.id,
               assigned_to_id: user2.id,
               assigned_to_type: "User",
+              assignment_id: assignment.id,
             },
           )
         }.to change { user2.notifications.count }.by(-1)
@@ -58,6 +51,7 @@ RSpec.describe Jobs::UnassignNotification do
               post_id: pm_post.id,
               assigned_to_id: pm.allowed_users.first.id,
               assigned_to_type: "User",
+              assignment_id: 4519,
             },
           )
         end
@@ -68,25 +62,17 @@ RSpec.describe Jobs::UnassignNotification do
       fab!(:assign_allowed_group) { Group.find_by(name: "staff") }
       fab!(:user3) { Fabricate(:user) }
       fab!(:group) { Fabricate(:group) }
+      fab!(:assignment) do
+        Fabricate(:topic_assignment, topic: topic, assigned_to: group, assigned_by_user: user1)
+      end
 
       before do
         group.add(user2)
         group.add(user3)
+        assignment.create_missing_notifications!
       end
 
       it "deletes notifications" do
-        Jobs::AssignNotification.new.execute(
-          {
-            topic_id: topic.id,
-            post_id: post.id,
-            assigned_to_id: group.id,
-            assigned_to_type: "Group",
-            assigned_by_id: user1.id,
-            skip_small_action_post: false,
-            assignment_id: 9281,
-          },
-        )
-
         expect {
           described_class.new.execute(
             {
@@ -94,6 +80,7 @@ RSpec.describe Jobs::UnassignNotification do
               post_id: post.id,
               assigned_to_id: group.id,
               assigned_to_type: "Group",
+              assignment_id: assignment.id,
             },
           )
         }.to change { Notification.count }.by(-2)

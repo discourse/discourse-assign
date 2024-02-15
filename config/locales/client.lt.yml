@@ -31,6 +31,8 @@ lt:
     user:
       messages:
         assigned: "Priskirta"
+      assignment_description:
+        topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:

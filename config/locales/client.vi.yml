@@ -29,6 +29,8 @@ vi:
     user:
       messages:
         assigned: "Được chỉ định"
+      assignment_description:
+        topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
       titles:

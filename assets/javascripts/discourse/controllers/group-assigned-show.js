@@ -1,13 +1,14 @@
-import UserTopicsList from "discourse/controllers/user-topics-list";
-import { alias } from "@ember/object/computed";
-import discourseDebounce from "discourse-common/lib/debounce";
-import { INPUT_DELAY } from "discourse-common/config/environment";
 import { inject as controller } from "@ember/controller";
-import { inject as service } from "@ember/service";
 import { action } from "@ember/object";
+import { alias } from "@ember/object/computed";
+import { inject as service } from "@ember/service";
+import UserTopicsList from "discourse/controllers/user-topics-list";
+import { INPUT_DELAY } from "discourse-common/config/environment";
+import discourseDebounce from "discourse-common/lib/debounce";
 
 export default class GroupAssignedShow extends UserTopicsList {
   @service taskActions;
+  @service router;
   @controller user;
 
   queryParams = ["order", "ascending", "search"];
@@ -45,13 +46,13 @@ export default class GroupAssignedShow extends UserTopicsList {
   @action
   async unassign(targetId, targetType = "Topic") {
     await this.taskActions.unassign(targetId, targetType);
-    this.send("changeAssigned");
+    this.router.refresh();
   }
 
   @action
   reassign(topic) {
     this.taskActions.showAssignModal(topic, {
-      onSuccess: () => this.send("changeAssigned"),
+      onSuccess: () => this.router.refresh(),
     });
   }
 

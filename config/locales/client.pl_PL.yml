@@ -36,8 +36,6 @@ pl_PL:
       assigned_topic_to: "Przypisano temat do <a href='%{path}'>%{username}</a>"
       assign_post_to: "Przypisano #%{post_number} do %{username}"
       assigned_to_w_ellipsis: "Przypisano do..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Cofnij przypisanie"
         title_w_ellipsis: "Cofnij przypisanie..."
@@ -98,13 +96,19 @@ pl_PL:
       no_assignments_body: >
         Tutaj zostaną wyświetlone Twoje przypisane tematy i wiadomości. Będziesz również otrzymywać okresowe przypomnienie o swoich przypisach, które możesz dostosować w swoich <a href='%{preferencesUrl}'>preferencjach użytkownika</a>. <br><br> Aby przypisać temat lub wiadomość do siebie lub innej osoby, poszukaj przycisku %{icon} przypisywania na dole.
       dismiss_assigned_tooltip: "Oznacz wszystkie nieprzeczytane powiadomienia o przypisaniu jako przeczytane"
-      assigned_to_group: "przypisany do %{group_name}"
-      assigned_to_you: "przypisany do Ciebie"
+      assigned_to_group:
+        post: "post przypisany do %{group_name}"
+        topic: "temat przypisany do %{group_name}"
+      assigned_to_you:
+        post: "post przypisany do Ciebie"
+        topic: "temat przypisany do Ciebie"
+      assignment_description:
+        topic: "%{topic_title}"
     admin:
       web_hooks:
         assign_event:
-          name: "Przypisz wydarzenie"
-          details: "Gdy użytkownik przypisuje lub cofa przypisanie tematu."
+          assigned: "Gdy użytkownik przypisze temat"
+          unassigned: "Gdy użytkownik anuluje przypisanie tematu"
     search:
       advanced:
         in:
@@ -147,5 +151,6 @@ pl_PL:
       titles:
         assigned: "Przypisany"
     user_menu:
+      view_all_assigned: "wyświetl wszystkie przypisania"
       tabs:
         assign_list: "Lista przypisań"

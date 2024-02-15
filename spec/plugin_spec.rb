@@ -2,38 +2,57 @@
 
 require "rails_helper"
 
-describe DiscourseAssign do
+RSpec.describe DiscourseAssign do
   before { SiteSetting.assign_enabled = true }
 
-  describe "events" do
-    describe "on user_removed_from_group" do
+  describe "Events" do
+    describe "on 'user_removed_from_group'" do
+      let(:group) { Fabricate(:group) }
+      let(:user) { Fabricate(:user) }
+      let(:first_assignment) { Fabricate(:topic_assignment, assigned_to: group) }
+      let(:second_assignment) { Fabricate(:post_assignment, assigned_to: group) }
+
       before do
-        @topic = Fabricate(:post).topic
-        @user = Fabricate(:user)
-        @group_a = Fabricate(:group)
-        @group_a.add(@user)
+        group.users << user
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:assigned],
+          user: user,
+          data: { assignment_id: first_assignment.id }.to_json,
+        )
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:assigned],
+          user: user,
+          data: { assignment_id: second_assignment.id }.to_json,
+        )
       end
 
-      it "unassigns the user" do
-        SiteSetting.assign_allowed_on_groups = @group_a.id.to_s
-
-        Assigner.new(@topic, Discourse.system_user).assign(@user)
-        @group_a.remove(@user)
-
-        expect(Assignment.count).to eq(0)
+      it "removes user's notifications related to group assignments" do
+        expect { group.remove(user) }.to change { user.notifications.assigned.count }.by(-2)
       end
+    end
 
-      it "doesn't unassign the user if it still has access through another group" do
-        @group_b = Fabricate(:group)
-        @group_b.add(@user)
-        SiteSetting.assign_allowed_on_groups = [@group_a.id.to_s, @group_b.id.to_s].join("|")
+    describe "on 'user_added_to_group'" do
+      let(:group) { Fabricate(:group) }
+      let(:user) { Fabricate(:user) }
+      let!(:first_assignment) { Fabricate(:topic_assignment, assigned_to: group) }
+      let!(:second_assignment) { Fabricate(:post_assignment, assigned_to: group) }
+      let!(:third_assignment) { Fabricate(:topic_assignment, assigned_to: group, active: false) }
 
-        Assigner.new(@topic, Discourse.system_user).assign(@user)
-        @group_a.remove(@user)
-
-        assignment = Assignment.first
-        expect(assignment.assigned_to_id).to eq(@user.id)
-        expect(assignment.assigned_by_user_id).to eq(Discourse::SYSTEM_USER_ID)
+      it "creates missing notifications for added user" do
+        group.add(user)
+        [first_assignment, second_assignment].each do |assignment|
+          expect_job_enqueued(job: Jobs::AssignNotification, args: { assignment_id: assignment.id })
+        end
+        expect(
+          job_enqueued?(
+            job: Jobs::AssignNotification,
+            args: {
+              assignment_id: third_assignment.id,
+            },
+          ),
+        ).to eq(false)
       end
     end
   end

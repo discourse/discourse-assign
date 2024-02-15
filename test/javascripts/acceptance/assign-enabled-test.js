@@ -1,16 +1,16 @@
-import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
-import userFixtures from "discourse/tests/fixtures/user-fixtures";
-import {
-  acceptance,
-  updateCurrentUser,
-} from "discourse/tests/helpers/qunit-helpers";
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import pretender, {
   parsePostData,
   response,
 } from "discourse/tests/helpers/create-pretender";
+import {
+  acceptance,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { cloneJSON } from "discourse-common/lib/object";
 
 acceptance("Discourse Assign | Assign mobile", function (needs) {
   needs.user();
@@ -44,7 +44,7 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
 
     assert.true(menu.rowByValue("assign").exists());
     await menu.selectRowByValue("assign");
-    assert.dom(".assign.modal").exists("assign modal opens");
+    assert.dom(".assign.d-modal").exists("assign modal opens");
   });
 });
 
@@ -86,12 +86,12 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
       .exists("assign to post button exists");
 
     await click("#post_2 .extra-buttons .d-icon-user-plus");
-    assert.dom(".assign.modal").exists("assign modal opens");
+    assert.dom(".assign.d-modal").exists("assign modal opens");
 
-    const menu = selectKit(".assign.modal .user-chooser");
+    const menu = selectKit(".assign.d-modal .user-chooser");
     assert.true(menu.isExpanded(), "user selector is expanded");
 
-    await click(".assign.modal .btn-primary");
+    await click(".assign.d-modal .btn-primary");
     assert.dom(".error-label").includesText("Choose a user to assign");
 
     await menu.expand();
@@ -108,16 +108,16 @@ acceptance("Discourse Assign | Assign desktop", function (needs) {
     });
 
     await fillIn("#assign-modal-note", "a note!");
-    await click(".assign.modal .btn-primary");
+    await click(".assign.d-modal .btn-primary");
 
-    assert.dom(".assign.modal").doesNotExist("assign modal closes");
+    assert.dom(".assign.d-modal").doesNotExist("assign modal closes");
   });
 
   test("Footer dropdown contains button", async function (assert) {
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
-    assert.dom(".assign.modal").exists("assign modal opens");
+    assert.dom(".assign.d-modal").exists("assign modal opens");
   });
 });
 
@@ -151,12 +151,35 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
   });
 
   test("Modal contains status dropdown", async function (assert) {
+    pretender.put("/assign/assign", ({ requestBody }) => {
+      const body = parsePostData(requestBody);
+      assert.strictEqual(body.target_type, "Topic");
+      assert.strictEqual(body.target_id, "280");
+      assert.strictEqual(body.username, "eviltrout");
+      assert.strictEqual(body.status, "In Progress");
+
+      return response({ success: true });
+    });
+
     await visit("/t/internationalization-localization/280");
     await click("#topic-footer-button-assign");
 
     assert
-      .dom(".assign.modal #assign-status")
+      .dom(".assign.d-modal #assign-status")
       .exists("assign status dropdown exists");
+
+    const statusDropdown = selectKit("#assign-status");
+    assert.strictEqual(statusDropdown.header().value(), "New");
+
+    await statusDropdown.expand();
+    await statusDropdown.selectRowByValue("In Progress");
+    assert.strictEqual(statusDropdown.header().value(), "In Progress");
+
+    const menu = selectKit(".assign.d-modal .user-chooser");
+    await menu.expand();
+    await menu.selectRowByIndex(0);
+
+    await click(".assign.d-modal .btn-primary");
   });
 });
 
@@ -190,7 +213,7 @@ acceptance("Discourse Assign | Assign Status disabled", function (needs) {
     await click("#topic-footer-button-assign");
 
     assert
-      .dom(".assign.modal #assign-status")
+      .dom(".assign.d-modal #assign-status")
       .doesNotExist("assign status dropdown doesn't exists");
   });
 });

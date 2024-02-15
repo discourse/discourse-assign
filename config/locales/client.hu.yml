@@ -31,8 +31,6 @@ hu:
       group_everyone: "Mindenki"
       assigned_to: "Kiosztva:"
       assigned_to_w_ellipsis: "Kiosztva…"
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Elvétel"
         title_w_ellipsis: "Elvétel…"
@@ -87,11 +85,8 @@ hu:
       no_assignments_title: "Még nincsenek kiosztott feladatai"
       no_assignments_body: >
         A kiosztott témák és üzenetek itt jelennek meg. Rendszeresen kap egy emlékeztető értesítést is a kiosztott feladatokról, amelyeket a <a href='%{preferencesUrl}'>felhasználói beállításokban</a> módosíthat. <br><br>Téma vagy üzenet saját magának vagy valaki másnak történő kiosztásához keresse a lenti %{icon} kiosztás gombot.
-    admin:
-      web_hooks:
-        assign_event:
-          name: "Esemény kiosztása"
-          details: "Amikor egy felhasználó kioszt vagy elvesz egy témát."
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:

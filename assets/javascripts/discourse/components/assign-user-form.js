@@ -9,8 +9,8 @@ export default class AssignUserForm extends Component {
   @service capabilities;
 
   @tracked assigneeError = false;
-  @tracked assigneeName =
-    this.args.model.username || this.args.model.group_name;
+  @tracked
+  assigneeName = this.args.model.username || this.args.model.group_name;
 
   constructor() {
     super(...arguments);
@@ -26,9 +26,7 @@ export default class AssignUserForm extends Component {
 
   get status() {
     return (
-      this.args.model.status ||
-      this.args.model.target.assignment_status ||
-      this.siteSettings.assign_statuses.split("|")[0]
+      this.args.model.status || this.siteSettings.assign_statuses.split("|")[0]
     );
   }
 

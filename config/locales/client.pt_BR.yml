@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 pt_BR:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Atribuição do Discourse"
   js:
     filters:
       unassigned:
@@ -35,9 +40,8 @@ pt_BR:
       assigned_to: "Atribuiu a"
       assigned_topic_to: "Tópico atribuído a <a href='%{path}'>%{username}</a>"
       assign_post_to: "Atribuiu #%{post_number} a %{username}"
+      assign_post_to_multiple: "#%{post_number} para %{username}"
       assigned_to_w_ellipsis: "Atribuiu a..."
-      assign_notification: "<p><span>%{username}</span> %{description}</p>"
-      assign_group_notification: "<p><span>%{username}</span> %{description}</p>"
       unassign:
         title: "Remover atribuição"
         title_w_ellipsis: "Remover atribuição..."
@@ -99,13 +103,21 @@ pt_BR:
       no_assignments_body: >
         Seus tópicos e mensagens atribuídas serão listados aqui. Você receberá uma notificação periódica de lembrete das suas atribuições, que você pode ajustar em suas <a href='%{preferencesUrl}'>preferências de usuário(a)/a>. <br><br> Para atribuir uma mensagem ou tópico a si ou a outra pessoa, procure o botão de atribuir %{icon} na parte inferior.
       dismiss_assigned_tooltip: "Marcar todas as notificações atribuídas não lidas como lidas"
-      assigned_to_group: "atribuiu a %{group_name}"
-      assigned_to_you: "atribuiu a você"
+      assigned_to_group:
+        post: "postagem atribuída a %{group_name}"
+        topic: "tópico atribuído a %{group_name}"
+      assigned_to_you:
+        post: "postagem atribuída a você"
+        topic: "tópico atribuído a você"
+      assignment_description:
+        post: "%{topic_title} (#%{post_number})"
+        topic: "%{topic_title}"
     admin:
       web_hooks:
         assign_event:
-          name: "Evento Atribuir"
-          details: "Quando usuário(a) atribui ou remove atribuição de um tópico."
+          group_name: "Eventos de atribuição"
+          assigned: "Quando um(a) usuário(a) atribuir um tópico"
+          unassigned: "Quando um(a) usuário(a) cancelar a atribuição de um tópico"
     search:
       advanced:
         in:

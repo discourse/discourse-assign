@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # name: discourse-assign
-# about: Assign users to topics
+# about: Provides the ability to assign topics and individual posts to a user or group.
+# meta_topic_id: 58044
 # version: 1.0.1
 # authors: Sam Saffron
 # url: https://github.com/discourse/discourse-assign
@@ -26,10 +27,12 @@ after_initialize do
   require_relative "app/jobs/regular/unassign_notification"
   require_relative "app/jobs/scheduled/enqueue_reminders"
   require_relative "lib/assigner"
+  require_relative "lib/discourse_assign/create_notification"
   require_relative "lib/discourse_assign/discourse_calendar"
   require_relative "lib/discourse_assign/group_extension"
   require_relative "lib/discourse_assign/helpers"
   require_relative "lib/discourse_assign/list_controller_extension"
+  require_relative "lib/discourse_assign/notification_extension"
   require_relative "lib/discourse_assign/post_extension"
   require_relative "lib/discourse_assign/topic_extension"
   require_relative "lib/discourse_assign/web_hook_extension"
@@ -38,11 +41,12 @@ after_initialize do
   require_relative "lib/topic_assigner"
 
   reloadable_patch do |plugin|
-    Group.class_eval { prepend DiscourseAssign::GroupExtension }
-    ListController.class_eval { prepend DiscourseAssign::ListControllerExtension }
-    Post.class_eval { prepend DiscourseAssign::PostExtension }
-    Topic.class_eval { prepend DiscourseAssign::TopicExtension }
-    WebHook.class_eval { prepend DiscourseAssign::WebHookExtension }
+    Group.prepend(DiscourseAssign::GroupExtension)
+    ListController.prepend(DiscourseAssign::ListControllerExtension)
+    Post.prepend(DiscourseAssign::PostExtension)
+    Topic.prepend(DiscourseAssign::TopicExtension)
+    WebHook.prepend(DiscourseAssign::WebHookExtension)
+    Notification.prepend(DiscourseAssign::NotificationExtension)
   end
 
   register_group_param(:assignable_level)
@@ -52,7 +56,7 @@ after_initialize do
 
   frequency_field = PendingAssignsReminder::REMINDERS_FREQUENCY
   register_editable_user_custom_field frequency_field
-  User.register_custom_field_type frequency_field, :integer
+  register_user_custom_field_type(frequency_field, :integer, max_length: 10)
   DiscoursePluginRegistry.serialized_current_user_fields << frequency_field
   add_to_serializer(:user, :reminders_frequency) { RemindAssignsFrequencySiteSettings.values }
 
@@ -88,13 +92,10 @@ after_initialize do
   end
 
   add_to_class(:user, :can_assign?) do
-    @can_assign ||=
-      begin
-        return true if admin?
-        allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").compact
-        allowed_groups.present? && groups.where(id: allowed_groups).exists? ? :true : :false
-      end
-    @can_assign == :true
+    return @can_assign if defined?(@can_assign)
+
+    allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").compact
+    @can_assign = admin? || (allowed_groups.present? && groups.where(id: allowed_groups).exists?)
   end
 
   add_to_serializer(:current_user, :never_auto_track_topics) do
@@ -167,7 +168,12 @@ after_initialize do
 
   on(:unassign_topic) { |topic, unassigning_user| Assigner.new(topic, unassigning_user).unassign }
 
-  Site.preloaded_category_custom_fields << "enable_unassigned_filter"
+  if respond_to?(:register_preloaded_category_custom_fields)
+    register_preloaded_category_custom_fields("enable_unassigned_filter")
+  else
+    # TODO: Drop the if-statement and this if-branch in Discourse v3.2
+    Site.preloaded_category_custom_fields << "enable_unassigned_filter"
+  end
 
   BookmarkQuery.on_preload do |bookmarks, bookmark_query|
     if SiteSetting.assign_enabled?
@@ -201,7 +207,8 @@ after_initialize do
       allowed_access = SiteSetting.assigns_public || can_assign
 
       if allowed_access && topics.length > 0
-        assignments = Assignment.strict_loading.where(topic: topics, active: true).includes(:target)
+        assignments =
+          Assignment.strict_loading.active.where(topic: topics).includes(:target, :assigned_to)
         assignments_map = assignments.group_by(&:topic_id)
 
         user_ids =
@@ -503,7 +510,7 @@ after_initialize do
     :topic_view,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to.is_a?(User)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.topic.assigned_to, object.topic) }
 
@@ -511,7 +518,7 @@ after_initialize do
     :topic_view,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.topic.assigned_to.is_a?(Group)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_group(object.topic.assigned_to, object.topic) }
 
@@ -551,7 +558,7 @@ after_initialize do
     :suggested_topic,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(User)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
@@ -559,7 +566,7 @@ after_initialize do
     :suggested_topic,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(Group)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object) }
 
@@ -584,7 +591,7 @@ after_initialize do
     :topic_list_item,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(User)
     end,
   ) { BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
@@ -592,7 +599,7 @@ after_initialize do
     :topic_list_item,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(Group)
     end,
   ) { AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
@@ -610,7 +617,7 @@ after_initialize do
     :search_topic_list_item,
     :assigned_to_user,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(User)
     end,
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
@@ -618,7 +625,7 @@ after_initialize do
     :search_topic_list_item,
     :assigned_to_group,
     include_condition: -> do
-      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && object.assigned_to.is_a?(Group)
     end,
   ) { AssignedGroupSerializer.new(object.assigned_to, scope: scope, root: false).as_json }
 
@@ -635,7 +642,11 @@ after_initialize do
     if @user.can_assign?
       assign_user = User.find_by_username(@operation[:username])
       topics.each do |topic|
-        Assigner.new(topic, @user).assign(assign_user, note: @operation[:note])
+        Assigner.new(topic, @user).assign(
+          assign_user,
+          status: @operation[:status],
+          note: @operation[:note],
+        )
       end
     end
   end
@@ -647,6 +658,7 @@ after_initialize do
   end
 
   register_permitted_bulk_action_parameter :username
+  register_permitted_bulk_action_parameter :status
   register_permitted_bulk_action_parameter :note
 
   add_to_class(:user_bookmark_base_serializer, :assigned_to) do
@@ -663,7 +675,7 @@ after_initialize do
     :assigned_to_user,
     include_condition: -> do
       return false if !can_have_assignment?
-      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(User)
+      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to.is_a?(User)
     end,
   ) do
     return if !can_have_assignment?
@@ -675,7 +687,7 @@ after_initialize do
     :assigned_to_group,
     include_condition: -> do
       return false if !can_have_assignment?
-      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to&.is_a?(Group)
+      (SiteSetting.assigns_public || scope.can_assign?) && assigned_to.is_a?(Group)
     end,
   ) do
     return if !can_have_assignment?
@@ -694,7 +706,7 @@ after_initialize do
     :assigned_to_user,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?) &&
-        object.assignment&.assigned_to&.is_a?(User) && object.assignment.active
+        object.assignment&.assigned_to.is_a?(User) && object.assignment.active
     end,
   ) { BasicUserSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json }
 
@@ -703,7 +715,7 @@ after_initialize do
     :assigned_to_group,
     include_condition: -> do
       (SiteSetting.assigns_public || scope.can_assign?) &&
-        object.assignment&.assigned_to&.is_a?(Group) && object.assignment.active
+        object.assignment&.assigned_to.is_a?(Group) && object.assignment.active
     end,
   ) do
     AssignedGroupSerializer.new(object.assignment.assigned_to, scope: scope, root: false).as_json
@@ -733,13 +745,13 @@ after_initialize do
   add_to_serializer(
     :flagged_topic,
     :assigned_to_user,
-    include_condition: -> { object.assigned_to && object.assigned_to&.is_a?(User) },
+    include_condition: -> { object.assigned_to && object.assigned_to.is_a?(User) },
   ) { DiscourseAssign::Helpers.build_assigned_to_user(object.assigned_to, object) }
 
   add_to_serializer(
     :flagged_topic,
     :assigned_to_group,
-    include_condition: -> { object.assigned_to && object.assigned_to&.is_a?(Group) },
+    include_condition: -> { object.assigned_to && object.assigned_to.is_a?(Group) },
   ) { DiscourseAssign::Helpers.build_assigned_to_group(object.assigned_to, object) }
 
   # Reviewable
@@ -836,20 +848,12 @@ after_initialize do
     next if !info[:group]
 
     Assignment
-      .where(topic_id: topic.id, active: false)
+      .inactive
+      .where(topic: topic)
       .find_each do |assignment|
         next unless assignment.target
         assignment.update!(active: true)
-        Jobs.enqueue(
-          :assign_notification,
-          topic_id: topic.id,
-          post_id: assignment.target_type.is_a?(Topic) ? topic.first_post.id : assignment.target.id,
-          assigned_to_id: assignment.assigned_to_id,
-          assigned_to_type: assignment.assigned_to_type,
-          assigned_by_id: assignment.assigned_by_user_id,
-          skip_small_action_post: true,
-          assignment_id: assignment.id,
-        )
+        Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
       end
   end
 
@@ -863,30 +867,28 @@ after_initialize do
     next if !info[:group]
 
     Assignment
-      .where(topic_id: topic.id, active: true)
+      .active
+      .where(topic: topic)
       .find_each do |assignment|
         assignment.update!(active: false)
         Jobs.enqueue(
           :unassign_notification,
           topic_id: topic.id,
-          assigned_to_id: assignment.assigned_to.id,
+          assigned_to_id: assignment.assigned_to_id,
           assigned_to_type: assignment.assigned_to_type,
+          assignment_id: assignment.id,
         )
       end
   end
 
-  on(:user_removed_from_group) do |user, group|
-    assign_allowed_groups = SiteSetting.assign_allowed_on_groups.split("|").map(&:to_i)
-
-    if assign_allowed_groups.include?(group.id)
-      groups = GroupUser.where(user: user).pluck(:group_id)
-
-      if (groups & assign_allowed_groups).empty?
-        topics = Topic.joins(:assignment).where("assignments.assigned_to_id = ?", user.id)
-
-        topics.each { |topic| Assigner.new(topic, Discourse.system_user).unassign }
-      end
+  on(:user_added_to_group) do |user, group, automatic:|
+    group.assignments.active.find_each do |assignment|
+      Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
     end
+  end
+
+  on(:user_removed_from_group) do |user, group|
+    user.notifications.for_assignment(group.assignments.select(:id)).destroy_all
   end
 
   on(:post_moved) do |post, original_topic_id|

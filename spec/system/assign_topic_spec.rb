@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Assign | Assigning topics", type: :system, js: true do
+describe "Assign | Assigning topics", type: :system, capture_log: true do
   let(:topic_page) { PageObjects::Pages::Topic.new }
   let(:assign_modal) { PageObjects::Modals::Assign.new }
   fab!(:staff_user) { Fabricate(:user, groups: [Group[:staff]]) }
@@ -10,6 +10,10 @@ describe "Assign | Assigning topics", type: :system, js: true do
 
   before do
     SiteSetting.assign_enabled = true
+
+    # The system tests in this file are flaky and auth token related so turning this on
+    SiteSetting.verbose_auth_token_logging = true
+
     sign_in(admin)
   end
 
@@ -73,7 +77,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
         expect(page).to have_no_css("#topic .assigned-to")
       end
 
-      xit "can assign the previous assignee" do
+      it "can assign the previous assignee" do
         visit "/t/#{topic.id}"
 
         topic_page.click_assign_topic
@@ -103,7 +107,7 @@ describe "Assign | Assigning topics", type: :system, js: true do
       context "when reassign_on_open is set to true" do
         before { SiteSetting.reassign_on_open = true }
 
-        skip "reassigns the topic on open" do
+        it "reassigns the topic on open" do
           visit "/t/#{topic.id}"
 
           topic_page.click_assign_topic

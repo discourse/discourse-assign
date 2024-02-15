@@ -195,7 +195,7 @@ class ::Assigner
     topic.posts.where(post_number: 1).first
   end
 
-  def forbidden_reasons(assign_to:, type:, note:, status:)
+  def forbidden_reasons(assign_to:, type:, note:, status:, allow_self_reassign:)
     case
     when assign_to.is_a?(User) && !can_assignee_see_target?(assign_to)
       if topic.private_message?
@@ -211,7 +211,7 @@ class ::Assigner
       end
     when !can_be_assigned?(assign_to)
       assign_to.is_a?(User) ? :forbidden_assign_to : :forbidden_group_assign_to
-    when already_assigned?(assign_to, type, note, status)
+    when !allow_self_reassign && already_assigned?(assign_to, type, note, status)
       assign_to.is_a?(User) ? :already_assigned : :group_already_assigned
     when Assignment.where(topic: topic, active: true).count >= ASSIGNMENTS_PER_TOPIC_LIMIT &&
            !reassign?
@@ -223,14 +223,15 @@ class ::Assigner
 
   def update_details(assign_to, note, status, skip_small_action_post: false)
     case
-    when @target.assignment.note != note && @target.assignment.status != status && status.present?
+    when note.present? && status.present? && @target.assignment.note != note &&
+           @target.assignment.status != status
       small_action_text = <<~TEXT
         Status: #{@target.assignment.status} → #{status}
 
         #{note}
       TEXT
       change_type = "details"
-    when @target.assignment.note != note
+    when note.present? && @target.assignment.note != note
       small_action_text = note
       change_type = "note"
     when @target.assignment.status != status
@@ -239,11 +240,8 @@ class ::Assigner
     end
 
     @target.assignment.update!(note: note, status: status)
-
-    queue_notification(assign_to, skip_small_action_post, @target.assignment)
-
-    assignment = @target.assignment
-    publish_assignment(assignment, assign_to, note, status)
+    queue_notification(@target.assignment)
+    publish_assignment(@target.assignment, assign_to, note, status)
 
     # email is skipped, for now
 
@@ -255,7 +253,13 @@ class ::Assigner
     { success: true }
   end
 
-  def assign(assign_to, note: nil, skip_small_action_post: false, status: nil)
+  def assign(
+    assign_to,
+    note: nil,
+    skip_small_action_post: false,
+    status: nil,
+    allow_self_reassign: false
+  )
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
     if topic.private_message? && SiteSetting.invite_on_assign
@@ -263,7 +267,13 @@ class ::Assigner
     end
 
     forbidden_reason =
-      forbidden_reasons(assign_to: assign_to, type: assigned_to_type, note: note, status: status)
+      forbidden_reasons(
+        assign_to: assign_to,
+        type: assigned_to_type,
+        note: note,
+        status: status,
+        allow_self_reassign: allow_self_reassign,
+      )
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
     if no_assignee_change?(assign_to) && details_change?(note, status)
@@ -274,33 +284,31 @@ class ::Assigner
     action_code[:user] = topic.assignment.present? ? "reassigned" : "assigned"
     action_code[:group] = topic.assignment.present? ? "reassigned_group" : "assigned_group"
 
-    skip_small_action_post = skip_small_action_post || no_assignee_change?(assign_to)
+    skip_small_action_post =
+      skip_small_action_post || (!allow_self_reassign && no_assignee_change?(assign_to))
 
-    if topic.assignment.present?
+    if @target.assignment
       Jobs.enqueue(
         :unassign_notification,
         topic_id: topic.id,
-        assigned_to_id: topic.assignment.assigned_to_id,
-        assigned_to_type: topic.assignment.assigned_to_type,
+        assigned_to_id: @target.assignment.assigned_to_id,
+        assigned_to_type: @target.assignment.assigned_to_type,
+        assignment_id: @target.assignment.id,
       )
+      @target.assignment.destroy!
     end
-
-    @target.assignment&.destroy!
 
     assignment =
       @target.create_assignment!(
-        assigned_to_id: assign_to.id,
-        assigned_to_type: assigned_to_type,
-        assigned_by_user_id: @assigned_by.id,
-        topic_id: topic.id,
+        assigned_to: assign_to,
+        assigned_by_user: @assigned_by,
+        topic: topic,
         note: note,
         status: status,
       )
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
-
-    queue_notification(assign_to, skip_small_action_post, assignment)
-
+    queue_notification(assignment)
     publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?
@@ -335,7 +343,7 @@ class ::Assigner
     end
 
     # Create a webhook event
-    if WebHook.active_web_hooks(:assign).exists?
+    if WebHook.active_web_hooks(:assigned).exists?
       assigned_to_type = :assigned
       payload = {
         type: assigned_to_type,
@@ -370,23 +378,8 @@ class ::Assigner
         topic_id: topic.id,
         assigned_to_id: assignment.assigned_to.id,
         assigned_to_type: assignment.assigned_to_type,
+        assignment_id: assignment.id,
       )
-
-      if assignment.assigned_to_user?
-        if TopicUser.exists?(
-             user_id: assignment.assigned_to_id,
-             topic: topic,
-             notification_level: TopicUser.notification_levels[:watching],
-             notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
-           )
-          TopicUser.change(
-            assignment.assigned_to_id,
-            topic.id,
-            notification_level: TopicUser.notification_levels[:tracking],
-            notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
-          )
-        end
-      end
 
       assigned_to = assignment.assigned_to
 
@@ -413,7 +406,7 @@ class ::Assigner
       end
 
       # Create a webhook event
-      if WebHook.active_web_hooks(:assign).exists?
+      if WebHook.active_web_hooks(:unassigned).exists?
         type = :unassigned
         payload = {
           type: type,
@@ -477,17 +470,8 @@ class ::Assigner
     @guardian ||= Guardian.new(@assigned_by)
   end
 
-  def queue_notification(assign_to, skip_small_action_post, assignment)
-    Jobs.enqueue(
-      :assign_notification,
-      topic_id: topic.id,
-      post_id: topic_target? ? first_post.id : @target.id,
-      assigned_to_id: assign_to.id,
-      assigned_to_type: assign_to.is_a?(User) ? "User" : "Group",
-      assigned_by_id: @assigned_by.id,
-      skip_small_action_post: skip_small_action_post,
-      assignment_id: assignment.id,
-    )
+  def queue_notification(assignment)
+    Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
   end
 
   def add_small_action_post(action_code, assign_to, text)
@@ -546,7 +530,7 @@ class ::Assigner
         ""
       end
     return "unassigned#{suffix}" if assignment.assigned_to_user?
-    return "unassigned_group#{suffix}" if assignment.assigned_to_group?
+    "unassigned_group#{suffix}" if assignment.assigned_to_group?
   end
 
   def already_assigned?(assign_to, type, note, status)

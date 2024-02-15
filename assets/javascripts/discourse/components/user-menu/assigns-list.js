@@ -1,10 +1,7 @@
+import { set } from "@ember/object";
+import { sort } from "@ember/object/computed";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
-import { ajax } from "discourse/lib/ajax";
-import UserMenuNotificationItem from "discourse/lib/user-menu/notification-item";
-import UserMenuAssignItem from "../../lib/user-menu/assign-item";
-import Notification from "discourse/models/notification";
 import I18n from "I18n";
-import Topic from "discourse/models/topic";
 import UserMenuAssignsListEmptyState from "./assigns-list-empty-state";
 
 export default class UserMenuAssignNotificationsList extends UserMenuNotificationsList {
@@ -56,25 +53,20 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   async fetchItems() {
-    const data = await ajax("/assign/user-menu-assigns.json");
-    const content = [];
+    return new SortedItems(await super.fetchItems()).sortedItems;
+  }
+}
 
-    const notifications = data.notifications.map((n) => Notification.create(n));
-    await Notification.applyTransformations(notifications);
-    notifications.forEach((notification) => {
-      content.push(
-        new UserMenuNotificationItem({
-          notification,
-          currentUser: this.currentUser,
-          siteSettings: this.siteSettings,
-          site: this.site,
-        })
-      );
-    });
+class SortedItems {
+  itemsSorting = [
+    "notification.read",
+    "notification.data.message:desc",
+    "notification.created_at:desc",
+  ];
 
-    const topics = data.topics.map((t) => Topic.create(t));
-    await Topic.applyTransformations(topics);
-    content.push(...topics.map((assign) => new UserMenuAssignItem({ assign })));
-    return content;
+  @sort("items", "itemsSorting") sortedItems;
+
+  constructor(items) {
+    set(this, "items", items);
   }
 }

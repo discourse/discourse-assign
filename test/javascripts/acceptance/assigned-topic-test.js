@@ -1,14 +1,14 @@
+import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   query,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { visit } from "@ember/test-helpers";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
 import I18n from "I18n";
-import topicFixtures from "discourse/tests/fixtures/topic";
-import selectKit from "discourse/tests/helpers/select-kit-helper";
 import NotificationFixture from "../fixtures/notifications-fixtures";
 
 function assignCurrentUserToTopic(needs) {
@@ -159,11 +159,11 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
     await visit("/u/eviltrout/notifications");
 
     const notification = query(
-      "section.user-content ul.notifications li.item.notification"
+      "section.user-content .user-notifications-list li.notification"
     );
 
     assert.true(
-      notification.children[0].classList.contains("assigned"),
+      notification.classList.contains("assigned"),
       "with correct assigned class"
     );
 

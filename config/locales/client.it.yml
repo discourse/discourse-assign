@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 it:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_assign: "Assegnazione Discourse"
   js:
     filters:
       unassigned:
@@ -35,9 +40,8 @@ it:
       assigned_to: "Assegnato a"
       assigned_topic_to: "Argomento assegnato a <a href='%{path}'>%{username}</a>"
       assign_post_to: "#%{post_number} assegnato a %{username}"
+      assign_post_to_multiple: "n°%{post_number} a %{username}"
       assigned_to_w_ellipsis: "Assegnato a..."
-      assign_notification: "<p> <span>%{username}</span> %{description} </p>"
-      assign_group_notification: "<p> <span>%{username}</span> %{description} </p>"
       unassign:
         title: "Annulla assegnazione"
         title_w_ellipsis: "Annullamento assegnazione..."
@@ -99,13 +103,21 @@ it:
       no_assignments_body: >
         Gli argomenti e i messaggi a te assegnati verranno elencati qui. Riceverai anche una notifica di promemoria periodica delle tue assegnazioni, che puoi modificare nelle tue <a href='%{preferencesUrl}'>preferenze utente</a>. <br><br> Per assegnare un argomento o un messaggio a te stesso o a qualcun altro, cerca il pulsante Assegna %{icon} in fondo.
       dismiss_assigned_tooltip: "Imposta tutte le notifiche di assegnazione non lette come lette"
-      assigned_to_group: "assegnato a %{group_name}"
-      assigned_to_you: "assegnato a te"
+      assigned_to_group:
+        post: "messaggio assegnato a %{group_name}"
+        topic: "argomento assegnato a %{group_name}"
+      assigned_to_you:
+        post: "messaggio assegnato a te"
+        topic: "argomento assegnato a te"
+      assignment_description:
+        post: "%{topic_title} (n°%{post_number})"
+        topic: "%{topic_title}"
     admin:
       web_hooks:
         assign_event:
-          name: "Evento di assegnazione"
-          details: "Quando un utente assegna o annulla l'assegnazione di un argomento."
+          group_name: "Assegna eventi"
+          assigned: "Quando un utente assegna un argomento"
+          unassigned: "Quando un utente rimuove l'assegnazione di un argomento"
     search:
       advanced:
         in:

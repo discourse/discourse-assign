@@ -3,175 +3,124 @@
 require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
-describe RandomAssignUtils do
-  before do
-    SiteSetting.assign_enabled = true
-
-    @orig_logger = Rails.logger
-    Rails.logger = @fake_logger = FakeLogger.new
-  end
-
-  after { Rails.logger = @orig_logger }
-
+RSpec.describe RandomAssignUtils do
   FakeAutomation = Struct.new(:id)
 
-  let(:post) { Fabricate(:post) }
   let!(:automation) { FakeAutomation.new(1) }
 
-  describe ".automation_script!" do
-    context "when all users of group are on holidays" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:group_1) { Fabricate(:group) }
-      fab!(:user_1) { Fabricate(:user) }
+  around do |example|
+    orig_logger = Rails.logger
+    Rails.logger = FakeLogger.new
+    example.run
+    Rails.logger = orig_logger
+  end
 
-      before do
-        group_1.add(user_1)
-        UserCustomField.create!(name: "on_holiday", value: "t", user_id: user_1.id)
+  before { SiteSetting.assign_enabled = true }
+
+  describe ".automation_script!" do
+    subject(:auto_assign) { described_class.automation_script!(ctx, fields, automation) }
+
+    fab!(:post_1) { Fabricate(:post) }
+    fab!(:topic_1) { post_1.topic }
+    fab!(:group_1) { Fabricate(:group) }
+    fab!(:user_1) { Fabricate(:user) }
+    fab!(:user_2) { Fabricate(:user) }
+    fab!(:user_3) { Fabricate(:user) }
+
+    let(:ctx) { {} }
+    let(:fields) { {} }
+
+    before do
+      SiteSetting.assign_allowed_on_groups = group_1.id.to_s
+      group_1.add(user_1)
+    end
+
+    context "when all users of group are on holidays" do
+      let(:fields) do
+        {
+          "assignees_group" => {
+            "value" => group_1.id,
+          },
+          "assigned_topic" => {
+            "value" => topic_1.id,
+          },
+        }
       end
 
+      before { UserCustomField.create!(name: "on_holiday", value: "t", user_id: user_1.id) }
+
       it "creates post on the topic" do
-        described_class.automation_script!(
-          {},
-          {
-            "assignees_group" => {
-              "value" => group_1.id,
-            },
-            "assigned_topic" => {
-              "value" => topic_1.id,
-            },
-          },
-          automation,
-        )
-        expect(topic_1.posts.first.raw).to match(
+        auto_assign
+        expect(topic_1.posts.last.raw).to match(
           I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
     end
 
     context "when all users of group have been assigned recently" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:group_1) { Fabricate(:group) }
-      fab!(:user_1) { Fabricate(:user) }
-
-      before do
-        Assigner.new(topic_1, Discourse.system_user).assign(user_1)
-        group_1.add(user_1)
+      let(:fields) do
+        {
+          "assignees_group" => {
+            "value" => group_1.id,
+          },
+          "assigned_topic" => {
+            "value" => topic_1.id,
+          },
+        }
       end
 
-      it "creates post on the topic" do
-        described_class.automation_script!(
-          {},
-          {
-            "assignees_group" => {
-              "value" => group_1.id,
-            },
-            "assigned_topic" => {
-              "value" => topic_1.id,
-            },
-          },
-          automation,
-        )
-        expect(topic_1.posts.first.raw).to match(
-          I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
-        )
+      before do
+        group_1.add(user_2)
+        group_1.add(user_3)
+        freeze_time(10.days.ago) { Assigner.new(topic_1, Discourse.system_user).assign(user_1) }
+        freeze_time(5.days.ago) { Assigner.new(topic_1, Discourse.system_user).assign(user_3) }
+        Assigner.new(topic_1, Discourse.system_user).assign(user_2)
+      end
+
+      it "assigns the least recently assigned user to the topic" do
+        expect { auto_assign }.to change { topic_1.reload.assignment.assigned_to }.to(user_1)
+      end
+
+      context "when a user is on holiday" do
+        before do
+          user_1.custom_fields["on_holiday"] = true
+          user_1.save!
+        end
+
+        it "doesn't assign them" do
+          expect { auto_assign }.to change { topic_1.reload.assignment.assigned_to }.to(user_3)
+        end
       end
     end
 
     context "when no users can be assigned because none are members of assign_allowed_on_groups groups" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:group_1) { Fabricate(:group) }
-      fab!(:user_1) { Fabricate(:user) }
+      let(:fields) do
+        {
+          "assignees_group" => {
+            "value" => group_1.id,
+          },
+          "assigned_topic" => {
+            "value" => topic_1.id,
+          },
+        }
+      end
 
-      before { group_1.add(user_1) }
+      before { SiteSetting.assign_allowed_on_groups = "" }
 
       it "creates post on the topic" do
-        described_class.automation_script!(
-          {},
-          {
-            "assignees_group" => {
-              "value" => group_1.id,
-            },
-            "assigned_topic" => {
-              "value" => topic_1.id,
-            },
-          },
-          automation,
-        )
-        expect(topic_1.posts.first.raw).to match(
+        auto_assign
+        expect(topic_1.posts.last.raw).to match(
           I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
     end
 
     context "when user can be assigned" do
-      fab!(:group_1) { Fabricate(:group) }
-      fab!(:user_1) { Fabricate(:user) }
-      fab!(:topic_1) { Fabricate(:topic) }
-
-      before do
-        SiteSetting.assign_allowed_on_groups = [group_1.id.to_s].join("|")
-        group_1.add(user_1)
-      end
-
       context "when post_template is set" do
-        it "creates a post with the template and assign the user" do
-          described_class.automation_script!(
-            {},
-            {
-              "post_template" => {
-                "value" => "this is a post template",
-              },
-              "assignees_group" => {
-                "value" => group_1.id,
-              },
-              "assigned_topic" => {
-                "value" => topic_1.id,
-              },
-            },
-            automation,
-          )
-          expect(topic_1.posts.first.raw).to match("this is a post template")
-        end
-      end
-
-      context "when post_template is not set" do
-        fab!(:post_1) { Fabricate(:post, topic: topic_1) }
-
-        it "assigns the user to the topic" do
-          described_class.automation_script!(
-            {},
-            {
-              "assignees_group" => {
-                "value" => group_1.id,
-              },
-              "assigned_topic" => {
-                "value" => topic_1.id,
-              },
-            },
-            automation,
-          )
-          expect(topic_1.assignment.assigned_to_id).to eq(user_1.id)
-        end
-      end
-    end
-
-    context "when all users are in working hours" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:group_1) { Fabricate(:group) }
-      fab!(:user_1) { Fabricate(:user) }
-
-      before do
-        freeze_time("2022-10-01 02:00")
-        UserOption.find_by(user_id: user_1.id).update(timezone: "Europe/Paris")
-        group_1.add(user_1)
-      end
-
-      it "creates post on the topic" do
-        described_class.automation_script!(
-          {},
+        let(:fields) do
           {
-            "in_working_hours" => {
-              "value" => true,
+            "post_template" => {
+              "value" => "this is a post template",
             },
             "assignees_group" => {
               "value" => group_1.id,
@@ -179,73 +128,131 @@ describe RandomAssignUtils do
             "assigned_topic" => {
               "value" => topic_1.id,
             },
+          }
+        end
+
+        it "creates a post with the template and assign the user" do
+          auto_assign
+          expect(topic_1.posts.second.raw).to match("this is a post template")
+        end
+      end
+
+      context "when post_template is not set" do
+        let(:fields) do
+          {
+            "assignees_group" => {
+              "value" => group_1.id,
+            },
+            "assigned_topic" => {
+              "value" => topic_1.id,
+            },
+          }
+        end
+
+        it "assigns the user to the topic" do
+          auto_assign
+          expect(topic_1.assignment.assigned_to_id).to eq(user_1.id)
+        end
+      end
+    end
+
+    context "when all users are in working hours" do
+      let(:fields) do
+        {
+          "in_working_hours" => {
+            "value" => true,
           },
-          automation,
-        )
-        expect(topic_1.posts.first.raw).to match(
-          I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
-        )
+          "assignees_group" => {
+            "value" => group_1.id,
+          },
+          "assigned_topic" => {
+            "value" => topic_1.id,
+          },
+        }
+      end
+
+      before do
+        freeze_time("2022-10-01 02:00")
+        UserOption.find_by(user_id: user_1.id).update(timezone: "Europe/Paris")
+      end
+
+      it "assigns the user to the topic" do
+        auto_assign
+        expect(topic_1.assignment.assigned_to).to eq(user_1)
+      end
+    end
+
+    context "when in a group of one person" do
+      let(:fields) do
+        {
+          "assignees_group" => {
+            "value" => group_1.id,
+          },
+          "assigned_topic" => {
+            "value" => topic_1.id,
+          },
+        }
+      end
+
+      context "when user is already assigned" do
+        before { described_class.automation_script!(ctx, fields, automation) }
+
+        it "reassigns them" do
+          expect { auto_assign }.to change { topic_1.reload.assignment.id }
+          expect(topic_1.assignment.assigned_to).to eq(user_1)
+        end
       end
     end
 
     context "when assignees_group is not provided" do
-      fab!(:topic_1) { Fabricate(:topic) }
+      let(:fields) { { "assigned_topic" => { "value" => topic_1.id } } }
 
       it "raises an error" do
-        expect {
-          described_class.automation_script!(
-            {},
-            { "assigned_topic" => { "value" => topic_1.id } },
-            automation,
-          )
-        }.to raise_error(/`assignees_group` not provided/)
+        expect { auto_assign }.to raise_error(/`assignees_group` not provided/)
       end
     end
 
     context "when assignees_group not found" do
-      fab!(:topic_1) { Fabricate(:topic) }
+      let(:fields) do
+        { "assigned_topic" => { "value" => topic_1.id }, "assignees_group" => { "value" => -1 } }
+      end
 
       it "raises an error" do
-        expect {
-          described_class.automation_script!(
-            {},
-            {
-              "assigned_topic" => {
-                "value" => topic_1.id,
-              },
-              "assignees_group" => {
-                "value" => -1,
-              },
-            },
-            automation,
-          )
-        }.to raise_error(/Group\(-1\) not found/)
+        expect { auto_assign }.to raise_error(/Group\(-1\) not found/)
       end
     end
 
     context "when assigned_topic not provided" do
       it "raises an error" do
-        expect { described_class.automation_script!({}, {}, automation) }.to raise_error(
-          /`assigned_topic` not provided/,
-        )
+        expect { auto_assign }.to raise_error(/`assigned_topic` not provided/)
       end
     end
 
     context "when assigned_topic is not found" do
+      let(:fields) do
+        { "assigned_topic" => { "value" => -1 }, "assignees_group" => { "value" => group_1.id } }
+      end
+
       it "raises an error" do
-        expect {
-          described_class.automation_script!(
-            {},
-            { "assigned_topic" => { "value" => 1 } },
-            automation,
-          )
-        }.to raise_error(/Topic\(1\) not found/)
+        expect { auto_assign }.to raise_error(/Topic\(-1\) not found/)
       end
     end
 
     context "when minimum_time_between_assignments is set" do
       context "when the topic has been assigned recently" do
-        fab!(:topic_1) { Fabricate(:topic) }
+        let(:fields) do
+          {
+            "assignees_group" => {
+              "value" => group_1.id,
+            },
+            "assigned_topic" => {
+              "value" => topic_1.id,
+            },
+            "minimum_time_between_assignments" => {
+              "value" => 10,
+            },
+          }
+        end
 
         before do
           freeze_time
@@ -257,18 +264,7 @@ describe RandomAssignUtils do
         end
 
         it "logs a warning" do
-          described_class.automation_script!(
-            {},
-            {
-              "assigned_topic" => {
-                "value" => topic_1.id,
-              },
-              "minimum_time_between_assignments" => {
-                "value" => 10,
-              },
-            },
-            automation,
-          )
+          auto_assign
           expect(Rails.logger.infos.first).to match(
             /Topic\(#{topic_1.id}\) has already been assigned recently/,
           )
@@ -277,40 +273,29 @@ describe RandomAssignUtils do
     end
 
     context "when skip_new_users_for_days is set" do
-      fab!(:topic_1) { Fabricate(:topic) }
-      fab!(:post_1) { Fabricate(:post, topic: topic_1) }
-      fab!(:group_1) { Fabricate(:group) }
-      fab!(:user_1) { Fabricate(:user) }
-
-      before do
-        SiteSetting.assign_allowed_on_groups = "#{group_1.id}"
-        group_1.add(user_1)
+      let(:fields) do
+        {
+          "assignees_group" => {
+            "value" => group_1.id,
+          },
+          "assigned_topic" => {
+            "value" => topic_1.id,
+          },
+          "skip_new_users_for_days" => {
+            "value" => "10",
+          },
+        }
       end
 
       it "creates post on the topic if all users are new" do
-        described_class.automation_script!(
-          {},
-          {
-            "assignees_group" => {
-              "value" => group_1.id,
-            },
-            "assigned_topic" => {
-              "value" => topic_1.id,
-            },
-            "skip_new_users_for_days" => {
-              "value" => "10",
-            },
-          },
-          automation,
-        )
+        auto_assign
         expect(topic_1.posts.last.raw).to match(
           I18n.t("discourse_automation.scriptables.random_assign.no_one", group: group_1.name),
         )
       end
 
-      it "assign topic if all users are old" do
-        described_class.automation_script!(
-          {},
+      context "when all users are old" do
+        let(:fields) do
           {
             "assignees_group" => {
               "value" => group_1.id,
@@ -321,46 +306,65 @@ describe RandomAssignUtils do
             "skip_new_users_for_days" => {
               "value" => "0",
             },
-          },
-          automation,
-        )
+          }
+        end
 
-        expect(topic_1.assignment).not_to eq(nil)
+        it "assigns topic" do
+          auto_assign
+          expect(topic_1.assignment).not_to be_nil
+        end
       end
     end
   end
 
-  describe ".recently_assigned_users_ids" do
+  describe "#recently_assigned_users_ids" do
+    subject(:assignees) { utils.recently_assigned_users_ids(2.months.ago) }
+
+    let(:utils) { described_class.new({}, fields, automation) }
+    let(:fields) do
+      {
+        "assignees_group" => {
+          "value" => assign_allowed_group.id,
+        },
+        "assigned_topic" => {
+          "value" => post.topic.id,
+        },
+      }
+    end
+    let(:post) { Fabricate(:post) }
+    let(:assign_allowed_group) { Group.find_by(name: "staff") }
+
     context "when no one has been assigned" do
       it "returns an empty array" do
-        assignees_ids = described_class.recently_assigned_users_ids(post.topic_id, 2.months.ago)
-        expect(assignees_ids).to eq([])
+        expect(assignees).to be_empty
       end
     end
 
     context "when users have been assigned" do
       let(:admin) { Fabricate(:admin) }
-      let(:assign_allowed_group) { Group.find_by(name: "staff") }
-      let(:user_1) { Fabricate(:user, groups: [assign_allowed_group]) }
-      let(:user_2) { Fabricate(:user, groups: [assign_allowed_group]) }
-      let(:user_3) { Fabricate(:user, groups: [assign_allowed_group]) }
-      let(:user_4) { Fabricate(:user, groups: [assign_allowed_group]) }
+      let!(:user_1) { Fabricate(:user, groups: [assign_allowed_group]) }
+      let!(:user_2) { Fabricate(:user, groups: [assign_allowed_group]) }
+      let!(:user_3) { Fabricate(:user, groups: [assign_allowed_group]) }
+      let!(:user_4) { Fabricate(:user, groups: [assign_allowed_group]) }
       let(:post_2) { Fabricate(:post, topic: post.topic) }
 
-      it "returns the recently assigned user ids" do
-        freeze_time 1.months.ago do
-          Assigner.new(post.topic, admin).assign(user_1)
-          Assigner.new(post.topic, admin).assign(user_2)
-          Assigner.new(post_2, admin).assign(user_4)
-        end
-
+      before do
         freeze_time 3.months.ago do
           Assigner.new(post.topic, admin).assign(user_3)
         end
+        freeze_time 45.days.ago do
+          Assigner.new(post_2, admin).assign(user_4)
+        end
+        freeze_time 30.days.ago do
+          Assigner.new(post.topic, admin).assign(user_1)
+        end
+        freeze_time 15.days.ago do
+          Assigner.new(post.topic, admin).assign(user_2)
+        end
+      end
 
-        assignees_ids = described_class.recently_assigned_users_ids(post.topic_id, 2.months.ago)
-
-        expect(assignees_ids).to contain_exactly(user_1.id, user_2.id, user_4.id)
+      it "returns the recently assigned user ids" do
+        expect(assignees).to eq([user_2, user_1, user_4].map(&:id))
       end
     end
   end

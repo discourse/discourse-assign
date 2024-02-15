@@ -48,6 +48,8 @@ sk:
     user:
       messages:
         assigned: "Priradené"
+      assignment_description:
+        topic: "%{topic_title}"
     search:
       advanced:
         assigned:
