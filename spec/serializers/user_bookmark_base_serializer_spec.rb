@@ -11,8 +11,8 @@ describe UserBookmarkBaseSerializer do
     add_to_assign_allowed_group(user)
   end
 
-  fab!(:user) { Fabricate(:user) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user)
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   let(:guardian) { Guardian.new(user) }
 

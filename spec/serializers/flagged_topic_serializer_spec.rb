@@ -4,7 +4,7 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 describe FlaggedTopicSerializer do
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   let(:guardian) { Guardian.new(user) }
 
   include_context "with group that is allowed to assign"

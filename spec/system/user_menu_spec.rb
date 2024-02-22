@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Assign | User Menu", type: :system, js: true do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
 
   let(:user_menu) { PageObjects::Components::UserMenu.new }
 

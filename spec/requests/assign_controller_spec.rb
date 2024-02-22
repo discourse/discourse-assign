@@ -13,12 +13,12 @@ RSpec.describe DiscourseAssign::AssignController do
   fab!(:non_allowed_group) { Fabricate(:group) }
   fab!(:allowed_group) { Fabricate(:group) }
 
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   fab!(:allowed_user) { Fabricate(:user, username: "mads", name: "Mads", groups: [allowed_group]) }
   fab!(:non_admin_staff) { Fabricate(:user, groups: [staff_group]) }
   fab!(:user_in_non_allowed_group) { Fabricate(:user, groups: [non_allowed_group]) }
 
-  fab!(:post) { Fabricate(:post) }
+  fab!(:post)
 
   describe "only allow users from allowed groups to assign" do
     it "filters requests where current_user is not member of an allowed group" do
@@ -339,7 +339,7 @@ RSpec.describe DiscourseAssign::AssignController do
   describe "#group_members" do
     fab!(:other_allowed_user) { Fabricate(:user, groups: [allowed_group]) }
 
-    fab!(:topic) { Fabricate(:topic) }
+    fab!(:topic)
     fab!(:post_in_same_topic) { Fabricate(:post, topic: topic) }
 
     fab!(:assignments) do

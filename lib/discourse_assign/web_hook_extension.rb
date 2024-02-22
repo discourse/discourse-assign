@@ -2,11 +2,12 @@
 
 module DiscourseAssign
   module WebHookExtension
-    def self.prepended(base)
-      base.class_eval do
-        def self.enqueue_assign_hooks(event, payload)
-          WebHook.enqueue_hooks(:assign, event, payload: payload) if active_web_hooks(event).exists?
-        end
+    extend ActiveSupport::Concern
+
+    class_methods do
+      def enqueue_assign_hooks(event, payload)
+        return unless active_web_hooks(event).exists?
+        enqueue_hooks(:assign, event, payload: payload)
       end
     end
   end
