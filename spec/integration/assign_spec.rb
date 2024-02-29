@@ -142,10 +142,10 @@ describe "integration tests" do
   end
 
   context "when already assigned" do
-    fab!(:post) { Fabricate(:post) }
+    fab!(:post)
     fab!(:post_2) { Fabricate(:post, topic: post.topic) }
     let(:topic) { post.topic }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
 
     include_context "with group that is allowed to assign"
 
@@ -170,7 +170,7 @@ describe "integration tests" do
   describe "move post" do
     fab!(:old_topic) { Fabricate(:topic) }
     fab!(:post) { Fabricate(:post, topic: old_topic) }
-    fab!(:user) { Fabricate(:user) }
+    fab!(:user)
     fab!(:assignment) do
       Assignment.create!(
         target_id: post.id,

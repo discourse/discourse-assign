@@ -4,8 +4,8 @@ require "rails_helper"
 require_relative "../support/assign_allowed_group"
 
 describe PostSerializer do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:topic) { Fabricate(:topic) }
+  fab!(:user)
+  fab!(:topic)
   fab!(:post) { Fabricate(:post, topic: topic) }
   let(:guardian) { Guardian.new(user) }
 

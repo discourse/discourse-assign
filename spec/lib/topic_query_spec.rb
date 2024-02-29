@@ -3,15 +3,15 @@
 require "topic_view"
 
 describe TopicQuery do
-  fab!(:user) { Fabricate(:user) }
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:user)
+  fab!(:admin)
   fab!(:other_admin) { Fabricate(:admin) }
 
   fab!(:user_pm) { Fabricate(:private_message_topic, user: user) }
   fab!(:admin_pm) { Fabricate(:private_message_topic, user: admin) }
   fab!(:other_admin_pm) { Fabricate(:private_message_topic, user: other_admin) }
 
-  fab!(:group) { Fabricate(:group) }
+  fab!(:group)
 
   describe "#list_group_topics_assigned" do
     before do

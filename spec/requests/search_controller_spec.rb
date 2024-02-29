@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe SearchController do
-  fab!(:admin) { Fabricate(:admin) }
+  fab!(:admin)
   fab!(:group) do
     Fabricate(
       :group,

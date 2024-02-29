@@ -6,7 +6,7 @@ require_relative "../support/assign_allowed_group"
 describe TopicQuery do
   before { SiteSetting.assign_enabled = true }
 
-  fab!(:user) { Fabricate(:user) }
+  fab!(:user)
   fab!(:user2) { Fabricate(:user) }
   fab!(:user3) { Fabricate(:user) }
   fab!(:user4) { Fabricate(:user) }

@@ -2,8 +2,8 @@
 
 module DiscourseAssign
   module ListControllerExtension
-    def self.prepended(base)
-      base.class_eval { ListController.generate_message_route(:private_messages_assigned) }
-    end
+    extend ActiveSupport::Concern
+
+    prepended { generate_message_route(:private_messages_assigned) }
   end
 end
