@@ -828,11 +828,13 @@ function initialize(api) {
           ? assignedToUserPath(assignedToUser)
           : assignedToGroupPath(assignedToGroup);
       }
+
       if (href) {
         return dec.widget.attach("assigned-to", {
           assignedToUser,
           assignedToGroup,
           href,
+          post: postModel,
         });
       }
     }
