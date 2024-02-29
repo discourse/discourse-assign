@@ -13,6 +13,7 @@ import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
+import { AssignedToWidget } from "../widgets/assigned-to";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -646,21 +647,7 @@ function initialize(api) {
     }
   });
 
-  api.createWidget("assigned-to", {
-    html(attrs) {
-      let { assignedToUser, assignedToGroup, href } = attrs;
-
-      return h("p.assigned-to", [
-        assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
-        h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
-        h(
-          "a",
-          { attributes: { class: "assigned-to-username", href } },
-          assignedToUser ? assignedToUser.username : assignedToGroup.name
-        ),
-      ]);
-    },
-  });
+  api.createWidget(...AssignedToWidget);
 
   api.createWidget("assigned-to-first-post", {
     html(attrs) {
