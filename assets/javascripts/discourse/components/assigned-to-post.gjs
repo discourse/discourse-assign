@@ -30,13 +30,13 @@ export default class AssignedToPost extends Component {
       {{i18n "discourse_assign.assigned_to"}}
     </span>
 
-    {{#if @assignedToUser}}
-      <a href={{@href}} class="assigned-to-username">
+    <a href={{@href}} class="assigned-to-username">
+      {{#if @assignedToUser}}
         {{@assignedToUser.username}}
-      </a>
-    {{else}}
-      {{@assignedToGroup.name}}
-    {{/if}}
+      {{else}}
+        {{@assignedToGroup.name}}
+      {{/if}}
+    </a>
 
     <DMenu @icon="ellipsis-h" class="btn-flat more-button">
       <div class="popup-menu">
