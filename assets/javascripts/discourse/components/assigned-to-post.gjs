@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 import DButton from "discourse/components/d-button";
