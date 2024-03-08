@@ -50,19 +50,6 @@
   align-items: center;
 }
 
-.assigned-to-user {
-  display: flex;
-  align-items: center;
-
-  img.avatar {
-    margin-right: 0.3em;
-  }
-
-  .unassign {
-    margin-left: 0.5em;
-  }
-}
-
 .topic-assigned-to {
   min-width: 15%;
   width: 15%;

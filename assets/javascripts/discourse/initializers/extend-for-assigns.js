@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/application";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { renderAvatar } from "discourse/helpers/user-avatar";
@@ -8,12 +9,12 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
-import { AssignedToWidget } from "../widgets/assigned-to";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -647,7 +648,21 @@ function initialize(api) {
     }
   });
 
-  api.createWidget(...AssignedToWidget);
+  api.createWidget("assigned-to-post", {
+    html(attrs) {
+      return new RenderGlimmer(
+        this,
+        "p.assigned-to",
+        hbs`<AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}} @href={{@data.href}} @post={{@data.post}} />`,
+        {
+          assignedToUser: attrs.post.assigned_to_user,
+          assignedToGroup: attrs.post.assigned_to_group,
+          href: attrs.href,
+          post: attrs.post,
+        }
+      );
+    },
+  });
 
   api.createWidget("assigned-to-first-post", {
     html(attrs) {
@@ -779,6 +794,7 @@ function initialize(api) {
             if (data.type === "unassigned") {
               delete topic.indirectly_assigned_to[data.post_number];
             }
+
             this.appEvents.trigger("post-stream:refresh", {
               id: topic.postStream.posts[0].id,
             });
@@ -830,7 +846,7 @@ function initialize(api) {
       }
 
       if (href) {
-        return dec.widget.attach("assigned-to", {
+        return dec.widget.attach("assigned-to-post", {
           assignedToUser,
           assignedToGroup,
           href,
