@@ -28,6 +28,36 @@ RSpec.describe Assignment do
     end
   end
 
+  describe ".deactivate!" do
+    subject(:deactivate!) { described_class.deactivate!(topic: topic) }
+
+    let!(:assignment1) { Fabricate(:topic_assignment) }
+    let!(:assignment2) { Fabricate(:post_assignment, topic: topic) }
+    let!(:assignment3) { Fabricate(:post_assignment) }
+    let(:topic) { assignment1.topic }
+
+    it "deactivates each assignment of the provided topic" do
+      deactivate!
+      expect([assignment1, assignment2].map(&:reload).map(&:active?)).to all eq false
+      expect(assignment3.reload).to be_active
+    end
+  end
+
+  describe ".reactivate!" do
+    subject(:reactivate!) { described_class.reactivate!(topic: topic) }
+
+    let!(:assignment1) { Fabricate(:topic_assignment, active: false) }
+    let!(:assignment2) { Fabricate(:post_assignment, topic: topic, active: false) }
+    let!(:assignment3) { Fabricate(:post_assignment, active: false) }
+    let(:topic) { assignment1.topic }
+
+    it "reactivates each assignment of the provided topic" do
+      reactivate!
+      expect([assignment1, assignment2].map(&:reload)).to all be_active
+      expect(assignment3.reload).not_to be_active
+    end
+  end
+
   describe "#assigned_users" do
     subject(:assigned_users) { assignment.assigned_users }
 
@@ -168,6 +198,54 @@ RSpec.describe Assignment do
         )
         create_missing_notifications
       end
+    end
+  end
+
+  describe "#reactivate!" do
+    subject(:reactivate!) { assignment.reactivate! }
+
+    fab!(:assignment) { Fabricate.create(:topic_assignment, active: false) }
+
+    context "when target does not exist" do
+      before { assignment.target.delete }
+
+      it "does nothing" do
+        expect { reactivate! }.not_to change { assignment.reload.active }
+      end
+    end
+
+    context "when target exists" do
+      it "sets the assignment as active" do
+        expect { reactivate! }.to change { assignment.reload.active? }.to true
+      end
+
+      it "enqueues a job to create notifications" do
+        reactivate!
+        expect_job_enqueued(job: Jobs::AssignNotification, args: { assignment_id: assignment.id })
+      end
+    end
+  end
+
+  describe "#deactivate!" do
+    subject(:deactivate!) { assignment.deactivate! }
+
+    fab!(:assignment) { Fabricate.create(:topic_assignment) }
+
+    it "sets the assignment as inactive" do
+      expect { deactivate! }.to change { assignment.reload.active? }.to false
+    end
+
+    it "enqueues a job to delete notifications" do
+      deactivate!
+      expect_job_enqueued(
+        job: Jobs::UnassignNotification,
+        args: {
+          topic_id: assignment.topic_id,
+          assigned_to_id: assignment.assigned_to_id,
+          assigned_to_type: assignment.assigned_to_type,
+          assignment_id: assignment.id,
+        },
+      )
     end
   end
 end
