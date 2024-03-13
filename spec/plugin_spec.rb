@@ -55,5 +55,96 @@ RSpec.describe DiscourseAssign do
         ).to eq(false)
       end
     end
+
+    describe "on 'topic_status_updated'" do
+      context "when closing a topic" do
+        let!(:first_assignment) { Fabricate(:topic_assignment) }
+        let!(:second_assignment) { Fabricate(:post_assignment, topic: topic) }
+        let(:topic) { first_assignment.topic }
+
+        before do
+          SiteSetting.unassign_on_close = true
+          topic.update_status("closed", true, Discourse.system_user)
+        end
+
+        it "deactivates existing assignments" do
+          [first_assignment, second_assignment].each do |assignment|
+            assignment.reload
+            expect(assignment).not_to be_active
+            expect_job_enqueued(
+              job: Jobs::UnassignNotification,
+              args: {
+                topic_id: assignment.topic_id,
+                assignment_id: assignment.id,
+                assigned_to_id: assignment.assigned_to_id,
+                assigned_to_type: assignment.assigned_to_type,
+              },
+            )
+          end
+        end
+      end
+
+      context "when reopening a topic" do
+        let!(:topic) { Fabricate(:closed_topic) }
+        let!(:first_assignment) { Fabricate(:topic_assignment, topic: topic, active: false) }
+        let!(:second_assignment) { Fabricate(:post_assignment, topic: topic, active: false) }
+
+        before do
+          SiteSetting.reassign_on_open = true
+          topic.update_status("closed", false, Discourse.system_user)
+        end
+
+        it "reactivates existing assignments" do
+          [first_assignment, second_assignment].each do |assignment|
+            assignment.reload
+            expect(assignment).to be_active
+            expect_job_enqueued(
+              job: Jobs::AssignNotification,
+              args: {
+                assignment_id: assignment.id,
+              },
+            )
+          end
+        end
+      end
+    end
+
+    describe "on 'post_destroyed'" do
+      let!(:assignment) { Fabricate(:post_assignment) }
+      let(:post) { assignment.target }
+
+      before { PostDestroyer.new(Discourse.system_user, post).destroy }
+
+      it "deactivates the existing assignment" do
+        assignment.reload
+        expect(assignment).not_to be_active
+        expect_job_enqueued(
+          job: Jobs::UnassignNotification,
+          args: {
+            topic_id: assignment.topic_id,
+            assignment_id: assignment.id,
+            assigned_to_id: assignment.assigned_to_id,
+            assigned_to_type: assignment.assigned_to_type,
+          },
+        )
+      end
+    end
+
+    describe "on 'post_recovered'" do
+      let!(:assignment) { Fabricate(:post_assignment, active: false) }
+      let(:post) { assignment.target }
+
+      before do
+        SiteSetting.reassign_on_open = true
+        post.trash!
+        PostDestroyer.new(Discourse.system_user, post).recover
+      end
+
+      it "reactivates the existing assignment" do
+        assignment.reload
+        expect(assignment).to be_active
+        expect_job_enqueued(job: Jobs::AssignNotification, args: { assignment_id: assignment.id })
+      end
+    end
   end
 end

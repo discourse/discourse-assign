@@ -23,20 +23,30 @@ class Assignment < ActiveRecord::Base
 
   validate :validate_status, if: -> { SiteSetting.enable_assign_status }
 
-  def self.valid_type?(type)
-    VALID_TYPES.include?(type.downcase)
-  end
+  class << self
+    def valid_type?(type)
+      VALID_TYPES.include?(type.downcase)
+    end
 
-  def self.statuses
-    SiteSetting.assign_statuses.split("|")
-  end
+    def statuses
+      SiteSetting.assign_statuses.split("|")
+    end
 
-  def self.default_status
-    Assignment.statuses.first
-  end
+    def default_status
+      Assignment.statuses.first
+    end
 
-  def self.status_enabled?
-    SiteSetting.enable_assign_status
+    def status_enabled?
+      SiteSetting.enable_assign_status
+    end
+
+    def deactivate!(topic:)
+      active.where(topic: topic).find_each(&:deactivate!)
+    end
+
+    def reactivate!(topic:)
+      inactive.where(topic: topic).find_each(&:reactivate!)
+    end
   end
 
   def assigned_to_user?
@@ -65,6 +75,23 @@ class Assignment < ActiveRecord::Base
         mark_as_read: assigned_by_user == user,
       )
     end
+  end
+
+  def reactivate!
+    return unless target
+    update!(active: true)
+    Jobs.enqueue(:assign_notification, assignment_id: id)
+  end
+
+  def deactivate!
+    update!(active: false)
+    Jobs.enqueue(
+      :unassign_notification,
+      topic_id: topic_id,
+      assigned_to_id: assigned_to_id,
+      assigned_to_type: assigned_to_type,
+      assignment_id: id,
+    )
   end
 
   private

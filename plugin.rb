@@ -784,7 +784,7 @@ after_initialize do
 
   on(:topic_status_updated) do |topic, status, enabled|
     if SiteSetting.unassign_on_close && (status == "closed" || status == "autoclosed") && enabled &&
-         Assignment.exists?(topic_id: topic.id, active: true)
+         Assignment.active.exists?(topic: topic)
       assigner = ::Assigner.new(topic, Discourse.system_user)
       assigner.unassign(silent: true, deactivate: true)
 
@@ -799,19 +799,15 @@ after_initialize do
     end
 
     if SiteSetting.reassign_on_open && (status == "closed" || status == "autoclosed") && !enabled &&
-         Assignment.exists?(topic_id: topic.id, active: false)
-      Assignment.where(topic_id: topic.id, target_type: "Topic").update_all(active: true)
-      Assignment
-        .where(topic_id: topic.id, target_type: "Post")
-        .joins("INNER JOIN posts ON posts.id = target_id AND posts.deleted_at IS NULL")
-        .update_all(active: true)
+         Assignment.inactive.exists?(topic: topic)
+      Assignment.reactivate!(topic: topic)
       MessageBus.publish("/topic/#{topic.id}", reload_topic: true, refresh_stream: true)
     end
   end
 
   on(:post_destroyed) do |post|
-    if Assignment.exists?(target_type: "Post", target_id: post.id, active: true)
-      Assignment.where(target_type: "Post", target_id: post.id).update_all(active: false)
+    if Assignment.active.exists?(target: post)
+      post.assignment.deactivate!
       MessageBus.publish("/topic/#{post.topic_id}", reload_topic: true, refresh_stream: true)
     end
 
@@ -830,9 +826,8 @@ after_initialize do
   end
 
   on(:post_recovered) do |post|
-    if SiteSetting.reassign_on_open &&
-         Assignment.where(target_type: "Post", target_id: post.id, active: false)
-      Assignment.where(target_type: "Post", target_id: post.id).update_all(active: true)
+    if SiteSetting.reassign_on_open && Assignment.inactive.exists?(target: post)
+      post.assignment.reactivate!
       MessageBus.publish("/topic/#{post.topic_id}", reload_topic: true, refresh_stream: true)
     end
   end
@@ -847,14 +842,7 @@ after_initialize do
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
 
-    Assignment
-      .inactive
-      .where(topic: topic)
-      .find_each do |assignment|
-        next unless assignment.target
-        assignment.update!(active: true)
-        Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
-      end
+    Assignment.reactivate!(topic: topic)
   end
 
   on(:archive_message) do |info|
@@ -866,19 +854,7 @@ after_initialize do
     next if !SiteSetting.unassign_on_group_archive
     next if !info[:group]
 
-    Assignment
-      .active
-      .where(topic: topic)
-      .find_each do |assignment|
-        assignment.update!(active: false)
-        Jobs.enqueue(
-          :unassign_notification,
-          topic_id: topic.id,
-          assigned_to_id: assignment.assigned_to_id,
-          assigned_to_type: assignment.assigned_to_type,
-          assignment_id: assignment.id,
-        )
-      end
+    Assignment.deactivate!(topic: topic)
   end
 
   on(:user_added_to_group) do |user, group, automatic:|
