@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
-import { tracked } from '@glimmer/tracking';
+import { tracked } from "@glimmer/tracking";
 //import Controller, { inject as controller } from "@ember/controller";
 
 export default class AssignUser extends Component {
@@ -16,8 +16,9 @@ export default class AssignUser extends Component {
   };
 
   @action
-  async assign() {
-    console.log('this assign');
+  async assign(context) {
+    debugger;
+
     //return this.bulkTopicActions.performAndRefresh({
     return this.args.performAndRefresh({
       type: "assign",
@@ -29,8 +30,8 @@ export default class AssignUser extends Component {
 
   @action
   performRegistration() {
-    console.log('performRegistration');
-    if (this.onRegisterAction && typeof this.onRegisterAction === 'function') {
+    console.log("performRegistration");
+    if (this.onRegisterAction && typeof this.onRegisterAction === "function") {
       this.onRegisterAction(this.assign.bind(this));
     }
   }

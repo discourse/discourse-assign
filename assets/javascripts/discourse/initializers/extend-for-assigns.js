@@ -13,8 +13,7 @@ import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
-
-
+import { addBulkDropdownComponentForAction } from "discourse/components/modal/bulk-topic-actions";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -885,9 +884,6 @@ export default {
       return;
     }
 
-    console.log(container.lookup('component:assign-user'));
-    console.log(container.lookup('controllers:bulk-assign'));
-
     const currentUser = container.lookup("service:current-user");
     if (currentUser?.can_assign) {
       SearchAdvancedOptions.reopen({
@@ -932,31 +928,31 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      console.log(container.lookup('component:assign-user'));
-
-      api.addBulkActionButton({
+      api.addBulkDropdownItem({
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
-        action({ setComponent }) {
-          console.log(api.container.lookup('controllers:bulk-assign'));
-          setComponent(BulkAssign);
+        action() {
+          console.log(this);
+          console.log(foo);
         },
+        component: BulkAssign,
+        display: true,
         // action() {
-        //   // const owner = getOwner(this);
-        //   // const bulkAssignManagerService = owner.lookup('service:bulk-assign-manager');
-        //   // bulkAssignManagerService.invokeAction();
+        // const owner = getOwner(this);
+        // const bulkAssignManagerService = owner.lookup('service:bulk-assign-manager');
+        // bulkAssignManagerService.invokeAction();
         // },
       });
 
-      api.addBulkActionButton({
-        label: "topics.bulk.unassign",
-        icon: "user-times",
-        class: "btn-default unassign-topics",
-        action({ performAndRefresh }) {
-          performAndRefresh({ type: "unassign" });
-        },
-      });
+      // api.addBulkActionButton({
+      //   label: "topics.bulk.unassign",
+      //   icon: "user-times",
+      //   class: "btn-default unassign-topics",
+      //   action(performAndRefresh) {
+      //     performAndRefresh({ type: "unassign" });
+      //   },
+      // });
     });
   },
 };
