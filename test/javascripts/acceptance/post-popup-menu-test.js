@@ -111,7 +111,7 @@ acceptance("Discourse Assign | Post popup menu", function (needs) {
       },
     });
 
-    // we can skip this one for now, I can fix it in a core PR
+    // todo: we can skip this one for now, I can fix it in a core PR
     // assert.dom(".popup-menu").doesNotExist("The popup menu is closed");
 
     assert
