@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/application";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { renderAvatar } from "discourse/helpers/user-avatar";
@@ -8,6 +9,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
+import RenderGlimmer from "discourse/widgets/render-glimmer";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
@@ -646,19 +648,19 @@ function initialize(api) {
     }
   });
 
-  api.createWidget("assigned-to", {
+  api.createWidget("assigned-to-post", {
     html(attrs) {
-      let { assignedToUser, assignedToGroup, href } = attrs;
-
-      return h("p.assigned-to", [
-        assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
-        h("span.assign-text", I18n.t("discourse_assign.assigned_to")),
-        h(
-          "a",
-          { attributes: { class: "assigned-to-username", href } },
-          assignedToUser ? assignedToUser.username : assignedToGroup.name
-        ),
-      ]);
+      return new RenderGlimmer(
+        this,
+        "p.assigned-to",
+        hbs`<AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}} @href={{@data.href}} @post={{@data.post}} />`,
+        {
+          assignedToUser: attrs.post.assigned_to_user,
+          assignedToGroup: attrs.post.assigned_to_group,
+          href: attrs.href,
+          post: attrs.post,
+        }
+      );
     },
   });
 
@@ -792,6 +794,7 @@ function initialize(api) {
             if (data.type === "unassigned") {
               delete topic.indirectly_assigned_to[data.post_number];
             }
+
             this.appEvents.trigger("post-stream:refresh", {
               id: topic.postStream.posts[0].id,
             });
@@ -841,11 +844,13 @@ function initialize(api) {
           ? assignedToUserPath(assignedToUser)
           : assignedToGroupPath(assignedToGroup);
       }
+
       if (href) {
-        return dec.widget.attach("assigned-to", {
+        return dec.widget.attach("assigned-to-post", {
           assignedToUser,
           assignedToGroup,
           href,
+          post: postModel,
         });
       }
     }

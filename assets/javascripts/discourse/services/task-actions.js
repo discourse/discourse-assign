@@ -45,6 +45,11 @@ export default class TaskActions extends Service {
     });
   }
 
+  async unassignPost(post) {
+    await this.unassign(post.id, "Post");
+    delete post.topic.indirectly_assigned_to[post.id];
+  }
+
   showAssignModal(
     target,
     { isAssigned = false, targetType = "Topic", onSuccess }
@@ -60,6 +65,10 @@ export default class TaskActions extends Service {
         onSuccess,
       },
     });
+  }
+
+  showAssignPostModal(post) {
+    return this.showAssignModal(post, { targetType: "Post" });
   }
 
   reassignUserToTopic(user, target, targetType = "Topic") {

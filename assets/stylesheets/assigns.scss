@@ -26,6 +26,12 @@
   .assignee:not(:last-child):after {
     content: ", ";
   }
+
+  .more-button {
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+    vertical-align: middle;
+  }
 }
 
 .topic-body {
@@ -42,19 +48,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
-
-.assigned-to-user {
-  display: flex;
-  align-items: center;
-
-  img.avatar {
-    margin-right: 0.3em;
-  }
-
-  .unassign {
-    margin-left: 0.5em;
-  }
 }
 
 .topic-assigned-to {
