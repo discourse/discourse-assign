@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import { inject as service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AssignUserForm from "discourse/plugins/discourse-assign/discourse/components/assign-user-form";
 
