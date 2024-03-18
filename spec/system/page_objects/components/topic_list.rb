@@ -7,6 +7,10 @@ module PageObjects
         page.has_css?("#{topic_list_item_assigned(topic)}")
       end
 
+      def has_unassigned_status?(topic)
+        page.has_no_css?("#{topic_list_item_assigned(topic)}")
+      end
+
       private
 
       def topic_list_item_assigned(topic)

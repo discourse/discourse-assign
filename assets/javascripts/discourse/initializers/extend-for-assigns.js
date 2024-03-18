@@ -940,6 +940,7 @@ export default {
         action({ setComponent }) {
           setComponent(BulkAssignComponent);
         },
+        actionType: 'setComponent',
       });
 
       api.addBulkActionButton({
@@ -949,6 +950,7 @@ export default {
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },
+        actionType: 'performAndRefresh',
       });
     });
   },

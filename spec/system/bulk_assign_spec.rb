@@ -21,7 +21,8 @@ describe "Assign | Bulk Assign", type: :system do
   end
 
   describe "from topic list" do
-    it "can assign topics" do
+    it "can assign and unassign topics" do
+      ## Assign
       visit "/latest"
       topic = topics.first
 
@@ -49,6 +50,25 @@ describe "Assign | Bulk Assign", type: :system do
       # Reload and check that topic is now assigned
       visit "/latest"
       expect(topic_list).to have_assigned_status(topic)
+
+      ## Unassign
+
+      # Select Topic
+      topic_list_header.click_bulk_select_button
+      topic_list.click_topic_checkbox(topic)
+
+      # Click Unassign Button
+      topic_list_header.click_bulk_select_topics_dropdown
+      expect(topic_list_header).to have_unassign_topics_button
+      topic_list_header.click_unassign_topics_button
+      expect(topic_list_header).to have_bulk_select_modal
+
+      # Click Confirm
+      topic_list_header.click_bulk_topics_confirm
+
+      # Reload and check that topic is now assigned
+      visit "/latest"
+      expect(topic_list).to have_unassigned_status(topic)
     end
   end
 end
