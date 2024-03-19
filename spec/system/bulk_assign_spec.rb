@@ -7,7 +7,6 @@ describe "Assign | Bulk Assign", type: :system do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   fab!(:staff_user) { Fabricate(:user, groups: [Group[:staff]]) }
   fab!(:admin)
-  #fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
 
   before do
@@ -38,11 +37,16 @@ describe "Assign | Bulk Assign", type: :system do
 
       # Assign User
       assignee = staff_user.username
-      # For some reason you have to click twice!?
-      find(".control-group .user-chooser.email-group-user-chooser .formatted-selection").click
-      find(".control-group .user-chooser.email-group-user-chooser .formatted-selection").click
-      find(".control-group input").fill_in(with: assignee)
-      find("li[data-value='#{assignee}']").click
+      select_kit = PageObjects::Components::SelectKit.new("#assignee-chooser")
+
+      # This initial collapse is needed because for some reason the modal is
+      # opening with `is-expanded` property, but it isn't actually expanded.
+      select_kit.collapse
+
+      select_kit.expand_if_needed
+      select_kit.search(assignee)
+      select_kit.select_row_by_value(assignee)
+      select_kit.collapse
 
       # Click Confirm
       topic_list_header.click_bulk_topics_confirm

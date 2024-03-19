@@ -928,17 +928,14 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      let BulkAssignComponent = BulkAssign;
-      if (currentUser?.use_experimental_topic_bulk_actions) {
-        BulkAssignComponent = BulkActionsAssignUser;
-      }
+      const bulkAssignComponent = currentUser?.use_experimental_topic_bulk_actions ? BulkActionsAssignUser : BulkAssign;
 
       api.addBulkActionButton({
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
         action({ setComponent }) {
-          setComponent(BulkAssignComponent);
+          setComponent(bulkAssignComponent);
         },
         actionType: 'setComponent',
       });
