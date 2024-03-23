@@ -1,32 +1,13 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import { cloneJSON } from "discourse-common/lib/object";
+import topicWithAssignedPost from "../fixtures/topic-with-assigned-post";
 
-const username = "eviltrout";
 const new_assignee_username = "new_assignee";
-
-function topicWithAssignedPostResponse() {
-  const topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
-  const secondPost = topic.post_stream.posts[1];
-
-  topic["indirectly_assigned_to"] = {
-    [secondPost.id]: {
-      assigned_to: {
-        username,
-      },
-      post_number: 1,
-    },
-  };
-  secondPost["assigned_to_user"] = { username };
-
-  return topic;
-}
 
 const selectors = {
   assignedTo: ".post-stream article#post_2 .assigned-to",
@@ -42,7 +23,7 @@ const selectors = {
   },
 };
 
-const topic = topicWithAssignedPostResponse();
+const topic = topicWithAssignedPost();
 const post = topic.post_stream.posts[1];
 
 acceptance("Discourse Assign | Post popup menu", function (needs) {
@@ -111,7 +92,7 @@ acceptance("Discourse Assign | Post popup menu", function (needs) {
       },
     });
 
-    // todo: we can skip this one for now, I can fix it in a core PR
+    // todo: we can skip this one for now, It will be fixed it in a core PR
     // assert.dom(".popup-menu").doesNotExist("The popup menu is closed");
 
     assert
