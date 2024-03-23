@@ -38,11 +38,16 @@ function defaultTitle(topic) {
   }
 }
 
-function includeIsAssignedOnTopic(api) {
+function extendTopicModel(api) {
   api.modifyClass("model:topic", {
     pluginId: PLUGIN_ID,
+
     isAssigned() {
       return this.assigned_to_user || this.assigned_to_group;
+    },
+
+    isAssignedTo(user) {
+      return this.assigned_to_user?.username === user.username;
     },
   });
 }
@@ -794,7 +799,7 @@ export default {
     }
 
     withPluginApi("0.13.0", (api) => {
-      includeIsAssignedOnTopic(api);
+      extendTopicModel(api);
       initialize(api);
       registerTopicFooterButtons(api);
 

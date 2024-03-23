@@ -13,6 +13,8 @@ const DEPENDENT_KEYS = [
 
 export default {
   id: "reassign",
+  dependentKeys: DEPENDENT_KEYS,
+  classNames: ["reassign"],
 
   async action(id) {
     if (!this.currentUser?.can_assign) {
@@ -20,6 +22,7 @@ export default {
     }
 
     const taskActions = getOwner(this).lookup("service:task-actions");
+    const firstPostId = this.topic.postStream.firstPostId;
 
     switch (id) {
       case "unassign": {
@@ -27,10 +30,7 @@ export default {
         this.set("topic.assigned_to_group", null);
 
         await taskActions.unassign(this.topic.id);
-
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
-        });
+        this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         break;
       }
       case "reassign-self": {
@@ -38,10 +38,7 @@ export default {
         this.set("topic.assigned_to_group", null);
 
         await taskActions.reassignUserToTopic(this.currentUser, this.topic);
-
-        this.appEvents.trigger("post-stream:refresh", {
-          id: this.topic.postStream.firstPostId,
-        });
+        this.appEvents.trigger("post-stream:refresh", { id: firstPostId });
         break;
       }
       case "reassign": {
@@ -49,9 +46,7 @@ export default {
           targetType: "Topic",
           isAssigned: this.topic.isAssigned(),
           onSuccess: () =>
-            this.appEvents.trigger("post-stream:refresh", {
-              id: this.topic.postStream.firstPostId,
-            }),
+            this.appEvents.trigger("post-stream:refresh", { id: firstPostId }),
         });
         break;
       }
@@ -85,47 +80,19 @@ export default {
       };
     }
   },
-  dependentKeys: DEPENDENT_KEYS,
-  classNames: ["reassign"],
   content() {
-    const content = [
-      {
-        id: "unassign",
-        name: I18n.t("discourse_assign.unassign.help", {
-          username:
-            this.topic.assigned_to_user?.username ||
-            this.topic.assigned_to_group?.name,
-        }),
-        label: htmlSafe(
-          `${iconHTML("user-times")} ${I18n.t(
-            "discourse_assign.unassign.title"
-          )}`
-        ),
-      },
-    ];
-    if (
-      this.topic.isAssigned() &&
-      this.topic.assigned_to_user?.username !== this.currentUser.username
-    ) {
-      content.push({
-        id: "reassign-self",
-        name: I18n.t("discourse_assign.reassign.to_self_help"),
-        label: htmlSafe(
-          `${iconHTML("user-plus")} ${I18n.t(
-            "discourse_assign.reassign.to_self"
-          )}`
-        ),
-      });
+    const content = [];
+
+    if (this.topic.isAssigned()) {
+      content.push(unassignFromTopicButton(this.topic));
     }
-    content.push({
-      id: "reassign",
-      name: I18n.t("discourse_assign.reassign.help"),
-      label: htmlSafe(
-        `${iconHTML("group-plus")} ${I18n.t(
-          "discourse_assign.reassign.title_w_ellipsis"
-        )}`
-      ),
-    });
+
+    if (this.topic.isAssigned() && !this.topic.isAssignedTo(this.currentUser)) {
+      content.push(reassignToSelfButton());
+    }
+
+    content.push(editAssignmentsButton());
+
     return content;
   },
 
@@ -137,3 +104,37 @@ export default {
     );
   },
 };
+
+function editAssignmentsButton() {
+  return {
+    id: "reassign",
+    name: I18n.t("discourse_assign.reassign.help"),
+    label: htmlSafe(
+      `${iconHTML("group-plus")} ${I18n.t(
+        "discourse_assign.reassign.title_w_ellipsis"
+      )}`
+    ),
+  };
+}
+
+function reassignToSelfButton() {
+  return {
+    id: "reassign-self",
+    name: I18n.t("discourse_assign.reassign.to_self_help"),
+    label: htmlSafe(
+      `${iconHTML("user-plus")} ${I18n.t("discourse_assign.reassign.to_self")}`
+    ),
+  };
+}
+
+function unassignFromTopicButton(topic) {
+  const username =
+    topic.assigned_to_user?.username || topic.assigned_to_group?.name;
+  return {
+    id: "unassign",
+    name: I18n.t("discourse_assign.unassign.help", { username }),
+    label: htmlSafe(
+      `${iconHTML("user-times")} ${I18n.t("discourse_assign.unassign.title")}`
+    ),
+  };
+}
