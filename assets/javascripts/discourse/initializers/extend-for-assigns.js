@@ -42,12 +42,36 @@ function extendTopicModel(api) {
   api.modifyClass("model:topic", {
     pluginId: PLUGIN_ID,
 
+    assignees() {
+      const result = [];
+
+      if (this.assigned_to_user) {
+        result.push(this.assigned_to_user);
+      }
+
+      const postAssignees = this.assignedPosts().map((p) => p.assigned_to);
+      result.push(...postAssignees);
+      return result;
+    },
+
+    assignedPosts() {
+      if (!this.indirectly_assigned_to) {
+        return [];
+      }
+
+      return Object.values(this.indirectly_assigned_to);
+    },
+
     isAssigned() {
       return this.assigned_to_user || this.assigned_to_group;
     },
 
     isAssignedTo(user) {
       return this.assigned_to_user?.username === user.username;
+    },
+
+    hasAssignedPosts() {
+      return !!this.assignedPosts().length;
     },
   });
 }
@@ -105,7 +129,11 @@ function registerTopicFooterButtons(api) {
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
-      return this.currentUser?.can_assign && !this.topic.isAssigned();
+      return (
+        this.currentUser?.can_assign &&
+        !this.topic.isAssigned() &&
+        !this.topic.hasAssignedPosts()
+      );
     },
   });
 
