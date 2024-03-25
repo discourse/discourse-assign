@@ -65,7 +65,7 @@ export default {
     const topic = this.topic;
 
     if (topic.assigned_to_user || topic.hasAssignedPosts()) {
-      return unassignUsersButton(topic.assignees());
+      return unassignUsersButton(topic.uniqueAssignees());
     } else if (topic.assigned_to_group) {
       return unassignGroupButton(topic.assigned_to_group);
     }
