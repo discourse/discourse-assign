@@ -928,7 +928,10 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      const bulkAssignComponent = currentUser?.use_experimental_topic_bulk_actions ? BulkActionsAssignUser : BulkAssign;
+      const bulkAssignComponent =
+        currentUser?.use_experimental_topic_bulk_actions
+          ? BulkActionsAssignUser
+          : BulkAssign;
 
       api.addBulkActionButton({
         label: "topics.bulk.assign",
@@ -937,7 +940,7 @@ export default {
         action({ setComponent }) {
           setComponent(bulkAssignComponent);
         },
-        actionType: 'setComponent',
+        actionType: "setComponent",
       });
 
       api.addBulkActionButton({
@@ -947,7 +950,7 @@ export default {
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
         },
-        actionType: 'performAndRefresh',
+        actionType: "performAndRefresh",
       });
     });
   },
