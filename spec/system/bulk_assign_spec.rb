@@ -13,9 +13,6 @@ describe "Assign | Bulk Assign", type: :system do
     SiteSetting.assign_enabled = true
     SiteSetting.experimental_topic_bulk_actions_enabled_groups = "1"
 
-    # The system tests in this file are flaky and auth token related so turning this on
-    SiteSetting.verbose_auth_token_logging = true
-
     sign_in(admin)
   end
 
