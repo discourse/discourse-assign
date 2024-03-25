@@ -54,6 +54,12 @@ function extendTopicModel(api) {
       return result;
     },
 
+    uniqueAssignees() {
+      const map = new Map();
+      this.assignees().forEach((user) => map.set(user.username, user));
+      return [...map.values()];
+    },
+
     assignedPosts() {
       if (!this.indirectly_assigned_to) {
         return [];
