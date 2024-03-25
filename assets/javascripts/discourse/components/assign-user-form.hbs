@@ -2,6 +2,7 @@
   <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
   <AssigneeChooser
     autocomplete="off"
+    @id="assignee-chooser"
     @value={{this.assigneeName}}
     @onChange={{this.assignUsername}}
     @showUserStatus={{true}}
