@@ -16,7 +16,7 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
-import TopicLevelAssignMenu from "../lib/topic-level-assign-menu";
+import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
 
 const PLUGIN_ID = "discourse-assign";
 
