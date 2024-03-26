@@ -19,11 +19,15 @@ export default class AssignUser extends Component {
       return I18n.t("discourse_assign.assign_post_modal.title");
     }
 
-    if (this.model.reassign) {
+    if (this.editingTopicAssignments) {
       return I18n.t("discourse_assign.assign_modal.edit_assignments_title");
     } else {
       return I18n.t("discourse_assign.assign_modal.title");
     }
+  }
+
+  get editingTopicAssignments() {
+    return this.model.targetType === "Topic" && this.model.reassign;
   }
 
   @action
