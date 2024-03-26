@@ -1,10 +1,12 @@
-<div class="control-group">
-  <label>{{i18n "discourse_assign.assign_modal.assignment_label"}}</label>
-  <ComboBox
-    @value={{1}}
-    @content={{this.assignments}}
-  />
-</div>
+{{#if this.editingTopicAssignments}}
+  <div class="control-group">
+    <label>{{i18n "discourse_assign.assign_modal.assignment_label"}}</label>
+    <ComboBox
+      @value={{1}}
+      @content={{this.assignments}}
+    />
+  </div>
+{{/if}}
 
 <div class="control-group {{if this.assigneeError 'assignee-error'}}">
   <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>

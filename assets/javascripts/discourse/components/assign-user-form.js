@@ -32,6 +32,10 @@ export default class AssignUserForm extends Component {
       .map((status) => ({ id: status, name: status }));
   }
 
+  get editingTopicAssignments() {
+    return this.args.model.targetType === "Topic" && this.args.model.reassign;
+  }
+
   get status() {
     return (
       this.args.model.status || this.siteSettings.assign_statuses.split("|")[0]
