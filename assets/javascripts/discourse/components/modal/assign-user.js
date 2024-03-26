@@ -15,22 +15,15 @@ export default class AssignUser extends Component {
   };
 
   get title() {
-    let i18nSuffix;
-
-    switch (this.model.targetType) {
-      case "Post":
-        i18nSuffix = "_post_modal";
-        break;
-      case "Topic":
-        i18nSuffix = "_modal";
-        break;
+    if (this.model.targetType === "Post") {
+      return I18n.t("discourse_assign.assign_post_modal.title");
     }
 
-    return I18n.t(
-      `discourse_assign.assign${i18nSuffix}.${
-        this.model.reassign ? "reassign_title" : "title"
-      }`
-    );
+    if (this.model.reassign) {
+      return I18n.t("discourse_assign.assign_modal.edit_assignments_title");
+    } else {
+      return I18n.t("discourse_assign.assign_modal.title");
+    }
   }
 
   @action
