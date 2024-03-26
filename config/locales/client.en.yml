@@ -67,6 +67,7 @@ en:
       assign_modal:
         title: "Assign Topic"
         reassign_title: "Reassign Topic"
+        edit_assignments_title: "Edit Assignments"
         assign: "Assign"
         assignee_label: Assignee
         assignment_label: Assignment
