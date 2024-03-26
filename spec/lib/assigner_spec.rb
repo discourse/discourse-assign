@@ -264,6 +264,21 @@ RSpec.describe Assigner do
         expect(second_assign[:success]).to eq(true)
       end
 
+      it "assignments limit doesn't prevent from reassigning a post" do
+        posts =
+          (described_class::ASSIGNMENTS_PER_TOPIC_LIMIT).times.map do
+            Fabricate(:post, topic: topic)
+          end
+
+        posts.each do |post|
+          user = Fabricate(:moderator)
+          described_class.new(post, admin).assign(user)
+        end
+
+        status = described_class.new(posts.first, admin).assign(Fabricate(:moderator))
+        expect(status[:success]).to eq(true)
+      end
+
       context "when 'allow_self_reassign' is false" do
         subject(:assign) do
           assigner.assign(moderator, note: other_note, allow_self_reassign: self_reassign)
