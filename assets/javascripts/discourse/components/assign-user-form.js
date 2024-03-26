@@ -18,6 +18,14 @@ export default class AssignUserForm extends Component {
     this.args.formApi.submit = this.assign;
   }
 
+  get assignments() {
+    return [
+      { id: 1, name: "Topic" },
+      { id: 2, name: "Post #1" },
+      { id: 3, name: "Post #2" },
+    ];
+  }
+
   get availableStatuses() {
     return this.siteSettings.assign_statuses
       .split("|")
