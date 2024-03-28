@@ -19,11 +19,26 @@ export default class AssignUserForm extends Component {
   }
 
   get assignments() {
-    return [
-      { id: 1, name: "Topic" },
-      { id: 2, name: "Post #1" },
-      { id: 3, name: "Post #2" },
-    ];
+    const topicAssignment = { id: 0, name: "Topic" };
+    return [topicAssignment, ...this.postAssignments];
+  }
+
+  get postAssignments() {
+    if (this.args.model.targetType !== "Topic") {
+      return [];
+    }
+
+    const topic = this.args.model.target;
+    if (
+      !topic.indirectly_assigned_to ||
+      !Object.keys(topic.indirectly_assigned_to).length
+    ) {
+      return [];
+    }
+
+    return Object.values(topic.indirectly_assigned_to).map((value) => {
+      return { id: value.post_number, name: `Post #${value.post_number}` };
+    });
   }
 
   get availableStatuses() {
