@@ -174,9 +174,18 @@
     width: 1.33em;
     height: 1.33em;
   }
+  .avatar.overlap {
+    z-index: 1;
+    margin-right: -0.4em;
+  }
+
   .d-icon,
   i.fa {
     color: var(--primary-medium);
+  }
+  .d-icon {
+    margin-left: 0.165em;
+    margin-right: 0.165em;
   }
 }
 

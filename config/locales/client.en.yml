@@ -57,6 +57,13 @@ en:
         help: "Edit assignment details"
       reassign_modal:
         title: "Reassign Topic"
+      topic_level_menu:
+        edit_assignments: "Edit assignments..."
+        reassign_topic_to_me: "Reassign topic to me"
+        unassign_with_ellipsis: "Unassign..."
+        unassign_from_post: "Unassign @%{assignee} from #%{post_number}"
+        unassign_from_post_help: "Unassign @%{assignee} from post #%{post_number}"
+        unassign_from_topic: "Unassign @%{username} from topic"
       assign_modal:
         title: "Assign Topic"
         reassign_title: "Reassign Topic"
