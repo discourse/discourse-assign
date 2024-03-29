@@ -11,17 +11,17 @@ export default class AssignUserForm extends Component {
   @tracked assigneeError = false;
   @tracked
   assigneeName = this.args.model.username || this.args.model.group_name;
-  TOPIC = 0;
+  TOPIC_ID = 0;
 
   constructor() {
     super(...arguments);
 
     this.args.formApi.submit = this.assign;
-    this.selectedTargetId = this.TOPIC;
+    this.selectedTargetId = this.TOPIC_ID;
   }
 
   get assignments() {
-    const topicAssignment = { id: this.TOPIC, name: "Topic" };
+    const topicAssignment = { id: this.TOPIC_ID, name: "Topic" };
     return [topicAssignment, ...this.postAssignments];
   }
 
@@ -96,7 +96,7 @@ export default class AssignUserForm extends Component {
 
     const topic = this.args.model.target;
     let assignee;
-    if (selectedTargetId === this.TOPIC) {
+    if (selectedTargetId === this.TOPIC_ID) {
       assignee = topic.assigned_to_user;
     } else {
       const postNumber = selectedTargetId;
