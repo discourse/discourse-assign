@@ -92,16 +92,19 @@ export default class AssignUserForm extends Component {
 
   @action
   synchronizeAssignee(selectedTargetId) {
-    const topic = this.args.model.target;
-
     this.selectedTargetId = selectedTargetId;
+
+    const topic = this.args.model.target;
+    let assignee;
     if (selectedTargetId === this.TOPIC) {
-      this.assigneeName = topic.assigned_to_user.username;
+      assignee = topic.assigned_to_user;
     } else {
       const assignment = Object.values(topic.indirectly_assigned_to).find(
         (v) => v.post_number === selectedTargetId
       );
-      this.assigneeName = assignment.assigned_to.username;
+      assignee = assignment.assigned_to;
     }
+
+    this.assigneeName = assignee.username;
   }
 }
