@@ -99,10 +99,8 @@ export default class AssignUserForm extends Component {
     if (selectedTargetId === this.TOPIC) {
       assignee = topic.assigned_to_user;
     } else {
-      const assignment = Object.values(topic.indirectly_assigned_to).find(
-        (v) => v.post_number === selectedTargetId
-      );
-      assignee = assignment.assigned_to;
+      const postNumber = selectedTargetId;
+      assignee = topic.postAssignee(postNumber);
     }
 
     this.assigneeName = assignee.username;

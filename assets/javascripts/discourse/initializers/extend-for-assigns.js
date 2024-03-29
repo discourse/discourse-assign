@@ -79,6 +79,13 @@ function extendTopicModel(api) {
     hasAssignedPosts() {
       return !!this.assignedPosts().length;
     },
+
+    postAssignee(postNumber) {
+      const assignment = this.assignedPosts().find(
+        (p) => p.post_number === postNumber
+      );
+      return assignment?.assigned_to;
+    },
   });
 }
 
@@ -569,7 +576,9 @@ function initialize(api) {
       return new RenderGlimmer(
         this,
         "p.assigned-to",
-        hbs`<AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}} @href={{@data.href}} @post={{@data.post}} />`,
+        hbs`
+          <AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}}
+                          @href={{@data.href}} @post={{@data.post}} />`,
         {
           assignedToUser: attrs.post.assigned_to_user,
           assignedToGroup: attrs.post.assigned_to_group,
