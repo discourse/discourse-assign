@@ -95,7 +95,11 @@ export default class AssignUserForm extends Component {
     this.args.model.group_name = groupName;
 
     if (this.editingTopicAssignments) {
-      // fixme andrei implement
+      const assignment = { username, groupName };
+      this.args.model.updatedPostAssignments.set(
+        this.selectedTargetId,
+        assignment
+      );
     }
   }
 
