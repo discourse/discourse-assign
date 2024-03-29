@@ -32,6 +32,7 @@ export default class AssignUser extends Component {
 
   @action
   async onSubmit() {
+    console.log("this.model.updatedPostAssignments", this.model.updatedPostAssignments);
     this.args.closeModal();
     await this.taskActions.assign(this.model);
   }

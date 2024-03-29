@@ -18,6 +18,7 @@ export default class AssignUserForm extends Component {
 
     this.args.formApi.submit = this.assign;
     this.selectedTargetId = this.TOPIC_ID;
+    this.args.model.updatedPostAssignments = new Map();
   }
 
   get assignments() {
@@ -81,12 +82,20 @@ export default class AssignUserForm extends Component {
     this.assigneeName = name;
     this.assigneeError = false;
 
+    let username, groupName;
     if (this.taskActions.allowedGroupsForAssignment.includes(name)) {
-      this.args.model.username = null;
-      this.args.model.group_name = name;
+      username = null;
+      groupName = name;
     } else {
-      this.args.model.username = name;
-      this.args.model.group_name = null;
+      username = name;
+      groupName = null;
+    }
+
+    this.args.model.username = username;
+    this.args.model.group_name = groupName;
+
+    if (this.editingTopicAssignments) {
+      // fixme andrei implement
     }
   }
 
