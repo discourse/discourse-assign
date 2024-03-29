@@ -264,7 +264,7 @@ RSpec.describe Assigner do
         expect(second_assign[:success]).to eq(true)
       end
 
-      it "assignments limit doesn't prevent from reassigning a post" do
+      it "reassigns a post even when at the assignments limit" do
         posts =
           (described_class::ASSIGNMENTS_PER_TOPIC_LIMIT).times.map do
             Fabricate(:post, topic: topic)
