@@ -44,7 +44,7 @@ export default {
       case "reassign": {
         await taskActions.showAssignModal(this.topic, {
           targetType: "Topic",
-          isAssigned: this.topic.isAssigned(),
+          isAssigned: this.topic.isAssigned() || this.topic.hasAssignedPosts(),
           onSuccess: () =>
             this.appEvents.trigger("post-stream:refresh", { id: firstPostId }),
         });
