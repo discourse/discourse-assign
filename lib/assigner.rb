@@ -547,8 +547,7 @@ class ::Assigner
   end
 
   def reassign?
-    return false if !@target.is_a?(Topic)
-    Assignment.exists?(topic_id: @target.id, target: @target, active: true)
+    Assignment.exists?(target: @target, active: true)
   end
 
   def no_assignee_change?(assignee)
