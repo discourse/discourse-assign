@@ -28,6 +28,20 @@ export default class Assignment extends Component {
     }
   }
 
+  @action
+  setAssignee([newAssignee]) {
+    this.assigneeName = newAssignee;
+    // this.assigneeError = false; fixme andrei
+
+    if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
+      this.args.model.username = null;
+      this.args.model.group_name = newAssignee;
+    } else {
+      this.args.model.username = newAssignee;
+      this.args.model.group_name = null;
+    }
+  }
+
   get #assignStatuses() {
     return this.siteSettings.assign_statuses.split("|");
   }

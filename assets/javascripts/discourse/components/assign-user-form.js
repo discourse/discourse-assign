@@ -27,18 +27,4 @@ export default class AssignUserForm extends Component {
 
     await this.args.onSubmit();
   }
-
-  @action
-  assignUsername([name]) {
-    this.assigneeName = name;
-    this.assigneeError = false;
-
-    if (this.taskActions.allowedGroupsForAssignment.includes(name)) {
-      this.args.model.username = null;
-      this.args.model.group_name = name;
-    } else {
-      this.args.model.username = name;
-      this.args.model.group_name = null;
-    }
-  }
 }
