@@ -19,13 +19,6 @@ export default class AssignUserForm extends Component {
   }
 
   @action
-  handleTextAreaKeydown(event) {
-    if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
-      this.assign();
-    }
-  }
-
-  @action
   async assign() {
     if (!this.assigneeName) {
       this.assigneeError = true;
