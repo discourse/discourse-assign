@@ -7,6 +7,8 @@ export default class Assignment extends Component {
   @service siteSettings;
   @service taskActions;
 
+  @tracked assignee = this.args.model.username || this.args.model.group_name;
+
   constructor() {
     super(...arguments);
   }
