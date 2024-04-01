@@ -31,7 +31,7 @@ export default class Assignment extends Component {
   @action
   setAssignee([newAssignee]) {
     this.assignee = newAssignee;
-    this.args.assigneeError = false;
+    // this.args.showAssigneeError = false;
 
     if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
       this.args.model.username = null;

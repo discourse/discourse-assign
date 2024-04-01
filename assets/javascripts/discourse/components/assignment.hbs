@@ -1,4 +1,4 @@
-<div class="control-group {{if @assigneeError 'assignee-error'}}">
+<div class="control-group {{if @showAssigneeError 'assignee-error'}}">
   <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
   <AssigneeChooser
     autocomplete="off"
@@ -21,7 +21,7 @@
   }}
   />
 
-  {{#if @assigneeError}}
+  {{#if @showAssigneeError}}
     <span class="error-label">
       {{d-icon "exclamation-triangle"}}
       {{i18n "discourse_assign.assign_modal.choose_assignee"}}
