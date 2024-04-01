@@ -20,6 +20,7 @@ export default class AssignUserForm extends Component {
 
   @action
   async assign() {
+    console.log("ass");
     if (!this.assigneeName) {
       this.assigneeError = true;
       return;
