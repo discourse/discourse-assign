@@ -9,6 +9,7 @@ export default class AssignUserForm extends Component {
   @service capabilities;
 
   @tracked assigneeError = false;
+  @tracked selectedTargetId = 0;
   @tracked
   assigneeName = this.args.model.username || this.args.model.group_name;
   TOPIC_ID = 0;
