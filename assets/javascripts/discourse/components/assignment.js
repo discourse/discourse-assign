@@ -4,10 +4,28 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default class Assignment extends Component {
+  @service siteSettings;
+
+  constructor() {
+    super(...arguments);
+  }
+
+  get status() {
+    return this.args.status || this.#assignStatuses[0];
+  }
+
+  get availableStatuses() {
+    return this.#assignStatuses.map((status) => ({ id: status, name: status }));
+  }
+
   @action
   handleTextAreaKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
       this.args.onSubmit();
     }
+  }
+
+  get #assignStatuses() {
+    return this.siteSettings.assign_statuses.split("|");
   }
 }

@@ -18,18 +18,6 @@ export default class AssignUserForm extends Component {
     this.args.formApi.submit = this.assign;
   }
 
-  get availableStatuses() {
-    return this.siteSettings.assign_statuses
-      .split("|")
-      .map((status) => ({ id: status, name: status }));
-  }
-
-  get status() {
-    return (
-      this.args.model.status || this.siteSettings.assign_statuses.split("|")[0]
-    );
-  }
-
   @action
   handleTextAreaKeydown(event) {
     if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
