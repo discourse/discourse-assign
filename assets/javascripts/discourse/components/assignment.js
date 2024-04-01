@@ -30,7 +30,7 @@ export default class Assignment extends Component {
 
   @action
   setAssignee([newAssignee]) {
-    this.assigneeName = newAssignee;
+    this.assignee = newAssignee;
     // this.assigneeError = false; fixme andrei
 
     if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
