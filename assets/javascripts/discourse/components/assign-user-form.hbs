@@ -41,4 +41,6 @@
   </div>
 {{/if}}
 
-<Assignment @onSubmit={{this.assign}} />
+<Assignment
+  @note={{@model.note}}
+  @onSubmit={{this.assign}} />
