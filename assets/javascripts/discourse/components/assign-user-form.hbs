@@ -41,16 +41,4 @@
   </div>
 {{/if}}
 
-<div class="control-group assign-status">
-  <label>
-    {{i18n "discourse_assign.assign_modal.note_label"}}&nbsp;<span
-      class="label-optional"
-    >{{i18n "discourse_assign.assign_modal.optional_label"}}</span>
-  </label>
-
-  <Textarea
-    id="assign-modal-note"
-    @value={{@model.note}}
-    {{on "keydown" this.handleTextAreaKeydown}}
-  />
-</div>
+<Assignment />
