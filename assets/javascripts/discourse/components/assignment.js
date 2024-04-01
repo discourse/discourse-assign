@@ -5,6 +5,7 @@ import { inject as service } from "@ember/service";
 
 export default class Assignment extends Component {
   @service siteSettings;
+  @service taskActions;
 
   constructor() {
     super(...arguments);

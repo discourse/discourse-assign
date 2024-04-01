@@ -1,34 +1,3 @@
-<div class="control-group {{if this.assigneeError 'assignee-error'}}">
-  <label>{{i18n "discourse_assign.assign_modal.assignee_label"}}</label>
-  <AssigneeChooser
-    autocomplete="off"
-    @id="assignee-chooser"
-    @value={{this.assigneeName}}
-    @onChange={{this.assignUsername}}
-    @showUserStatus={{true}}
-    @options={{hash
-      mobilePlacementStrategy="absolute"
-      includeGroups=true
-      customSearchOptions=(hash
-        assignableGroups=true defaultSearchResults=this.taskActions.suggestions
-      )
-      groupMembersOf=this.taskActions.allowedGroups
-      maximum=1
-      tabindex=1
-      expandedOnInsert=(not this.assigneeName)
-      caretUpIcon="search"
-      caretDownIcon="search"
-    }}
-  />
-
-  {{#if this.assigneeError}}
-    <span class="error-label">
-      {{d-icon "exclamation-triangle"}}
-      {{i18n "discourse_assign.assign_modal.choose_assignee"}}
-    </span>
-  {{/if}}
-</div>
-
 <Assignment
   @note={{@model.note}}
   @status={{@model.status}}
