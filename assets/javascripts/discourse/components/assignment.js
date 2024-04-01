@@ -14,11 +14,23 @@ export default class Assignment extends Component {
   }
 
   get status() {
-    return this.args.status || this.#assignStatuses[0];
+    return this.args.status || this.assignStatuses[0];
+  }
+
+  get assignStatuses() {
+    return this.siteSettings.assign_statuses.split("|");
   }
 
   get assignStatusOptions() {
-    return this.#assignStatuses.map((status) => ({ id: status, name: status }));
+    return this.assignStatuses.map((status) => ({ id: status, name: status }));
+  }
+
+  get assigneeIsEmpty() {
+    return !this.args.model.username && !this.args.model.group_name;
+  }
+
+  get showAssigneeIeEmptyError() {
+    return this.assigneeIsEmpty && this.args.showValidationErrors;
   }
 
   @action
@@ -31,7 +43,6 @@ export default class Assignment extends Component {
   @action
   setAssignee([newAssignee]) {
     this.assignee = newAssignee;
-    // this.args.showAssigneeError = false;
 
     if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
       this.args.model.username = null;
@@ -40,9 +51,5 @@ export default class Assignment extends Component {
       this.args.model.username = newAssignee;
       this.args.model.group_name = null;
     }
-  }
-
-  get #assignStatuses() {
-    return this.siteSettings.assign_statuses.split("|");
   }
 }

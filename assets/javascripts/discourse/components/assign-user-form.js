@@ -9,16 +9,22 @@ export default class AssignUserForm extends Component {
   @service capabilities;
 
   @tracked assigneeError = false;
+  @tracked showValidationErrors = false;
+
   constructor() {
     super(...arguments);
 
     this.args.formApi.submit = this.assign;
   }
 
+  get assigneeIsEmpty() {
+    return !this.args.model.username && !this.args.model.group_name;
+  }
+
   @action
   async assign() {
-    if (!(this.args.model.username || this.args.model.group_name)) {
-      this.assigneeError = true;
+    if (this.assigneeIsEmpty) {
+      this.showValidationErrors = true;
       return;
     }
 
