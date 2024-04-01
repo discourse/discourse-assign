@@ -3,7 +3,7 @@
   <AssigneeChooser
     autocomplete="off"
     @id="assignee-chooser"
-    @value={{this.assigneeName}}
+    @value={{this.assignee}}
     @onChange={{this.assignUsername}}
     @showUserStatus={{true}}
     @options={{hash
@@ -15,7 +15,7 @@
     groupMembersOf=this.taskActions.allowedGroups
     maximum=1
     tabindex=1
-    expandedOnInsert=(not this.assigneeName)
+    expandedOnInsert=(not this.assignee)
     caretUpIcon="search"
     caretDownIcon="search"
   }}
