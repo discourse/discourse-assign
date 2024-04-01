@@ -14,7 +14,7 @@ export default class Assignment extends Component {
     return this.args.status || this.#assignStatuses[0];
   }
 
-  get availableStatuses() {
+  get assignStatusOptions() {
     return this.#assignStatuses.map((status) => ({ id: status, name: status }));
   }
 

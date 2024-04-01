@@ -3,7 +3,7 @@
     <label>{{i18n "discourse_assign.assign_modal.status_label"}}</label>
     <ComboBox
       @id="assign-status"
-      @content={{this.availableStatuses}}
+      @content={{this.assignStatusOptions}}
       @value={{this.status}}
       @onChange={{fn (mut @status)}}
     />
