@@ -69,7 +69,9 @@ en:
         reassign_title: "Reassign Topic"
         assign: "Assign"
         assignee_label: Assignee
+        assignment_label: Assignment
         choose_assignee: Choose a user to assign.
+        edit_assignments_title: "Edit Assignments"
         note_label: Note
         optional_label: "(optional)"
         status_label: Status
