@@ -62,6 +62,8 @@ nl:
         help: "Toewijzingsdetails bewerken"
       reassign_modal:
         title: "Topic opnieuw toewijzen"
+      topic_level_menu:
+        unassign_with_ellipsis: "Toewijzing opheffen..."
       assign_modal:
         title: "Topic toewijzen"
         reassign_title: "Topic opnieuw toewijzen"

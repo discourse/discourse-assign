@@ -62,6 +62,8 @@ fr:
         help: "Modifier les détails de l'attribution"
       reassign_modal:
         title: "Réattribuer le sujet"
+      topic_level_menu:
+        unassign_with_ellipsis: "Annuler l'attribution…"
       assign_modal:
         title: "Attribuer le sujet"
         reassign_title: "Réattribuer le sujet"

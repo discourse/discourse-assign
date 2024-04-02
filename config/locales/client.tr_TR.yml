@@ -62,6 +62,8 @@ tr_TR:
         help: "Atama bilgilerini düzenle"
       reassign_modal:
         title: "Konuyu yeniden ata"
+      topic_level_menu:
+        unassign_with_ellipsis: "Atamayı kaldır..."
       assign_modal:
         title: "Konu Ata"
         reassign_title: "Konuyu yeniden ata"

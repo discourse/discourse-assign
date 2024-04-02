@@ -31,6 +31,8 @@ uk:
         help: "Призначити тему користувачеві"
       reassign:
         title: "Редагувати"
+      topic_level_menu:
+        unassign_with_ellipsis: "Скасувати призначення..."
       assign_modal:
         title: "Призначити тему"
         assign: "Призначити"

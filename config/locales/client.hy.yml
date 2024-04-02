@@ -26,6 +26,8 @@ hy:
         help: "Վերագրել Թեման Օգտատիրոջը"
       reassign:
         title: "Խմբագրել"
+      topic_level_menu:
+        unassign_with_ellipsis: "Ետ կանչել վերագրումը..."
       assign_modal:
         title: "Վերագրել Թեման"
         assign: "Վերագրել"

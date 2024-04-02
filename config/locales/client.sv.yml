@@ -54,6 +54,8 @@ sv:
         help: "Redigera tilldelningsdetaljer"
       reassign_modal:
         title: "Tilldela om ämne"
+      topic_level_menu:
+        unassign_with_ellipsis: "Ta bort tilldelning..."
       assign_modal:
         title: "Tilldela ämne"
         reassign_title: "Tilldela om ämne"

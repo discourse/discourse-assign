@@ -36,6 +36,8 @@ da:
         help: "Tildel Emne til Bruger"
       reassign:
         title: "Redigér"
+      topic_level_menu:
+        unassign_with_ellipsis: "Fjern tildeling..."
       assign_modal:
         title: "Tildel Emne"
         assign: "Tildel"

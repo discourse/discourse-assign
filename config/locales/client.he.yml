@@ -62,6 +62,13 @@ he:
         help: "עריכת פרטי משימה"
       reassign_modal:
         title: "הקצאת נושא מחדש"
+      topic_level_menu:
+        edit_assignments: "עריכת הקצאות…"
+        reassign_topic_to_me: "הקצאת הנושא אליי מחדש"
+        unassign_with_ellipsis: "ביטול הקצאה..."
+        unassign_from_post: "ביטול הקצאת ‎@%{assignee} ממס׳ %{post_number}"
+        unassign_from_post_help: "ביטול הקצאת ‎@%{assignee} מפוסט מס׳ %{post_number}"
+        unassign_from_topic: "ביטול הקצאת ‎@%{username} מנושא"
       assign_modal:
         title: "הקצאת נושא"
         reassign_title: "הקצאת נושא מחדש"

@@ -49,6 +49,8 @@ hu:
         to_self_help: "Téma átvétele"
       reassign_modal:
         title: "Téma átadása"
+      topic_level_menu:
+        unassign_with_ellipsis: "Elvétel…"
       assign_modal:
         title: "Téma kiosztása"
         reassign_title: "Téma átadása"

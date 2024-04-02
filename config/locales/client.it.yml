@@ -62,6 +62,8 @@ it:
         help: "Modifica dettagli dell'assegnazione"
       reassign_modal:
         title: "Riassegna argomento"
+      topic_level_menu:
+        unassign_with_ellipsis: "Annullamento assegnazione..."
       assign_modal:
         title: "Assegna Argomento"
         reassign_title: "Riassegna argomento"

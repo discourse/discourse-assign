@@ -62,6 +62,8 @@ ar:
         help: "تعديل تفاصيل التعيين"
       reassign_modal:
         title: "إعادة تعيين الموضوع"
+      topic_level_menu:
+        unassign_with_ellipsis: "إلغاء تعيين..."
       assign_modal:
         title: "تعيين الموضوع"
         reassign_title: "إعادة تعيين الموضوع"

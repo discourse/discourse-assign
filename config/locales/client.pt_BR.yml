@@ -62,6 +62,8 @@ pt_BR:
         help: "Editar detalhes da atribuição"
       reassign_modal:
         title: "Reatribuir tópico"
+      topic_level_menu:
+        unassign_with_ellipsis: "Remover atribuição..."
       assign_modal:
         title: "Atribuir tópico"
         reassign_title: "Reatribuir tópico"

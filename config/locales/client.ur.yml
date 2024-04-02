@@ -49,6 +49,8 @@ ur:
         to_self_help: "مجھے موضوع دوبارہ تفویض کریں"
       reassign_modal:
         title: "موضوع دوبارہ تفویض کریں"
+      topic_level_menu:
+        unassign_with_ellipsis: "غیر تفویض کریں..."
       assign_modal:
         title: "ٹاپک اسائین کریں"
         reassign_title: "موضوع دوبارہ تفویض کریں"

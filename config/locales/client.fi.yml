@@ -62,6 +62,8 @@ fi:
         help: "Muokkaa osoituksen tietoja"
       reassign_modal:
         title: "Osoita ketju uudelleen"
+      topic_level_menu:
+        unassign_with_ellipsis: "Peru osoitus..."
       assign_modal:
         title: "Osoita ketju"
         reassign_title: "Osoita ketju uudelleen"
