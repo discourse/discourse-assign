@@ -19,9 +19,17 @@ export default class TopicAssignments extends Component {
   @action
   synchronizeAssignment(selectedAssignmentId) {
     this.selectedAssignmentId = selectedAssignmentId;
-    this.selectedAssignment = this.args.assignments.find(
-      (a) => a.id === selectedAssignmentId
-    ); // fixme andrei
+    // fixme andrei:
+    if (selectedAssignmentId === this.TOPIC_ID) {
+      this.selectedAssignment = this.args.assignments.find(
+        (a) => a.type === "Topic"
+      );
+    } else {
+      this.selectedAssignment = this.args.assignments.find(
+        (a) => a.postNumber === selectedAssignmentId
+      );
+    }
+    console.log("this.selectedAssignment", this.selectedAssignment);
   }
 
   #toComboBoxOption(assignment) {
@@ -30,7 +38,7 @@ export default class TopicAssignments extends Component {
     } else {
       return {
         id: assignment.post_number,
-        name: `Post #${assignment.post_number}`, // fixme andrei string
+        name: `Post #${assignment.postNumber}`, // fixme andrei string
       };
     }
   }
