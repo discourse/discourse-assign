@@ -3,6 +3,7 @@ import { htmlSafe } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { iconHTML } from "discourse-common/lib/icon-library";
 import I18n from "I18n";
+import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
@@ -22,6 +23,7 @@ export default {
     }
 
     const taskActions = getOwner(this).lookup("service:task-actions");
+    const modal = getOwner(this).lookup("service:modal");
     const firstPostId = this.topic.postStream.firstPostId;
 
     switch (id) {
@@ -42,9 +44,10 @@ export default {
         break;
       }
       case "reassign": {
-        await taskActions.showAssignModal(this.topic, {
-          targetType: "Topic",
-          isAssigned: this.topic.isAssigned(),
+        await modal.show(EditTopicAssignments, {
+          model: {
+            topic: this.topic,
+          },
           onSuccess: () =>
             this.appEvents.trigger("post-stream:refresh", { id: firstPostId }),
         });

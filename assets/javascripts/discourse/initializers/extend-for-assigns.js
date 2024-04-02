@@ -17,6 +17,7 @@ import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
+import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -110,6 +111,7 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
+      const modal = getOwner(this).lookup("service:modal");
 
       if (this.topic.isAssigned()) {
         this.set("topic.assigned_to_user", null);
@@ -121,7 +123,10 @@ function registerTopicFooterButtons(api) {
           id: this.topic.postStream.firstPostId,
         });
       } else {
-        await taskActions.showAssignModal(this.topic, {
+        await modal.show(EditTopicAssignments, {
+          model: {
+            topic: this.topic,
+          },
           onSuccess: () =>
             this.appEvents.trigger("post-stream:refresh", {
               id: this.topic.postStream.firstPostId,
