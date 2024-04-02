@@ -1,13 +1,13 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
+import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import I18n from "I18n";
 
 export default class EditTopicAssignments extends Component {
   @service taskActions;
-
-  model = new TrackedObject(this.args.model);
+  @tracked assignments = [];
 
   // fixme andrei
   // `submit` property will be mutated by the `AssignUserForm` component
@@ -22,7 +22,8 @@ export default class EditTopicAssignments extends Component {
 
   @action
   async onSubmit() {
-    this.args.closeModal();
-    await this.taskActions.assign(this.model);
+    throw "Not implemented";
+    // this.args.closeModal();
+    // await this.taskActions.assign(this.model);
   }
 }
