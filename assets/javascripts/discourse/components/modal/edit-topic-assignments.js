@@ -9,6 +9,7 @@ export default class EditTopicAssignments extends Component {
 
   model = new TrackedObject(this.args.model);
 
+  // fixme andrei
   // `submit` property will be mutated by the `AssignUserForm` component
   formApi = {
     submit() {},
