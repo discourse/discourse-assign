@@ -36,7 +36,7 @@
       @id="assign-status"
       @content={{this.assignStatusOptions}}
       @value={{this.status}}
-      @onChange={{fn (mut @model.status)}}
+      @onChange={{fn (mut @assignment.status)}}
     />
   </div>
 {{/if}}
@@ -49,7 +49,7 @@
 
   <Textarea
     id="assign-modal-note"
-    @value={{@model.note}}
+    @value={{@assignment.note}}
     {{on "keydown" this.handleTextAreaKeydown}}
   />
 </div>

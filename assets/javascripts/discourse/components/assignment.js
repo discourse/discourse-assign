@@ -7,14 +7,15 @@ export default class Assignment extends Component {
   @service siteSettings;
   @service taskActions;
 
-  @tracked assignee = this.args.model.username || this.args.model.group_name;
+  @tracked assignee =
+    this.args.assignment.username || this.args.assignment.group_name;
 
   constructor() {
     super(...arguments);
   }
 
   get status() {
-    return this.args.model.status || this.assignStatuses[0];
+    return this.args.assignment.status || this.assignStatuses[0];
   }
 
   get assignStatuses() {
@@ -26,7 +27,7 @@ export default class Assignment extends Component {
   }
 
   get assigneeIsEmpty() {
-    return !this.args.model.username && !this.args.model.group_name;
+    return !this.args.assignment.username && !this.args.assignment.group_name;
   }
 
   get showAssigneeIeEmptyError() {
@@ -45,11 +46,11 @@ export default class Assignment extends Component {
     this.assignee = newAssignee;
 
     if (this.taskActions.allowedGroupsForAssignment.includes(newAssignee)) {
-      this.args.model.username = null;
-      this.args.model.group_name = newAssignee;
+      this.args.assignment.username = null;
+      this.args.assignment.group_name = newAssignee;
     } else {
-      this.args.model.username = newAssignee;
-      this.args.model.group_name = null;
+      this.args.assignment.username = newAssignee;
+      this.args.assignment.group_name = null;
     }
   }
 }
