@@ -26,6 +26,8 @@ sw:
         help: "Pangia Mada kwa Mtumiaji"
       reassign:
         title: "Hariri"
+      topic_level_menu:
+        unassign_with_ellipsis: "Haijakabithiwa..."
       assign_modal:
         title: "Awadha Mada"
         assign: "Kabidhi"

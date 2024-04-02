@@ -25,6 +25,8 @@ zh_TW:
         help: "指派主題給使用者"
       reassign:
         title: "編輯"
+      topic_level_menu:
+        unassign_with_ellipsis: "取消指派..."
       assign_modal:
         title: "指派主題"
         assign: "指派"

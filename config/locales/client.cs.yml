@@ -62,6 +62,8 @@ cs:
         help: "Upravit podrobnosti přidělení"
       reassign_modal:
         title: "Změnit přidělení tématu"
+      topic_level_menu:
+        unassign_with_ellipsis: "Odebrat přidělení..."
       assign_modal:
         title: "Zadat téma"
         reassign_title: "Změnit přidělení tématu"

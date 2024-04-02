@@ -62,6 +62,8 @@ es:
         help: "Editar detalles de la asignación"
       reassign_modal:
         title: "Reasignar tema"
+      topic_level_menu:
+        unassign_with_ellipsis: "Anular asignación..."
       assign_modal:
         title: "Asignar tema"
         reassign_title: "Reasignar tema"

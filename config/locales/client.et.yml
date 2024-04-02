@@ -18,6 +18,8 @@ et:
         title: "Määra"
       reassign:
         title: "Muuda"
+      topic_level_menu:
+        unassign_with_ellipsis: "Eemalda määramine..."
       assign_modal:
         title: "Määra teema"
         assign: "Määra"

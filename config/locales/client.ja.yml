@@ -62,6 +62,8 @@ ja:
         help: "割り当て情報を編集します"
       reassign_modal:
         title: "トピックを再割り当てする"
+      topic_level_menu:
+        unassign_with_ellipsis: "割り当て解除..."
       assign_modal:
         title: "トピックを割り当てる"
         reassign_title: "トピックを再割り当てする"

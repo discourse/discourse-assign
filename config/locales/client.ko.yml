@@ -31,6 +31,8 @@ ko:
         help: "사용자에게 토픽 할당"
       reassign:
         title: "수정"
+      topic_level_menu:
+        unassign_with_ellipsis: "할당 해제..."
       assign_modal:
         title: "토픽 할당"
         assign: "할당"

@@ -62,6 +62,8 @@ ru:
         help: "Изменить детали назначения"
       reassign_modal:
         title: "Переназначить тему"
+      topic_level_menu:
+        unassign_with_ellipsis: "Отменить назначение..."
       assign_modal:
         title: "Назначить ответственного в тему"
         reassign_title: "Переназначить тему"

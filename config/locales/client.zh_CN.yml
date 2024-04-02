@@ -62,6 +62,8 @@ zh_CN:
         help: "编辑分配详细信息"
       reassign_modal:
         title: "重新分配话题"
+      topic_level_menu:
+        unassign_with_ellipsis: "取消分配…"
       assign_modal:
         title: "分配话题"
         reassign_title: "重新分配话题"

@@ -56,6 +56,8 @@ pl_PL:
         help: "Edytuj szczegóły przypisania"
       reassign_modal:
         title: "Przypisz ponownie temat"
+      topic_level_menu:
+        unassign_with_ellipsis: "Cofnij przypisanie..."
       assign_modal:
         title: "Przypisz temat"
         reassign_title: "Przypisz ponownie temat"

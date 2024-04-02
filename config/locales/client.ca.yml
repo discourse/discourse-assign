@@ -31,6 +31,8 @@ ca:
         help: "Assigna el tema a l'usuari"
       reassign:
         title: "Edita"
+      topic_level_menu:
+        unassign_with_ellipsis: "Desassigna..."
       assign_modal:
         title: "Assigna el tema"
         assign: "Assigna"

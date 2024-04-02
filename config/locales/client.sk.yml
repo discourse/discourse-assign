@@ -24,6 +24,8 @@ sk:
         help: "Priradiť tému používateľovi"
       reassign:
         title: "Upraviť"
+      topic_level_menu:
+        unassign_with_ellipsis: "Nepriradené..."
       assign_modal:
         title: "Priradiť tému"
         assign: "Priraď"

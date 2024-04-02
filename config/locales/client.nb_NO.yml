@@ -26,6 +26,8 @@ nb_NO:
         help: "Tildel emne til bruker"
       reassign:
         title: "Endre"
+      topic_level_menu:
+        unassign_with_ellipsis: "Fjern tildelning..."
       assign_modal:
         title: "Tildel emne"
         assign: "Tildel"
