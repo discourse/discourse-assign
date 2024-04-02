@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 
 export default class TopicAssignments extends Component {
   @tracked selectedAssignmentId;
@@ -15,6 +16,7 @@ export default class TopicAssignments extends Component {
     return this.args.assignments.map((a) => this.#toComboBoxOption(a));
   }
 
+  @action
   synchronizeAssignment(selectedAssignmentId) {
     this.selectedAssignmentId = selectedAssignmentId;
     this.selectedAssignment = this.args.assignments[0]; // fixme andrei
