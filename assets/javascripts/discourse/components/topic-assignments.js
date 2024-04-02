@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 
 export default class TopicAssignments extends Component {
-  @tracked selectedAssignmentId = 0;
+  @tracked selectedAssignmentId;
   @tracked selectedAssignment;
   TOPIC_ID = 0;
 
   constructor() {
     super(...arguments);
-    this.selectedAssignment = this.args.assignments[0]; // fixme andrei
+    this.synchronizeAssignment(0); // fixme andrei
   }
 
   get assignmentOptions() {
