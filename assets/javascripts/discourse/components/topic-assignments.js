@@ -12,7 +12,14 @@ export default class TopicAssignments extends Component {
   }
 
   get assignmentOptions() {
-    const topicAssignment = { id: this.TOPIC_ID, name: "Topic" };
-    return [topicAssignment];
+    return this.args.assignments.map((a) => this.#toComboBoxOption(a));
+  }
+
+  #toComboBoxOption(assignment) {
+    if (assignment.type === "Topic") {
+      return { id: this.TOPIC_ID, name: "Topic" };
+    } else {
+      return null;
+    }
   }
 }

@@ -12,6 +12,7 @@ export default class EditTopicAssignments extends Component {
   constructor() {
     super(...arguments);
     const topicAssignment = {
+      type: "Topic",
       username: "",
       group_name: "",
       status: "",
