@@ -14,7 +14,7 @@ export default class Assignment extends Component {
   }
 
   get status() {
-    return this.args.status || this.assignStatuses[0];
+    return this.args.model.status || this.assignStatuses[0];
   }
 
   get assignStatuses() {
