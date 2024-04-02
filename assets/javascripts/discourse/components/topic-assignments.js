@@ -24,7 +24,10 @@ export default class TopicAssignments extends Component {
     if (assignment.type === "Topic") {
       return { id: this.TOPIC_ID, name: "Topic" };
     } else {
-      return null;
+      return {
+        id: assignment.post_number,
+        name: `Post #${assignment.post_number}`, // fixme andrei string
+      };
     }
   }
 }

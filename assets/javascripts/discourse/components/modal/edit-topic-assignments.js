@@ -13,12 +13,23 @@ export default class EditTopicAssignments extends Component {
     super(...arguments);
     const topicAssignment = {
       type: "Topic",
-      username: "",
-      group_name: "",
-      status: "",
-      note: ""
+      username: this.topic.assigned_to_user?.username,
+      group_name: this.topic.assigned_to_group?.name,
+      status: this.topic.assignment_status,
+      note: this.topic.assignment_note
     };
     this.assignments.push(topicAssignment);
+
+    this.topic.assignedPosts().forEach((a) => {
+      this.assignments.push({
+        type: "Post",
+        post_number: a.post_number,
+        username: a.username,
+        group_name: a.name,
+        status: a.assignment_status,
+        note: a.assignment_note,
+      });
+    });
   }
 
   get title() {

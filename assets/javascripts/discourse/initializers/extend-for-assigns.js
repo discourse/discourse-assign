@@ -61,6 +61,7 @@ function extendTopicModel(api) {
       return [...map.values()];
     },
 
+    // fixme andrei rename to postAssignment()
     assignedPosts() {
       if (!this.indirectly_assigned_to) {
         return [];
