@@ -4,5 +4,7 @@ import { action } from "@ember/object";
 import { inject as service } from "@ember/service";
 
 export default class TopicAssignments extends Component {
-
+  get topicAssignment() {
+    return this.args.assignments[0];
+  }
 }

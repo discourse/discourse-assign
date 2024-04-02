@@ -31,10 +31,6 @@ export default class EditTopicAssignments extends Component {
     return this.args.model.topic;
   }
 
-  get topicAssignment() {
-    return this.assignments[0];
-  }
-
   @action
   async submit() {
     console.log("", this.assignments);
