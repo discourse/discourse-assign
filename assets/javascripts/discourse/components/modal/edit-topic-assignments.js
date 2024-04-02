@@ -2,7 +2,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { tracked } from "@glimmer/tracking";
 import { inject as service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import I18n from "I18n";
 
 export default class EditTopicAssignments extends Component {
@@ -16,13 +15,15 @@ export default class EditTopicAssignments extends Component {
   };
 
   get title() {
-    const title = this.model.topic.isAssigned() ? "reassign_title" : "title";
+    const title = this.args.model.topic.isAssigned()
+      ? "reassign_title"
+      : "title";
     return I18n.t(`discourse_assign.assign_modal.${title}`);
   }
 
   @action
   async onSubmit() {
-    throw "Not implemented";
+    throw "Not implemented"; // fixme andrei
     // this.args.closeModal();
     // await this.taskActions.assign(this.model);
   }
