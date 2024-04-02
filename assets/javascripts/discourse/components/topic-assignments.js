@@ -5,11 +5,11 @@ import { action } from "@ember/object";
 export default class TopicAssignments extends Component {
   @tracked selectedAssignmentId;
   @tracked selectedAssignment;
-  TOPIC_ID = 0;
+  TOPIC_ID = 0; // fixme andrei
 
   constructor() {
     super(...arguments);
-    this.synchronizeAssignment(0); // fixme andrei
+    this.synchronizeAssignment(this.TOPIC_ID); // fixme andrei
   }
 
   get assignmentOptions() {
@@ -19,7 +19,9 @@ export default class TopicAssignments extends Component {
   @action
   synchronizeAssignment(selectedAssignmentId) {
     this.selectedAssignmentId = selectedAssignmentId;
-    this.selectedAssignment = this.args.assignments[0]; // fixme andrei
+    this.selectedAssignment = this.args.assignments.find(
+      (a) => a.id === selectedAssignmentId
+    ); // fixme andrei
   }
 
   #toComboBoxOption(assignment) {
