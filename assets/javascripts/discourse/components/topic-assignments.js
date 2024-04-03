@@ -37,7 +37,7 @@ export default class TopicAssignments extends Component {
       return { id: this.TOPIC_ID, name: "Topic" };
     } else {
       return {
-        id: assignment.post_number,
+        id: assignment.postNumber,
         name: `Post #${assignment.postNumber}`, // fixme andrei string
       };
     }
