@@ -61,7 +61,7 @@ acceptance(
 
     test("the assigns tab is not shown", async function (assert) {
       await visit("/");
-      await click(".d-header-icons .current-user");
+      await click(".d-header-icons .current-user button");
       assert.dom("#user-menu-button-assign-list").doesNotExist();
     });
   }
@@ -79,7 +79,7 @@ acceptance(
 
     test("the assigns tab is not shown", async function (assert) {
       await visit("/");
-      await click(".d-header-icons .current-user");
+      await click(".d-header-icons .current-user button");
       assert.dom("#user-menu-button-assign-list").doesNotExist();
     });
   }
@@ -134,7 +134,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
 
   test("assigns tab", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     assert.dom("#user-menu-button-assign-list").exists("assigns tab exists");
     assert
       .dom("#user-menu-button-assign-list .d-icon-user-plus")
@@ -157,7 +157,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
 
   test("clicking on the assign tab when it's already selected navigates to the user's assignments page", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-assign-list");
     await click("#user-menu-button-assign-list");
 
@@ -170,7 +170,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
 
   test("displays unread assign notifications on top and fills the remaining space with read assigns", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-assign-list");
 
     const notifications = queryAll(
@@ -251,7 +251,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
 
   test("dismiss button", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-assign-list");
 
     assert
@@ -284,7 +284,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
   test("empty state", async function (assert) {
     forceEmptyState = true;
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-assign-list");
 
     assert
@@ -307,7 +307,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
 
   test("renders the confirmation modal when dismiss assign notifications", async function (assert) {
     await visit("/");
-    await click(".d-header-icons .current-user");
+    await click(".d-header-icons .current-user button");
     await click("#user-menu-button-assign-list");
     await click(".notifications-dismiss");
     assert.false(markRead, "a request to the server is not made");
