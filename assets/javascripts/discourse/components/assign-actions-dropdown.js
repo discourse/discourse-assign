@@ -52,7 +52,7 @@ export default DropdownSelectBoxComponent.extend({
   },
 
   @action
-  onSelect(id) {
+  onChange(id) {
     switch (id) {
       case "unassign":
         this.unassign(this.topic.id);
