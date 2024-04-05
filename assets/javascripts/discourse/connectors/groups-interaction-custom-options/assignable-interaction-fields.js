@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import I18n from "I18n";
 
 export default class AssignableInteractionFields extends Component {
@@ -12,6 +13,11 @@ export default class AssignableInteractionFields extends Component {
   ];
 
   get assignableLevel() {
-    return this.args.outletArgs.model.assignable_level || 0;
+    return this.args.outletArgs.model.get("assignable_level") || 0;
+  }
+
+  @action
+  onChangeAssignableLevel(level) {
+    this.args.outletArgs.model.set("assignable_level", level);
   }
 }
