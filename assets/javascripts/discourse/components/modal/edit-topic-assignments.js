@@ -12,6 +12,7 @@ export default class EditTopicAssignments extends Component {
 
   constructor() {
     super(...arguments);
+    // fixme andrei simplify mapping
     const topicAssignment = new Assignment(
       this.topic.assigned_to_user?.username,
       this.topic.assigned_to_group?.name,
