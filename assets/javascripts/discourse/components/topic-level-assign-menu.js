@@ -62,13 +62,7 @@ export default {
   },
 
   noneItem() {
-    const topic = this.topic;
-
-    if (topic.assigned_to_user || topic.hasAssignedPosts()) {
-      return unassignUsersButton(topic.uniqueAssignees());
-    } else if (topic.assigned_to_group) {
-      return unassignGroupButton(topic.assigned_to_group);
-    }
+    return topicLevelUnassignButton(this.topic.uniqueAssignees());
   },
   content() {
     const content = [];
@@ -98,39 +92,6 @@ export default {
     );
   },
 };
-
-function unassignGroupButton(group) {
-  const label = I18n.t("discourse_assign.unassign.title");
-  return {
-    id: null,
-    name: I18n.t("discourse_assign.reassign_modal.title"),
-    label: htmlSafe(
-      `<span class="unassign-label">${label}</span> @${group.name}...`
-    ),
-  };
-}
-
-function unassignUsersButton(users) {
-  let avatars = "";
-  if (users.length === 1) {
-    avatars = avatarHtml(users[0], "tiny");
-  } else if (users.length > 1) {
-    avatars =
-      avatarHtml(users[0], "tiny", "overlap") + avatarHtml(users[1], "tiny");
-  }
-
-  const label = `<span class="unassign-label">${I18n.t(
-    "discourse_assign.topic_level_menu.unassign_with_ellipsis"
-  )}</span>`;
-
-  return {
-    id: null,
-    name: htmlSafe(
-      I18n.t("discourse_assign.topic_level_menu.unassign_with_ellipsis")
-    ),
-    label: htmlSafe(`${avatars}${label}`),
-  };
-}
 
 function avatarHtml(user, size, classes) {
   return renderAvatar(user, {
@@ -224,4 +185,32 @@ function unassignFromPostButton(postId, assignment) {
     name: htmlSafe(dataName),
     label: htmlSafe(`${icon} ${label}`),
   };
+}
+
+function topicLevelUnassignButton(assignees) {
+  const avatars = topicLevelUnassignButtonAvatars(assignees);
+  const label = `<span class="unassign-label">${I18n.t(
+    "discourse_assign.topic_level_menu.unassign_with_ellipsis"
+  )}</span>`;
+
+  return {
+    id: null,
+    name: htmlSafe(
+      I18n.t("discourse_assign.topic_level_menu.unassign_with_ellipsis")
+    ),
+    label: htmlSafe(`${avatars}${label}`),
+  };
+}
+
+function topicLevelUnassignButtonAvatars(assignees) {
+  const users = assignees.filter((a) => a.username);
+  let avatars = "";
+  if (users.length === 1) {
+    avatars = avatarHtml(users[0], "tiny");
+  } else if (users.length > 1) {
+    avatars =
+      avatarHtml(users[0], "tiny", "overlap") + avatarHtml(users[1], "tiny");
+  }
+
+  return avatars;
 }
