@@ -115,4 +115,18 @@ export default class TaskActions extends Service {
       popupAjaxError(error);
     }
   }
+
+  async putAssignment(assignment) {
+    await ajax("/assign/assign", {
+      type: "PUT",
+      data: {
+        username: assignment.username,
+        group_name: assignment.group_name,
+        target_id: assignment.targetId,
+        target_type: assignment.targetType,
+        note: assignment.note,
+        status: assignment.status,
+      },
+    });
+  }
 }

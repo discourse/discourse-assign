@@ -16,7 +16,9 @@ import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
 import BulkAssign from "../components/bulk-actions/assign-user";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
+import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
+import { extendTopicModel } from "../models/topic";
 
 const PLUGIN_ID = "discourse-assign";
 
@@ -36,50 +38,6 @@ function defaultTitle(topic) {
   } else {
     return I18n.t("discourse_assign.assign.help");
   }
-}
-
-function extendTopicModel(api) {
-  api.modifyClass("model:topic", {
-    pluginId: PLUGIN_ID,
-
-    assignees() {
-      const result = [];
-
-      if (this.assigned_to_user) {
-        result.push(this.assigned_to_user);
-      }
-
-      const postAssignees = this.assignedPosts().map((p) => p.assigned_to);
-      result.push(...postAssignees);
-      return result;
-    },
-
-    uniqueAssignees() {
-      const map = new Map();
-      this.assignees().forEach((user) => map.set(user.username, user));
-      return [...map.values()];
-    },
-
-    assignedPosts() {
-      if (!this.indirectly_assigned_to) {
-        return [];
-      }
-
-      return Object.values(this.indirectly_assigned_to);
-    },
-
-    isAssigned() {
-      return this.assigned_to_user || this.assigned_to_group;
-    },
-
-    isAssignedTo(user) {
-      return this.assigned_to_user?.username === user.username;
-    },
-
-    hasAssignedPosts() {
-      return !!this.assignedPosts().length;
-    },
-  });
 }
 
 function registerTopicFooterButtons(api) {
@@ -110,6 +68,7 @@ function registerTopicFooterButtons(api) {
       }
 
       const taskActions = getOwner(this).lookup("service:task-actions");
+      const modal = getOwner(this).lookup("service:modal");
 
       if (this.topic.isAssigned()) {
         this.set("topic.assigned_to_user", null);
@@ -121,7 +80,10 @@ function registerTopicFooterButtons(api) {
           id: this.topic.postStream.firstPostId,
         });
       } else {
-        await taskActions.showAssignModal(this.topic, {
+        await modal.show(EditTopicAssignments, {
+          model: {
+            topic: this.topic,
+          },
           onSuccess: () =>
             this.appEvents.trigger("post-stream:refresh", {
               id: this.topic.postStream.firstPostId,
@@ -723,6 +685,9 @@ function initialize(api) {
           }
         }
         this.appEvents.trigger("header:update-topic", topic);
+        this.appEvents.trigger("post-stream:refresh", {
+          id: topic.postStream.posts[0].id,
+        });
       });
     },
 
@@ -833,7 +798,7 @@ export default {
     }
 
     withPluginApi("0.13.0", (api) => {
-      extendTopicModel(api);
+      extendTopicModel(api, PLUGIN_ID);
       initialize(api);
       registerTopicFooterButtons(api);
 

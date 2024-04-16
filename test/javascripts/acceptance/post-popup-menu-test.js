@@ -5,7 +5,7 @@ import {
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicWithAssignedPost from "../fixtures/topic-with-assigned-post";
+import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
 
 const new_assignee_username = "new_assignee";
 
@@ -23,7 +23,7 @@ const selectors = {
   },
 };
 
-const topic = topicWithAssignedPost();
+const topic = topicWithAssignedPosts();
 const post = topic.post_stream.posts[1];
 
 acceptance("Discourse Assign | Post popup menu", function (needs) {
