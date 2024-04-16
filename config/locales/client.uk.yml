@@ -71,3 +71,6 @@ uk:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Призначено"
+    edit_assignments_modal:
+      topic: "Тема"
+      post: "Допис"

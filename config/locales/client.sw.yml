@@ -62,3 +62,6 @@ sw:
     notifications:
       titles:
         assigned: "Kukabidhi"
+    edit_assignments_modal:
+      topic: "Mada"
+      post: "Ujumbe"

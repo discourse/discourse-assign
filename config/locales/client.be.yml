@@ -28,3 +28,6 @@ be:
     notifications:
       titles:
         assigned: "прызначаны"
+    edit_assignments_modal:
+      topic: "тэма"
+      post: "пост"

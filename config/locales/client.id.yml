@@ -18,3 +18,6 @@ id:
         always: "Selalu"
       reminders_frequency:
         never: "Tidak pernah"
+    edit_assignments_modal:
+      topic: "Topik"
+      post: "Postingan"

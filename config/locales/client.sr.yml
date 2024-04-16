@@ -19,3 +19,6 @@ sr:
         weekly: "Top nedeljne"
         monthly: "Top mesečne"
         quarterly: "Top kvartalne"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Post"

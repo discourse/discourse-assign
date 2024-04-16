@@ -175,3 +175,6 @@ es:
         assign_list_with_unread:
           one: "Asignar lista - %{count} asignación no leída"
           other: "Asignar lista - %{count} asignación no leída"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Publicación"

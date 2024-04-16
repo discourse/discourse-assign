@@ -115,3 +115,6 @@ hu:
       assigned: "<span>%{username}</span>%{description}"
       titles:
         assigned: "Kiosztott"
+    edit_assignments_modal:
+      topic: "Téma"
+      post: "Bejegyzés"

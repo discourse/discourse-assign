@@ -36,3 +36,6 @@ fa_IR:
         topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
+    edit_assignments_modal:
+      topic: "موضوع"
+      post: "نوشته"

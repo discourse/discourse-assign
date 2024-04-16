@@ -24,3 +24,6 @@ th:
         quarterly: "สามเดือน"
     notifications:
       assigned: "<span>%{username}</span>%{description}"
+    edit_assignments_modal:
+      topic: "หัวข้อ"
+      post: "โพส"

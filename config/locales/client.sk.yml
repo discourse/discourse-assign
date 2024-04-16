@@ -59,3 +59,6 @@ sk:
     notifications:
       titles:
         assigned: "Priradené"
+    edit_assignments_modal:
+      topic: "Témy"
+      post: "Príspevok"

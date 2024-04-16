@@ -115,3 +115,6 @@ ur:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "تفویض کردہ"
+    edit_assignments_modal:
+      topic: "ٹاپک"
+      post: "پوسٹ"

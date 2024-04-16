@@ -175,3 +175,6 @@ fr:
         assign_list_with_unread:
           one: "Liste des attributions - %{count} attribution non lue"
           other: "Liste des attributions - %{count} attributions non lues"
+    edit_assignments_modal:
+      topic: "Sujet"
+      post: "Message"

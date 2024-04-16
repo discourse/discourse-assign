@@ -173,3 +173,6 @@ zh_CN:
         assign_list: "分配列表"
         assign_list_with_unread:
           other: "分配列表 - %{count} 个未读分配"
+    edit_assignments_modal:
+      topic: "话题"
+      post: "帖子"

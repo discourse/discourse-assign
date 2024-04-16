@@ -71,3 +71,6 @@ ko:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "할당됨"
+    edit_assignments_modal:
+      topic: "글"
+      post: "글"

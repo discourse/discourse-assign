@@ -35,3 +35,6 @@ vi:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Được chỉ định"
+    edit_assignments_modal:
+      topic: "Chủ đề"
+      post: "Bài đăng"

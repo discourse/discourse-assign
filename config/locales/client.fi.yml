@@ -175,3 +175,6 @@ fi:
         assign_list_with_unread:
           one: "Osoitusluettelo – %{count} lukematon osoitus"
           other: "Osoitusluettelo – %{count} lukematonta osoitusta"
+    edit_assignments_modal:
+      topic: "Ketju"
+      post: "Viesti"

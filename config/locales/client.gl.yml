@@ -32,3 +32,6 @@ gl:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Asignado"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Publicación"

@@ -54,3 +54,6 @@ et:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Määratud"
+    edit_assignments_modal:
+      topic: "Teema"
+      post: "Postitus"

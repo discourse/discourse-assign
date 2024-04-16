@@ -143,3 +143,6 @@ sv:
             other: "Är du säker? Du har %{count} olästa tilldelningsmeddelande."
     user_menu:
       view_all_assigned: "visa alla tilldelade"
+    edit_assignments_modal:
+      topic: "Ämne"
+      post: "Inlägg"

@@ -14,3 +14,6 @@ te:
         optional_label: "(ఐచ్ఛికం)"
       assign_mailer:
         always: "ఎల్లప్పుడూ"
+    edit_assignments_modal:
+      topic: "విషయం"
+      post: "పోస్ట్"

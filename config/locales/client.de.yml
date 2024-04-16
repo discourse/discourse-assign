@@ -74,7 +74,9 @@ de:
         reassign_title: "Thema neu zuordnen"
         assign: "Zuordnen"
         assignee_label: Zugeordnete Person
+        assignment_label: Zuordnung
         choose_assignee: Wähle einen Benutzer aus, den du zuordnen möchtest.
+        edit_assignments_title: "Zuordnungen bearbeiten"
         note_label: Notiz
         optional_label: "(optional)"
         status_label: Status
@@ -180,3 +182,7 @@ de:
         assign_list_with_unread:
           one: "Zuordnungsliste – %{count} ungelesene Zuordnung"
           other: "Zuordnungsliste – %{count} ungelesene Zuordnungen"
+    edit_assignments_modal:
+      title: "Zuordnungen bearbeiten"
+      topic: "Thema"
+      post: "Beitrag"
