@@ -5,9 +5,9 @@ import {
   publishToMessageBus,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import topicWithAssignedPost from "../fixtures/topic-with-assigned-post";
+import topicWithAssignedPosts from "../fixtures/topic-with-assigned-posts";
 
-const topic = topicWithAssignedPost();
+const topic = topicWithAssignedPosts();
 const post = topic.post_stream.posts[1];
 
 acceptance("Discourse Assign | Topic level assign menu", function (needs) {
