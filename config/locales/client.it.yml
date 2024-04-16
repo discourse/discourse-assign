@@ -175,3 +175,6 @@ it:
         assign_list_with_unread:
           one: "Elenco assegnazioni: %{count} assegnazione non letta"
           other: "Elenco assegnazioni: %{count} assegnazioni non lette"
+    edit_assignments_modal:
+      topic: "Argomento"
+      post: "Messaggio"

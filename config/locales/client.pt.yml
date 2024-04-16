@@ -156,3 +156,6 @@ pt:
         assign_list_with_unread:
           one: "Atribuir lista - %{count} atribuição não lida"
           other: "Atribuir lista - %{count} atribuições não lidas"
+    edit_assignments_modal:
+      topic: "Tópico"
+      post: "Publicação"

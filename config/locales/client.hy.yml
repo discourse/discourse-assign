@@ -64,3 +64,6 @@ hy:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Վերագրված"
+    edit_assignments_modal:
+      topic: "Թեմա"
+      post: "Գրառում"

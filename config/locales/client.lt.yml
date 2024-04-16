@@ -37,3 +37,6 @@ lt:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Priskirta"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Įrašai"

@@ -173,3 +173,6 @@ ja:
         assign_list: "割り当てリスト"
         assign_list_with_unread:
           other: "割り当てリスト - %{count} 件の未読の割り当て"
+    edit_assignments_modal:
+      topic: "トピック"
+      post: "投稿"

@@ -156,3 +156,6 @@ pl_PL:
       view_all_assigned: "wyświetl wszystkie przypisania"
       tabs:
         assign_list: "Lista przypisań"
+    edit_assignments_modal:
+      topic: "Temat"
+      post: "Post"

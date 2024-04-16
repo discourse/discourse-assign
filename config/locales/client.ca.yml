@@ -70,3 +70,6 @@ ca:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Assignat"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Publicació"

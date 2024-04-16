@@ -24,3 +24,6 @@ bs_BA:
         quarterly: "Kvartalno"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
+    edit_assignments_modal:
+      topic: "Topic"
+      post: "Objava"

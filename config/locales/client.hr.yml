@@ -25,3 +25,6 @@ hr:
         quarterly: "Tromjesečno"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
+    edit_assignments_modal:
+      topic: "Tema"
+      post: "Objava"

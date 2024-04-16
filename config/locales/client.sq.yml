@@ -22,3 +22,6 @@ sq:
     user:
       assignment_description:
         topic: "%{topic_title}"
+    edit_assignments_modal:
+      topic: "Topic"
+      post: "Postim"

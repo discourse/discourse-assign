@@ -62,3 +62,6 @@ zh_TW:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "已指派"
+    edit_assignments_modal:
+      topic: "話題"
+      post: "貼文"

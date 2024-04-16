@@ -61,3 +61,6 @@ nb_NO:
       assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Tildelt"
+    edit_assignments_modal:
+      topic: "Emne"
+      post: "Innlegg"

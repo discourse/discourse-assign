@@ -175,3 +175,6 @@ nl:
         assign_list_with_unread:
           one: "Toewijzingslijst - %{count} ongelezen toewijzing"
           other: "Toewijzingslijst - %{count} ongelezen toewijzingen"
+    edit_assignments_modal:
+      topic: "Topic"
+      post: "Bericht"

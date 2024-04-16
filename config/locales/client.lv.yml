@@ -22,3 +22,6 @@ lv:
         weekly: "Nedēļas"
         monthly: "Mēneša"
         quarterly: "Ceturkšņa"
+    edit_assignments_modal:
+      topic: "Tēmas"
+      post: "Ieraksts"

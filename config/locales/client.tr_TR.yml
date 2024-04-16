@@ -175,3 +175,6 @@ tr_TR:
         assign_list_with_unread:
           one: "Atama listesi - %{count} okunmamış atama"
           other: "Atama listesi - %{count} okunmamış atama"
+    edit_assignments_modal:
+      topic: "Konu"
+      post: "İleti"

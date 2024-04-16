@@ -184,3 +184,6 @@ he:
           two: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
           many: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
           other: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
+    edit_assignments_modal:
+      topic: "נושא"
+      post: "פוסט"
