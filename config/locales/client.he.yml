@@ -9,7 +9,7 @@ he:
     admin:
       site_settings:
         categories:
-          discourse_assign: "Discourse הקצאה"
+          discourse_assign: "Discourse הקצאות"
   js:
     filters:
       unassigned:
@@ -74,7 +74,9 @@ he:
         reassign_title: "הקצאת נושא מחדש"
         assign: "הקצאה"
         assignee_label: ממונה
+        assignment_label: הקצאה
         choose_assignee: נא לבחור משתמש להקצאה.
+        edit_assignments_title: "עריכת הקצאות"
         note_label: הערה
         optional_label: "(רשות)"
         status_label: מצב
@@ -185,5 +187,6 @@ he:
           many: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
           other: "רשימת הקצאות - %{count} הקצאות שלא נקראו"
     edit_assignments_modal:
+      title: "עריכת הקצאות"
       topic: "נושא"
       post: "פוסט"
