@@ -47,7 +47,10 @@ export default class EditTopicAssignments extends Component {
   <template>
     <DModal class="assign" @title={{this.title}} @closeModal={{@closeModal}}>
       <:body>
-        <TopicAssignments @assignments={{this.assignments}} />
+        <TopicAssignments
+          @assignments={{this.assignments}}
+          @onSubmit={{this.submit}}
+        />
       </:body>
       <:footer>
         <DButton
