@@ -41,7 +41,7 @@ export default class TopicAssignments extends Component {
     </div>
     <Assignment
       @assignment={{this.selectedAssignment}}
-      @onSubmit={{this.submit}}
+      @onSubmit={{@onSubmit}}
       @showValidationErrors={{false}}
     />
   </template>

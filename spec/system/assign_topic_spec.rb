@@ -35,6 +35,20 @@ describe "Assign | Assigning topics", type: :system do
       expect(page).to have_no_css("#topic .assigned-to")
     end
 
+    it "can submit form with shortcut from texatea" do
+      visit "/t/#{topic.id}"
+
+      topic_page.click_assign_topic
+      assign_modal.assignee = staff_user
+
+      find("body").send_keys(:tab)
+      find("body").send_keys(:control, :enter)
+
+      expect(assign_modal).to be_closed
+      expect(topic_page).to have_assigned(user: staff_user, at_post: 2)
+      expect(find("#topic .assigned-to")).to have_content(staff_user.username)
+    end
+
     context "when assigns are not public" do
       before { SiteSetting.assigns_public = false }
 
