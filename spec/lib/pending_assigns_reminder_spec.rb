@@ -144,17 +144,10 @@ RSpec.describe PendingAssignsReminder do
     end
 
     context "with assigns_reminder_assigned_topics_query" do
-      let(:modifier_block) do
-        Proc.new do |query|
-          query.where.not(id: @post1.topic_id)
-        end
-      end
+      let(:modifier_block) { Proc.new { |query| query.where.not(id: @post1.topic_id) } }
       it "doesn't remind if topic is solved" do
         plugin_instance = Plugin::Instance.new
-        plugin_instance.register_modifier(
-          :assigns_reminder_assigned_topics_query,
-          &modifier_block
-        )
+        plugin_instance.register_modifier(:assigns_reminder_assigned_topics_query, &modifier_block)
         topics = reminder.send(:assigned_topics, user, order: :asc)
         puts topics.inspect
         expect(topics).not_to include(@post1.topic)
