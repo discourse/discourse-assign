@@ -149,7 +149,6 @@ RSpec.describe PendingAssignsReminder do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:assigns_reminder_assigned_topics_query, &modifier_block)
         topics = reminder.send(:assigned_topics, user, order: :asc)
-        puts topics.inspect
         expect(topics).not_to include(@post1.topic)
       ensure
         DiscoursePluginRegistry.unregister_modifier(
