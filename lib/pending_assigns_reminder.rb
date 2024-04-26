@@ -67,16 +67,16 @@ class PendingAssignsReminder
     secure =
       Topic.listable_topics.secured(Guardian.new(user)).or(Topic.private_messages_for_user(user))
 
-    Topic
-      .joins(:assignment)
-      .select(:slug, :id, :title, :fancy_title, "assignments.created_at AS assigned_at")
-      .where(
-        "assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User' AND assignments.active",
-        user.id,
-      )
-      .merge(secure)
-      .order("assignments.created_at #{order}")
-      .limit(3)
+    topics =
+      Topic
+        .joins(:assignment)
+        .select(:slug, :id, :title, :fancy_title, "assignments.created_at AS assigned_at")
+        .where(
+          "assignments.assigned_to_id = ? AND assignments.assigned_to_type = 'User' AND assignments.active",
+          user.id,
+        )
+    topics = DiscoursePluginRegistry.apply_modifier(:assigns_reminder_assigned_topics_query, topics)
+    topics.merge(secure).order("assignments.created_at #{order}").limit(3)
   end
 
   def reminder_body(user, assigned_topics_count, first_three_topics, last_three_topics)

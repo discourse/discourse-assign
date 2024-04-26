@@ -142,5 +142,21 @@ RSpec.describe PendingAssignsReminder do
 
       expect(topic.title).to eq(I18n.t("pending_assigns_reminder.title", pending_assignments: 3))
     end
+
+    context "with assigns_reminder_assigned_topics_query" do
+      let(:modifier_block) { Proc.new { |query| query.where.not(id: @post1.topic_id) } }
+      it "doesn't remind if topic is solved" do
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:assigns_reminder_assigned_topics_query, &modifier_block)
+        topics = reminder.send(:assigned_topics, user, order: :asc)
+        expect(topics).not_to include(@post1.topic)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :assigns_reminder_assigned_topics_query,
+          &modifier_block
+        )
+      end
+    end
   end
 end
