@@ -511,7 +511,7 @@ function initialize(api) {
           } else {
             assignedPath = `/t/${topic.id}`;
           }
-          const icon = iconHTML(assignee.assign_icon);
+          const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
           const name = assignee.username || assignee.name;
           const tagName = params.tagName || "a";
           const href =

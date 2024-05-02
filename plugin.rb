@@ -694,12 +694,6 @@ after_initialize do
     AssignedGroupSerializer.new(assigned_to, scope: scope, root: false).as_json
   end
 
-  add_to_serializer(:basic_user, :assign_icon) { "user-plus" }
-  add_to_serializer(:basic_user, :assign_path) do
-    return if !object.is_a?(User)
-    SiteSetting.assigns_user_url_path.gsub("{username}", object.username)
-  end
-
   # PostSerializer
   add_to_serializer(
     :post,

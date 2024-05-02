@@ -34,8 +34,6 @@ describe SearchController do
 
     expect(assigned_to_group_data["id"]).to eq(group.id)
     expect(assigned_to_group_data["name"]).to eq(group.name)
-    expect(assigned_to_group_data["assign_icon"]).to eq("group-plus")
-    expect(assigned_to_group_data["assign_path"]).to eq("/g/#{group.name}/assigned/everyone")
   end
 
   it "does not result in N+1 queries when search returns multiple results" do

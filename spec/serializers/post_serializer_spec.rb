@@ -21,7 +21,6 @@ describe PostSerializer do
     serializer = PostSerializer.new(post, scope: guardian)
     post = serializer.as_json[:post]
     expect(post[:assigned_to_user][:id]).to eq(user.id)
-    expect(post[:assigned_to_user][:assign_icon]).to eq("user-plus")
     expect(post[:assigned_to_group]).to be(nil)
   end
 
@@ -30,7 +29,6 @@ describe PostSerializer do
     serializer = PostSerializer.new(post, scope: guardian)
     post = serializer.as_json[:post]
     expect(post[:assigned_to_group][:id]).to eq(assign_allowed_group.id)
-    expect(post[:assigned_to_group][:assign_icon]).to eq("group-plus")
     expect(post[:assigned_to_user]).to be(nil)
   end
 

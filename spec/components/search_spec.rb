@@ -61,8 +61,6 @@ describe Search do
       expect(indirectly_assigned_to).to eq(
         post5.id => {
           assigned_to: {
-            assign_icon: "user-plus",
-            assign_path: "/u/#{user.username}/activity/assigned",
             avatar_template: user.avatar_template,
             name: user.name,
             username: user.username,
