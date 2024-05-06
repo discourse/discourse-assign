@@ -108,6 +108,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
         "shows assignment and indirect assignments in the first post"
       );
     assert.dom("#post_1 .assigned-to svg.d-icon-user-plus").exists();
+    assert.dom("#post_1 .assigned-to a[href='/']").exists();
     assert
       .dom(".discourse-tags .assigned-to[href='/t/28830'] span")
       .hasAttribute("title", "Shark Doododooo", "shows topic assign notes");
@@ -137,6 +138,9 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
         "shows assignment in the first post"
       );
     assert.dom("#post_1 .assigned-to svg.d-icon-group-plus").exists();
+    assert
+      .dom("#post_1 .assigned-to a[href='/g/Developers/assigned/everyone']")
+      .exists();
     assert
       .dom("#topic-footer-dropdown-reassign")
       .exists("shows reassign dropdown at the bottom of the topic");

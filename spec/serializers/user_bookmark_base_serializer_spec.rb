@@ -24,7 +24,6 @@ describe UserBookmarkBaseSerializer do
       bookmark = serializer.as_json[:user_topic_bookmark]
 
       expect(bookmark[:assigned_to_user][:id]).to eq(user.id)
-      expect(bookmark[:assigned_to_user][:assign_icon]).to eq("user-plus")
       expect(bookmark[:assigned_to_group]).to be(nil)
     end
 
@@ -34,7 +33,6 @@ describe UserBookmarkBaseSerializer do
       bookmark = serializer.as_json[:user_topic_bookmark]
 
       expect(bookmark[:assigned_to_group][:id]).to eq(assign_allowed_group.id)
-      expect(bookmark[:assigned_to_group][:assign_icon]).to eq("group-plus")
       expect(bookmark[:assigned_to_user]).to be(nil)
     end
   end
@@ -47,7 +45,6 @@ describe UserBookmarkBaseSerializer do
       bookmark = serializer.as_json[:user_post_bookmark]
 
       expect(bookmark[:assigned_to_user][:id]).to eq(user.id)
-      expect(bookmark[:assigned_to_user][:assign_icon]).to eq("user-plus")
       expect(bookmark[:assigned_to_group]).to be(nil)
     end
 
@@ -57,7 +54,6 @@ describe UserBookmarkBaseSerializer do
       bookmark = serializer.as_json[:user_post_bookmark]
 
       expect(bookmark[:assigned_to_group][:id]).to eq(assign_allowed_group.id)
-      expect(bookmark[:assigned_to_group][:assign_icon]).to eq("group-plus")
       expect(bookmark[:assigned_to_user]).to be(nil)
     end
   end

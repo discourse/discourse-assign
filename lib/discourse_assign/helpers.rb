@@ -4,13 +4,7 @@ module DiscourseAssign
   module Helpers
     def self.build_assigned_to_user(user, topic)
       return if !user
-      {
-        username: user.username,
-        name: user.name,
-        avatar_template: user.avatar_template,
-        assign_icon: "user-plus",
-        assign_path: SiteSetting.assigns_user_url_path.gsub("{username}", user.username),
-      }
+      { username: user.username, name: user.name, avatar_template: user.avatar_template }
     end
 
     def self.build_assigned_to_group(group, topic)
@@ -22,8 +16,6 @@ module DiscourseAssign
         flair_color: group.flair_color,
         flair_icon: group.flair_icon,
         flair_upload_id: group.flair_upload_id,
-        assign_icon: "group-plus",
-        assign_path: "/g/#{group.name}/assigned/everyone",
       }
     end
 
