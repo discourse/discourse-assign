@@ -46,7 +46,7 @@ export default class AssignedToPost extends Component {
             @action={{this.unassign}}
             @icon="user-plus"
             @label="discourse_assign.unassign.title"
-            class="popup-menu-btn"
+            class="btn-transparent"
           />
         </dropdown.item>
         <dropdown.item>
