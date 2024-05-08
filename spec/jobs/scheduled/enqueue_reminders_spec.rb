@@ -40,7 +40,7 @@ RSpec.describe Jobs::EnqueueReminders do
     it "doesn't count assigns from deleted topics" do
       deleted_post = Fabricate(:post)
       assign_one_task_to(user, post: deleted_post)
-      (PendingAssignsReminder::REMINDER_THRESHOLD - 1).times { assign_one_task_to(user) }
+      (SiteSetting.pending_assign_reminder_threshold - 1).times { assign_one_task_to(user) }
 
       deleted_post.topic.trash!
 
@@ -115,7 +115,7 @@ RSpec.describe Jobs::EnqueueReminders do
     end
 
     def assign_multiple_tasks_to(user, assigned_on: 3.months.ago)
-      PendingAssignsReminder::REMINDER_THRESHOLD.times do
+      SiteSetting.pending_assign_reminder_threshold.times do
         assign_one_task_to(user, assigned_on: assigned_on)
       end
     end
