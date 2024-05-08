@@ -4,7 +4,7 @@ class PendingAssignsReminder
   REMINDED_AT = "last_reminded_at"
   REMINDERS_FREQUENCY = "remind_assigns_frequency"
   CUSTOM_FIELD_NAME = "assigns_reminder"
-  REMINDER_THRESHOLD = 2
+  REMINDER_THRESHOLD = SiteSetting.pending_assign_reminder_threshold
 
   def remind(user)
     newest_topics = assigned_topics(user, order: :desc)

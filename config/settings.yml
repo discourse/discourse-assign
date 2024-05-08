@@ -23,6 +23,10 @@ discourse_assign:
     client: true
     enum: "RemindAssignsFrequencySiteSettings"
     default: 0
+  pending_assign_reminder_threshold:
+    client: true
+    default: 2
+    min: 1
   max_assigned_topics:
     client: true
     default: 10
