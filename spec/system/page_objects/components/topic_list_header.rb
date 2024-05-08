@@ -8,7 +8,6 @@ module PageObjects
       end
 
       def click_assign_topics_button
-        p bulk_select_dropdown_item("assign-topics")
         find(bulk_select_dropdown_item("assign-topics")).click
       end
 
