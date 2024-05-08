@@ -819,6 +819,7 @@ export default {
           : BulkAssign;
 
       api.addBulkActionButton({
+        id: "assign-topics",
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
@@ -829,6 +830,7 @@ export default {
       });
 
       api.addBulkActionButton({
+        id: "unassign-topics",
         label: "topics.bulk.unassign",
         icon: "user-times",
         class: "btn-default unassign-topics",
