@@ -13,8 +13,8 @@ const selectors = {
   assignedTo: ".post-stream article#post_2 .assigned-to",
   moreButton: ".post-stream .topic-post .more-button",
   popupMenu: {
-    unassign: ".popup-menu .popup-menu-btn svg.d-icon-user-plus",
-    editAssignment: ".popup-menu .popup-menu-btn svg.d-icon-group-plus",
+    unassign: ".post-assign-menu-content .unassign-btn",
+    editAssignment: ".post-assign-menu-content .edit-assignment-btn",
   },
   modal: {
     assignee: ".modal-container .select-kit-header-wrapper",

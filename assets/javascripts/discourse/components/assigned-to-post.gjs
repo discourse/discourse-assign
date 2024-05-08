@@ -39,14 +39,19 @@ export default class AssignedToPost extends Component {
       {{/if}}
     </a>
 
-    <DMenu @icon="ellipsis-h" class="btn-flat more-button" @autofocus={{true}}>
+    <DMenu
+      @identifier="post-assign-menu"
+      @icon="ellipsis-h"
+      class="btn-flat more-button"
+      @autofocus={{true}}
+    >
       <DropdownMenu as |dropdown|>
         <dropdown.item>
           <DButton
             @action={{this.unassign}}
             @icon="user-plus"
             @label="discourse_assign.unassign.title"
-            class="btn-transparent"
+            class="btn-transparent unassign-btn"
           />
         </dropdown.item>
         <dropdown.item>
@@ -54,7 +59,7 @@ export default class AssignedToPost extends Component {
             @action={{this.editAssignment}}
             @icon="group-plus"
             @label="discourse_assign.reassign.title_w_ellipsis"
-            class="btn-transparent"
+            class="btn-transparent edit-assignment-btn"
           />
         </dropdown.item>
       </DropdownMenu>
