@@ -22,6 +22,10 @@ module Jobs
       Group.assign_allowed_groups.pluck(:id).join(",")
     end
 
+    def reminder_threshold
+      @reminder_threshold ||= SiteSetting.pending_assign_reminder_threshold
+    end
+
     def user_ids
       global_frequency = SiteSetting.remind_assigns_frequency
       frequency =
@@ -54,7 +58,7 @@ module Jobs
         AND assignments.assigned_to_type = 'User'
 
         GROUP BY assignments.assigned_to_id
-        HAVING COUNT(assignments.assigned_to_id) > 1
+        HAVING COUNT(assignments.assigned_to_id) >= #{reminder_threshold}
       SQL
     end
   end
