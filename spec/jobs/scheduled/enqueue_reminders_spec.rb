@@ -31,10 +31,18 @@ RSpec.describe Jobs::EnqueueReminders do
       assert_reminders_enqueued(1)
     end
 
-    it "does not enqueue a reminder when the user only has one task" do
+    it "does not enqueue a reminder when the user has fewer assignments than `pending_assign_reminder_threshold`" do
       assign_one_task_to(user)
 
       assert_reminders_enqueued(0)
+    end
+
+    it "enqueues a reminder when the user has one assignement if `pending_assign_reminder_threshold` is set to one" do
+      assign_one_task_to(user)
+
+      SiteSetting.pending_assign_reminder_threshold = 1
+
+      assert_reminders_enqueued(1)
     end
 
     it "doesn't count assigns from deleted topics" do
