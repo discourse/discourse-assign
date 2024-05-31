@@ -36,6 +36,7 @@ uk:
       assign_modal:
         title: "Призначити тему"
         assign: "Призначити"
+        note_label: Примітка
         optional_label: "(опціонально)"
         status_label: Статус
       claim:

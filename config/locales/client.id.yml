@@ -7,6 +7,7 @@
 id:
   js:
     discourse_assign:
+      assigned: "Ditugaskan"
       group_everyone: "Semua orang"
       reassign:
         title: "Ubah"
@@ -18,6 +19,12 @@ id:
         always: "Selalu"
       reminders_frequency:
         never: "Tidak pernah"
+    user:
+      messages:
+        assigned: "Ditugaskan"
+    notifications:
+      titles:
+        assigned: "Ditugaskan"
     edit_assignments_modal:
       topic: "Topik"
       post: "Postingan"

@@ -55,6 +55,7 @@ hu:
         title: "Téma kiosztása"
         reassign_title: "Téma átadása"
         assign: "Kiosztás"
+        note_label: Megjegyzés
         optional_label: "(nem kötelező)"
         status_label: Állapot
       assign_post_modal:

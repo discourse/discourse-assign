@@ -11,6 +11,8 @@ be:
       group_everyone: "усе"
       reassign:
         title: "рэдагаваць"
+      assign_modal:
+        status_label: Статус
       assign_mailer:
         never: "ніколі"
         always: "заўсёды"
