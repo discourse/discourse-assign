@@ -11,6 +11,7 @@ ro:
       reassign:
         title: "Modifică"
       assign_modal:
+        note_label: Notă
         optional_label: "(opțional)"
         status_label: Status
       assign_mailer:

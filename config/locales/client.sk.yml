@@ -29,7 +29,9 @@ sk:
       assign_modal:
         title: "Priradiť tému"
         assign: "Priraď"
+        note_label: Poznámka
         optional_label: "(nepovinné)"
+        status_label: Stav
       claim:
         title: "prevziať"
         help: "Priradiť tému sebe"
@@ -57,6 +59,7 @@ sk:
         assigned:
           label: "Priradené komu"
     notifications:
+      assigned: "<span>%{username}</span> %{description}"
       titles:
         assigned: "Priradené"
     edit_assignments_modal:

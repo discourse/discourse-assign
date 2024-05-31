@@ -7,13 +7,29 @@
 te:
   js:
     discourse_assign:
+      assigned: "కేటాయించబడింది"
       group_everyone: "అందరూ"
       reassign:
         title: "సవరణ"
       assign_modal:
         optional_label: "(ఐచ్ఛికం)"
+        status_label: స్థితి
       assign_mailer:
+        never: "ఎప్పటికీ వద్దు"
         always: "ఎల్లప్పుడూ"
+      reminders_frequency:
+        never: "ఎప్పటికీ వద్దు"
+        daily: "రోజువారీ"
+        weekly: "వారానికోసారి"
+        monthly: "నెలవారీ"
+        quarterly: "త్రైమాసిక"
+    user:
+      messages:
+        assigned: "కేటాయించబడింది"
+    notifications:
+      assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "కేటాయించబడింది"
     edit_assignments_modal:
       topic: "విషయం"
       post: "పోస్ట్"

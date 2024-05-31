@@ -23,6 +23,9 @@ hr:
         weekly: "Tjedno"
         monthly: "Mjesečno"
         quarterly: "Tromjesečno"
+    user:
+      assignment_description:
+        topic: "%{topic_title}"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:
