@@ -63,13 +63,20 @@ tr_TR:
       reassign_modal:
         title: "Konuyu yeniden ata"
       topic_level_menu:
+        edit_assignments: "Atamayı düzenle..."
+        reassign_topic_to_me: "Bana geri ata"
         unassign_with_ellipsis: "Atamayı kaldır..."
+        unassign_from_post: "#%{post_number} öğesinden @%{assignee} atamasını kaldır"
+        unassign_from_post_help: "#%{post_number} numaralı gönderideki @%{assignee} atamasını kaldır"
+        unassign_from_topic: "%{username} adlı kullanıcının Konudan atamasını kaldır"
       assign_modal:
         title: "Konu Ata"
         reassign_title: "Konuyu yeniden ata"
         assign: "Ata"
         assignee_label: Atanan kişi
+        assignment_label: Atama
         choose_assignee: Atanacak bir kullanıcı seçin.
+        edit_assignments_title: "Atamaları düzenle"
         note_label: Not
         optional_label: "(isteğe bağlı)"
         status_label: Durum
@@ -176,5 +183,6 @@ tr_TR:
           one: "Atama listesi - %{count} okunmamış atama"
           other: "Atama listesi - %{count} okunmamış atama"
     edit_assignments_modal:
+      title: "atamaları düzenle"
       topic: "Konu"
       post: "İleti"
