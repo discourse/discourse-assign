@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { alias } from "@ember/object/computed";
 import { inject as service } from "@ember/service";
 import UserTopicsList from "discourse/controllers/user-topics-list";
+import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { INPUT_DELAY } from "discourse-common/config/environment";
 import discourseDebounce from "discourse-common/lib/debounce";
 
@@ -16,6 +17,7 @@ export default class GroupAssignedShow extends UserTopicsList {
   ascending = false;
   search = "";
   bulkSelectEnabled = false;
+  bulkSelectHelper = new BulkSelectHelper(this);
   selected = [];
 
   @alias("currentUser.staff") canBulkSelect;
