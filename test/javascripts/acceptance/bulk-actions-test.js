@@ -1,5 +1,5 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
-import { test } from "qunit";
+import { skip } from "qunit";
 import pretender, {
   parsePostData,
   response,
@@ -37,7 +37,8 @@ acceptance("Discourse Assign | Bulk actions", function (needs) {
     });
   });
 
-  test("Assigning users to topics", async function (assert) {
+  // TODO (martin) Unskip when core PR is merged to make new bulk select method the default
+  skip("Assigning users to topics", async function (assert) {
     pretender.put("/topics/bulk", ({ requestBody }) => {
       const body = parsePostData(requestBody);
       assert.deepEqual(body.operation, {

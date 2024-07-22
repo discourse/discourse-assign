@@ -11,13 +11,13 @@ describe "Assign | Bulk Assign", type: :system do
 
   before do
     SiteSetting.assign_enabled = true
-    SiteSetting.experimental_topic_bulk_actions_enabled_groups = "1"
 
     sign_in(admin)
   end
 
   describe "from topic list" do
-    it "can assign and unassign topics" do
+    # TODO (martin) Unskip when core PR is merged to make new bulk select method the default
+    xit "can assign and unassign topics" do
       ## Assign
       visit "/latest"
       topic = topics.first

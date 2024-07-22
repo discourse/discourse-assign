@@ -17,7 +17,8 @@ RSpec.describe "Assign | Group assigned", type: :system, js: true do
     sign_in(admin)
   end
 
-  it "allows to bulk select assigned topics" do
+  # TODO (martin) Unskip when core PR is merged to make new bulk select method the default
+  xit "allows to bulk select assigned topics" do
     visit "/g/#{group.name}/assigned/everyone"
 
     topic_list_header.click_bulk_select_button
