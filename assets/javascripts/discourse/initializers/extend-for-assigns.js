@@ -14,7 +14,6 @@ import getURL from "discourse-common/lib/get-url";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
-import BulkAssign from "../components/bulk-actions/assign-user";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
@@ -813,18 +812,13 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
-      const bulkAssignComponent =
-        currentUser?.use_experimental_topic_bulk_actions
-          ? BulkActionsAssignUser
-          : BulkAssign;
-
       api.addBulkActionButton({
         id: "assign-topics",
         label: "topics.bulk.assign",
         icon: "user-plus",
         class: "btn-default assign-topics",
         action({ setComponent }) {
-          setComponent(bulkAssignComponent);
+          setComponent(BulkActionsAssignUser);
         },
         actionType: "setComponent",
       });
