@@ -16,8 +16,7 @@ describe "Assign | Bulk Assign", type: :system do
   end
 
   describe "from topic list" do
-    # TODO (martin) Unskip when core PR is merged to make new bulk select method the default
-    xit "can assign and unassign topics" do
+    it "can assign and unassign topics" do
       ## Assign
       visit "/latest"
       topic = topics.first
