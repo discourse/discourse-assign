@@ -63,13 +63,20 @@ fi:
       reassign_modal:
         title: "Osoita ketju uudelleen"
       topic_level_menu:
+        edit_assignments: "Muokkaa osoituksia..."
+        reassign_topic_to_me: "Osoita ketju uudelleen minulle"
         unassign_with_ellipsis: "Peru osoitus..."
+        unassign_from_post: "Peru käyttäjän @%{assignee} osoitus viestistä %{post_number}"
+        unassign_from_post_help: "Peru käyttäjän @%{assignee} osoitus viestistä %{post_number}"
+        unassign_from_topic: "Peru käyttäjän @%{username} osoitus ketjusta"
       assign_modal:
         title: "Osoita ketju"
         reassign_title: "Osoita ketju uudelleen"
         assign: "Osoita"
         assignee_label: Osoituksensaaja
+        assignment_label: Osoitus
         choose_assignee: Valitse osoitettava käyttäjä.
+        edit_assignments_title: "Muokkaa osoituksia"
         note_label: Huomautus
         optional_label: "(valinnainen)"
         status_label: Tila
@@ -176,5 +183,6 @@ fi:
           one: "Osoitusluettelo – %{count} lukematon osoitus"
           other: "Osoitusluettelo – %{count} lukematonta osoitusta"
     edit_assignments_modal:
+      title: "Muokkaa osoituksia"
       topic: "Ketju"
       post: "Viesti"

@@ -63,7 +63,7 @@ de:
       reassign_modal:
         title: "Thema neu zuordnen"
       topic_level_menu:
-        edit_assignments: "Zuordnungen bearbeiten..."
+        edit_assignments: "Zuordnungen bearbeiten …"
         reassign_topic_to_me: "Thema mir neu zuordnen"
         unassign_with_ellipsis: "Zuordnung aufheben …"
         unassign_from_post: "Zuordnung von @%{assignee} zu #%{post_number} aufheben"

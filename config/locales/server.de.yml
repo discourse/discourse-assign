@@ -20,7 +20,7 @@ de:
     assign_mailer: "Wann für Zuordnungen Benachrichtigungs-E-Mails gesendet werden"
     remind_assigns: "Benutzer an ausstehende Zuordnungen erinnern."
     remind_assigns_frequency: "Häufigkeit, mit der Benutzer an zugeordnete Themen erinnert werden."
-    pending_assign_reminder_threshold: "Anzahl ausstehender Zuweisungen um eine Erinnerungsbenachrichtigung auslösen."
+    pending_assign_reminder_threshold: "Anzahl ausstehender Zuweisungen zum Auslösen einer Erinnerungsbenachrichtigung."
     max_assigned_topics: "Maximale Anzahl an Themen, die einem Benutzer zugeordnet werden können."
     assign_allowed_on_groups: "Benutzer in diesen Gruppen dürfen Themen zuordnen und können Themen zugeordnet werden."
     enable_assign_status: "Füge zu jeder Zuordnung ein anpassbares Statusfeld hinzu."

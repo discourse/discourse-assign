@@ -63,13 +63,20 @@ fr:
       reassign_modal:
         title: "Réattribuer le sujet"
       topic_level_menu:
+        edit_assignments: "Modifier les attributions…"
+        reassign_topic_to_me: "Me réattribuer le sujet"
         unassign_with_ellipsis: "Annuler l'attribution…"
+        unassign_from_post: "Annuler l'attribution de @%{assignee} à #%{post_number}"
+        unassign_from_post_help: "Annuler l'attribution de @%{assignee} à la publication #%{post_number}"
+        unassign_from_topic: "Annuler l'attribution de @%{username} au sujet"
       assign_modal:
         title: "Attribuer le sujet"
         reassign_title: "Réattribuer le sujet"
         assign: "Attribuer"
         assignee_label: Attributaire
+        assignment_label: Attribution
         choose_assignee: Choisissez un utilisateur à attribuer.
+        edit_assignments_title: "Modifier les attributions"
         note_label: Note
         optional_label: "(facultatif)"
         status_label: Statut
@@ -176,5 +183,6 @@ fr:
           one: "Liste des attributions - %{count} attribution non lue"
           other: "Liste des attributions - %{count} attributions non lues"
     edit_assignments_modal:
+      title: "Modifier les attributions"
       topic: "Sujet"
-      post: "Message"
+      post: "Publication"

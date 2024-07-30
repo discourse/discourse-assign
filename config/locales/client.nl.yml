@@ -63,13 +63,20 @@ nl:
       reassign_modal:
         title: "Topic opnieuw toewijzen"
       topic_level_menu:
+        edit_assignments: "Toewijzingen bewerken..."
+        reassign_topic_to_me: "Topic opnieuw toewijzen aan mij"
         unassign_with_ellipsis: "Toewijzing opheffen..."
+        unassign_from_post: "Toewijzing van @%{assignee} aan %{post_number} opheffen"
+        unassign_from_post_help: "Toewijzing van @%{assignee} aan bericht %{post_number} opheffen"
+        unassign_from_topic: "Toewijzing van @%{username} aan topic opheffen"
       assign_modal:
         title: "Topic toewijzen"
         reassign_title: "Topic opnieuw toewijzen"
         assign: "Toewijzen"
         assignee_label: Toegewezen persoon
+        assignment_label: Toewijzing
         choose_assignee: Kies een gebruiker om toe te wijzen.
+        edit_assignments_title: "Toewijzingen bewerken"
         note_label: Opmerking
         optional_label: "(optioneel)"
         status_label: Status
@@ -176,5 +183,6 @@ nl:
           one: "Toewijzingslijst - %{count} ongelezen toewijzing"
           other: "Toewijzingslijst - %{count} ongelezen toewijzingen"
     edit_assignments_modal:
+      title: "Toewijzingen bewerken"
       topic: "Topic"
       post: "Bericht"

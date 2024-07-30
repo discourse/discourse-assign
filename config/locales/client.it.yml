@@ -63,13 +63,20 @@ it:
       reassign_modal:
         title: "Riassegna argomento"
       topic_level_menu:
+        edit_assignments: "Modifica assegnazioni..."
+        reassign_topic_to_me: "Riassegna argomento a me"
         unassign_with_ellipsis: "Annullamento assegnazione..."
+        unassign_from_post: "Annulla assegnazione di @%{assignee} da #%{post_number}"
+        unassign_from_post_help: "Annulla assegnazione di @%{assignee} dal messaggio #%{post_number}"
+        unassign_from_topic: "Annulla l'assegnazione di @%{username} dall'argomento"
       assign_modal:
         title: "Assegna Argomento"
         reassign_title: "Riassegna argomento"
         assign: "Assegna"
         assignee_label: Assegnatario
+        assignment_label: Assegnazione
         choose_assignee: Scegli un utente da assegnare.
+        edit_assignments_title: "Modifica assegnazioni"
         note_label: Nota
         optional_label: "(opzionale)"
         status_label: Stato
@@ -176,5 +183,6 @@ it:
           one: "Elenco assegnazioni: %{count} assegnazione non letta"
           other: "Elenco assegnazioni: %{count} assegnazioni non lette"
     edit_assignments_modal:
+      title: "Modifica assegnazioni"
       topic: "Argomento"
       post: "Messaggio"
