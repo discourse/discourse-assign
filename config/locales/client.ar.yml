@@ -44,7 +44,7 @@ ar:
       assigned_to_w_ellipsis: "معيَّنة إلى..."
       unassign:
         title: "إلغاء التعيين"
-        title_w_ellipsis: "إلغاء تعيين..."
+        title_w_ellipsis: "إلغاء التعيين..."
         help: "إلغاء تعيين الموضوع إلى %{username}"
       assign:
         title: "تعيين"
@@ -63,13 +63,20 @@ ar:
       reassign_modal:
         title: "إعادة تعيين الموضوع"
       topic_level_menu:
+        edit_assignments: "تعديل التعيينات..."
+        reassign_topic_to_me: "إعادة تعيين الموضوع إليَّ"
         unassign_with_ellipsis: "إلغاء تعيين..."
+        unassign_from_post: "إلغاء تعيين @%{assignee} من #%{post_number}"
+        unassign_from_post_help: "إلغاء تعيين @%{assignee} من المنشور #%{post_number}"
+        unassign_from_topic: "إلغاء تعيين @%{username} من الموضوع"
       assign_modal:
         title: "تعيين الموضوع"
         reassign_title: "إعادة تعيين الموضوع"
         assign: "تعيين"
         assignee_label: المعيَّن
+        assignment_label: التعيين
         choose_assignee: اختر مستخدمًا لتعيينه.
+        edit_assignments_title: "تعديل التعيينات"
         note_label: ملاحظة
         optional_label: "(اختياري)"
         status_label: الحالة
@@ -184,5 +191,6 @@ ar:
           many: "قائمة التعيين - %{count} تعيينًا غير مقروء"
           other: "قائمة التعيين - %{count} تعيين غير مقروء"
     edit_assignments_modal:
+      title: "تعديل التعيينات"
       topic: "الموضوع"
       post: "المنشور"

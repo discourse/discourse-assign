@@ -20,6 +20,7 @@ fi:
     assign_mailer: "Milloin lähetetään ilmoituksia osoituksista"
     remind_assigns: "Muistuta käyttäjiä odottavista osoituksista."
     remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus."
+    pending_assign_reminder_threshold: "Odottavien osoitusten määrä, joka laukaisee muistutusilmoituksen."
     max_assigned_topics: "Käyttäjälle osoitettavien ketjujen enimmäismäärä."
     assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaa aiheita, ja heille voidaan osoittaa aiheita."
     enable_assign_status: "Lisää mukautettava tilakenttä jokaiseen osoitukseen."

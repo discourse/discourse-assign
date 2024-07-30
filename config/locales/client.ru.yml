@@ -63,13 +63,20 @@ ru:
       reassign_modal:
         title: "Переназначить тему"
       topic_level_menu:
+        edit_assignments: "Изменить назначения..."
+        reassign_topic_to_me: "Переназначить тему мне"
         unassign_with_ellipsis: "Отменить назначение..."
+        unassign_from_post: "Снять ответственного @%{assignee} с публикации #%{post_number}"
+        unassign_from_post_help: "Снять ответственного @%{assignee} с публикации #%{post_number}"
+        unassign_from_topic: "Снять ответственного @%{username} с темы"
       assign_modal:
         title: "Назначить ответственного в тему"
         reassign_title: "Переназначить тему"
         assign: "Назначить"
         assignee_label: Назначенный
+        assignment_label: Назначение
         choose_assignee: Выберите пользователя для назначения.
+        edit_assignments_title: "Изменить назначения"
         note_label: Примечание
         optional_label: "(необязательно)"
         status_label: Статус
@@ -180,5 +187,6 @@ ru:
           many: "Список назначений - %{count} непрочитанных назначений"
           other: "Список назначений - %{count} непрочитанных назначений"
     edit_assignments_modal:
-      topic: "Перенаправление в тему"
-      post: "Запись"
+      title: "Изменить назначения"
+      topic: "Тема"
+      post: "Публикация"

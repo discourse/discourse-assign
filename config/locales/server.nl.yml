@@ -20,6 +20,7 @@ nl:
     assign_mailer: "Wanneer een e-mailmelding sturen voor toewijzingen"
     remind_assigns: "Gebruikers aan wachtende toewijzingen herinneren"
     remind_assigns_frequency: "Frequentie voor het herinneren van gebruikers aan toegewezen topics."
+    pending_assign_reminder_threshold: "Aantal wachtende toewijzingen dat een herinneringsmelding activeert."
     max_assigned_topics: "Maximaal aantal topics dat aan een gebruiker kan worden toegewezen."
     assign_allowed_on_groups: "Gebruikers in deze groepen mogen topics toewijzen en kunnen topics toegewezen krijgen."
     enable_assign_status: "Voeg een aanpasbaar statusveld toe aan elke toewijzing."

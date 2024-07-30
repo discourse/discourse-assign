@@ -20,6 +20,7 @@ es:
     assign_mailer: "Cuándo enviar notificaciones por correo electrónico de asignaciones."
     remind_assigns: "Recordar a los usuarios sobre asignaciones pendientes."
     remind_assigns_frequency: "Frecuencia para recordar a los usuarios sobre los temas asignados."
+    pending_assign_reminder_threshold: "Número de asignaciones pendientes que activa una notificación de recordatorio."
     max_assigned_topics: "Número máximo de temas que se pueden asignar a un usuario."
     assign_allowed_on_groups: "Los usuarios de estos grupos pueden asignar temas y se les pueden asignar temas."
     enable_assign_status: "Añade un campo de estado personalizable a cada asignación."

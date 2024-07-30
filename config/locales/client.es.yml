@@ -63,13 +63,20 @@ es:
       reassign_modal:
         title: "Reasignar tema"
       topic_level_menu:
+        edit_assignments: "Editar asignaciones..."
+        reassign_topic_to_me: "Reasignar tema a mí"
         unassign_with_ellipsis: "Anular asignación..."
+        unassign_from_post: "Anular asignación de @%{assignee} de #%{post_number}"
+        unassign_from_post_help: "Anular asignación de @%{assignee} de la publicación #%{post_number}"
+        unassign_from_topic: "Anular asignación de @%{username} del tema"
       assign_modal:
         title: "Asignar tema"
         reassign_title: "Reasignar tema"
         assign: "Asignar"
         assignee_label: Asignado
+        assignment_label: Asignación
         choose_assignee: Elige un usuario para asignar.
+        edit_assignments_title: "Editar asignaciones"
         note_label: Nota
         optional_label: "(opcional)"
         status_label: Estado
@@ -176,5 +183,6 @@ es:
           one: "Asignar lista - %{count} asignación no leída"
           other: "Asignar lista - %{count} asignación no leída"
     edit_assignments_modal:
+      title: "Editar asignaciones"
       topic: "Tema"
       post: "Publicación"
