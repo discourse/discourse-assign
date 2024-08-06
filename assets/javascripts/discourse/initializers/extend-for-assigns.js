@@ -359,7 +359,7 @@ function initialize(api) {
   }
 
   api.addPostSmallActionClassesCallback((post) => {
-    if (post.actionCode.includes("assigned") && !siteSettings.assigns_public) {
+    if (!!post.actionCode && post.actionCode.includes("assigned") && !siteSettings.assigns_public) {
       return ["private-assign"];
     }
   });
