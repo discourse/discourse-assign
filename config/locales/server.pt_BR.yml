@@ -20,6 +20,7 @@ pt_BR:
     assign_mailer: "Quando enviar e-mail de notificação por atribuições"
     remind_assigns: "Lembrar usuários sobre atribuições pendentes."
     remind_assigns_frequency: "Frequência para lembrar usuários sobre tópicos atribuídos."
+    pending_assign_reminder_threshold: "Quantidade de atribuições pendentes para acionar notificação de lembrete."
     max_assigned_topics: "Número máximo de tópicos que podem ser atribuídos a um(a) usuário(a)."
     assign_allowed_on_groups: "Usuários(as) nestes grupos têm permissão para atribuir tópicos e podem receber atribuição de tópicos."
     enable_assign_status: "Adicione um campo de status personalizável a cada atribuição."

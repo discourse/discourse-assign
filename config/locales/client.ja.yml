@@ -63,13 +63,20 @@ ja:
       reassign_modal:
         title: "トピックを再割り当てする"
       topic_level_menu:
+        edit_assignments: "割り当てを編集..."
+        reassign_topic_to_me: "トピックを自分に割り当て直す"
         unassign_with_ellipsis: "割り当て解除..."
+        unassign_from_post: "#%{post_number} から @%{assignee} の割り当てを解除"
+        unassign_from_post_help: "投稿 #%{post_number} から @%{assignee} の割り当てを解除"
+        unassign_from_topic: "トピックから @%{username} の割り当てを解除"
       assign_modal:
         title: "トピックを割り当てる"
         reassign_title: "トピックを再割り当てする"
         assign: "割り当てる"
         assignee_label: 割り当てられた担当者
+        assignment_label: 割り当て
         choose_assignee: 割り当てるユーザーを選択します。
+        edit_assignments_title: "割り当ての編集"
         note_label: メモ
         optional_label: "(オプション)"
         status_label: ステータス
@@ -174,5 +181,6 @@ ja:
         assign_list_with_unread:
           other: "割り当てリスト - %{count} 件の未読の割り当て"
     edit_assignments_modal:
+      title: "割り当ての編集"
       topic: "トピック"
       post: "投稿"
