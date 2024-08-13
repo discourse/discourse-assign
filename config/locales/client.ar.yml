@@ -63,7 +63,7 @@ ar:
       reassign_modal:
         title: "إعادة تعيين الموضوع"
       topic_level_menu:
-        edit_assignments: "تعديل التعيينات..."
+        edit_assignments: "تعديل المهام المعيَّنة..."
         reassign_topic_to_me: "إعادة تعيين الموضوع إليَّ"
         unassign_with_ellipsis: "إلغاء تعيين..."
         unassign_from_post: "إلغاء تعيين @%{assignee} من #%{post_number}"
@@ -76,7 +76,7 @@ ar:
         assignee_label: المعيَّن
         assignment_label: التعيين
         choose_assignee: اختر مستخدمًا لتعيينه.
-        edit_assignments_title: "تعديل التعيينات"
+        edit_assignments_title: "تعديل المهام المعيَّنة"
         note_label: ملاحظة
         optional_label: "(اختياري)"
         status_label: الحالة
@@ -148,7 +148,7 @@ ar:
             assignees_group:
               label: مجموعة المعيَّنين
             minimum_time_between_assignments:
-              label: الحد الأدنى لعدد الساعات بين التعيينات
+              label: الحد الأدنى لعدد الساعات بين المهام المعيَّنة
             min_recently_assigned_days:
               label: الحد الأدنى لعدد الأيام التي يعتبر فيها المستخدم حديث التعيين
               description: الإعداد الافتراضي هو 14 يومًا.
@@ -191,6 +191,6 @@ ar:
           many: "قائمة التعيين - %{count} تعيينًا غير مقروء"
           other: "قائمة التعيين - %{count} تعيين غير مقروء"
     edit_assignments_modal:
-      title: "تعديل التعيينات"
+      title: "تعديل المهام المعيَّنة"
       topic: "الموضوع"
       post: "المنشور"
