@@ -20,6 +20,7 @@ ja:
     assign_mailer: "割り当ての通知メールを送信するタイミング"
     remind_assigns: "保留中の割り当てについてユーザーに通知します。"
     remind_assigns_frequency: "割り当てられたトピックについてユーザーに通知する頻度です。"
+    pending_assign_reminder_threshold: "リマインダー通知をトリガーする保留中の割り当ての数。"
     max_assigned_topics: "ユーザーに割り当てられるトピックの最大数。"
     assign_allowed_on_groups: "これらのグループのユーザーはトピックを割り当てたり、割り当てられたりすることができます。"
     enable_assign_status: "カスタマイズ可能なステータスフィールドをすべての割り当てに追加します。"

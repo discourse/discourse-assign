@@ -17,10 +17,10 @@ ar:
     unassign_on_close: "إلغاء تعيين الموضوع عند إغلاقه"
     reassign_on_open: "إعادة تعيين المستخدمين/المجموعات المعيَّنة مسبقًا عند فتح الموضوع"
     invite_on_assign: "دعوة المستخدم أو المجموعة إلى الرسالة الشخصية عند تعيينها إليهما، إذا لم يكونا مشاركين فيها بالفعل."
-    assign_mailer: "متى يتم إرسال إشعار بالتعيينات عبر البريد الإلكتروني"
-    remind_assigns: "تذكير المستخدمين بالتعيينات قيد الانتظار"
+    assign_mailer: "متى يتم إرسال إشعار بالمهام المعيَّنة عبر البريد الإلكتروني"
+    remind_assigns: "تذكير المستخدمين بالمهام المعيَّنة قيد الانتظار"
     remind_assigns_frequency: "معدل تكرار تذكير المستخدمين بالموضوعات المعيَّنة"
-    pending_assign_reminder_threshold: "عدد التعيينات المعلَّقة التي تؤدي إلى ظهور إشعار تذكير."
+    pending_assign_reminder_threshold: "عدد المهام المعيَّنة المعلَّقة التي تؤدي إلى ظهور إشعار تذكير."
     max_assigned_topics: "أقصى عدد من الموضوعات التي يمكن تعيينها إلى مستخدم"
     assign_allowed_on_groups: "المجموعات المسموح للمستخدمين فيها بتعيين الموضوعات ويمكن تعيين الموضوعات إليها"
     enable_assign_status: "أضِف حقل حالة قابل للتخصيص لكل تعيين."
@@ -36,7 +36,7 @@ ar:
     already_claimed: "تمت المطالبة بملكية هذا الموضوع بالفعل."
     already_assigned: "الموضوع معيَّن بالفعل إلى @%{username}"
     too_many_assigns: "لقد بلغ @%{username} أقصى عدد من الموضوعات المعيَّنة (%{max})."
-    too_many_assigns_for_topic: "تم بلوغ الحد الأقصى لعدد التعيينات في الموضوع والبالغ %{limit}."
+    too_many_assigns_for_topic: "تم بلوغ الحد الأقصى لعدد المهام المعيَّنة في الموضوع والبالغ %{limit}."
     forbidden_assign_to: "لا يمكن تعيين @%{username} لأنه لا ينتمي إلى المجموعات المسموح بها المعيَّنة."
     forbidden_assignee_not_pm_participant: "لا يمكن تعيين @%{username} لأنه لا يملك إذن الوصول إلى هذه الرسالة الخاصة. يمكنك منح @%{username} إذن الوصول من خلال دعوته إلى هذه الرسالة الخاصة."
     forbidden_assignee_cant_see_topic: "لا يمكن تعيين @%{username} لأنه لا يملك إذن الوصول إلى هذا الموضوع."
@@ -66,9 +66,9 @@ ar:
       إذا كنت مهتمًا، فانقر على الرابط أدناه:
       [%{topic_link}](%{topic_link})
   pending_assigns_reminder:
-    title: "لديك %{pending_assignments} من التعيينات قيد الانتظار"
+    title: "لديك %{pending_assignments} من المهام المعيَّنة قيد الانتظار"
     body: |
-      لديك حاليًا [%{pending_assignments} من التعيينات قيد الانتظار](%{assignments_link}).
+      لديك حاليًا [%{pending_assignments} من المهام المعيَّنة قيد الانتظار](%{assignments_link}).
 
       %{newest_assignments}
       %{oldest_assignments}

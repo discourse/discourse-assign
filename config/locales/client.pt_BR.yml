@@ -63,13 +63,20 @@ pt_BR:
       reassign_modal:
         title: "Reatribuir tópico"
       topic_level_menu:
+        edit_assignments: "Editar atribuições..."
+        reassign_topic_to_me: "Reatribuir tópico a mim"
         unassign_with_ellipsis: "Remover atribuição..."
+        unassign_from_post: "Remover atribuição de @%{assignee} a #%{post_number}"
+        unassign_from_post_help: "Remover atribuição de @%{assignee} à postagem #%{post_number}"
+        unassign_from_topic: "Remover atribuição de @%{username} do tópico"
       assign_modal:
         title: "Atribuir tópico"
         reassign_title: "Reatribuir tópico"
         assign: "Atribuir"
         assignee_label: Destinatário(a)
+        assignment_label: Atribuição
         choose_assignee: Escolha um(a) usuário(a) para atribuir.
+        edit_assignments_title: "Editar atribuições"
         note_label: Observação
         optional_label: "(opcional)"
         status_label: Status
@@ -176,5 +183,6 @@ pt_BR:
           one: "Lista de atribuições - %{count} atribuição não lida"
           other: "Lista de atribuições - %{count} atribuições não lidas"
     edit_assignments_modal:
+      title: "Editar atribuições"
       topic: "Tópico"
       post: "Postar"
