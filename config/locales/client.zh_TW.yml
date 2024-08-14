@@ -52,6 +52,8 @@ zh_TW:
     user:
       messages:
         assigned: "已指派"
+      assigned_to_you:
+        post: "分配給您的帖子"
       assignment_description:
         topic: "%{topic_title}"
     search:
