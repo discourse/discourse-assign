@@ -10,13 +10,13 @@ module DiscourseAssign
       scope :assignable,
             ->(user) do
               where(
-                "assignable_level in (:levels) OR
+                "groups.assignable_level in (:levels) OR
                   (
-                    assignable_level = #{Group::ALIAS_LEVELS[:members_mods_and_admins]} AND id in (
-                    SELECT group_id FROM group_users WHERE user_id = :user_id)
+                    groups.assignable_level = #{Group::ALIAS_LEVELS[:members_mods_and_admins]} AND groups.id in (
+                    SELECT group_id FROM group_users AS gu WHERE gu.user_id = :user_id)
                   ) OR (
-                    assignable_level = #{Group::ALIAS_LEVELS[:owners_mods_and_admins]} AND id in (
-                    SELECT group_id FROM group_users WHERE user_id = :user_id AND owner IS TRUE)
+                    groups.assignable_level = #{Group::ALIAS_LEVELS[:owners_mods_and_admins]} AND groups.id in (
+                    SELECT group_id FROM group_users as gu WHERE gu.user_id = :user_id AND gu.owner IS TRUE)
                   )",
                 levels: alias_levels(user),
                 user_id: user&.id,
