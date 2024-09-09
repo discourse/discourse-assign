@@ -872,6 +872,15 @@ after_initialize do
     end
   end
 
+  on(:group_destroyed) do |group, user_ids|
+    user_ids.each do |user_id|
+      user = User.find(user_id)
+      user.notifications.for_assignment(group.assignments.select(:id)).destroy_all if user
+    end
+
+    Assignment.active_for_group(group).destroy_all
+  end
+
   register_search_advanced_filter(/in:assigned/) do |posts|
     posts.where(<<~SQL) if @guardian.can_assign?
         topics.id IN (
