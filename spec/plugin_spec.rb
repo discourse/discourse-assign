@@ -170,7 +170,6 @@ RSpec.describe DiscourseAssign do
       end
 
       it "removes user's notifications related to group assignments" do
-
         expect { group.destroy }.to change { user.notifications.assigned.count }.by(-2)
       end
     end
