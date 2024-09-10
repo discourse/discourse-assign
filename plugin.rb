@@ -873,9 +873,11 @@ after_initialize do
   end
 
   on(:group_destroyed) do |group, user_ids|
-    User.where(id: user_ids).find_each do |user|
-      user.notifications.for_assignment(group.assignments.select(:id)).destroy_all if user
-    end
+    User
+      .where(id: user_ids)
+      .find_each do |user|
+        user.notifications.for_assignment(group.assignments.select(:id)).destroy_all
+      end
 
     Assignment.active_for_group(group).destroy_all
   end
