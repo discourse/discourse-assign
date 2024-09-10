@@ -146,5 +146,32 @@ RSpec.describe DiscourseAssign do
         expect_job_enqueued(job: Jobs::AssignNotification, args: { assignment_id: assignment.id })
       end
     end
+
+    describe "on 'group_destroyed'" do
+      let(:group) { Fabricate(:group) }
+      let(:user) { Fabricate(:user) }
+      let(:first_assignment) { Fabricate(:topic_assignment, assigned_to: group) }
+      let(:second_assignment) { Fabricate(:post_assignment, assigned_to: group) }
+
+      before do
+        group.users << user
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:assigned],
+          user: user,
+          data: { assignment_id: first_assignment.id }.to_json,
+        )
+        Fabricate(
+          :notification,
+          notification_type: Notification.types[:assigned],
+          user: user,
+          data: { assignment_id: second_assignment.id }.to_json,
+        )
+      end
+
+      it "removes user's notifications related to group assignments" do
+        expect { group.destroy }.to change { user.notifications.assigned.count }.by(-2)
+      end
+    end
   end
 end
