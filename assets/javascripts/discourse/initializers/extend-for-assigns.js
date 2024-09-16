@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/application";
+import { inject as service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";
@@ -381,9 +382,9 @@ function initialize(api) {
       : {}
   );
 
-  function assignedToUserPath(assignedToUser) {
+  function assignedToUserPath(assignedToUser, settings) {
     return getURL(
-      siteSettings.assigns_user_url_path.replace(
+      settings.assigns_user_url_path.replace(
         "{username}",
         assignedToUser.username
       )
@@ -397,9 +398,11 @@ function initialize(api) {
   api.modifyClass("model:bookmark", {
     pluginId: PLUGIN_ID,
 
+    siteSettings: service(),
+
     @discourseComputed("assigned_to_user")
     assignedToUserPath(assignedToUser) {
-      return assignedToUserPath(assignedToUser);
+      return assignedToUserPath(assignedToUser, this.siteSettings);
     },
     @discourseComputed("assigned_to_group")
     assignedToGroupPath(assignedToGroup) {
@@ -409,6 +412,8 @@ function initialize(api) {
 
   api.modifyClass("component:topic-notifications-button", {
     pluginId: PLUGIN_ID,
+
+    currentUser: service(),
 
     @discourseComputed(
       "topic",
@@ -542,6 +547,8 @@ function initialize(api) {
   });
 
   api.createWidget("assigned-to-first-post", {
+    services: ["site-settings"],
+
     html(attrs) {
       const topic = attrs.topic;
       const [assignedToUser, assignedToGroup, indirectlyAssignedTo] = [
@@ -567,7 +574,7 @@ function initialize(api) {
             new RawHtml({
               html: assignedHtml(
                 assignedToUser.username,
-                assignedToUserPath(assignedToUser),
+                assignedToUserPath(assignedToUser, this.siteSettings),
                 "user"
               ),
             })
@@ -635,6 +642,9 @@ function initialize(api) {
 
   api.modifyClass("controller:topic", {
     pluginId: PLUGIN_ID,
+
+    appEvents: service(),
+    messageBus: service(),
 
     subscribe() {
       this._super(...arguments);
