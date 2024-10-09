@@ -8,7 +8,7 @@ module DiscourseAssign
       scope :assigned, -> { where(notification_type: Notification.types[:assigned]) }
       scope :for_assignment,
             ->(assignment) do
-              assigned.where("((data::jsonb)->'assignment_id')::int IN (?)", assignment)
+              assigned.where("((data::jsonb)->'assignment_id')::bigint IN (?)", assignment)
             end
     end
   end
