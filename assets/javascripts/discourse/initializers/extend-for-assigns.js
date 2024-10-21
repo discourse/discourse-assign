@@ -420,7 +420,7 @@ function initialize(api) {
             return I18n.t("notification_reason.user");
           }
 
-          return super.reasonText(...arguments);
+          return super.reasonText;
         }
       }
   );
