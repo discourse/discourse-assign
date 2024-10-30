@@ -56,10 +56,15 @@ class PendingAssignsReminder
   end
 
   def assigned_count_for(user)
-    Assignment
-      .joins_with_topics
-      .where(assigned_to_id: user.id, assigned_to_type: "User", active: true)
-      .count
+    assignments =
+      Assignment.joins_with_topics.where(
+        assigned_to_id: user.id,
+        assigned_to_type: "User",
+        active: true,
+      )
+    assignments =
+      DiscoursePluginRegistry.apply_modifier(:assigned_count_for_user_query, assignments, user)
+    assignments.count
   end
 
   def assigned_topics(user, order:)
