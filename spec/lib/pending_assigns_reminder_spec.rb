@@ -143,9 +143,9 @@ RSpec.describe PendingAssignsReminder do
       expect(topic.title).to eq(I18n.t("pending_assigns_reminder.title", pending_assignments: 3))
     end
 
-    context "with assigns_reminder_assigned_topics_query" do
+    context "with assigns_reminder_assigned_topics_query modifier" do
       let(:modifier_block) { Proc.new { |query| query.where.not(id: @post1.topic_id) } }
-      it "doesn't remind if topic is solved" do
+      it "updates the query correctly" do
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:assigns_reminder_assigned_topics_query, &modifier_block)
         topics = reminder.send(:assigned_topics, user, order: :asc)
@@ -154,6 +154,23 @@ RSpec.describe PendingAssignsReminder do
         DiscoursePluginRegistry.unregister_modifier(
           plugin_instance,
           :assigns_reminder_assigned_topics_query,
+          &modifier_block
+        )
+      end
+    end
+
+    context "with assigned_count_for_user_query modifier" do
+      let(:modifier_block) { Proc.new { |query, user| query.where.not(assigned_to_id: user.id) } }
+      it "updates the query correctly" do
+        expect(reminder.send(:assigned_count_for, user)).to eq(3)
+        
+        plugin_instance = Plugin::Instance.new
+        plugin_instance.register_modifier(:assigned_count_for_user_query, &modifier_block)
+        expect(reminder.send(:assigned_count_for, user)).to eq(0)
+      ensure
+        DiscoursePluginRegistry.unregister_modifier(
+          plugin_instance,
+          :assigned_count_for_user_query,
           &modifier_block
         )
       end
