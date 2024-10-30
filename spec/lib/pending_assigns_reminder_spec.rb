@@ -163,7 +163,7 @@ RSpec.describe PendingAssignsReminder do
       let(:modifier_block) { Proc.new { |query, user| query.where.not(assigned_to_id: user.id) } }
       it "updates the query correctly" do
         expect(reminder.send(:assigned_count_for, user)).to eq(3)
-        
+
         plugin_instance = Plugin::Instance.new
         plugin_instance.register_modifier(:assigned_count_for_user_query, &modifier_block)
         expect(reminder.send(:assigned_count_for, user)).to eq(0)
