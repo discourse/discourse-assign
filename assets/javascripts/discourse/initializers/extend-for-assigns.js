@@ -3,6 +3,14 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
+import {
+  POST_MENU_ADMIN_BUTTON_KEY,
+  POST_MENU_COPY_LINK_BUTTON_KEY,
+  POST_MENU_DELETE_BUTTON_KEY,
+  POST_MENU_LIKE_BUTTON_KEY,
+  POST_MENU_SHARE_BUTTON_KEY,
+  POST_MENU_SHOW_MORE_BUTTON_KEY,
+} from "discourse/components/post/menu";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -10,10 +18,15 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
+import AssignButton, {
+  assignPost,
+  unassignPost,
+} from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
@@ -314,47 +327,9 @@ function initialize(api) {
       },
       before: "top",
     });
+
     if (api.getCurrentUser()?.can_assign) {
-      api.addPostMenuButton("assign", (post) => {
-        if (post.firstPost) {
-          return;
-        }
-        if (post.assigned_to_user || post.assigned_to_group) {
-          return {
-            action: "unassignPost",
-            icon: "user-times",
-            className: "unassign-post",
-            title: "discourse_assign.unassign_post.title",
-            position:
-              post.assigned_to_user?.id === api.getCurrentUser().id
-                ? "first"
-                : "second-last-hidden",
-          };
-        } else {
-          return {
-            action: "assignPost",
-            icon: "user-plus",
-            className: "assign-post",
-            title: "discourse_assign.assign_post.title",
-            position: "second-last-hidden",
-          };
-        }
-      });
-
-      api.attachWidgetAction("post", "assignPost", function () {
-        const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.showAssignModal(this.model, {
-          isAssigned: false,
-          targetType: "Post",
-        });
-      });
-
-      api.attachWidgetAction("post", "unassignPost", function () {
-        const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.unassign(this.model.id, "Post").then(() => {
-          delete this.model.topic.indirectly_assigned_to[this.model.id];
-        });
-      });
+      customizePostMenu(api);
     }
   }
 
@@ -753,6 +728,77 @@ function initialize(api) {
   });
 
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
+}
+
+function customizePostMenu(api) {
+  const transformerRegistered = api.registerValueTransformer(
+    "post-menu-buttons",
+    ({ value: dag, context: { post, state } }) => {
+      dag.add(
+        "assign",
+        AssignButton,
+        post.assigned_to_user?.id === state.currentUser.id
+          ? {
+              before: [
+                POST_MENU_LIKE_BUTTON_KEY,
+                POST_MENU_COPY_LINK_BUTTON_KEY,
+                POST_MENU_SHARE_BUTTON_KEY,
+                POST_MENU_SHOW_MORE_BUTTON_KEY,
+              ],
+            }
+          : {
+              before: [
+                POST_MENU_ADMIN_BUTTON_KEY,
+                POST_MENU_SHOW_MORE_BUTTON_KEY,
+              ],
+              after: POST_MENU_DELETE_BUTTON_KEY,
+            }
+      );
+
+      return dag;
+    }
+  );
+
+  const silencedKey =
+    transformerRegistered && "discourse.post-menu-widget-overrides";
+
+  withSilencedDeprecations(silencedKey, () => customizeWidgetPostMenu(api));
+}
+
+function customizeWidgetPostMenu(api) {
+  api.addPostMenuButton("assign", (post) => {
+    if (post.firstPost) {
+      return;
+    }
+    if (post.assigned_to_user || post.assigned_to_group) {
+      return {
+        action: "unassignPost",
+        icon: "user-times",
+        className: "unassign-post",
+        title: "discourse_assign.unassign_post.title",
+        position:
+          post.assigned_to_user?.id === api.getCurrentUser().id
+            ? "first"
+            : "second-last-hidden",
+      };
+    } else {
+      return {
+        action: "assignPost",
+        icon: "user-plus",
+        className: "assign-post",
+        title: "discourse_assign.assign_post.title",
+        position: "second-last-hidden",
+      };
+    }
+  });
+
+  api.attachWidgetAction("post", "assignPost", function () {
+    assignPost(this.model, getOwner(this).lookup("service:task-actions"));
+  });
+
+  api.attachWidgetAction("post", "unassignPost", function () {
+    unassignPost(this.model, getOwner(this).lookup("service:task-actions"));
+  });
 }
 
 const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
