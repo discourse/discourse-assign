@@ -840,7 +840,7 @@ export default {
       });
     }
 
-    withPluginApi("0.13.0", (api) => {
+    withPluginApi("1.34.0", (api) => {
       extendTopicModel(api, PLUGIN_ID);
       initialize(api);
       registerTopicFooterButtons(api);
