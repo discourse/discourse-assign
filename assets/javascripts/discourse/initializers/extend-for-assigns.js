@@ -754,8 +754,6 @@ function customizePostMenu(api) {
               after: POST_MENU_DELETE_BUTTON_KEY,
             }
       );
-
-      return dag;
     }
   );
 
