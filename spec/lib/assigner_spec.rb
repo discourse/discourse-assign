@@ -30,13 +30,33 @@ RSpec.describe Assigner do
         [topic],
       )
 
-      expect(TopicUser.find_by(user: moderator).notification_level).to eq(
-        TopicUser.notification_levels[:watching],
-      )
+      notification_level = moderator.user_option.notification_level_when_replying
+
+      expect(TopicUser.find_by(user: moderator).notification_level).to eq(notification_level)
 
       expect_enqueued_with(job: :unassign_notification) { assigner.unassign }
 
       expect(TopicQuery.new(moderator, assigned: moderator.username).list_latest.topics).to eq([])
+
+      expect(TopicUser.find_by(user: moderator).notification_level).to eq(notification_level)
+    end
+
+    it "uses the notification_level_when_replying of the assignee" do
+      moderator.user_option.update!(
+        notification_level_when_replying: TopicUser.notification_levels[:regular],
+      )
+
+      assigner.assign(moderator)
+
+      expect(TopicUser.find_by(user: moderator).notification_level).to eq(
+        TopicUser.notification_levels[:regular],
+      )
+    end
+
+    it "defaults the notification level to watching" do
+      moderator.user_option.update!(notification_level_when_replying: nil)
+
+      assigner.assign(moderator)
 
       expect(TopicUser.find_by(user: moderator).notification_level).to eq(
         TopicUser.notification_levels[:watching],
@@ -111,11 +131,9 @@ RSpec.describe Assigner do
     end
 
     it "does not update notification level if already watching" do
-      TopicUser.change(
-        moderator.id,
-        topic.id,
-        notification_level: TopicUser.notification_levels[:watching],
-      )
+      notification_level = moderator.user_option.notification_level_when_replying
+
+      TopicUser.change(moderator.id, topic.id, notification_level:)
 
       expect do assigner_self.assign(moderator) end.to_not change {
         TopicUser.last.notifications_reason_id
@@ -123,16 +141,16 @@ RSpec.describe Assigner do
     end
 
     it "does not update notification level when unassigned" do
+      notification_level = moderator.user_option.notification_level_when_replying
+
       assigner.assign(moderator)
 
-      expect(TopicUser.find_by(user: moderator).notification_level).to eq(
-        TopicUser.notification_levels[:watching],
-      )
+      expect(TopicUser.find_by(user: moderator).notification_level).to eq(notification_level)
 
       assigner.unassign
 
       expect(TopicUser.find_by(user: moderator, topic: topic).notification_level).to eq(
-        TopicUser.notification_levels[:watching],
+        notification_level,
       )
     end
 

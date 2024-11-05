@@ -312,15 +312,15 @@ class ::Assigner
     publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?
-      if !TopicUser.exists?(
-           user_id: assign_to.id,
-           topic_id: topic.id,
-           notification_level: TopicUser.notification_levels[:watching],
-         )
+      notification_level =
+        assign_to.user_option&.notification_level_when_replying ||
+          TopicUser.notification_levels[:watching]
+
+      if !TopicUser.exists?(user_id: assign_to.id, topic_id: topic.id, notification_level:)
         TopicUser.change(
           assign_to.id,
           topic.id,
-          notification_level: TopicUser.notification_levels[:watching],
+          notification_level:,
           notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
         )
       end
