@@ -3,14 +3,6 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
-import {
-  POST_MENU_ADMIN_BUTTON_KEY,
-  POST_MENU_COPY_LINK_BUTTON_KEY,
-  POST_MENU_DELETE_BUTTON_KEY,
-  POST_MENU_LIKE_BUTTON_KEY,
-  POST_MENU_SHARE_BUTTON_KEY,
-  POST_MENU_SHOW_MORE_BUTTON_KEY,
-} from "discourse/components/post/menu";
 import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -503,7 +495,9 @@ function initialize(api) {
       return new RenderGlimmer(
         this,
         "p.assigned-to",
-        hbs`<AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}} @href={{@data.href}} @post={{@data.post}} />`,
+        hbs`
+          <AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}}
+                          @href={{@data.href}} @post={{@data.post}} />`,
         {
           assignedToUser: attrs.post.assigned_to_user,
           assignedToGroup: attrs.post.assigned_to_group,
@@ -733,25 +727,26 @@ function initialize(api) {
 function customizePostMenu(api) {
   const transformerRegistered = api.registerValueTransformer(
     "post-menu-buttons",
-    ({ value: dag, context: { post, state } }) => {
+    ({
+      value: dag,
+      context: {
+        post,
+        state,
+        firstButtonKey,
+        lastHiddenButtonKey,
+        secondLastHiddenButtonKey,
+      },
+    }) => {
       dag.add(
         "assign",
         AssignButton,
         post.assigned_to_user?.id === state.currentUser.id
           ? {
-              before: [
-                POST_MENU_LIKE_BUTTON_KEY,
-                POST_MENU_COPY_LINK_BUTTON_KEY,
-                POST_MENU_SHARE_BUTTON_KEY,
-                POST_MENU_SHOW_MORE_BUTTON_KEY,
-              ],
+              before: firstButtonKey,
             }
           : {
-              before: [
-                POST_MENU_ADMIN_BUTTON_KEY,
-                POST_MENU_SHOW_MORE_BUTTON_KEY,
-              ],
-              after: POST_MENU_DELETE_BUTTON_KEY,
+              before: lastHiddenButtonKey,
+              after: secondLastHiddenButtonKey,
             }
       );
     }
