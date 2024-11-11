@@ -46,6 +46,7 @@ describe "Assign | Bulk Assign", type: :system do
 
       # Click Confirm
       topic_list_header.click_bulk_topics_confirm
+      expect(assign_modal).to be_closed
 
       # Reload and check that topic is now assigned
       visit "/latest"
@@ -65,6 +66,7 @@ describe "Assign | Bulk Assign", type: :system do
 
       # Click Confirm
       topic_list_header.click_bulk_topics_confirm
+      expect(assign_modal).to be_closed
 
       # Reload and check that topic is now assigned
       visit "/latest"
