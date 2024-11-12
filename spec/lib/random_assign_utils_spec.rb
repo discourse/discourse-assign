@@ -7,15 +7,14 @@ RSpec.describe RandomAssignUtils do
   FakeAutomation = Struct.new(:id)
 
   let!(:automation) { FakeAutomation.new(1) }
+  let(:fake_logger) { FakeLogger.new }
 
-  around do |example|
-    orig_logger = Rails.logger
-    Rails.logger = FakeLogger.new
-    example.run
-    Rails.logger = orig_logger
+  before do
+    SiteSetting.assign_enabled = true
+    Rails.logger.broadcast_to(fake_logger)
   end
 
-  before { SiteSetting.assign_enabled = true }
+  after { Rails.logger.stop_broadcasting_to(fake_logger) }
 
   describe ".automation_script!" do
     subject(:auto_assign) { described_class.automation_script!(ctx, fields, automation) }
