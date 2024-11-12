@@ -10,10 +10,15 @@ import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer
 import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
+import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
 import getURL from "discourse-common/lib/get-url";
 import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
 import discourseComputed from "discourse-common/utils/decorators";
 import I18n from "I18n";
+import AssignButton, {
+  assignPost,
+  unassignPost,
+} from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
@@ -314,47 +319,9 @@ function initialize(api) {
       },
       before: "top",
     });
+
     if (api.getCurrentUser()?.can_assign) {
-      api.addPostMenuButton("assign", (post) => {
-        if (post.firstPost) {
-          return;
-        }
-        if (post.assigned_to_user || post.assigned_to_group) {
-          return {
-            action: "unassignPost",
-            icon: "user-times",
-            className: "unassign-post",
-            title: "discourse_assign.unassign_post.title",
-            position:
-              post.assigned_to_user?.id === api.getCurrentUser().id
-                ? "first"
-                : "second-last-hidden",
-          };
-        } else {
-          return {
-            action: "assignPost",
-            icon: "user-plus",
-            className: "assign-post",
-            title: "discourse_assign.assign_post.title",
-            position: "second-last-hidden",
-          };
-        }
-      });
-
-      api.attachWidgetAction("post", "assignPost", function () {
-        const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.showAssignModal(this.model, {
-          isAssigned: false,
-          targetType: "Post",
-        });
-      });
-
-      api.attachWidgetAction("post", "unassignPost", function () {
-        const taskActions = getOwner(this).lookup("service:task-actions");
-        taskActions.unassign(this.model.id, "Post").then(() => {
-          delete this.model.topic.indirectly_assigned_to[this.model.id];
-        });
-      });
+      customizePostMenu(api);
     }
   }
 
@@ -528,7 +495,9 @@ function initialize(api) {
       return new RenderGlimmer(
         this,
         "p.assigned-to",
-        hbs`<AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}} @href={{@data.href}} @post={{@data.post}} />`,
+        hbs`
+          <AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}}
+                          @href={{@data.href}} @post={{@data.post}} />`,
         {
           assignedToUser: attrs.post.assigned_to_user,
           assignedToGroup: attrs.post.assigned_to_group,
@@ -755,6 +724,76 @@ function initialize(api) {
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
 
+function customizePostMenu(api) {
+  const transformerRegistered = api.registerValueTransformer(
+    "post-menu-buttons",
+    ({
+      value: dag,
+      context: {
+        post,
+        state,
+        firstButtonKey,
+        lastHiddenButtonKey,
+        secondLastHiddenButtonKey,
+      },
+    }) => {
+      dag.add(
+        "assign",
+        AssignButton,
+        post.assigned_to_user?.id === state.currentUser.id
+          ? {
+              before: firstButtonKey,
+            }
+          : {
+              before: lastHiddenButtonKey,
+              after: secondLastHiddenButtonKey,
+            }
+      );
+    }
+  );
+
+  const silencedKey =
+    transformerRegistered && "discourse.post-menu-widget-overrides";
+
+  withSilencedDeprecations(silencedKey, () => customizeWidgetPostMenu(api));
+}
+
+function customizeWidgetPostMenu(api) {
+  api.addPostMenuButton("assign", (post) => {
+    if (post.firstPost) {
+      return;
+    }
+    if (post.assigned_to_user || post.assigned_to_group) {
+      return {
+        action: "unassignPost",
+        icon: "user-times",
+        className: "unassign-post",
+        title: "discourse_assign.unassign_post.title",
+        position:
+          post.assigned_to_user?.id === api.getCurrentUser().id
+            ? "first"
+            : "second-last-hidden",
+      };
+    } else {
+      return {
+        action: "assignPost",
+        icon: "user-plus",
+        className: "assign-post",
+        title: "discourse_assign.assign_post.title",
+        position: "second-last-hidden",
+      };
+    }
+  });
+
+  api.attachWidgetAction("post", "assignPost", function () {
+    assignPost(this.model, getOwner(this).lookup("service:task-actions"));
+  });
+
+  api.attachWidgetAction("post", "unassignPost", function () {
+    unassignPost(this.model, getOwner(this).lookup("service:task-actions"));
+  });
+}
+
 const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
 
 export default {
@@ -794,7 +833,7 @@ export default {
       });
     }
 
-    withPluginApi("0.13.0", (api) => {
+    withPluginApi("1.34.0", (api) => {
       extendTopicModel(api, PLUGIN_ID);
       initialize(api);
       registerTopicFooterButtons(api);
