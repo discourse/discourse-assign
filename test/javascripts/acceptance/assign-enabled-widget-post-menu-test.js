@@ -12,6 +12,7 @@ import {
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { cloneJSON } from "discourse-common/lib/object";
 
+// TODO (glimmer-post-menu): Remove this file when the post menu widget code is removed from core
 acceptance(
   "Discourse Assign | Widget Post Menu | Assign mobile",
   function (needs) {
