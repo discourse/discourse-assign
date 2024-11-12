@@ -41,8 +41,8 @@ export default class AssignButton extends Component {
     <DButton
       class={{if
         this.isAssigned
-        "post-action-menu__assign-post assign-post"
         "post-action-menu__unassign-post unassign-post"
+        "post-action-menu__assign-post assign-post"
       }}
       ...attributes
       @action={{this.acceptAnswer}}
