@@ -221,7 +221,7 @@ class ::Assigner
     end
   end
 
-  def update_details(assign_to, note, status, skip_small_action_post: false)
+  def update_details(assign_to, note, status, skip_small_action_post: false, should_notify: true)
     case
     when note.present? && status.present? && @target.assignment.note != note &&
            @target.assignment.status != status
@@ -240,7 +240,7 @@ class ::Assigner
     end
 
     @target.assignment.update!(note: note, status: status)
-    queue_notification(@target.assignment)
+    queue_notification(@target.assignment) if should_notify
     publish_assignment(@target.assignment, assign_to, note, status)
 
     # email is skipped, for now
@@ -258,12 +258,17 @@ class ::Assigner
     note: nil,
     skip_small_action_post: false,
     status: nil,
-    allow_self_reassign: false
+    allow_self_reassign: false,
+    should_notify: true
   )
     assigned_to_type = assign_to.is_a?(User) ? "User" : "Group"
 
     if topic.private_message? && SiteSetting.invite_on_assign
-      assigned_to_type == "Group" ? invite_group(assign_to) : invite_user(assign_to)
+      if assigned_to_type == "Group"
+        invite_group(assign_to, should_notify)
+      else
+        invite_user(assign_to)
+      end
     end
 
     forbidden_reason =
@@ -277,7 +282,15 @@ class ::Assigner
     return { success: false, reason: forbidden_reason } if forbidden_reason
 
     if no_assignee_change?(assign_to) && details_change?(note, status)
-      return update_details(assign_to, note, status, skip_small_action_post: skip_small_action_post)
+      return(
+        update_details(
+          assign_to,
+          note,
+          status,
+          skip_small_action_post: skip_small_action_post,
+          should_notify: should_notify,
+        )
+      )
     end
 
     action_code = {}
@@ -308,7 +321,7 @@ class ::Assigner
       )
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
-    queue_notification(assignment)
+    queue_notification(assignment) if should_notify
     publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?
@@ -452,7 +465,7 @@ class ::Assigner
     topic.invite(@assigned_by, user.username)
   end
 
-  def invite_group(group)
+  def invite_group(group, should_notify)
     return if topic.topic_allowed_groups.exists?(group_id: group.id)
     if topic
          .all_allowed_users
@@ -463,7 +476,7 @@ class ::Assigner
     end
 
     guardian.ensure_can_invite_group_to_private_message!(group, topic)
-    topic.invite_group(@assigned_by, group)
+    topic.invite_group(@assigned_by, group, should_notify: should_notify)
   end
 
   def guardian

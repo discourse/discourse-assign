@@ -43,6 +43,8 @@ module DiscourseAssign
       group_name = params.permit(:group_name)["group_name"]
       note = params.permit(:note)["note"].presence
       status = params.permit(:status)["status"].presence
+      should_notify = params.permit(:should_notify)["should_notify"]
+      should_notify = (should_notify.present? ? should_notify.to_s == "true" : true)
 
       assign_to =
         (
@@ -58,7 +60,13 @@ module DiscourseAssign
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound unless target
 
-      assign = Assigner.new(target, current_user).assign(assign_to, note: note, status: status)
+      assign =
+        Assigner.new(target, current_user).assign(
+          assign_to,
+          note: note,
+          status: status,
+          should_notify: should_notify,
+        )
 
       if assign[:success]
         render json: success_json

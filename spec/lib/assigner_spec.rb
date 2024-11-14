@@ -465,9 +465,15 @@ RSpec.describe Assigner do
       it "queues notification" do
         assigner.assign(moderator)
 
+        expect(job_enqueued?(job: :assign_notification)).to eq(true)
         expect_enqueued_with(job: :assign_notification) do
           assigner.assign(moderator, status: "Done")
         end
+      end
+
+      it "does not queue notification if should_notify is set to false" do
+        assigner.assign(moderator, status: "Done", should_notify: false)
+        expect(job_enqueued?(job: :assign_notification)).to eq(false)
       end
 
       it "publishes topic assignment with note" do
@@ -756,7 +762,7 @@ RSpec.describe Assigner do
       expect(topic.allowed_users).not_to include(user)
     end
 
-    it "invites group to the PM" do
+    it "invites group to the PM and notifies users" do
       group =
         Fabricate(
           :group,
@@ -764,8 +770,30 @@ RSpec.describe Assigner do
           messageable_level: Group::ALIAS_LEVELS[:only_admins],
         )
       group.add(Fabricate(:user))
+
+      Notification.delete_all
+      Jobs.run_immediately!
+
       assigner.assign(group)
       expect(topic.allowed_groups).to include(group)
+      expect(Notification.count).to be > 0
+    end
+
+    it "invites group to the PM and does not notifies users if should_notify is false" do
+      group =
+        Fabricate(
+          :group,
+          assignable_level: Group::ALIAS_LEVELS[:only_admins],
+          messageable_level: Group::ALIAS_LEVELS[:only_admins],
+        )
+      group.add(Fabricate(:user))
+
+      Notification.delete_all
+      Jobs.run_immediately!
+
+      assigner.assign(group, should_notify: false)
+      expect(topic.allowed_groups).to include(group)
+      expect(Notification.count).to eq(0)
     end
 
     it "doesn't invite group if all members have access to the PM already" do

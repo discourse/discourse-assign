@@ -259,6 +259,62 @@ RSpec.describe DiscourseAssign::AssignController do
       )
     end
 
+    it "notifies the assignee when the topic is assigned to a group" do
+      admins = Group[:admins]
+      admins.messageable_level = Group::ALIAS_LEVELS[:everyone]
+      admins.save!
+
+      SiteSetting.invite_on_assign = true
+      pm = Fabricate(:private_message_post, user: admin).topic
+
+      another_user = Fabricate(:user)
+      admins.add(another_user)
+      admins
+        .group_users
+        .find_by(user_id: another_user.id)
+        .update!(notification_level: NotificationLevels.all[:watching])
+
+      Notification.delete_all
+      Jobs.run_immediately!
+
+      put "/assign/assign.json",
+          params: {
+            target_id: pm.id,
+            target_type: "Topic",
+            group_name: admins.name,
+          }
+
+      expect(Notification.count).to be > 0
+    end
+
+    it "does not notify the assignee when the topic is assigned to a group if should_notify option is set to false" do
+      admins = Group[:admins]
+      admins.messageable_level = Group::ALIAS_LEVELS[:everyone]
+      admins.save!
+
+      SiteSetting.invite_on_assign = true
+      pm = Fabricate(:private_message_post, user: admin).topic
+
+      another_user = Fabricate(:user)
+      admins.add(another_user)
+      admins
+        .group_users
+        .find_by(user_id: another_user.id)
+        .update!(notification_level: NotificationLevels.all[:watching])
+
+      Notification.delete_all
+      Jobs.run_immediately!
+
+      put "/assign/assign.json",
+          params: {
+            target_id: pm.id,
+            target_type: "Topic",
+            group_name: admins.name,
+            should_notify: false,
+          }
+      expect(Notification.count).to eq(0)
+    end
+
     it "fails with a specific error message if the topic is not a PM and the assignee can not see it" do
       topic = Fabricate(:topic, category: Fabricate(:private_category, group: Fabricate(:group)))
       another_user = Fabricate(:user)
