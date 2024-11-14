@@ -44,7 +44,7 @@ module DiscourseAssign
       note = params.permit(:note)["note"].presence
       status = params.permit(:status)["status"].presence
       should_notify = params.permit(:should_notify)["should_notify"]
-      should_notify = (should_notify.present? ? should_notify == "true" : true)
+      should_notify = (should_notify.present? ? should_notify.to_s == "true" : true)
 
       assign_to =
         (
