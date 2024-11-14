@@ -2,7 +2,7 @@
 
 module Jobs
   class EnqueueReminders < ::Jobs::Scheduled
-    REMINDER_BUFFER_MINUTES ||= 120
+    REMINDER_BUFFER_MINUTES = 120
 
     every 1.day
 
