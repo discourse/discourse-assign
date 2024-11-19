@@ -1,4 +1,4 @@
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import cookie from "discourse/lib/cookie";
 import UserTopicListRoute from "discourse/routes/user-topic-list";
 import I18n from "I18n";

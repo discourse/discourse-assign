@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import Service, { inject as service } from "@ember/service";
+import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -10,7 +10,7 @@ export default class TaskActions extends Service {
 
   @tracked allowedGroups;
   @tracked allowedGroupsForAssignment;
-  #suggestionsPromise;
+  #suggestionsPromise; // eslint-disable-line no-unused-private-class-members
   @tracked _suggestions;
 
   get suggestions() {

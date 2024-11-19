@@ -1,6 +1,6 @@
 import { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import { INPUT_DELAY } from "discourse-common/config/environment";

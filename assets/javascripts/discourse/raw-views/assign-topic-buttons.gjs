@@ -1,5 +1,5 @@
 import EmberObject from "@ember/object";
-import { inject as service } from "@ember/service";
+import { service } from "@ember/service";
 import rawRenderGlimmer from "discourse/lib/raw-render-glimmer";
 import AssignedTopicListColumn from "../components/assigned-topic-list-column";
 
