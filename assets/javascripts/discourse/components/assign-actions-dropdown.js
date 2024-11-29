@@ -1,17 +1,19 @@
 import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 import I18n from "I18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
+import { selectKitOptions } from "select-kit/components/select-kit";
 
-export default DropdownSelectBoxComponent.extend({
-  classNames: ["assign-actions-dropdown"],
-  headerIcon: null,
-  allowInitialValueMutation: false,
+@selectKitOptions({
+  icon: null,
+  translatedNone: "...",
   showFullTitle: true,
-  selectKitOptions: {
-    icon: null,
-    translatedNone: "...",
-    showFullTitle: true,
-  },
+})
+@classNames("assign-actions-dropdown")
+export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
+  headerIcon = null;
+  allowInitialValueMutation = false;
+  showFullTitle = true;
 
   computeContent() {
     let options = [];
@@ -49,7 +51,7 @@ export default DropdownSelectBoxComponent.extend({
       });
     }
     return options;
-  },
+  }
 
   @action
   onChange(id) {
@@ -65,5 +67,5 @@ export default DropdownSelectBoxComponent.extend({
     if (postId) {
       this.unassign(postId, "Post");
     }
-  },
-});
+  }
+}
