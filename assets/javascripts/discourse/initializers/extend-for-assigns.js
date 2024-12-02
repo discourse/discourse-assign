@@ -1,4 +1,5 @@
 import { getOwner } from "@ember/application";
+import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";
@@ -23,8 +24,6 @@ import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
 import { extendTopicModel } from "../models/topic";
-
-const PLUGIN_ID = "discourse-assign";
 
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
@@ -361,18 +360,21 @@ function initialize(api) {
     return getURL(`/g/${assignedToGroup.name}/assigned/everyone`);
   }
 
-  api.modifyClass("model:bookmark", {
-    pluginId: PLUGIN_ID,
+  api.modifyClass(
+    "model:bookmark",
+    (Superclass) =>
+      class extends Superclass {
+        @discourseComputed("assigned_to_user")
+        assignedToUserPath(assignedToUser) {
+          return assignedToUserPath(assignedToUser);
+        }
 
-    @discourseComputed("assigned_to_user")
-    assignedToUserPath(assignedToUser) {
-      return assignedToUserPath(assignedToUser);
-    },
-    @discourseComputed("assigned_to_group")
-    assignedToGroupPath(assignedToGroup) {
-      return assignedToGroupPath(assignedToGroup);
-    },
-  });
+        @discourseComputed("assigned_to_group")
+        assignedToGroupPath(assignedToGroup) {
+          return assignedToGroupPath(assignedToGroup);
+        }
+      }
+  );
 
   api.modifyClass(
     "component:topic-notifications-button",
@@ -590,83 +592,91 @@ function initialize(api) {
     },
   });
 
-  api.modifyClass("model:group", {
-    pluginId: PLUGIN_ID,
-
-    asJSON() {
-      return Object.assign({}, this._super(...arguments), {
-        assignable_level: this.assignable_level,
-      });
-    },
-  });
-
-  api.modifyClass("controller:topic", {
-    pluginId: PLUGIN_ID,
-
-    subscribe() {
-      this._super(...arguments);
-
-      this.messageBus.subscribe("/staff/topic-assignment", (data) => {
-        const topic = this.model;
-        const topicId = topic.id;
-
-        if (data.topic_id === topicId) {
-          let post;
-          if (data.post_id) {
-            post = topic.postStream.posts.find((p) => p.id === data.post_id);
-          }
-          const target = post || topic;
-
-          target.set("assignment_note", data.assignment_note);
-          target.set("assignment_status", data.assignment_status);
-          if (data.assigned_type === "User") {
-            target.set(
-              "assigned_to_user_id",
-              data.type === "assigned" ? data.assigned_to.id : null
-            );
-            target.set("assigned_to_user", data.assigned_to);
-          }
-          if (data.assigned_type === "Group") {
-            target.set(
-              "assigned_to_group_id",
-              data.type === "assigned" ? data.assigned_to.id : null
-            );
-            target.set("assigned_to_group", data.assigned_to);
-          }
-
-          if (data.post_id) {
-            if (data.type === "unassigned") {
-              delete topic.indirectly_assigned_to[data.post_number];
-            }
-
-            this.appEvents.trigger("post-stream:refresh", {
-              id: topic.postStream.posts[0].id,
-            });
-            this.appEvents.trigger("post-stream:refresh", { id: data.post_id });
-          }
-          if (topic.closed) {
-            this.appEvents.trigger("post-stream:refresh", {
-              id: topic.postStream.posts[0].id,
-            });
-          }
+  api.modifyClass(
+    "model:group",
+    (Superclass) =>
+      class extends Superclass {
+        asJSON() {
+          return Object.assign({}, super.asJSON(...arguments), {
+            assignable_level: this.assignable_level,
+          });
         }
-        this.appEvents.trigger("header:update-topic", topic);
-        this.appEvents.trigger("post-stream:refresh", {
-          id: topic.postStream.posts[0].id,
-        });
-      });
-    },
-
-    unsubscribe() {
-      this._super(...arguments);
-
-      if (!this.model?.id) {
-        return;
       }
+  );
 
-      this.messageBus.unsubscribe("/staff/topic-assignment");
-    },
-  });
+  api.modifyClass(
+    "controller:topic",
+    (Superclass) =>
+      class extends Superclass {
+        subscribe() {
+          super.subscribe(...arguments);
+
+          this.messageBus.subscribe("/staff/topic-assignment", (data) => {
+            const topic = this.model;
+            const topicId = topic.id;
+
+            if (data.topic_id === topicId) {
+              let post;
+              if (data.post_id) {
+                post = topic.postStream.posts.find(
+                  (p) => p.id === data.post_id
+                );
+              }
+              const target = post || topic;
+
+              target.set("assignment_note", data.assignment_note);
+              target.set("assignment_status", data.assignment_status);
+              if (data.assigned_type === "User") {
+                target.set(
+                  "assigned_to_user_id",
+                  data.type === "assigned" ? data.assigned_to.id : null
+                );
+                target.set("assigned_to_user", data.assigned_to);
+              }
+              if (data.assigned_type === "Group") {
+                target.set(
+                  "assigned_to_group_id",
+                  data.type === "assigned" ? data.assigned_to.id : null
+                );
+                target.set("assigned_to_group", data.assigned_to);
+              }
+
+              if (data.post_id) {
+                if (data.type === "unassigned") {
+                  delete topic.indirectly_assigned_to[data.post_number];
+                }
+
+                this.appEvents.trigger("post-stream:refresh", {
+                  id: topic.postStream.posts[0].id,
+                });
+                this.appEvents.trigger("post-stream:refresh", {
+                  id: data.post_id,
+                });
+              }
+              if (topic.closed) {
+                this.appEvents.trigger("post-stream:refresh", {
+                  id: topic.postStream.posts[0].id,
+                });
+              }
+            }
+            this.appEvents.trigger("header:update-topic", topic);
+            this.appEvents.trigger("post-stream:refresh", {
+              id: topic.postStream.posts[0].id,
+            });
+          });
+        }
+
+        unsubscribe() {
+          super.unsubscribe(...arguments);
+
+          if (!this.model?.id) {
+            return;
+          }
+
+          this.messageBus.unsubscribe("/staff/topic-assignment");
+        }
+      }
+  );
 
   api.decorateWidget("post-contents:after-cooked", (dec) => {
     const postModel = dec.getModel();
@@ -710,16 +720,17 @@ function initialize(api) {
     "group-plus"
   );
 
-  api.modifyClass("controller:preferences/notifications", {
-    pluginId: PLUGIN_ID,
-
-    actions: {
-      save() {
-        this.saveAttrNames.push("custom_fields");
-        this._super(...arguments);
-      },
-    },
-  });
+  api.modifyClass(
+    "controller:preferences/notifications",
+    (Superclass) =>
+      class extends Superclass {
+        @action
+        save() {
+          this.saveAttrNames.push("custom_fields");
+          super.save(...arguments);
+        }
+      }
+  );
 
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
@@ -834,7 +845,7 @@ export default {
     }
 
     withPluginApi("1.34.0", (api) => {
-      extendTopicModel(api, PLUGIN_ID);
+      extendTopicModel(api);
       initialize(api);
       registerTopicFooterButtons(api);
 
