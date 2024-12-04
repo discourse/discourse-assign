@@ -112,7 +112,7 @@ function extractPostId(buttonId) {
 }
 
 function editAssignmentsButton() {
-  const icon = iconHTML("pencil-alt");
+  const icon = iconHTML("pencil");
   const label = I18n.t("discourse_assign.topic_level_menu.edit_assignments");
   return {
     id: "reassign",
@@ -138,7 +138,7 @@ function unassignFromTopicButton(topic) {
     topic.assigned_to_user?.username || topic.assigned_to_group?.name;
   const icon = topic.assigned_to_user
     ? avatarHtml(topic.assigned_to_user, "small")
-    : iconHTML("user-times");
+    : iconHTML("user-xmark");
   const label = I18n.t(
     "discourse_assign.topic_level_menu.unassign_from_topic",
     { username }
