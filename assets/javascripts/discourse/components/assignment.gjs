@@ -98,7 +98,7 @@ export default class Assignment extends Component {
 
       {{#if this.showAssigneeIeEmptyError}}
         <span class="error-label">
-          {{icon "exclamation-triangle"}}
+          {{icon "triangle-exclamation"}}
           {{i18n "discourse_assign.assign_modal.choose_assignee"}}
         </span>
       {{/if}}
