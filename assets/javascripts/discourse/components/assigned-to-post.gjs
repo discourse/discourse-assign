@@ -41,7 +41,7 @@ export default class AssignedToPost extends Component {
 
     <DMenu
       @identifier="post-assign-menu"
-      @icon="ellipsis-h"
+      @icon="ellipsis"
       class="btn-flat more-button"
       @autofocus={{true}}
     >
