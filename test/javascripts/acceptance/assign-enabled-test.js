@@ -39,19 +39,14 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
   test("Footer dropdown contains button", async function (assert) {
     updateCurrentUser({ can_assign: true });
     await visit("/t/internationalization-localization/280");
-    const menu = selectKit(".topic-footer-mobile-dropdown");
-    await menu.expand();
-
-    assert.true(menu.rowByValue("assign").exists());
-    await menu.selectRowByValue("assign");
+    await click(".topic-footer-mobile-dropdown-trigger");
+    await click(".assign");
     assert.dom(".assign.d-modal").exists("assign modal opens");
   });
 });
 
 acceptance("Discourse Assign | Assign desktop", function (needs) {
-  needs.user({
-    can_assign: true,
-  });
+  needs.user({ can_assign: true });
   needs.settings({ glimmer_post_menu_mode: "enabled", assign_enabled: true });
 
   needs.pretender((server, helper) => {

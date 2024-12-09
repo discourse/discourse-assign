@@ -159,16 +159,6 @@
   }
 }
 
-#topic-footer-button-assign {
-  padding-top: 0.35em;
-  padding-bottom: 0.35em;
-  .d-button-label {
-    .avatar {
-      margin-right: 0.25em;
-    }
-  }
-}
-
 #topic-footer-dropdown-reassign {
   .name {
     font-weight: normal;
@@ -196,7 +186,6 @@
 }
 
 // Group assigns sidebar nav
-
 .group-assignments {
   // a little extra space for long names
   min-width: 250px;
