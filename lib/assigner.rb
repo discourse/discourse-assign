@@ -322,6 +322,10 @@ class ::Assigner
 
     first_post.publish_change_to_clients!(:revised, reload_topic: true)
     queue_notification(assignment) if should_notify
+
+    # This assignment should never be notified
+    SilencedAssignment.create!(assignment_id: assignment.id) if !should_notify
+
     publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?

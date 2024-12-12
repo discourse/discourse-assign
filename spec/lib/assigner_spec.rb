@@ -794,6 +794,10 @@ RSpec.describe Assigner do
       assigner.assign(group, should_notify: false)
       expect(topic.allowed_groups).to include(group)
       expect(Notification.count).to eq(0)
+      expect(SilencedAssignment.count).to eq(1)
+
+      group.add(Fabricate(:user))
+      expect(Notification.count).to eq(0) # no one is ever notified about this assignment
     end
 
     it "doesn't invite group if all members have access to the PM already" do

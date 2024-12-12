@@ -262,6 +262,7 @@ RSpec.describe DiscourseAssign::AssignController do
     it "notifies the assignee when the topic is assigned to a group" do
       admins = Group[:admins]
       admins.messageable_level = Group::ALIAS_LEVELS[:everyone]
+      admins.assignable_level = Group::ALIAS_LEVELS[:everyone]
       admins.save!
 
       SiteSetting.invite_on_assign = true
@@ -290,6 +291,7 @@ RSpec.describe DiscourseAssign::AssignController do
     it "does not notify the assignee when the topic is assigned to a group if should_notify option is set to false" do
       admins = Group[:admins]
       admins.messageable_level = Group::ALIAS_LEVELS[:everyone]
+      admins.assignable_level = Group::ALIAS_LEVELS[:everyone]
       admins.save!
 
       SiteSetting.invite_on_assign = true
@@ -313,6 +315,7 @@ RSpec.describe DiscourseAssign::AssignController do
             should_notify: false,
           }
       expect(Notification.count).to eq(0)
+      expect(SilencedAssignment.count).to eq(1)
     end
 
     it "fails with a specific error message if the topic is not a PM and the assignee can not see it" do
