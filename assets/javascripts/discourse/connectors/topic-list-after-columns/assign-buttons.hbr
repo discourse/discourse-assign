@@ -1,1 +1,1 @@
-{{raw "assign-topic-buttons" topic=context.topic}}
+{{!-- has-modern-replacement --}}{{raw "assign-topic-buttons" topic=context.topic}}
