@@ -15,7 +15,7 @@ export default class AssignButton extends Component {
   @service taskActions;
 
   get icon() {
-    return this.isAssigned ? "user-times" : "user-plus";
+    return this.isAssigned ? "user-xmark" : "user-plus";
   }
 
   get isAssigned() {

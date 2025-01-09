@@ -21,7 +21,7 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
       options = options.concat([
         {
           id: "unassign",
-          icon: this.group ? "group-times" : "user-times",
+          icon: this.group ? "group-times" : "user-xmark",
           name: I18n.t("discourse_assign.unassign.title"),
           description: I18n.t("discourse_assign.unassign.help", {
             username: this.assignee,
@@ -42,7 +42,7 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
         const assignee = assignment_map.assigned_to;
         options = options.concat({
           id: `unassign_post_${postId}`,
-          icon: assignee.username ? "user-times" : "group-times",
+          icon: assignee.username ? "user-xmark" : "group-times",
           name: I18n.t("discourse_assign.unassign_post.title"),
           description: I18n.t("discourse_assign.unassign_post.help", {
             username: assignee.username || assignee.name,
