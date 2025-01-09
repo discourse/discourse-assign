@@ -51,7 +51,7 @@ function registerTopicFooterButtons(api) {
     icon() {
       return this.topic.isAssigned()
         ? this.site.mobileView
-          ? "user-times"
+          ? "user-xmark"
           : null
         : "user-plus";
     },
@@ -150,7 +150,7 @@ function registerTopicFooterButtons(api) {
   api.registerTopicFooterButton({
     id: "unassign-mobile",
     icon() {
-      return "user-times";
+      return "user-xmark";
     },
     translatedTitle() {
       return defaultTitle(this.topic);
@@ -398,9 +398,9 @@ function initialize(api) {
   api.addPostSmallActionIcon("assigned_to_post", "user-plus");
   api.addPostSmallActionIcon("assigned_group", "group-plus");
   api.addPostSmallActionIcon("assigned_group_to_post", "group-plus");
-  api.addPostSmallActionIcon("unassigned", "user-times");
+  api.addPostSmallActionIcon("unassigned", "user-xmark");
   api.addPostSmallActionIcon("unassigned_group", "group-times");
-  api.addPostSmallActionIcon("unassigned_from_post", "user-times");
+  api.addPostSmallActionIcon("unassigned_from_post", "user-xmark");
   api.addPostSmallActionIcon("unassigned_group_from_post", "group-times");
   api.includePostAttributes("assigned_to_user", "assigned_to_group");
   api.addPostSmallActionIcon("reassigned", "user-plus");
@@ -777,7 +777,7 @@ function customizeWidgetPostMenu(api) {
     if (post.assigned_to_user || post.assigned_to_group) {
       return {
         action: "unassignPost",
-        icon: "user-times",
+        icon: "user-xmark",
         className: "unassign-post",
         title: "discourse_assign.unassign_post.title",
         position:
@@ -874,7 +874,7 @@ export default {
       api.addBulkActionButton({
         id: "unassign-topics",
         label: "topics.bulk.unassign",
-        icon: "user-times",
+        icon: "user-xmark",
         class: "btn-default unassign-topics",
         action({ performAndRefresh }) {
           performAndRefresh({ type: "unassign" });
