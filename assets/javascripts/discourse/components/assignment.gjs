@@ -91,8 +91,8 @@ export default class Assignment extends Component {
           maximum=1
           tabindex=1
           expandedOnInsert=(not this.assignee)
-          caretUpIcon="search"
-          caretDownIcon="search"
+          caretUpIcon="magnifying-glass"
+          caretDownIcon="magnifying-glass"
         }}
       />
 
