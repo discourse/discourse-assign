@@ -102,9 +102,9 @@ en:
     user:
       notification_level_when_assigned: 
         label: "When assigned"
-        watch_topic: "watch topic"
-        track_topic: "track topic"
-        do_nothing: "do nothing"
+        watch_topic: "Watch topic"
+        track_topic: "Track topic"
+        do_nothing: "Do nothing"
       messages:
         assigned_title: "Assigned (%{count})"
         assigned: "Assigned"
