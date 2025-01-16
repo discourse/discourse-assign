@@ -860,6 +860,8 @@ export default {
 
       api.addUserSearchOption("assignableGroups");
 
+      api.addSaveableUserOptionField("notification_level_when_assigned");
+
       api.addBulkActionButton({
         id: "assign-topics",
         label: "topics.bulk.assign",

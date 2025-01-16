@@ -100,6 +100,11 @@ en:
               assignable_levels:
                 title: "Who can assign this group"
     user:
+      notification_level_when_assigned: 
+        label: "When assigned"
+        watch_topic: "watch topic"
+        track_topic: "track topic"
+        do_nothing: "do nothing"
       messages:
         assigned_title: "Assigned (%{count})"
         assigned: "Assigned"
