@@ -329,17 +329,19 @@ class ::Assigner
     publish_assignment(assignment, assign_to, note, status)
 
     if assignment.assigned_to_user?
-      if !TopicUser.exists?(
-           user_id: assign_to.id,
-           topic_id: topic.id,
-           notification_level: TopicUser.notification_levels[:watching],
-         )
-        TopicUser.change(
-          assign_to.id,
-          topic.id,
-          notification_level: TopicUser.notification_levels[:watching],
-          notifications_reason_id: TopicUser.notification_reasons[:plugin_changed],
-        )
+      if !assign_to.user_option.do_nothing_when_assigned?
+        notification_level =
+          if assign_to.user_option.track_topic_when_assigned?
+            TopicUser.notification_levels[:tracking]
+          else
+            TopicUser.notification_levels[:watching]
+          end
+
+        topic_user = TopicUser.find_by(user_id: assign_to.id, topic:)
+        if !topic_user || topic_user.notification_level < notification_level
+          notifications_reason_id = TopicUser.notification_reasons[:plugin_changed]
+          TopicUser.change(assign_to.id, topic.id, notification_level:, notifications_reason_id:)
+        end
       end
 
       if SiteSetting.assign_mailer == AssignMailer.levels[:always] ||
@@ -506,6 +508,7 @@ class ::Assigner
       @assigned_by,
       text,
       bump: false,
+      auto_track: false,
       post_type: SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper],
       action_code: action_code,
       custom_fields: custom_fields,
