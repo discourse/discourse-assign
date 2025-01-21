@@ -51,6 +51,8 @@ nb_NO:
             interaction:
               assign: "Tildel"
     user:
+      notification_level_when_assigned:
+        do_nothing: "ikke gjør noe"
       messages:
         assigned: "Tildelt"
     search:

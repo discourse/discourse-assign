@@ -91,6 +91,8 @@ pl_PL:
               assignable_levels:
                 title: "Kto może przypisać tę grupę"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Nic nie rób"
       messages:
         assigned_title: "Przypisano (%{count})"
         assigned: "Przypisany"

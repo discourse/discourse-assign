@@ -24,6 +24,8 @@ gl:
         monthly: "Mensual"
         quarterly: "Trimestral"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Non facer nada"
       messages:
         assigned: "Asignado"
       assignment_description:

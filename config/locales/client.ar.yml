@@ -105,6 +105,8 @@ ar:
               assignable_levels:
                 title: "من يمكنه تعيين هذه المجموعة"
     user:
+      notification_level_when_assigned:
+        do_nothing: "عدم اتخاذ أي إجراء"
       messages:
         assigned_title: "المعيَّنة (%{count})"
         assigned: "المعيَّنة"

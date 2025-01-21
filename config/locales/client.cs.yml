@@ -105,6 +105,11 @@ cs:
               assignable_levels:
                 title: "Kdo může přidělit této skupině"
     user:
+      notification_level_when_assigned:
+        label: "Při přidělení"
+        watch_topic: "Hlídat téma"
+        track_topic: "Sledovat téma"
+        do_nothing: "Nic nedělat"
       messages:
         assigned_title: "Přiděleno (%{count})"
         assigned: "Přiděleno"

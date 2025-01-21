@@ -105,6 +105,8 @@ tr_TR:
               assignable_levels:
                 title: "Bu grubu kim atayabilir?"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Hiçbir şey yapma"
       messages:
         assigned_title: "Atandı (%{count})"
         assigned: "Atandı"

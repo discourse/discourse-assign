@@ -105,6 +105,8 @@ zh_CN:
               assignable_levels:
                 title: "谁可以指定此群组"
     user:
+      notification_level_when_assigned:
+        do_nothing: "不进行操作"
       messages:
         assigned_title: "已指定 (%{count})"
         assigned: "已指定"

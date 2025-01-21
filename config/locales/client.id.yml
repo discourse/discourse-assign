@@ -20,6 +20,8 @@ id:
       reminders_frequency:
         never: "Tidak pernah"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Tidak melakukan apapun"
       messages:
         assigned: "Ditugaskan"
     notifications:

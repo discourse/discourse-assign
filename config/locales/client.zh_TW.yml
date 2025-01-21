@@ -50,6 +50,8 @@ zh_TW:
             interaction:
               assign: "指派"
     user:
+      notification_level_when_assigned:
+        do_nothing: "不做任何動作"
       messages:
         assigned: "已指派"
       assigned_to_you:

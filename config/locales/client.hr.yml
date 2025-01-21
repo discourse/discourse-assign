@@ -24,6 +24,8 @@ hr:
         monthly: "Mjesečno"
         quarterly: "Tromjesečno"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Ne radi ništa"
       assignment_description:
         topic: "%{topic_title}"
     notifications:

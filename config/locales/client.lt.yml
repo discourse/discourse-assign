@@ -29,6 +29,8 @@ lt:
         monthly: "Kas mėnesį"
         quarterly: "Kas ketvirtį"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Nieko nedaryti"
       messages:
         assigned: "Priskirta"
       assignment_description:

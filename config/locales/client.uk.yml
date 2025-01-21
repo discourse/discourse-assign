@@ -59,6 +59,8 @@ uk:
             interaction:
               assign: "Призначити"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Нічого не робити"
       messages:
         assigned_title: "Призначено (%{count})"
         assigned: "Призначено"

@@ -105,6 +105,8 @@ ja:
               assignable_levels:
                 title: "このグループを割り当てられるユーザー"
     user:
+      notification_level_when_assigned:
+        do_nothing: "何もしない"
       messages:
         assigned_title: "割り当て済み（%{count}）"
         assigned: "割り当てました"

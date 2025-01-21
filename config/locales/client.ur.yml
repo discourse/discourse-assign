@@ -81,6 +81,8 @@ ur:
               assignable_levels:
                 title: "کون اس گروپ کو تفویض کر سکتا ہے"
     user:
+      notification_level_when_assigned:
+        do_nothing: "کچھ نہ کریں"
       messages:
         assigned_title: "اسائین کردہ (%{count})"
         assigned: "اسائین کردہ"

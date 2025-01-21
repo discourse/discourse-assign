@@ -105,6 +105,8 @@ nl:
               assignable_levels:
                 title: "Wie kan deze groep toewijzen"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Niets doen"
       messages:
         assigned_title: "Toegewezen (%{count})"
         assigned: "Toegewezen"

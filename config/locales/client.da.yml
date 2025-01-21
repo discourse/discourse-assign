@@ -63,6 +63,8 @@ da:
             interaction:
               assign: "Tildel"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Gøre ingenting"
       messages:
         assigned_title: "Tildelt (%{count})"
         assigned: "Tildelt"

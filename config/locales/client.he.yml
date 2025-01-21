@@ -105,6 +105,8 @@ he:
               assignable_levels:
                 title: "מי יכול להקצות את הקבוצה הזאת"
     user:
+      notification_level_when_assigned:
+        do_nothing: "לא לעשות דבר"
       messages:
         assigned_title: "מוקצים (%{count})"
         assigned: "מוקצה"

@@ -105,6 +105,8 @@ ru:
               assignable_levels:
                 title: "Кто может назначить эту группу"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Ничего не делать"
       messages:
         assigned_title: "Назначенные (%{count})"
         assigned: "Назначенные темы"

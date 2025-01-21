@@ -58,6 +58,8 @@ ko:
             interaction:
               assign: "할당"
     user:
+      notification_level_when_assigned:
+        do_nothing: "아무것도하지 않음"
       messages:
         assigned_title: "할당됨 (%{count})"
         assigned: "할당됨"

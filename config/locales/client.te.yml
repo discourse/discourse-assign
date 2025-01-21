@@ -24,6 +24,8 @@ te:
         monthly: "నెలవారీ"
         quarterly: "త్రైమాసిక"
     user:
+      notification_level_when_assigned:
+        do_nothing: "ఏమీ చేయవద్దు"
       messages:
         assigned: "కేటాయించబడింది"
     notifications:

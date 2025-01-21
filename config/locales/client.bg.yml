@@ -22,6 +22,9 @@ bg:
         weekly: "Седмично"
         monthly: "Месечно"
         quarterly: "Тримесечно"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Не прави нищо"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:

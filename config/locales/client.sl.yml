@@ -23,6 +23,8 @@ sl:
         monthly: "Mesečno"
         quarterly: "V četrtletju"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Ne naredi nič"
       assignment_description:
         topic: "%{topic_title}"
     notifications:

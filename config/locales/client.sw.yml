@@ -50,6 +50,8 @@ sw:
             interaction:
               assign: "Kabidhi"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Usifanye chochote"
       messages:
         assigned_title: "Amekabidhiwa (%{count})"
         assigned: "Imekabidhiwa"
