@@ -25,6 +25,8 @@ ug:
         monthly: "ئايلىق"
         quarterly: "پەسىللىك"
     user:
+      notification_level_when_assigned:
+        do_nothing: "ھېچ ئىش قىلما"
       messages:
         assigned: "تەقسىملەنگەن"
       assignment_description:

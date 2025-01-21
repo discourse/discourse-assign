@@ -22,6 +22,9 @@ bs_BA:
         weekly: "Popularne Sedmično"
         monthly: "Popularne Mjesečno"
         quarterly: "Kvartalno"
+    user:
+      notification_level_when_assigned:
+        do_nothing: "Ne radi ništa"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
     edit_assignments_modal:

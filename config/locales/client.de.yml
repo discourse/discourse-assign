@@ -105,6 +105,8 @@ de:
               assignable_levels:
                 title: "Wer kann für diese Gruppe Zuordnungen vornehmen"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Nichts tun"
       messages:
         assigned_title: "Zugeordnet (%{count})"
         assigned: "Zugeordnet"

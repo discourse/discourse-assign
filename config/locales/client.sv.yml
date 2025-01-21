@@ -87,6 +87,8 @@ sv:
               assignable_levels:
                 title: "Vem som kan tilldela denna grupp"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Gör ingenting"
       messages:
         assigned_title: "Tilldelade (%{count})"
         assigned: "Tilldelad"

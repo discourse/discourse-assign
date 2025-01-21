@@ -50,6 +50,8 @@ sk:
             interaction:
               assign: "Priradiť"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Nerobiť nič"
       messages:
         assigned: "Priradené"
       assignment_description:

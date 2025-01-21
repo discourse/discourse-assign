@@ -24,6 +24,8 @@ ro:
         monthly: "Lunar"
         quarterly: "Trimestrial"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Nu face nimic"
       assignment_description:
         topic: "%{topic_title}"
     notifications:

@@ -105,6 +105,8 @@ fi:
               assignable_levels:
                 title: "Ketkä voivat osoittaa tämän ryhmän"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Älä tee mitään"
       messages:
         assigned_title: "Osoitettu (%{count})"
         assigned: "Osoitettu"

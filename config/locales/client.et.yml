@@ -42,6 +42,8 @@ et:
             interaction:
               assign: "Määra"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Ära tee midagi"
       messages:
         assigned: "Määratud"
       assignment_description:

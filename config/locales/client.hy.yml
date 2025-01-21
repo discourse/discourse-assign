@@ -51,6 +51,8 @@ hy:
             interaction:
               assign: "Վերագրել"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Ոչինչ չանել"
       messages:
         assigned_title: "Վերագրված (%{count})"
         assigned: "Վերագրված"

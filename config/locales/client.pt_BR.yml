@@ -105,6 +105,8 @@ pt_BR:
               assignable_levels:
                 title: "Quem pode atribuir este grupo"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Não fazer nada"
       messages:
         assigned_title: "Atribuiu (%{count})"
         assigned: "Atribuiu"

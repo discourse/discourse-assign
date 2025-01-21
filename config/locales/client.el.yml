@@ -23,6 +23,8 @@ el:
         monthly: "Μηνιαία"
         quarterly: "Τριμηνιαία"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Μην κάνετε τίποτα"
       assignment_description:
         topic: "%{topic_title}"
     notifications:

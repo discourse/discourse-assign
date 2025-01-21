@@ -105,6 +105,8 @@ it:
               assignable_levels:
                 title: "Chi può assegnare questo gruppo"
     user:
+      notification_level_when_assigned:
+        do_nothing: "Non fare nulla"
       messages:
         assigned_title: "Assegnato (%{count})"
         assigned: "Assegnato"
