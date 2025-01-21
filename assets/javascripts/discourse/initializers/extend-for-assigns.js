@@ -4,7 +4,6 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
-import SearchAdvancedOptions from "discourse/components/search-advanced-options";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
@@ -816,35 +815,39 @@ export default {
       return;
     }
 
-    const currentUser = container.lookup("service:current-user");
-    if (currentUser?.can_assign) {
-      SearchAdvancedOptions.reopen({
-        updateSearchTermForAssignedUsername() {
-          const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
-          const userFilter = this.searchedTerms?.assigned;
-          let searchTerm = this.searchTerm || "";
-          let keyword = "assigned";
-
-          if (userFilter?.length !== 0) {
-            if (match.length !== 0) {
-              searchTerm = searchTerm.replace(
-                match[0],
-                `${keyword}:${userFilter}`
-              );
-            } else {
-              searchTerm += ` ${keyword}:${userFilter}`;
-            }
-
-            this._updateSearchTerm(searchTerm);
-          } else if (match.length !== 0) {
-            searchTerm = searchTerm.replace(match[0], "");
-            this._updateSearchTerm(searchTerm);
-          }
-        },
-      });
-    }
-
     withPluginApi("1.34.0", (api) => {
+      const currentUser = container.lookup("service:current-user");
+      if (currentUser?.can_assign) {
+        api.modifyClass(
+          "component:search-advanced-options",
+          (Superclass) =>
+            class extends Superclass {
+              updateSearchTermForAssignedUsername() {
+                const match = this.filterBlocks(REGEXP_USERNAME_PREFIX);
+                const userFilter = this.searchedTerms?.assigned;
+                let searchTerm = this.searchTerm || "";
+                let keyword = "assigned";
+
+                if (userFilter?.length !== 0) {
+                  if (match.length !== 0) {
+                    searchTerm = searchTerm.replace(
+                      match[0],
+                      `${keyword}:${userFilter}`
+                    );
+                  } else {
+                    searchTerm += ` ${keyword}:${userFilter}`;
+                  }
+
+                  this._updateSearchTerm(searchTerm);
+                } else if (match.length !== 0) {
+                  searchTerm = searchTerm.replace(match[0], "");
+                  this._updateSearchTerm(searchTerm);
+                }
+              }
+            }
+        );
+      }
+
       extendTopicModel(api);
       initialize(api);
       registerTopicFooterButtons(api);
