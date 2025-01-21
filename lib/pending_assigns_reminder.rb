@@ -55,21 +55,23 @@ class PendingAssignsReminder
     posts.find_each { |post| PostDestroyer.new(Discourse.system_user, post).destroy }
   end
 
+  def visible_topics(user)
+    Topic.listable_topics.secured(Guardian.new(user)).or(Topic.private_messages_for_user(user))
+  end
+
   def assigned_count_for(user)
     assignments =
-      Assignment.joins_with_topics.where(
-        assigned_to_id: user.id,
-        assigned_to_type: "User",
-        active: true,
-      )
+      Assignment
+        .joins_with_topics
+        .where(assigned_to_id: user.id, assigned_to_type: "User", active: true)
+        .merge(visible_topics(user))
     assignments =
       DiscoursePluginRegistry.apply_modifier(:assigned_count_for_user_query, assignments, user)
     assignments.count
   end
 
   def assigned_topics(user, order:)
-    secure =
-      Topic.listable_topics.secured(Guardian.new(user)).or(Topic.private_messages_for_user(user))
+    secure = visible_topics(user)
 
     topics =
       Topic

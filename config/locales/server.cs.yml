@@ -20,6 +20,7 @@ cs:
     assign_mailer: "Kdy odeslat e-mail s upozorněním na úkoly"
     remind_assigns: "Připomenout uživatelům nevyřízené úkoly."
     remind_assigns_frequency: "Frekvence připomínání přidělených témat uživatelům."
+    pending_assign_reminder_threshold: "Počet nevyřízených úkolů, které spustí upozornění na připomenutí."
     max_assigned_topics: "Maximální počet témat, která lze uživateli přidělit."
     assign_allowed_on_groups: "Uživatelé v těchto skupinách mohou přidělovat témata a mohou jim být témata přidělována."
     enable_assign_status: "Ke každému úkolu přidat přizpůsobitelné stavové pole."

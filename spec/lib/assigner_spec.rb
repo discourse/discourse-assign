@@ -43,6 +43,46 @@ RSpec.describe Assigner do
       )
     end
 
+    describe "when user watchs topic when assigned" do
+      before { moderator.user_option.watch_topic_when_assigned! }
+
+      it "respects 'when assigned' user preference" do
+        expect(TopicUser.find_by(user: moderator)).to be(nil)
+
+        assigner.assign(moderator)
+
+        expect(TopicUser.find_by(user: moderator).notification_level).to eq(
+          TopicUser.notification_levels[:watching],
+        )
+      end
+    end
+
+    describe "when user tracks topic when assigned" do
+      before { moderator.user_option.track_topic_when_assigned! }
+
+      it "respects 'when assigned' user preference" do
+        expect(TopicUser.find_by(user: moderator)).to be(nil)
+
+        assigner.assign(moderator)
+
+        expect(TopicUser.find_by(user: moderator).notification_level).to eq(
+          TopicUser.notification_levels[:tracking],
+        )
+      end
+    end
+
+    describe "when user wants to do nothing when assigned" do
+      before { moderator.user_option.do_nothing_when_assigned! }
+
+      it "respects 'when assigned' user preference" do
+        expect(TopicUser.find_by(user: moderator)).to be(nil)
+
+        assigner.assign(moderator)
+
+        expect(TopicUser.find_by(user: moderator)).to be(nil)
+      end
+    end
+
     it "deletes notification for original assignee when reassigning" do
       Jobs.run_immediately!
 
@@ -794,6 +834,10 @@ RSpec.describe Assigner do
       assigner.assign(group, should_notify: false)
       expect(topic.allowed_groups).to include(group)
       expect(Notification.count).to eq(0)
+      expect(SilencedAssignment.count).to eq(1)
+
+      group.add(Fabricate(:user))
+      expect(Notification.count).to eq(0) # no one is ever notified about this assignment
     end
 
     it "doesn't invite group if all members have access to the PM already" do

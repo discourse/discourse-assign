@@ -12,7 +12,7 @@ enabled_site_setting :assign_enabled
 register_asset "stylesheets/assigns.scss"
 register_asset "stylesheets/mobile/assigns.scss", :mobile
 
-%w[user-plus user-times group-plus group-times].each { |i| register_svg_icon(i) }
+%w[user-plus user-xmark group-plus group-times].each { |i| register_svg_icon(i) }
 
 module ::DiscourseAssign
   PLUGIN_NAME = "discourse-assign"
@@ -22,6 +22,8 @@ require_relative "lib/discourse_assign/engine"
 require_relative "lib/validators/assign_statuses_validator"
 
 after_initialize do
+  UserUpdater::OPTION_ATTR.push(:notification_level_when_assigned)
+
   reloadable_patch do |plugin|
     Group.prepend(DiscourseAssign::GroupExtension)
     ListController.prepend(DiscourseAssign::ListControllerExtension)
@@ -29,6 +31,15 @@ after_initialize do
     Topic.prepend(DiscourseAssign::TopicExtension)
     WebHook.prepend(DiscourseAssign::WebHookExtension)
     Notification.prepend(DiscourseAssign::NotificationExtension)
+    UserOption.prepend(DiscourseAssign::UserOptionExtension)
+  end
+
+  add_to_serializer(:user_option, :notification_level_when_assigned) do
+    object.notification_level_when_assigned
+  end
+
+  add_to_serializer(:current_user_option, :notification_level_when_assigned) do
+    object.notification_level_when_assigned
   end
 
   register_group_param(:assignable_level)
