@@ -106,6 +106,9 @@ zh_CN:
                 title: "谁可以指定此群组"
     user:
       notification_level_when_assigned:
+        label: "指定后"
+        watch_topic: "关注话题"
+        track_topic: "跟踪话题"
         do_nothing: "不进行操作"
       messages:
         assigned_title: "已指定 (%{count})"

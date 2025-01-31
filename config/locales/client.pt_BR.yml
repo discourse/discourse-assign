@@ -106,6 +106,9 @@ pt_BR:
                 title: "Quem pode atribuir este grupo"
     user:
       notification_level_when_assigned:
+        label: "Ao atribuir"
+        watch_topic: "Acompanhar tópico"
+        track_topic: "Monitorar tópico"
         do_nothing: "Não fazer nada"
       messages:
         assigned_title: "Atribuiu (%{count})"

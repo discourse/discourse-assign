@@ -106,6 +106,9 @@ de:
                 title: "Wer kann für diese Gruppe Zuordnungen vornehmen"
     user:
       notification_level_when_assigned:
+        label: "Bei Zuordnung"
+        watch_topic: "Thema beobachten"
+        track_topic: "Thema verfolgen"
         do_nothing: "Nichts tun"
       messages:
         assigned_title: "Zugeordnet (%{count})"

@@ -106,6 +106,9 @@ ru:
                 title: "Кто может назначить эту группу"
     user:
       notification_level_when_assigned:
+        label: "Когда назначено"
+        watch_topic: "Наблюдаемая тема"
+        track_topic: "Отслеживаемая тема"
         do_nothing: "Ничего не делать"
       messages:
         assigned_title: "Назначенные (%{count})"

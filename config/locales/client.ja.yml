@@ -106,6 +106,9 @@ ja:
                 title: "このグループを割り当てられるユーザー"
     user:
       notification_level_when_assigned:
+        label: "割り当てられたとき"
+        watch_topic: "トピックをウォッチ"
+        track_topic: "トピックを追跡"
         do_nothing: "何もしない"
       messages:
         assigned_title: "割り当て済み（%{count}）"
