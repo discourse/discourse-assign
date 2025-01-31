@@ -106,6 +106,9 @@ fi:
                 title: "Ketkä voivat osoittaa tämän ryhmän"
     user:
       notification_level_when_assigned:
+        label: "Kun osoitetaan"
+        watch_topic: "Tarkkailtu ketju"
+        track_topic: "Seurattu ketju"
         do_nothing: "Älä tee mitään"
       messages:
         assigned_title: "Osoitettu (%{count})"

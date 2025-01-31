@@ -106,6 +106,9 @@ es:
                 title: "Quién puede asignar este grupo"
     user:
       notification_level_when_assigned:
+        label: "Cuando se asigne"
+        watch_topic: "Observar tema"
+        track_topic: "Seguir tema"
         do_nothing: "No hacer nada"
       messages:
         assigned_title: "Asignados (%{count})"
