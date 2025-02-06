@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
 import {
   acceptance,
@@ -7,8 +8,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 import NotificationFixture from "../fixtures/notifications-fixtures";
 
 function assignCurrentUserToTopic(needs) {
@@ -173,7 +173,7 @@ acceptance("Discourse Assign | Assigned topic", function (needs) {
 
     assert.strictEqual(
       notification.querySelector("a").title,
-      I18n.t("notifications.titles.assigned"),
+      i18n("notifications.titles.assigned"),
       "with correct title"
     );
     assert.strictEqual(

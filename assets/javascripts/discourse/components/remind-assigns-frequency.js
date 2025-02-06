@@ -1,6 +1,6 @@
 import Component from "@ember/component";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import discourseComputed from "discourse/lib/decorators";
+import { i18n } from "discourse-i18n";
 
 export default class RemindAssignsFrequency extends Component {
   @discourseComputed(
@@ -22,7 +22,7 @@ export default class RemindAssignsFrequency extends Component {
   @discourseComputed("user.reminders_frequency")
   availableFrequencies(userRemindersFrequency) {
     return userRemindersFrequency.map((freq) => ({
-      name: I18n.t(freq.name),
+      name: i18n(freq.name),
       value: freq.value,
       selected: false,
     }));

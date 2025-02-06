@@ -1,5 +1,5 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 
 export default {
   name: "assign-extend-user-messages",
@@ -11,7 +11,7 @@ export default {
       if (currentUser?.can_assign && api.addUserMessagesNavigationDropdownRow) {
         api.addUserMessagesNavigationDropdownRow(
           "userPrivateMessages.assigned",
-          I18n.t("discourse_assign.assigned"),
+          i18n("discourse_assign.assigned"),
           "user-plus"
         );
       }

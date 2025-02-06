@@ -1,12 +1,12 @@
 import { currentURL, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import { cloneJSON } from "discourse/lib/object";
 import {
   acceptance,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
-import { cloneJSON } from "discourse-common/lib/object";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 
 acceptance("Discourse Assign | User Private Messages", function (needs) {
@@ -34,7 +34,7 @@ acceptance("Discourse Assign | User Private Messages", function (needs) {
     const messagesDropdown = selectKit(".user-nav-messages-dropdown");
 
     await messagesDropdown.expand();
-    await messagesDropdown.selectRowByName(I18n.t("discourse_assign.assigned"));
+    await messagesDropdown.selectRowByName(i18n("discourse_assign.assigned"));
 
     assert.strictEqual(
       currentURL(),
@@ -44,7 +44,7 @@ acceptance("Discourse Assign | User Private Messages", function (needs) {
 
     assert.strictEqual(
       messagesDropdown.header().name(),
-      I18n.t("discourse_assign.assigned"),
+      i18n("discourse_assign.assigned"),
       "assigned messages is selected in the dropdown"
     );
   });

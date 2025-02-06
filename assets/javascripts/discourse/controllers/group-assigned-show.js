@@ -4,8 +4,8 @@ import { alias } from "@ember/object/computed";
 import { service } from "@ember/service";
 import UserTopicsList from "discourse/controllers/user-topics-list";
 import BulkSelectHelper from "discourse/lib/bulk-select-helper";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY } from "discourse/lib/environment";
 
 export default class GroupAssignedShow extends UserTopicsList {
   @service taskActions;

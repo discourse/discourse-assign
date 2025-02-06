@@ -1,6 +1,6 @@
 import { action } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 import DropdownSelectBoxComponent from "select-kit/components/dropdown-select-box";
 import { selectKitOptions } from "select-kit/components/select-kit";
 
@@ -22,16 +22,16 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
         {
           id: "unassign",
           icon: this.group ? "group-times" : "user-xmark",
-          name: I18n.t("discourse_assign.unassign.title"),
-          description: I18n.t("discourse_assign.unassign.help", {
+          name: i18n("discourse_assign.unassign.title"),
+          description: i18n("discourse_assign.unassign.help", {
             username: this.assignee,
           }),
         },
         {
           id: "reassign",
           icon: "users",
-          name: I18n.t("discourse_assign.reassign.title"),
-          description: I18n.t("discourse_assign.reassign.help"),
+          name: i18n("discourse_assign.reassign.title"),
+          description: i18n("discourse_assign.reassign.help"),
         },
       ]);
     }
@@ -43,8 +43,8 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
         options = options.concat({
           id: `unassign_post_${postId}`,
           icon: assignee.username ? "user-xmark" : "group-times",
-          name: I18n.t("discourse_assign.unassign_post.title"),
-          description: I18n.t("discourse_assign.unassign_post.help", {
+          name: i18n("discourse_assign.unassign_post.title"),
+          description: i18n("discourse_assign.unassign_post.help", {
             username: assignee.username || assignee.name,
           }),
         });
