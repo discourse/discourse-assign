@@ -1,8 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import i18n from "discourse-common/helpers/i18n";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
 import Assignment from "./assignment";
 
@@ -21,9 +20,9 @@ export default class TopicAssignments extends Component {
   #toComboBoxOption(assignment) {
     const option = { id: assignment.id };
     if (assignment.targetType === "Topic") {
-      option.name = I18n.t("edit_assignments_modal.topic");
+      option.name = i18n("edit_assignments_modal.topic");
     } else {
-      option.name = `${I18n.t("edit_assignments_modal.post")} #${
+      option.name = `${i18n("edit_assignments_modal.post")} #${
         assignment.postNumber
       }`;
     }

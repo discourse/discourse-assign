@@ -6,7 +6,7 @@ import {
   queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 
 const USER_MENU_ASSIGN_RESPONSE = {
   notifications: [
@@ -239,12 +239,12 @@ acceptance("Discourse Assign | user menu", function (needs) {
 
     assert.strictEqual(
       userAssign.querySelector("a").title,
-      I18n.t("user.assigned_to_you.topic"),
+      i18n("user.assigned_to_you.topic"),
       "user assign has the right title"
     );
     assert.strictEqual(
       groupAssign.querySelector("a").title,
-      I18n.t("user.assigned_to_group.topic", { group_name: "Team" }),
+      i18n("user.assigned_to_group.topic", { group_name: "Team" }),
       "group assign has the right title"
     );
   });
@@ -264,7 +264,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
       query(
         ".dismiss-notification-confirmation .d-modal__body"
       ).textContent.trim(),
-      I18n.t("notifications.dismiss_confirmation.body.assigns", { count: 173 }),
+      i18n("notifications.dismiss_confirmation.body.assigns", { count: 173 }),
       "dismiss confirmation modal is shown"
     );
 
@@ -290,7 +290,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
     assert
       .dom(".empty-state-title")
       .hasText(
-        I18n.t("user.no_assignments_title"),
+        i18n("user.no_assignments_title"),
         "empty state title is rendered"
       );
     assert.dom(".empty-state-body").exists("empty state body exists");

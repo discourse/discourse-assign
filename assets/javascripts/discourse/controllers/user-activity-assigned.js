@@ -3,12 +3,12 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import UserTopicsList from "discourse/controllers/user-topics-list";
-import { INPUT_DELAY } from "discourse-common/config/environment";
-import discourseDebounce from "discourse-common/lib/debounce";
-import getURL from "discourse-common/lib/get-url";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import discourseDebounce from "discourse/lib/debounce";
+import discourseComputed from "discourse/lib/decorators";
+import { INPUT_DELAY } from "discourse/lib/environment";
+import getURL from "discourse/lib/get-url";
+import { iconHTML } from "discourse/lib/icon-library";
+import { i18n } from "discourse-i18n";
 
 export default class UserActivityAssigned extends UserTopicsList {
   @service taskActions;
@@ -27,7 +27,7 @@ export default class UserActivityAssigned extends UserTopicsList {
   @discourseComputed
   emptyStateBody() {
     return htmlSafe(
-      I18n.t("user.no_assignments_body", {
+      i18n("user.no_assignments_body", {
         preferencesUrl: getURL("/my/preferences/notifications"),
         icon: iconHTML("user-plus"),
       })

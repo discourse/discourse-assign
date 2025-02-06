@@ -5,16 +5,16 @@ import { isEmpty } from "@ember/utils";
 import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import { renderAvatar } from "discourse/helpers/user-avatar";
+import discourseComputed from "discourse/lib/decorators";
+import { withSilencedDeprecations } from "discourse/lib/deprecated";
+import getURL from "discourse/lib/get-url";
+import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
 import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
-import { withSilencedDeprecations } from "discourse-common/lib/deprecated";
-import getURL from "discourse-common/lib/get-url";
-import { iconHTML, iconNode } from "discourse-common/lib/icon-library";
-import discourseComputed from "discourse-common/utils/decorators";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 import AssignButton, {
   assignPost,
   unassignPost,
@@ -36,9 +36,9 @@ function defaultTitle(topic) {
     topic.assigned_to_user?.username || topic.assigned_to_group?.name;
 
   if (username) {
-    return I18n.t("discourse_assign.unassign.help", { username });
+    return i18n("discourse_assign.unassign.help", { username });
   } else {
-    return I18n.t("discourse_assign.assign.help");
+    return i18n("discourse_assign.assign.help");
   }
 }
 
@@ -62,7 +62,7 @@ function registerTopicFooterButtons(api) {
       return defaultTitle(this.topic);
     },
     translatedLabel() {
-      return I18n.t("discourse_assign.assign.title");
+      return i18n("discourse_assign.assign.title");
     },
     async action() {
       if (!this.currentUser?.can_assign) {
@@ -118,7 +118,7 @@ function registerTopicFooterButtons(api) {
     translatedLabel() {
       const user = this.topic.assigned_to_user;
       const group = this.topic.assigned_to_group;
-      const label = I18n.t("discourse_assign.assigned_to_w_ellipsis");
+      const label = i18n("discourse_assign.assigned_to_w_ellipsis");
 
       if (user) {
         return htmlSafe(
@@ -158,7 +158,7 @@ function registerTopicFooterButtons(api) {
       return defaultTitle(this.topic);
     },
     translatedLabel() {
-      const label = I18n.t("discourse_assign.unassign.title");
+      const label = i18n("discourse_assign.unassign.title");
 
       return htmlSafe(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
@@ -200,13 +200,13 @@ function registerTopicFooterButtons(api) {
       return "user-plus";
     },
     translatedTitle() {
-      return I18n.t("discourse_assign.reassign.to_self_help");
+      return i18n("discourse_assign.reassign.to_self_help");
     },
     translatedAriaLabel() {
-      return I18n.t("discourse_assign.reassign.to_self_help");
+      return i18n("discourse_assign.reassign.to_self_help");
     },
     translatedLabel() {
-      const label = I18n.t("discourse_assign.reassign.to_self");
+      const label = i18n("discourse_assign.reassign.to_self");
 
       return htmlSafe(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
@@ -250,13 +250,13 @@ function registerTopicFooterButtons(api) {
       return "group-plus";
     },
     translatedTitle() {
-      return I18n.t("discourse_assign.reassign.help");
+      return i18n("discourse_assign.reassign.help");
     },
     translatedAriaLabel() {
-      return I18n.t("discourse_assign.reassign.help");
+      return i18n("discourse_assign.reassign.help");
     },
     translatedLabel() {
-      const label = I18n.t("discourse_assign.reassign.title_w_ellipsis");
+      const label = i18n("discourse_assign.reassign.title_w_ellipsis");
 
       return htmlSafe(
         `<span class="unassign-label"><span class="text">${label}</span></span>`
@@ -334,11 +334,11 @@ function initialize(api) {
       ? {
           inOptionsForUsers: [
             {
-              name: I18n.t("search.advanced.in.assigned"),
+              name: i18n("search.advanced.in.assigned"),
               value: "assigned",
             },
             {
-              name: I18n.t("search.advanced.in.unassigned"),
+              name: i18n("search.advanced.in.unassigned"),
               value: "unassigned",
             },
           ],
@@ -385,7 +385,7 @@ function initialize(api) {
             this.args.topic.get("assigned_to_user.username") ===
               this.currentUser.username
           ) {
-            return I18n.t("notification_reason.user");
+            return i18n("notification_reason.user");
           }
 
           return super.reasonText;
@@ -521,7 +521,7 @@ function initialize(api) {
 
       const assignedHtml = (username, path, type) => {
         return `<span class="assigned-to--${type}">${htmlSafe(
-          I18n.t("discourse_assign.assigned_topic_to", {
+          i18n("discourse_assign.assigned_topic_to", {
             username,
             path,
           })
@@ -570,7 +570,7 @@ function initialize(api) {
                     href: `${topic.url}/${postNumber}`,
                   },
                 },
-                I18n.t("discourse_assign.assign_post_to_multiple", {
+                i18n("discourse_assign.assign_post_to_multiple", {
                   post_number: postNumber,
                   username: assignee.username || assignee.name,
                 })
@@ -584,7 +584,7 @@ function initialize(api) {
           assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
           assignedToUser || assignedToGroup
             ? ""
-            : h("span.assign-text", I18n.t("discourse_assign.assigned")),
+            : h("span.assign-text", i18n("discourse_assign.assigned")),
           assigneeElements,
         ]);
       }

@@ -2,7 +2,7 @@ import { visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import DiscoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 
 function stubCategory(needs, customFields) {
   needs.site({
@@ -39,7 +39,7 @@ acceptance(
     test("can see Unassigned button", async function (assert) {
       await visit("/c/test");
 
-      const title = I18n.t("filters.unassigned.help");
+      const title = i18n("filters.unassigned.help");
       assert.dom(`#navigation-bar li[title='${title}']`).exists();
     });
   }
@@ -59,7 +59,7 @@ acceptance(
     test("cannot see Unassigned button", async function (assert) {
       await visit("/c/test");
 
-      const title = I18n.t("filters.unassigned.help");
+      const title = i18n("filters.unassigned.help");
       assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
     });
   }
@@ -79,7 +79,7 @@ acceptance(
     test("can see Unassigned button", async function (assert) {
       await visit("/c/test");
 
-      const title = I18n.t("filters.unassigned.help");
+      const title = i18n("filters.unassigned.help");
       assert.dom(`#navigation-bar li[title='${title}']`).exists();
     });
   }
@@ -99,7 +99,7 @@ acceptance(
     test("cannot see Unassigned button", async function (assert) {
       await visit("/c/test");
 
-      const title = I18n.t("filters.unassigned.help");
+      const title = i18n("filters.unassigned.help");
       assert.dom(`#navigation-bar li[title='${title}']`).doesNotExist();
     });
   }

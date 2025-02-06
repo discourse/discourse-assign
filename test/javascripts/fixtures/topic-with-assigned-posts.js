@@ -1,5 +1,5 @@
+import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
-import { cloneJSON } from "discourse-common/lib/object";
 
 export default function topicWithAssignedPosts() {
   const username = "eviltrout";

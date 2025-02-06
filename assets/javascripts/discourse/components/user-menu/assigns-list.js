@@ -1,7 +1,7 @@
 import { set } from "@ember/object";
 import { sort } from "@ember/object/computed";
 import UserMenuNotificationsList from "discourse/components/user-menu/notifications-list";
-import I18n from "I18n";
+import { i18n } from "discourse-i18n";
 import UserMenuAssignsListEmptyState from "./assigns-list-empty-state";
 
 export default class UserMenuAssignNotificationsList extends UserMenuNotificationsList {
@@ -14,7 +14,7 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   get dismissTitle() {
-    return I18n.t("user.dismiss_assigned_tooltip");
+    return i18n("user.dismiss_assigned_tooltip");
   }
 
   get showAllHref() {
@@ -22,7 +22,7 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   get showAllTitle() {
-    return I18n.t("user_menu.view_all_assigned");
+    return i18n("user_menu.view_all_assigned");
   }
 
   get itemsCacheKey() {
@@ -47,7 +47,7 @@ export default class UserMenuAssignNotificationsList extends UserMenuNotificatio
   }
 
   get dismissConfirmationText() {
-    return I18n.t("notifications.dismiss_confirmation.body.assigns", {
+    return i18n("notifications.dismiss_confirmation.body.assigns", {
       count: this._unreadAssignedNotificationsCount,
     });
   }

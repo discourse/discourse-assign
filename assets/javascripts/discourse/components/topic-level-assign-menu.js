@@ -1,8 +1,8 @@
 import { getOwner } from "@ember/application";
 import { htmlSafe } from "@ember/template";
 import { renderAvatar } from "discourse/helpers/user-avatar";
-import { iconHTML } from "discourse-common/lib/icon-library";
-import I18n from "I18n";
+import { iconHTML } from "discourse/lib/icon-library";
+import { i18n } from "discourse-i18n";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 
 const DEPENDENT_KEYS = [
@@ -113,7 +113,7 @@ function extractPostId(buttonId) {
 
 function editAssignmentsButton() {
   const icon = iconHTML("pencil");
-  const label = I18n.t("discourse_assign.topic_level_menu.edit_assignments");
+  const label = i18n("discourse_assign.topic_level_menu.edit_assignments");
   return {
     id: "reassign",
     name: htmlSafe(label),
@@ -123,9 +123,7 @@ function editAssignmentsButton() {
 
 function reassignToSelfButton() {
   const icon = iconHTML("user-plus");
-  const label = I18n.t(
-    "discourse_assign.topic_level_menu.reassign_topic_to_me"
-  );
+  const label = i18n("discourse_assign.topic_level_menu.reassign_topic_to_me");
   return {
     id: "reassign-self",
     name: htmlSafe(label),
@@ -139,10 +137,9 @@ function unassignFromTopicButton(topic) {
   const icon = topic.assigned_to_user
     ? avatarHtml(topic.assigned_to_user, "small")
     : iconHTML("user-xmark");
-  const label = I18n.t(
-    "discourse_assign.topic_level_menu.unassign_from_topic",
-    { username }
-  );
+  const label = i18n("discourse_assign.topic_level_menu.unassign_from_topic", {
+    username,
+  });
 
   return {
     id: "unassign",
@@ -173,11 +170,11 @@ function unassignFromPostButton(postId, assignment) {
     icon = iconHTML("group-times");
   }
 
-  const label = I18n.t("discourse_assign.topic_level_menu.unassign_from_post", {
+  const label = i18n("discourse_assign.topic_level_menu.unassign_from_post", {
     assignee,
     post_number: assignment.post_number,
   });
-  const dataName = I18n.t(
+  const dataName = i18n(
     "discourse_assign.topic_level_menu.unassign_from_post_help",
     {
       assignee,
@@ -193,14 +190,14 @@ function unassignFromPostButton(postId, assignment) {
 
 function topicLevelUnassignButton(assignees) {
   const avatars = topicLevelUnassignButtonAvatars(assignees);
-  const label = `<span class="unassign-label">${I18n.t(
+  const label = `<span class="unassign-label">${i18n(
     "discourse_assign.topic_level_menu.unassign_with_ellipsis"
   )}</span>`;
 
   return {
     id: null,
     name: htmlSafe(
-      I18n.t("discourse_assign.topic_level_menu.unassign_with_ellipsis")
+      i18n("discourse_assign.topic_level_menu.unassign_with_ellipsis")
     ),
     label: htmlSafe(`${avatars}${label}`),
   };
