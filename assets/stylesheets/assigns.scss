@@ -16,6 +16,7 @@
     margin-right: 0.25em;
     color: var(--primary-medium);
   }
+
   .assign-text {
     margin-right: 0.25em;
   }
@@ -23,7 +24,8 @@
   .composer-popup & {
     margin-left: 0.5em;
   }
-  .assignee:not(:last-child):after {
+
+  .assignee:not(:last-child)::after {
     content: ", ";
   }
 
@@ -44,7 +46,6 @@
   padding: 0.5em;
   border: 1px dashed var(--primary-medium);
   color: var(--primary);
-
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -85,6 +86,7 @@
     .select-kit-header {
       outline: 0 !important;
     }
+
     .select-kit-body {
       position: absolute !important;
       transform: none !important;
@@ -166,10 +168,12 @@
     align-items: center;
     gap: 0.25em;
   }
+
   .avatar {
     width: 1.19em;
     height: 1.19em;
   }
+
   .avatar.overlap {
     z-index: 1;
     margin-right: -0.4em;
@@ -179,6 +183,7 @@
   i.fa {
     color: var(--primary-medium);
   }
+
   .d-icon {
     margin-left: 0.165em;
     margin-right: 0.165em;
@@ -189,6 +194,7 @@
 .group-assignments {
   // a little extra space for long names
   min-width: 250px;
+
   li a {
     display: grid;
     grid-template-areas: " avatar names count";
@@ -200,6 +206,7 @@
       width: 45px;
       margin-right: 0.5em;
       text-align: center;
+
       svg {
         width: 40px;
         height: 40px;
@@ -212,31 +219,38 @@
       overflow: hidden;
       line-height: normal;
     }
+
     .assign-name {
       @include ellipsis;
       margin-top: 3px;
     }
+
     .assign-username {
       font-weight: bold;
       @include ellipsis;
     }
+
     .assign-count {
       font-size: $font-up-2;
       grid-area: count;
     }
+
     .assign-image {
       grid-area: avatar;
+
       a {
         padding: 0;
         padding-right: 0.5em;
       }
     }
   }
+
   .search {
     width: 100%;
   }
+
   .search-div {
-    padding: 0 13px;
+    padding: 0 0;
   }
 }
 
@@ -261,5 +275,27 @@
   .small-action-custom-message {
     font-style: italic;
     color: var(--primary-medium);
+  }
+}
+
+.desktop-view {
+  .group-assign {
+    .user-secondary-navigation {
+      grid-column: 1;
+      grid-row: 2/4;
+    }
+
+    .group-assignments {
+      margin-top: 1.25em;
+    }
+
+    .user-content-wrapper .user-content {
+      grid-column: 2;
+    }
+
+    .nav-stacked {
+      width: 100%;
+      margin-right: 2em;
+    }
   }
 }
