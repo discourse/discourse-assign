@@ -29,6 +29,7 @@ const DEPENDENT_KEYS = [
   "topic.assigned_to_group",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
+  "topic.assigned_to_user.name",
 ];
 
 function defaultTitle(topic) {
@@ -477,12 +478,16 @@ function initialize(api) {
             assignedPath = `/t/${topic.id}`;
           }
           const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
-          const name = assignee.username || assignee.name;
           const tagName = params.tagName || "a";
           const href =
             tagName === "a"
               ? `href="${getURL(assignedPath)}" data-auto-route="true"`
               : "";
+
+          const name = !siteSettings.prioritize_full_name_in_ux
+            ? assignee.username
+            : assignee.name;
+
           return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
             note
           )}">${name}</span></${tagName}>`;
