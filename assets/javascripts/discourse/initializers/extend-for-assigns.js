@@ -485,10 +485,6 @@ function initialize(api) {
               ? `href="${getURL(assignedPath)}" data-auto-route="true"`
               : "";
 
-          const name = !siteSettings.prioritize_full_name_in_ux
-            ? assignee.username
-            : assignee.name;
-
           return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
             note
           )}">${name}</span></${tagName}>`;
@@ -568,6 +564,10 @@ function initialize(api) {
       ];
       const assigneeElements = [];
 
+      const nameOrUsername = siteSettings.prioritize_full_name_in_ux
+        ? assignedToUser.name
+        : assignedToUser.username;
+
       const assignedHtml = (username, path, type) => {
         return `<span class="assigned-to--${type}">${htmlSafe(
           i18n("discourse_assign.assigned_topic_to", {
@@ -583,7 +583,7 @@ function initialize(api) {
             "span.assignee",
             new RawHtml({
               html: assignedHtml(
-                assignedToUser.username,
+                nameOrUsername,
                 assignedToUserPath(assignedToUser),
                 "user"
               ),

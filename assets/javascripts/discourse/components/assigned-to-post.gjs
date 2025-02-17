@@ -9,6 +9,7 @@ import DMenu from "float-kit/components/d-menu";
 
 export default class AssignedToPost extends Component {
   @service taskActions;
+  @service siteSettings;
 
   @action
   unassign() {
