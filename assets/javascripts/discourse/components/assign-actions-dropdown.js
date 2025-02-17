@@ -40,15 +40,12 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
       Object.entries(this.topic.indirectly_assigned_to).forEach((entry) => {
         const [postId, assignment_map] = entry;
         const assignee = assignment_map.assigned_to;
-        console.log("!!!!!!!!!!!!!!!!!!!");
         options = options.concat({
           id: `unassign_post_${postId}`,
           icon: assignee.username ? "user-xmark" : "group-times",
           name: i18n("discourse_assign.unassign_post.title"),
           description: i18n("discourse_assign.unassign_post.help", {
-            username: !siteSettings.prioritize_full_name_in_ux
-              ? assignee.username
-              : assignee.name,
+            username: assignee.username || assignee.name,
           }),
         });
       });
