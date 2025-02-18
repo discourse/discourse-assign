@@ -68,6 +68,7 @@ module DiscourseAssign
     end
 
     def call
+      return if topic.nil?
       Assigner.publish_topic_tracking_state(topic, user.id)
       unless mark_as_read?
         PostAlerter.new(post).create_notification_alert(

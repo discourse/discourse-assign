@@ -24,6 +24,20 @@ RSpec.describe DiscourseAssign::CreateNotification do
         create_notification
       end
 
+      context "when topic is not found" do
+        before { assignment.topic = nil }
+
+        it "does not publish topic tracking state" do
+          Assigner.expects(:publish_topic_tracking_state).never
+          create_notification
+        end
+
+        it "does not create a notification alert" do
+          alerter.expects(:create_notification_alert).never
+          create_notification
+        end
+      end
+
       context "when `mark_as_read` is false" do
         let(:excerpt) do
           I18n.t(
