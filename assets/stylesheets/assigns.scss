@@ -206,6 +206,12 @@
       width: 45px;
       margin-right: 0.5em;
       text-align: center;
+      grid-area: avatar;
+
+      a {
+        padding: 0;
+        padding-right: 0.5em;
+      }
 
       svg {
         width: 40px;
@@ -214,7 +220,7 @@
     }
 
     .assign-names {
-      font-size: $font-down-1;
+      font-size: var(--font-down-1);
       grid-area: names;
       overflow: hidden;
       line-height: normal;
@@ -231,17 +237,8 @@
     }
 
     .assign-count {
-      font-size: $font-up-2;
+      font-size: var(--font-up-2);
       grid-area: count;
-    }
-
-    .assign-image {
-      grid-area: avatar;
-
-      a {
-        padding: 0;
-        padding-right: 0.5em;
-      }
     }
   }
 

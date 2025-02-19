@@ -8,6 +8,8 @@
 .assigned-topic-list-item {
   .topic-list-data {
     max-width: unset;
+    display: grid;
+    grid-template-columns: 1fr 37px; // 37px is size of button
   }
 
   .pull-right .num.activity {
@@ -41,11 +43,6 @@
   }
 }
 
-.assigned-topic-list-item .topic-list-data {
-  display: grid;
-  grid-template-columns: 1fr 37px; // 37px is size of button
-}
-
 .select-kit-row[data-value="unassign-mobile-header"] {
   background: rgba(var(--primary-low-rgb), 0.5);
   pointer-events: none;
@@ -64,7 +61,7 @@
       width: auto;
 
       .username {
-        font-size: $font-down-1;
+        font-size: var(--font-down-1);
         color: var(--primary-medium);
       }
     }
@@ -100,7 +97,7 @@
   li > a {
     .assign-names,
     .assign-count {
-      font-size: $font-0;
+      font-size: var(--font-0);
     }
 
     .assign-image,
