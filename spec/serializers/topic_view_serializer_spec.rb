@@ -19,6 +19,7 @@ RSpec.describe TopicViewSerializer do
   it "includes assigned user in serializer" do
     Assigner.new(topic, user).assign(user)
     serializer = TopicViewSerializer.new(TopicView.new(topic), scope: guardian)
+    expect(serializer.as_json[:topic_view][:assigned_to_user][:name]).to eq(user.name)
     expect(serializer.as_json[:topic_view][:assigned_to_user][:username]).to eq(user.username)
     expect(serializer.as_json[:topic_view][:assigned_to_group]).to be nil
   end
