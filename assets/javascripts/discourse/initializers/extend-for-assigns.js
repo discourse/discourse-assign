@@ -479,12 +479,12 @@ function initialize(api) {
             assignedPath = `/t/${topic.id}`;
           }
           const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
+          const name = assignee.username || assignee.name;
           const tagName = params.tagName || "a";
           const href =
             tagName === "a"
               ? `href="${getURL(assignedPath)}" data-auto-route="true"`
               : "";
-
           return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
             note
           )}">${name}</span></${tagName}>`;
@@ -564,10 +564,6 @@ function initialize(api) {
       ];
       const assigneeElements = [];
 
-      const nameOrUsername = siteSettings.prioritize_full_name_in_ux
-        ? assignedToUser.name
-        : assignedToUser.username;
-
       const assignedHtml = (username, path, type) => {
         return `<span class="assigned-to--${type}">${htmlSafe(
           i18n("discourse_assign.assigned_topic_to", {
@@ -583,7 +579,7 @@ function initialize(api) {
             "span.assignee",
             new RawHtml({
               html: assignedHtml(
-                nameOrUsername,
+                assignedToUser.username,
                 assignedToUserPath(assignedToUser),
                 "user"
               ),
@@ -729,6 +725,8 @@ function initialize(api) {
   api.decorateWidget("post-contents:after-cooked", (dec) => {
     const postModel = dec.getModel();
     if (postModel) {
+      console.log("!!!!!!!!!!!!!!!!!!!!!!", dec.attrs);
+      // need to make sure 'name' is not empty in the attrs ^
       let assignedToUser, assignedToGroup, postAssignment, href;
       if (dec.attrs.post_number === 1) {
         return dec.widget.attach("assigned-to-first-post", {
