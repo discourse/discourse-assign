@@ -29,6 +29,7 @@ const DEPENDENT_KEYS = [
   "topic.assigned_to_group",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
+  "topic.assigned_to_user.name",
 ];
 
 function defaultTitle(topic) {
@@ -680,6 +681,8 @@ function initialize(api) {
   api.decorateWidget("post-contents:after-cooked", (dec) => {
     const postModel = dec.getModel();
     if (postModel) {
+      console.log("!!!!!!!!!!!!!!!!!!!!!!", dec.attrs);
+      // need to make sure 'name' is not empty in the attrs ^
       let assignedToUser, assignedToGroup, postAssignment, href;
       if (dec.attrs.post_number === 1) {
         return dec.widget.attach("assigned-to-first-post", {
