@@ -29,6 +29,7 @@ const DEPENDENT_KEYS = [
   "topic.assigned_to_group",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
+  "topic.assigned_to_user.name",
 ];
 
 function defaultTitle(topic) {
@@ -579,6 +580,7 @@ function initialize(api) {
           );
         });
       }
+      console.log(assigneeElements);
       if (!isEmpty(assigneeElements)) {
         return h("p.assigned-to", [
           assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
@@ -680,6 +682,7 @@ function initialize(api) {
   api.decorateWidget("post-contents:after-cooked", (dec) => {
     const postModel = dec.getModel();
     if (postModel) {
+      // 'name' is not empty in the attrs ^, looking good
       let assignedToUser, assignedToGroup, postAssignment, href;
       if (dec.attrs.post_number === 1) {
         return dec.widget.attach("assigned-to-first-post", {
