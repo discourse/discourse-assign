@@ -24,7 +24,7 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
           icon: this.group ? "group-times" : "user-xmark",
           name: i18n("discourse_assign.unassign.title"),
           description: i18n("discourse_assign.unassign.help", {
-            username: this.assignee,
+            username: this.assignee, // here
           }),
         },
         {
@@ -45,7 +45,7 @@ export default class AssignActionsDropdown extends DropdownSelectBoxComponent {
           icon: assignee.username ? "user-xmark" : "group-times",
           name: i18n("discourse_assign.unassign_post.title"),
           description: i18n("discourse_assign.unassign_post.help", {
-            username: assignee.username || assignee.name,
+            username: assignee.username || assignee.name, // here
           }),
         });
       });

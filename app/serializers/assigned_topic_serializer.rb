@@ -8,7 +8,6 @@ class AssignedTopicSerializer < BasicTopicSerializer
   has_one :user, serializer: BasicUserSerializer, embed: :objects
 
   def assigned_to_user
-    # checkout out this basic user serializer
     BasicUserSerializer.new(object.assigned_to, scope: scope, root: false).as_json
   end
 
