@@ -11,6 +11,14 @@ export default class AssignedToPost extends Component {
   @service taskActions;
   @service siteSettings;
 
+  get nameOrUsername() {
+    if (this.siteSettings.prioritize_full_name_in_ux) {
+      return this.args.assignedToUser.name || this.args.assignedToUser.username;
+    } else {
+      return this.args.assignedToUser.username;
+    }
+  }
+
   @action
   unassign() {
     this.taskActions.unassignPost(this.args.post);
@@ -34,7 +42,7 @@ export default class AssignedToPost extends Component {
 
     <a href={{@href}} class="assigned-to-username">
       {{#if @assignedToUser}}
-        {{@assignedToUser.username}}
+        {{this.nameOrUsername}}
       {{else}}
         {{@assignedToGroup.name}}
       {{/if}}
