@@ -1,10 +1,4 @@
-# WARNING: Never edit this file.
-# It will be overwritten when translations are pulled from Crowdin.
-#
-# To work with us on translations, join this project:
-# https://translate.discourse.org/
-
-pt_BR:
+pt:
   site_settings:
     assign_enabled: "Ativar plugin de atribuição"
     assigns_public: "Permitir que o público em geral veja as atribuições de tópico"
