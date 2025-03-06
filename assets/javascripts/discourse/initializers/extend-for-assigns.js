@@ -480,7 +480,7 @@ function initialize(api) {
           }
           const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
           let name;
-          if (siteSettings.prioritize_full_name_in_ux) {
+          if (siteSettings.prioritize_full_name_in_ux || !assignee.username) {
             name = assignee.name;
           } else {
             name = assignee.username;
@@ -617,13 +617,12 @@ function initialize(api) {
         Object.keys(indirectlyAssignedTo).map((postId) => {
           const assignee = indirectlyAssignedTo[postId].assigned_to;
           const postNumber = indirectlyAssignedTo[postId].post_number;
-
-          if (this.siteSettings.prioritize_full_name_in_ux) {
+          if (this.siteSettings.prioritize_full_name_in_ux || !assignee.username) {
             displayedName = assignee.name;
-          } else {
+          } else{
             displayedName = assignee.username;
           }
-
+          
           assigneeElements.push(
             h("span.assignee", [
               h(
