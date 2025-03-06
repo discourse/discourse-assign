@@ -6,7 +6,6 @@ export class Assignment extends EmberObject {
     const assignment = new Assignment();
     assignment.id = 0;
     assignment.username = topic.assigned_to_user?.username;
-    assignment.name = topic.assigned_to_user?.name;
     assignment.groupName = topic.assigned_to_group?.name;
     assignment.status = topic.assignment_status;
     assignment.note = topic.assignment_note;

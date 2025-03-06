@@ -105,14 +105,6 @@ function avatarHtml(user, size, classes) {
   });
 }
 
-// function nameOrUsername() {
-//   if (this.siteSettings.prioritize_full_name_in_ux) {
-//     topic.assigned_to_user?.name || topic.assigned_to_user?.username;
-//   } else {
-//     topic.assigned_to_user?.username;
-//   }
-// }
-
 function extractPostId(buttonId) {
   // buttonId format is "unassign-from-post-${postId}"
   const start = buttonId.lastIndexOf("-") + 1;

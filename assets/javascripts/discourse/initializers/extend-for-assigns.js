@@ -479,7 +479,13 @@ function initialize(api) {
             assignedPath = `/t/${topic.id}`;
           }
           const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
-          const name = assignee.username || assignee.name;
+          let name;
+          if (siteSettings.prioritize_full_name_in_ux) {
+            name = assignee.name;
+          } else {
+            name = assignee.username;
+          }
+
           const tagName = params.tagName || "a";
           const href =
             tagName === "a"
@@ -572,14 +578,19 @@ function initialize(api) {
           })
         )}</span>`;
       };
-
+      let displayedName = "";
       if (assignedToUser) {
+        if (this.siteSettings.prioritize_full_name_in_ux) {
+          displayedName = assignedToUser.name;
+        } else {
+          displayedName = assignedToUser.username;
+        }
         assigneeElements.push(
           h(
             "span.assignee",
             new RawHtml({
               html: assignedHtml(
-                assignedToUser.username,
+                displayedName,
                 assignedToUserPath(assignedToUser),
                 "user"
               ),
@@ -601,10 +612,18 @@ function initialize(api) {
           )
         );
       }
+
       if (indirectlyAssignedTo) {
         Object.keys(indirectlyAssignedTo).map((postId) => {
           const assignee = indirectlyAssignedTo[postId].assigned_to;
           const postNumber = indirectlyAssignedTo[postId].post_number;
+
+          if (this.siteSettings.prioritize_full_name_in_ux) {
+            displayedName = assignee.name;
+          } else {
+            displayedName = assignee.username;
+          }
+
           assigneeElements.push(
             h("span.assignee", [
               h(
@@ -617,14 +636,14 @@ function initialize(api) {
                 },
                 i18n("discourse_assign.assign_post_to_multiple", {
                   post_number: postNumber,
-                  username: assignee.username || assignee.name,
+                  username: displayedName,
                 })
               ),
             ])
           );
         });
       }
-      console.log(assigneeElements);
+
       if (!isEmpty(assigneeElements)) {
         return h("p.assigned-to", [
           assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
