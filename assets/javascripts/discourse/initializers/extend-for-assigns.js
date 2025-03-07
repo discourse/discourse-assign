@@ -482,7 +482,7 @@ function initialize(api) {
           let name;
 
           name =
-            this.siteSettings.prioritize_full_name_in_ux || !assignee.username
+            siteSettings.prioritize_full_name_in_ux || !assignee.username
               ? assignee.name || assignee.username
               : assignee.username;
 
@@ -581,7 +581,7 @@ function initialize(api) {
 
       let displayedName = "";
       if (assignedToUser) {
-        this.siteSettings.prioritize_full_name_in_ux
+        displayedName = this.siteSettings.prioritize_full_name_in_ux
           ? assignedToUser.name || assignedToUser.username
           : assignedToUser.username;
 
@@ -617,6 +617,7 @@ function initialize(api) {
         Object.keys(indirectlyAssignedTo).map((postId) => {
           const assignee = indirectlyAssignedTo[postId].assigned_to;
           const postNumber = indirectlyAssignedTo[postId].post_number;
+
           displayedName =
             this.siteSettings.prioritize_full_name_in_ux || !assignee.username
               ? assignee.name || assignee.username
