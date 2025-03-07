@@ -11,6 +11,7 @@ import getURL from "discourse/lib/get-url";
 import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { registerTopicFooterDropdown } from "discourse/lib/register-topic-footer-dropdown";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
@@ -23,7 +24,6 @@ import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
 import { extendTopicModel } from "../models/topic";
-import { applyValueTransformer } from "discourse/lib/transformer";
 
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
