@@ -23,6 +23,7 @@ import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
 import { extendTopicModel } from "../models/topic";
+import { applyValueTransformer } from "discourse/lib/transformer";
 
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
@@ -467,28 +468,52 @@ function initialize(api) {
       .filter(({ assignee }) => assignee)
       .flat();
 
-    if (assignedTo) {
-      return assignedTo
-        .map(({ assignee, note }) => {
-          let assignedPath;
-          if (assignee.assignedToPostId) {
-            assignedPath = `/p/${assignee.assignedToPostId}`;
-          } else {
-            assignedPath = `/t/${topic.id}`;
-          }
-          const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
-          const name = assignee.username || assignee.name;
-          const tagName = params.tagName || "a";
-          const href =
-            tagName === "a"
-              ? `href="${getURL(assignedPath)}" data-auto-route="true"`
-              : "";
-          return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
-            note
-          )}">${name}</span></${tagName}>`;
-        })
-        .join("");
+    if (!assignedTo) {
+      return "";
     }
+
+    const createTagHtml = ({ assignee, note }) => {
+      let assignedPath;
+      if (assignee.assignedToPostId) {
+        assignedPath = `/p/${assignee.assignedToPostId}`;
+      } else {
+        assignedPath = `/t/${topic.id}`;
+      }
+
+      const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
+      const name = assignee.username || assignee.name;
+      const tagName = params.tagName || "a";
+      const href =
+        tagName === "a"
+          ? `href="${getURL(assignedPath)}" data-auto-route="true"`
+          : "";
+
+      return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
+        note
+      )}">${name}</span></${tagName}>`;
+    };
+
+    // is there's one assignment just return the tag
+    if (assignedTo.length === 1) {
+      return createTagHtml(assignedTo[0]);
+    }
+
+    // join multiple assignments with a separator
+    let result = "";
+    assignedTo.forEach((assignment, index) => {
+      result += createTagHtml(assignment);
+
+      // add separator if not the last tag
+      if (index < assignedTo.length - 1) {
+        const separator = applyValueTransformer("tag-separator", ",", {
+          topic,
+          index,
+        });
+        result += `<span class="discourse-tags__tag-separator">${separator}</span>`;
+      }
+    });
+
+    return result;
   });
 
   api.createWidget("assigned-to-post", {
