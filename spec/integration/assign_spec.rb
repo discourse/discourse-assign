@@ -149,7 +149,7 @@ describe "integration tests" do
 
     include_context "with group that is allowed to assign"
 
-    it "does not allow to assign topic if post is already assigned" do
+    it "allows to assign topic if post is already assigned" do
       add_to_assign_allowed_group(user)
 
       assigner = Assigner.new(post, user)
@@ -162,8 +162,7 @@ describe "integration tests" do
 
       assigner = Assigner.new(topic, user)
       response = assigner.assign(user)
-      expect(response[:success]).to be false
-      expect(response[:reason]).to eq(:already_assigned)
+      expect(response[:success]).to be true
     end
   end
 

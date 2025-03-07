@@ -554,16 +554,7 @@ class ::Assigner
   end
 
   def already_assigned?(assign_to, type, note, status)
-    return true if assignment_eq?(@target.assignment, assign_to, type, note, status)
-
-    # Check if the user is not assigned to any of the posts from the topic
-    # they will be assigned to.
-    if @target.is_a?(Topic)
-      assignments = Assignment.where(topic_id: topic.id, target_type: "Post", active: true)
-      return true if assignments.any? { |a| assignment_eq?(a, assign_to, type, note, status) }
-    end
-
-    false
+    assignment_eq?(@target.assignment, assign_to, type, note, status)
   end
 
   def reassign?
