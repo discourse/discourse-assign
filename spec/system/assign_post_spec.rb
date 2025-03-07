@@ -12,9 +12,6 @@ describe "Assign | Assigning posts", type: :system do
   before do
     SiteSetting.assign_enabled = true
 
-    # # The system tests in this file are flaky and auth token related so turning this on
-    # SiteSetting.verbose_auth_token_logging = true
-
     sign_in(admin)
   end
 
@@ -43,7 +40,7 @@ describe "Assign | Assigning posts", type: :system do
       expect(page).to have_no_css("#topic .assigned-to")
     end
 
-    it "can submit form with shortcut from texatea" do
+    it "can submit modal form with shortcuts" do
       visit "/t/#{topic.id}"
 
       topic_page.click_assign_post(post2)
@@ -69,6 +66,19 @@ describe "Assign | Assigning posts", type: :system do
         assign_modal.confirm
         expect(topic_page.find_post_assign(post1.post_number)).to have_content(staff_user.name)
         expect(topic_page.find_post_assign(post2.post_number)).to have_content(staff_user.name)
+      end
+
+      it "show the user's username if there is no name" do
+        visit "/t/#{topic.id}"
+        staff_user.name = nil
+        staff_user.save
+        staff_user.reload
+
+        topic_page.click_assign_post(post2)
+        assign_modal.assignee = staff_user
+        assign_modal.confirm
+        expect(topic_page.find_post_assign(post1.post_number)).to have_content(staff_user.username)
+        expect(topic_page.find_post_assign(post2.post_number)).to have_content(staff_user.username)
       end
     end
 

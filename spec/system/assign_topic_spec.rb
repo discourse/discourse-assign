@@ -61,6 +61,18 @@ describe "Assign | Assigning topics", type: :system do
         assign_modal.confirm
         expect(find("#topic .assigned-to")).to have_content(staff_user.name)
       end
+
+      it "show the user's username if there is no name" do
+        visit "/t/#{topic.id}"
+        staff_user.name = nil
+        staff_user.save
+        staff_user.reload
+
+        topic_page.click_assign_topic
+        assign_modal.assignee = staff_user
+        assign_modal.confirm
+        expect(find("#topic .assigned-to")).to have_content(staff_user.name)
+      end
     end
 
     context "when assigns are not public" do

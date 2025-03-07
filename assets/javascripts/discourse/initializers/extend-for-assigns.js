@@ -480,11 +480,11 @@ function initialize(api) {
           }
           const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
           let name;
-          if (siteSettings.prioritize_full_name_in_ux || !assignee.username) {
-            name = assignee.name;
-          } else {
-            name = assignee.username;
-          }
+
+          name =
+            this.siteSettings.prioritize_full_name_in_ux || !assignee.username
+              ? assignee.name || assignee.username
+              : assignee.username;
 
           const tagName = params.tagName || "a";
           const href =
@@ -578,13 +578,13 @@ function initialize(api) {
           })
         )}</span>`;
       };
+
       let displayedName = "";
       if (assignedToUser) {
-        if (this.siteSettings.prioritize_full_name_in_ux) {
-          displayedName = assignedToUser.name;
-        } else {
-          displayedName = assignedToUser.username;
-        }
+        this.siteSettings.prioritize_full_name_in_ux
+          ? assignedToUser.name || assignedToUser.username
+          : assignedToUser.username;
+
         assigneeElements.push(
           h(
             "span.assignee",
@@ -617,12 +617,11 @@ function initialize(api) {
         Object.keys(indirectlyAssignedTo).map((postId) => {
           const assignee = indirectlyAssignedTo[postId].assigned_to;
           const postNumber = indirectlyAssignedTo[postId].post_number;
-          if (this.siteSettings.prioritize_full_name_in_ux || !assignee.username) {
-            displayedName = assignee.name;
-          } else{
-            displayedName = assignee.username;
-          }
-          
+          displayedName =
+            this.siteSettings.prioritize_full_name_in_ux || !assignee.username
+              ? assignee.name || assignee.username
+              : assignee.username;
+
           assigneeElements.push(
             h("span.assignee", [
               h(
