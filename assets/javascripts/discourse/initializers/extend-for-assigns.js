@@ -30,6 +30,7 @@ const DEPENDENT_KEYS = [
   "topic.assigned_to_group",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
+  "topic.assigned_to_user.name",
 ];
 
 function defaultTitle(topic) {
@@ -481,7 +482,12 @@ function initialize(api) {
       }
 
       const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
-      const name = assignee.username || assignee.name;
+      let name;
+      name =
+        siteSettings.prioritize_full_name_in_ux || !assignee.username
+          ? assignee.name || assignee.username
+          : assignee.username;
+
       const tagName = params.tagName || "a";
       const href =
         tagName === "a"
@@ -553,13 +559,18 @@ function initialize(api) {
         )}</span>`;
       };
 
+      let displayedName = "";
       if (assignedToUser) {
+        displayedName = this.siteSettings.prioritize_full_name_in_ux
+          ? assignedToUser.name || assignedToUser.username
+          : assignedToUser.username;
+
         assigneeElements.push(
           h(
             "span.assignee",
             new RawHtml({
               html: assignedHtml(
-                assignedToUser.username,
+                displayedName,
                 assignedToUserPath(assignedToUser),
                 "user"
               ),
@@ -581,10 +592,17 @@ function initialize(api) {
           )
         );
       }
+
       if (indirectlyAssignedTo) {
         Object.keys(indirectlyAssignedTo).map((postId) => {
           const assignee = indirectlyAssignedTo[postId].assigned_to;
           const postNumber = indirectlyAssignedTo[postId].post_number;
+
+          displayedName =
+            this.siteSettings.prioritize_full_name_in_ux || !assignee.username
+              ? assignee.name || assignee.username
+              : assignee.username;
+
           assigneeElements.push(
             h("span.assignee", [
               h(
@@ -597,13 +615,14 @@ function initialize(api) {
                 },
                 i18n("discourse_assign.assign_post_to_multiple", {
                   post_number: postNumber,
-                  username: assignee.username || assignee.name,
+                  username: displayedName,
                 })
               ),
             ])
           );
         });
       }
+
       if (!isEmpty(assigneeElements)) {
         return h("p.assigned-to", [
           assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
@@ -705,6 +724,7 @@ function initialize(api) {
   api.decorateWidget("post-contents:after-cooked", (dec) => {
     const postModel = dec.getModel();
     if (postModel) {
+      // 'name' is not empty in the attrs ^, looking good
       let assignedToUser, assignedToGroup, postAssignment, href;
       if (dec.attrs.post_number === 1) {
         return dec.widget.attach("assigned-to-first-post", {
