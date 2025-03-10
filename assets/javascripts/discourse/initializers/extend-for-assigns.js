@@ -724,7 +724,6 @@ function initialize(api) {
   api.decorateWidget("post-contents:after-cooked", (dec) => {
     const postModel = dec.getModel();
     if (postModel) {
-      // 'name' is not empty in the attrs ^, looking good
       let assignedToUser, assignedToGroup, postAssignment, href;
       if (dec.attrs.post_number === 1) {
         return dec.widget.attach("assigned-to-first-post", {
