@@ -482,8 +482,7 @@ function initialize(api) {
       }
 
       const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
-      let name;
-      name =
+      const name =
         siteSettings.prioritize_full_name_in_ux || !assignee.username
           ? assignee.name || assignee.username
           : assignee.username;
