@@ -74,6 +74,7 @@
 
 .group-assignments .mobile-nav a.expander > span {
   display: flex;
+
   @include ellipsis;
 
   .assign-count {
