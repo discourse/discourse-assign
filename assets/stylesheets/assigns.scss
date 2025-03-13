@@ -233,6 +233,7 @@
 
     .assign-username {
       font-weight: bold;
+
       @include ellipsis;
     }
 
