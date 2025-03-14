@@ -6,7 +6,7 @@
       <Input
         @type="checkbox"
         @checked={{readonly this.outletArgs.category.enable_unassigned_filter}}
-        {{on "change" (this.onChangeSetting value="target.checked")}}
+        {{on "change" this.onChangeSetting}}
       />
       {{i18n "discourse_assign.add_unassigned_filter"}}
     </label>
