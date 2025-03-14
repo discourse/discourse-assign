@@ -19,15 +19,18 @@ describe "Assign | Assigning posts", type: :system do
     sign_in(admin)
   end
 
+  def assign_post(post, assignee)
+    topic_page.click_assign_post(post)
+    assign_modal.assignee = assignee
+    assign_modal.confirm
+  end
+
   describe "with open topic" do
     before { SiteSetting.prioritize_full_name_in_ux = false }
 
     it "can assign and unassign" do
       visit "/t/#{topic.id}"
-
-      topic_page.click_assign_post(post2)
-      assign_modal.assignee = staff_user
-      assign_modal.confirm
+      assign_post(post2, staff_user)
 
       expect(assign_modal).to be_closed
 
@@ -65,9 +68,8 @@ describe "Assign | Assigning posts", type: :system do
       it "shows the user's name after assign" do
         visit "/t/#{topic.id}"
 
-        topic_page.click_assign_post(post2)
-        assign_modal.assignee = staff_user
-        assign_modal.confirm
+        assign_post(post2, staff_user)
+
         expect(topic_page.find_post_assign(post1.post_number)).to have_content(staff_user.name)
         expect(topic_page.find_post_assign(post2.post_number)).to have_content(staff_user.name)
       end
@@ -78,9 +80,8 @@ describe "Assign | Assigning posts", type: :system do
         staff_user.save
         staff_user.reload
 
-        topic_page.click_assign_post(post2)
-        assign_modal.assignee = staff_user
-        assign_modal.confirm
+        assign_post(post2, staff_user)
+
         expect(topic_page.find_post_assign(post1.post_number)).to have_content(staff_user.username)
         expect(topic_page.find_post_assign(post2.post_number)).to have_content(staff_user.username)
       end
@@ -92,9 +93,7 @@ describe "Assign | Assigning posts", type: :system do
       it "assigned small action post has 'private-assign' in class attribute" do
         visit "/t/#{topic.id}"
 
-        topic_page.click_assign_post(post2)
-        assign_modal.assignee = staff_user
-        assign_modal.confirm
+        assign_post(post2, staff_user)
 
         expect(assign_modal).to be_closed
         expect(topic_page).to have_assigned_post(
@@ -111,9 +110,7 @@ describe "Assign | Assigning posts", type: :system do
       it "unassigns the topic on close" do
         visit "/t/#{topic.id}"
 
-        topic_page.click_assign_post(post2)
-        assign_modal.assignee = staff_user
-        assign_modal.confirm
+        assign_post(post2, staff_user)
 
         expect(assign_modal).to be_closed
         expect(topic_page).to have_assigned_post(user: staff_user, at_post: 3)
@@ -131,9 +128,7 @@ describe "Assign | Assigning posts", type: :system do
       it "can assign the previous assignee" do
         visit "/t/#{topic.id}"
 
-        topic_page.click_assign_post(post2)
-        assign_modal.assignee = staff_user
-        assign_modal.confirm
+        assign_post(post2, staff_user)
 
         expect(assign_modal).to be_closed
         expect(topic_page).to have_assigned_post(user: staff_user, at_post: 3)
@@ -147,9 +142,7 @@ describe "Assign | Assigning posts", type: :system do
         expect(page).to have_no_css("#post_5")
         expect(page).to have_no_css("#topic .assigned-to")
 
-        topic_page.click_assign_post(post2)
-        assign_modal.assignee = staff_user
-        assign_modal.confirm
+        assign_post(post2, staff_user)
 
         expect(page).to have_no_css("#post_5")
         expect(topic_page.find_post_assign(post1.post_number)).to have_content(staff_user.username)
@@ -162,10 +155,7 @@ describe "Assign | Assigning posts", type: :system do
         it "reassigns the topic on open" do
           visit "/t/#{topic.id}"
 
-          topic_page.click_assign_post(post2)
-          assign_modal.assignee = staff_user
-          assign_modal.confirm
-
+          assign_post(post2, staff_user)
           expect(assign_modal).to be_closed
           expect(topic_page).to have_assigned_post(user: staff_user, at_post: 3)
 
