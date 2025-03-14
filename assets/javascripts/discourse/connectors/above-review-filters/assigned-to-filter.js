@@ -1,22 +1,24 @@
+import Component from "@ember/component";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 
-export default {
+export default class AssignedToFilter extends Component {
+  static shouldRender(args) {
+    return args.additionalFilters;
+  }
+
+  @service site;
+  @service siteSettings;
+
+  groupIDs = (this.siteSettings.assign_allowed_on_groups || "")
+    .split("|")
+    .filter(Boolean);
+  allowedGroups = this.site.groups
+    .filter((group) => this.groupIDs.includes(group.id.toString()))
+    .mapBy("name");
+
   @action
   updateAssignedTo(selected) {
-    this.set("additionalFilters.assigned_to", selected.firstObject);
-  },
-
-  shouldRender(args) {
-    return args.additionalFilters;
-  },
-
-  setupComponent(args, component) {
-    const groupIDs = (component.siteSettings.assign_allowed_on_groups || "")
-      .split("|")
-      .filter(Boolean);
-    const groupNames = this.site.groups
-      .filter((group) => groupIDs.includes(group.id.toString()))
-      .mapBy("name");
-    component.set("allowedGroups", groupNames);
-  },
-};
+    this.set("outletArgs.additionalFilters.assigned_to", selected.firstObject);
+  }
+}

@@ -1,16 +1,20 @@
+import Component from "@ember/component";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 
-export default {
-  shouldRender(args, component) {
+export default class AssignedAdvancedSearch extends Component {
+  static shouldRender(args, component) {
     return component.currentUser?.can_assign;
-  },
+  }
+
+  @service currentUser;
 
   @action
   onChangeAssigned(value) {
-    this.onChangeSearchedTermField(
+    this.outletArgs.onChangeSearchedTermField(
       "assigned",
       "updateSearchTermForAssignedUsername",
       value
     );
-  },
-};
+  }
+}

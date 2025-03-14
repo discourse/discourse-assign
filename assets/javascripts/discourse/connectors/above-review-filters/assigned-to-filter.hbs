@@ -1,8 +1,8 @@
 <div class="reviewable-filter discourse-assign-assign-to-filter">
   <label class="filter-label">{{i18n "discourse_assign.assigned_to"}}</label>
+
   <EmailGroupUserChooser
-    autocomplete="off"
-    @value={{this.additionalFilters.assigned_to}}
+    @value={{this.outletArgs.additionalFilters.assigned_to}}
     @onChange={{this.updateAssignedTo}}
     @options={{hash
       maximum=1
@@ -10,5 +10,6 @@
       includeGroups=false
       groupMembersOf=this.allowedGroups
     }}
+    autocomplete="off"
   />
 </div>
