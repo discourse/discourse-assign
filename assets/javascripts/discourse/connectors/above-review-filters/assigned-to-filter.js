@@ -1,7 +1,9 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { classNames } from "@ember-decorators/component";
 
+@classNames("assigned-to-filter")
 export default class AssignedToFilter extends Component {
   static shouldRender(args) {
     return args.additionalFilters;

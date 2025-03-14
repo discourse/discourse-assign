@@ -1,6 +1,8 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 
+@classNames("assign-settings")
 export default class AssignSettings extends Component {
   @action
   onChangeSetting(event) {
