@@ -492,7 +492,7 @@ class ::Assigner
   end
 
   def small_action_username_or_name(assign_to)
-    if assign_to.is_a?(User) && SiteSetting.prioritize_full_name_in_ux && !assign_to.username
+    if (assign_to.is_a?(User) && SiteSetting.prioritize_full_name_in_ux) || !assign_to.username
       custom_fields = { "action_code_who" => assign_to.name || assign_to.username }
     else
       custom_fields = {
