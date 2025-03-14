@@ -405,9 +405,7 @@ class ::Assigner
       if SiteSetting.unassign_creates_tracking_post && !silent
         post_type = SiteSetting.assigns_public ? Post.types[:small_action] : Post.types[:whisper]
 
-        custom_fields = {
-          "action_code_who" => assigned_to.is_a?(User) ? assigned_to.username : assigned_to.name,
-        }
+        custom_fields = small_action_username_or_name(assigned_to)
 
         if post_target?
           custom_fields.merge!("action_code_path" => "/p/#{@target.id}")
@@ -493,10 +491,20 @@ class ::Assigner
     Jobs.enqueue(:assign_notification, assignment_id: assignment.id)
   end
 
+  def small_action_username_or_name(assign_to)
+    if (assign_to.is_a?(User) && SiteSetting.prioritize_full_name_in_ux) ||
+         !assign_to.try(:username)
+      custom_fields = { "action_code_who" => assign_to.name || assign_to.username }
+    else
+      custom_fields = {
+        "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name,
+      }
+    end
+    custom_fields
+  end
+
   def add_small_action_post(action_code, assign_to, text)
-    custom_fields = {
-      "action_code_who" => assign_to.is_a?(User) ? assign_to.username : assign_to.name,
-    }
+    custom_fields = small_action_username_or_name(assign_to)
 
     if post_target?
       custom_fields.merge!(

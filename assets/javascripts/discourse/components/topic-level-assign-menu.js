@@ -72,7 +72,12 @@ export default {
     const content = [];
 
     if (this.topic.isAssigned()) {
-      content.push(unassignFromTopicButton(this.topic));
+      content.push(
+        unassignFromTopicButton(
+          this.topic,
+          this.siteSettings.prioritize_full_name_in_ux
+        )
+      );
     }
 
     if (this.topic.hasAssignedPosts()) {
@@ -131,9 +136,14 @@ function reassignToSelfButton() {
   };
 }
 
-function unassignFromTopicButton(topic) {
-  const username =
+function unassignFromTopicButton(topic, prioritize_full_name_in_ux) {
+  let username =
     topic.assigned_to_user?.username || topic.assigned_to_group?.name;
+
+  if (topic.assigned_to_user && prioritize_full_name_in_ux) {
+    username = topic.assigned_to_user?.name || topic.assigned_to_user?.username;
+  }
+
   const icon = topic.assigned_to_user
     ? avatarHtml(topic.assigned_to_user, "small")
     : iconHTML("user-xmark");

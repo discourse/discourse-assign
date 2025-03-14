@@ -17,6 +17,7 @@ export class Assignment extends EmberObject {
   static fromPost(post) {
     const assignment = new Assignment();
     assignment.username = post.assigned_to.username;
+    assignment.name = post.assigned_to.name;
     assignment.groupName = post.assigned_to.name;
     assignment.status = post.assignment_status;
     assignment.note = post.assignment_note;
@@ -31,6 +32,7 @@ export class Assignment extends EmberObject {
   // and models from server, that's why we have to call it "group_name" now
   @tracked group_name;
   @tracked username;
+  @tracked name;
   @tracked status;
   @tracked note;
   targetId;
