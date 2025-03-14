@@ -39,7 +39,6 @@ RSpec.describe "Assign | Group assigned", type: :system, js: true do
     # opening with `is-expanded` property, but it isn't actually expanded.
     select_kit.collapse
 
-    select_kit.expand_if_needed
     select_kit.search(assignee)
     select_kit.select_row_by_value(assignee)
     select_kit.collapse
