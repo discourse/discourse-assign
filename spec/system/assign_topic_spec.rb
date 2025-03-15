@@ -10,7 +10,6 @@ describe "Assign | Assigning topics", type: :system do
 
   before do
     SiteSetting.assign_enabled = true
-    SiteSetting.prioritize_full_name_in_ux = false
 
     # The system tests in this file are flaky and auth token related so turning this on
     SiteSetting.verbose_auth_token_logging = true
@@ -51,7 +50,7 @@ describe "Assign | Assigning topics", type: :system do
     end
 
     context "when prioritize_full_name_in_ux setting is enabled" do
-      before { SiteSetting.prioritize_full_name_in_ux = true }
+      before { SiteSetting.prioritize_username_in_ux = false }
 
       it "shows the user's name after assign" do
         visit "/t/#{topic.id}"
