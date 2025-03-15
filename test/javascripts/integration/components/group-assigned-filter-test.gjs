@@ -21,9 +21,11 @@ module(
         timezone: "Asia/Calcutta",
       };
 
-      await render(<template>
-        <GroupAssignedFilter @showAvatar={{true}} @filter={{filter}} />
-      </template>);
+      await render(
+        <template>
+          <GroupAssignedFilter @showAvatar={{true}} @filter={{filter}} />
+        </template>
+      );
 
       assert.dom(".assign-username").hasText("Ahmed");
       assert.dom(".assign-name").hasText("Ahmed Gagan");

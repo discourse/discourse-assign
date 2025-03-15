@@ -1,11 +1,14 @@
+import Component from "@ember/component";
 import { action } from "@ember/object";
+import { classNames } from "@ember-decorators/component";
 
-export default {
+@classNames("assign-settings")
+export default class AssignSettings extends Component {
   @action
-  onChangeSetting(value) {
+  onChangeSetting(event) {
     this.set(
-      "category.custom_fields.enable_unassigned_filter",
-      value ? "true" : "false"
+      "outletArgs.category.custom_fields.enable_unassigned_filter",
+      event.target.checked ? "true" : "false"
     );
-  },
-};
+  }
+}
