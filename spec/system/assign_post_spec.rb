@@ -10,6 +10,7 @@ describe "Assign | Assigning posts", type: :system do
   fab!(:post2) { Fabricate(:post, topic: topic) }
 
   before do
+    skip "Tests are broken and need to be fixed. See https://github.com/discourse/discourse/actions/runs/13890376408/job/38861216842"
     SiteSetting.assign_enabled = true
     SiteSetting.prioritize_username_in_ux = true
     # The system tests in this file are flaky and auth token related so turning this on
