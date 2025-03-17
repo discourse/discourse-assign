@@ -5,6 +5,7 @@ import { i18n } from "discourse-i18n";
 
 export default class UserActivityAssigned extends UserTopicListRoute {
   @service router;
+
   templateName = "user-activity-assigned";
   controllerName = "user-activity-assigned";
 
