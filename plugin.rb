@@ -887,37 +887,47 @@ after_initialize do
     Assignment.active_for_group(group).destroy_all
   end
 
-  register_search_advanced_filter(/in:assigned/) do |posts|
-    posts.where(<<~SQL) if @guardian.can_assign?
-        topics.id IN (
-          SELECT a.topic_id FROM assignments a WHERE a.active
-        )
+  add_filter_custom_filter("assigned") do |scope, filter_values|
+    user_or_group_name = filter_values.compact.first
+
+    return scope if user_or_group_name.blank?
+    
+    if user_id = User.find_by_username(user_or_group_name)&.id
+      scope.where(<<~SQL, user_id)
+        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
       SQL
+    elsif group_id = Group.find_by(name: user_or_group_name)&.id
+      scope.where(<<~SQL, group_id)
+        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
+      SQL
+    else
+      scope
+    end
+  end
+
+  register_search_advanced_filter(/in:assigned/) do |posts|
+    return if !@guardian.can_assign?
+
+    posts.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
   end
 
   register_search_advanced_filter(/in:unassigned/) do |posts|
-    posts.where(<<~SQL) if @guardian.can_assign?
-        topics.id NOT IN (
-          SELECT a.topic_id FROM assignments a WHERE a.active
-        )
-      SQL
+    return if !@guardian.can_assign?
+    
+    posts.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
   end
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
-    if @guardian.can_assign?
-      if user_id = User.find_by_username(match)&.id
-        posts.where(<<~SQL, user_id)
-          topics.id IN (
-            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active
-          )
-        SQL
-      elsif group_id = Group.find_by_name(match)&.id
-        posts.where(<<~SQL, group_id)
-          topics.id IN (
-            SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active
-          )
-        SQL
-      end
+    return if !@guardian.can_assign? || match.blank?
+
+    if user_id = User.find_by_username(match)&.id
+      posts.where(<<~SQL, user_id)
+        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
+      SQL
+    elsif group_id = Group.find_by(name: match)&.id
+      posts.where(<<~SQL, group_id)
+        topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
+      SQL
     end
   end
 
