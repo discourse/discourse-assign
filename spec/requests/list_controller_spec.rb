@@ -355,4 +355,61 @@ describe ListController do
       expect(JSON.parse(response.body)["topic_list"]["topics"].map { |t| t["id"] }).to eq([pm.id])
     end
   end
+
+  describe "#filter" do
+    include_context "with group that is allowed to assign"
+
+    fab!(:group) { Fabricate(:group, assignable_level: Group::ALIAS_LEVELS[:mods_and_admins]) }
+
+    fab!(:topic_1) { Fabricate(:topic) }
+    fab!(:topic_2) { Fabricate(:topic) }
+    fab!(:topic_3) { Fabricate(:topic) }
+
+    fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+    fab!(:post_2) { Fabricate(:post, topic: topic_2) }
+    fab!(:post_3) { Fabricate(:post, topic: topic_3) }
+
+    describe "when user cannot assign" do
+      it "ignores the assign filter" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, user).assign(user)
+
+        get "/filter", params: { q: "assigned:#{user.username_lower}", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
+    end
+
+    describe "when user can assign" do
+      before { sign_in(admin) }
+
+      it "filters topics by assigned user" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, admin).assign(user)
+
+        get "/filter", params: { q: "assigned:#{user.username_lower}", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id)
+      end
+
+      it "filters topics by assigned group" do
+        Assigner.new(topic_2, admin).assign(group)
+
+        get "/filter", params: { q: "assigned:#{group.name}", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_2.id)
+      end
+    end
+  end
 end
