@@ -888,11 +888,11 @@ after_initialize do
   end
 
   add_filter_custom_filter("assigned") do |scope, filter_values, guardian|
-    return if !guardian.can_assign? || filter_values.blank?
+    next if !guardian.can_assign? || filter_values.blank?
 
     user_or_group_name = filter_values.compact.first
 
-    return if user_or_group_name.blank?
+    next if user_or_group_name.blank?
 
     if user_id = User.find_by_username(user_or_group_name)&.id
       scope.where(<<~SQL, user_id)
@@ -906,19 +906,19 @@ after_initialize do
   end
 
   register_search_advanced_filter(/in:assigned/) do |posts|
-    return if !@guardian.can_assign?
+    next if !@guardian.can_assign?
 
     posts.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
   end
 
   register_search_advanced_filter(/in:unassigned/) do |posts|
-    return if !@guardian.can_assign?
+    next if !@guardian.can_assign?
 
     posts.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
   end
 
   register_search_advanced_filter(/assigned:(.+)$/) do |posts, match|
-    return if !@guardian.can_assign? || match.blank?
+    next if !@guardian.can_assign? || match.blank?
 
     if user_id = User.find_by_username(match)&.id
       posts.where(<<~SQL, user_id)

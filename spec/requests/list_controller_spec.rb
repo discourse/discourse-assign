@@ -369,28 +369,47 @@ describe ListController do
     fab!(:post_2) { Fabricate(:post, topic: topic_2) }
     fab!(:post_3) { Fabricate(:post, topic: topic_3) }
 
-    before do
-      sign_in(admin)
+    describe "when user cannot assign" do
+      it "ignores the assign filter" do
+        add_to_assign_allowed_group(user)
+
+        Assigner.new(topic_1, user).assign(user)
+
+        get "/filter", params: { q: "assigned:#{user.username_lower}", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id, topic_2.id, topic_3.id)
+      end
     end
 
-    it "filters topics by assigned user" do
-      add_to_assign_allowed_group(user)
+    describe "when user can assign" do
+      before { sign_in(admin) }
 
-      Assigner.new(topic_1, admin).assign(user)
+      it "filters topics by assigned user" do
+        add_to_assign_allowed_group(user)
 
-      get "/filter", params: { q: "assigned:#{user.username_lower}", format: :json }
+        Assigner.new(topic_1, admin).assign(user)
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body.dig("topic_list", "topics").map { _1["id"] }).to contain_exactly(topic_1.id)
-    end
+        get "/filter", params: { q: "assigned:#{user.username_lower}", format: :json }
 
-    it "filters topics by assigned group" do
-      Assigner.new(topic_2, admin).assign(group)
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_1.id)
+      end
 
-      get "/filter", params: { q: "assigned:#{group.name}", format: :json }
+      it "filters topics by assigned group" do
+        Assigner.new(topic_2, admin).assign(group)
 
-      expect(response.status).to eq(200)
-      expect(response.parsed_body.dig("topic_list", "topics").map { _1["id"] }).to contain_exactly(topic_2.id)
+        get "/filter", params: { q: "assigned:#{group.name}", format: :json }
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body.dig("topic_list", "topics").map { _1["id"] },
+        ).to contain_exactly(topic_2.id)
+      end
     end
   end
 end
