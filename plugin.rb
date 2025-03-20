@@ -887,11 +887,13 @@ after_initialize do
     Assignment.active_for_group(group).destroy_all
   end
 
-  add_filter_custom_filter("assigned") do |scope, filter_values|
+  add_filter_custom_filter("assigned") do |scope, filter_values, guardian|
+    return if !guardian.can_assign? || filter_values.blank?
+
     user_or_group_name = filter_values.compact.first
 
-    return scope if user_or_group_name.blank?
-    
+    return if user_or_group_name.blank?
+
     if user_id = User.find_by_username(user_or_group_name)&.id
       scope.where(<<~SQL, user_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'User' AND a.active)
@@ -900,8 +902,6 @@ after_initialize do
       scope.where(<<~SQL, group_id)
         topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.assigned_to_id = ? AND a.assigned_to_type = 'Group' AND a.active)
       SQL
-    else
-      scope
     end
   end
 
@@ -913,7 +913,7 @@ after_initialize do
 
   register_search_advanced_filter(/in:unassigned/) do |posts|
     return if !@guardian.can_assign?
-    
+
     posts.where("topics.id NOT IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
   end
 
