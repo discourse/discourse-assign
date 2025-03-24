@@ -29,6 +29,15 @@ export default {
           return columns;
         }
       );
+      api.registerValueTransformer(
+        "topic-list-item-class",
+        ({ value: classes }) => {
+          if (ASSIGN_LIST_ROUTES.includes(router.currentRouteName)) {
+            classes.push("assigned-list-item");
+          }
+          return classes;
+        }
+      );
     });
   },
 };
