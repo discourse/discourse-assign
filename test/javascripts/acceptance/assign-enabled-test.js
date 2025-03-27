@@ -15,7 +15,7 @@ import selectKit from "discourse/tests/helpers/select-kit-helper";
 acceptance("Discourse Assign | Assign mobile", function (needs) {
   needs.user();
   needs.mobileView();
-  needs.settings({ glimmer_post_menu_mode: "enabled", assign_enabled: true });
+  needs.settings({ assign_enabled: true });
 
   needs.pretender((server, helper) => {
     server.get("/assign/suggestions", () => {
@@ -47,7 +47,7 @@ acceptance("Discourse Assign | Assign mobile", function (needs) {
 
 acceptance("Discourse Assign | Assign desktop", function (needs) {
   needs.user({ can_assign: true });
-  needs.settings({ glimmer_post_menu_mode: "enabled", assign_enabled: true });
+  needs.settings({ assign_enabled: true });
 
   needs.pretender((server, helper) => {
     server.get("/assign/suggestions", () => {
@@ -121,7 +121,6 @@ acceptance("Discourse Assign | Assign Status enabled", function (needs) {
     can_assign: true,
   });
   needs.settings({
-    glimmer_post_menu_mode: "enabled",
     assign_enabled: true,
     enable_assign_status: true,
     assign_statuses: "New|In Progress|Done",
@@ -184,7 +183,6 @@ acceptance("Discourse Assign | Assign Status disabled", function (needs) {
     can_assign: true,
   });
   needs.settings({
-    glimmer_post_menu_mode: "enabled",
     assign_enabled: true,
     enable_assign_status: false,
   });
@@ -245,7 +243,6 @@ const remindersFrequency = [
 acceptance("Discourse Assign | User preferences", function (needs) {
   needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
   needs.settings({
-    glimmer_post_menu_mode: "enabled",
     assign_enabled: true,
     remind_assigns_frequency: 43200,
   });
@@ -292,7 +289,6 @@ acceptance(
   function (needs) {
     needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
     needs.settings({
-      glimmer_post_menu_mode: "enabled",
       assign_enabled: true,
       remind_assigns_frequency: 43200,
     });
