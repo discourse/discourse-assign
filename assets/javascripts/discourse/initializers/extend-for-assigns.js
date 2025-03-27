@@ -778,7 +778,7 @@ function initialize(api) {
 }
 
 function customizePostMenu(api) {
-  const transformerRegistered = api.registerValueTransformer(
+  api.registerValueTransformer(
     "post-menu-buttons",
     ({
       value: dag,
@@ -804,47 +804,6 @@ function customizePostMenu(api) {
       );
     }
   );
-
-  const silencedKey =
-    transformerRegistered && "discourse.post-menu-widget-overrides";
-
-  withSilencedDeprecations(silencedKey, () => customizeWidgetPostMenu(api));
-}
-
-function customizeWidgetPostMenu(api) {
-  api.addPostMenuButton("assign", (post) => {
-    if (post.firstPost) {
-      return;
-    }
-    if (post.assigned_to_user || post.assigned_to_group) {
-      return {
-        action: "unassignPost",
-        icon: "user-xmark",
-        className: "unassign-post",
-        title: "discourse_assign.unassign_post.title",
-        position:
-          post.assigned_to_user?.id === api.getCurrentUser().id
-            ? "first"
-            : "second-last-hidden",
-      };
-    } else {
-      return {
-        action: "assignPost",
-        icon: "user-plus",
-        className: "assign-post",
-        title: "discourse_assign.assign_post.title",
-        position: "second-last-hidden",
-      };
-    }
-  });
-
-  api.attachWidgetAction("post", "assignPost", function () {
-    assignPost(this.model, getOwner(this).lookup("service:task-actions"));
-  });
-
-  api.attachWidgetAction("post", "unassignPost", function () {
-    unassignPost(this.model, getOwner(this).lookup("service:task-actions"));
-  });
 }
 
 const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;

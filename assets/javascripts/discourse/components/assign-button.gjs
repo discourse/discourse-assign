@@ -29,11 +29,17 @@ export default class AssignButton extends Component {
   }
 
   @action
-  acceptAnswer() {
+  async acceptAnswer() {
     if (this.isAssigned) {
-      unassignPost(this.args.post, this.taskActions);
+      const post = this.args.post;
+
+      await this.taskActions.unassign(post.id, "Post");
+      delete post.topic.indirectly_assigned_to[post.id];
     } else {
-      assignPost(this.args.post, this.taskActions);
+      this.taskActions.showAssignModal(this.args.post, {
+        isAssigned: false,
+        targetType: "Post",
+      });
     }
   }
 
@@ -50,17 +56,4 @@ export default class AssignButton extends Component {
       @title={{this.title}}
     />
   </template>
-}
-
-// TODO (glimmer-post-menu): Remove these exported functions and move the code into the button action after the widget code is removed
-export function assignPost(post, taskActions) {
-  taskActions.showAssignModal(post, {
-    isAssigned: false,
-    targetType: "Post",
-  });
-}
-
-export async function unassignPost(post, taskActions) {
-  await taskActions.unassign(post.id, "Post");
-  delete post.topic.indirectly_assigned_to[post.id];
 }
