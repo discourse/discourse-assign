@@ -6,7 +6,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import discourseComputed from "discourse/lib/decorators";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import getURL from "discourse/lib/get-url";
 import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -16,10 +15,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { i18n } from "discourse-i18n";
-import AssignButton, {
-  assignPost,
-  unassignPost,
-} from "../components/assign-button";
+import AssignButton from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
