@@ -4,20 +4,13 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import icon from "discourse/helpers/d-icon";
+import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import { i18n } from "discourse-i18n";
 import DMenu from "float-kit/components/d-menu";
 
 export default class AssignedToPost extends Component {
   @service taskActions;
   @service siteSettings;
-
-  get nameOrUsername() {
-    if (this.siteSettings.prioritize_full_name_in_ux) {
-      return this.args.assignedToUser.name || this.args.assignedToUser.username;
-    } else {
-      return this.args.assignedToUser.username;
-    }
-  }
 
   @action
   unassign() {
@@ -42,7 +35,7 @@ export default class AssignedToPost extends Component {
 
     <a href={{@href}} class="assigned-to-username">
       {{#if @assignedToUser}}
-        {{this.nameOrUsername}}
+        {{userPrioritizedName @assignedToUser}}
       {{else}}
         {{@assignedToGroup.name}}
       {{/if}}
