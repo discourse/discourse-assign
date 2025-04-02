@@ -6,7 +6,6 @@ import { hbs } from "ember-cli-htmlbars";
 import { h } from "virtual-dom";
 import { renderAvatar } from "discourse/helpers/user-avatar";
 import discourseComputed from "discourse/lib/decorators";
-import { withSilencedDeprecations } from "discourse/lib/deprecated";
 import getURL from "discourse/lib/get-url";
 import { iconHTML, iconNode } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
@@ -16,10 +15,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import RawHtml from "discourse/widgets/raw-html";
 import RenderGlimmer from "discourse/widgets/render-glimmer";
 import { i18n } from "discourse-i18n";
-import AssignButton, {
-  assignPost,
-  unassignPost,
-} from "../components/assign-button";
+import AssignButton from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
@@ -778,7 +774,7 @@ function initialize(api) {
 }
 
 function customizePostMenu(api) {
-  const transformerRegistered = api.registerValueTransformer(
+  api.registerValueTransformer(
     "post-menu-buttons",
     ({
       value: dag,
@@ -804,47 +800,6 @@ function customizePostMenu(api) {
       );
     }
   );
-
-  const silencedKey =
-    transformerRegistered && "discourse.post-menu-widget-overrides";
-
-  withSilencedDeprecations(silencedKey, () => customizeWidgetPostMenu(api));
-}
-
-function customizeWidgetPostMenu(api) {
-  api.addPostMenuButton("assign", (post) => {
-    if (post.firstPost) {
-      return;
-    }
-    if (post.assigned_to_user || post.assigned_to_group) {
-      return {
-        action: "unassignPost",
-        icon: "user-xmark",
-        className: "unassign-post",
-        title: "discourse_assign.unassign_post.title",
-        position:
-          post.assigned_to_user?.id === api.getCurrentUser().id
-            ? "first"
-            : "second-last-hidden",
-      };
-    } else {
-      return {
-        action: "assignPost",
-        icon: "user-plus",
-        className: "assign-post",
-        title: "discourse_assign.assign_post.title",
-        position: "second-last-hidden",
-      };
-    }
-  });
-
-  api.attachWidgetAction("post", "assignPost", function () {
-    assignPost(this.model, getOwner(this).lookup("service:task-actions"));
-  });
-
-  api.attachWidgetAction("post", "unassignPost", function () {
-    unassignPost(this.model, getOwner(this).lookup("service:task-actions"));
-  });
 }
 
 const REGEXP_USERNAME_PREFIX = /^(assigned:)/gi;
