@@ -67,7 +67,7 @@ module PageObjects
           post_content.gsub!(%r{<a[^>]*>(.*?)</a>}, '\1')
         end
 
-        container.has_content?(post_content)
+        container.has_content?(:all, post_content)
       end
     end
   end
