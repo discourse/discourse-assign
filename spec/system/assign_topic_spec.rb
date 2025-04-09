@@ -50,7 +50,7 @@ describe "Assign | Assigning topics", type: :system do
     end
 
     context "when prioritize_full_name_in_ux setting is enabled" do
-      before { SiteSetting.prioritize_username_in_ux = false }
+      before { SiteSetting.prioritize_full_name_in_ux = true }
 
       it "shows the user's name after assign" do
         visit "/t/#{topic.id}"
