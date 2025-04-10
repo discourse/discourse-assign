@@ -478,8 +478,9 @@ function initialize(api) {
       }
 
       const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
+      const showNameInUx = siteSettings.prioritize_full_name_in_ux;
       const name =
-        !siteSettings.prioritize_username_in_ux || !assignee.username
+        showNameInUx || !assignee.username
           ? assignee.name || assignee.username
           : assignee.username;
 
@@ -556,7 +557,7 @@ function initialize(api) {
 
       let displayedName = "";
       if (assignedToUser) {
-        displayedName = !this.siteSettings.prioritize_username_in_ux
+        displayedName = this.siteSettings.prioritize_full_name_in_ux
           ? assignedToUser.name || assignedToUser.username
           : assignedToUser.username;
 
@@ -594,7 +595,7 @@ function initialize(api) {
           const postNumber = indirectlyAssignedTo[postId].post_number;
 
           displayedName =
-            !this.siteSettings.prioritize_username_in_ux || !assignee.username
+            this.siteSettings.prioritize_full_name_in_ux || !assignee.username
               ? assignee.name || assignee.username
               : assignee.username;
 
