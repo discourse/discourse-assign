@@ -392,7 +392,6 @@ function initialize(api) {
   api.addPostSmallActionIcon("unassigned_group", "group-times");
   api.addPostSmallActionIcon("unassigned_from_post", "user-xmark");
   api.addPostSmallActionIcon("unassigned_group_from_post", "group-times");
-  api.includePostAttributes("assigned_to_user", "assigned_to_group");
   api.addPostSmallActionIcon("reassigned", "user-plus");
   api.addPostSmallActionIcon("reassigned_group", "group-plus");
 
@@ -712,6 +711,30 @@ function initialize(api) {
 }
 
 function customizePost(api) {
+  api.addTrackedPostProperties("assigned_to_user", "assigned_to_group");
+
+  api.modifyClass(
+    "model:post",
+    (Superclass) =>
+      class extends Superclass {
+        get can_edit() {
+          return isAssignSmallAction(this.action_code) ? true : super.can_edit;
+        }
+
+        // overriding tracked properties requires overriding both the getter and the setter.
+        // otherwise the superclass will throw an error when the application sets the field value
+        set can_edit(value) {
+          super.can_edit = value;
+        }
+
+        get isSmallAction() {
+          return isAssignSmallAction(this.action_code)
+            ? true
+            : super.isSmallAction;
+        }
+      }
+  );
+
   api.renderAfterWrapperOutlet(
     "post-content-cooked-html",
     PostAssignmentsDisplay
@@ -872,31 +895,32 @@ function customizeWidgetPost(api) {
     },
   });
 
-  // This won't have a direct translation in the Glimmer API as it uses can_edit from the model
-  // TODO (glimmer-post-stream): check the post small action component and introduce a transformer to override the
-  //   canEdit behavior there
+  // `addPostTransformCallback` doesn't have a direct translation in the new Glimmer API.
+  // We need to use a modify class in the post model instead
   api.addPostTransformCallback((transformed) => {
-    if (
-      [
-        "assigned",
-        "unassigned",
-        "reassigned",
-        "assigned_group",
-        "unassigned_group",
-        "reassigned_group",
-        "assigned_to_post",
-        "assigned_group_to_post",
-        "unassigned_from_post",
-        "unassigned_group_from_post",
-        "details_change",
-        "note_change",
-        "status_change",
-      ].includes(transformed.actionCode)
-    ) {
+    if (isAssignSmallAction(transformed.actionCode)) {
       transformed.isSmallAction = true;
       transformed.canEdit = true;
     }
   });
+}
+
+function isAssignSmallAction(actionCode) {
+  return [
+    "assigned",
+    "unassigned",
+    "reassigned",
+    "assigned_group",
+    "unassigned_group",
+    "reassigned_group",
+    "assigned_to_post",
+    "assigned_group_to_post",
+    "unassigned_from_post",
+    "unassigned_group_from_post",
+    "details_change",
+    "note_change",
+    "status_change",
+  ].includes(actionCode);
 }
 
 function customizePostMenu(api) {
