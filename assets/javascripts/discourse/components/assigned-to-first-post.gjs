@@ -1,11 +1,14 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
-import userPrioritizedName from "discourse/helpers/user-prioritized-name";
+import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 import { assignedToGroupPath, assignedToUserPath } from "../lib/url";
 
 export default class AssignedToFirstPost extends Component {
+  @service siteSettings;
+
   get assignedToUser() {
     return this.args.post?.topic?.assigned_to_user;
   }
@@ -47,6 +50,19 @@ export default class AssignedToFirstPost extends Component {
     );
   }
 
+  get hasOnlyIndirectAssignments() {
+    return !this.assignedToUser && !this.assignedToGroup;
+  }
+
+  @bind
+  prioritizedAssigneeName(assignee) {
+    // if this code is ever replaced to use `prioritize_username_in_ux`, remove this function and use the helper
+    // userPrioritizedName instead
+    return this.siteSettings.prioritize_full_name_in_ux || !assignee.username
+      ? assignee.name || assignee.username
+      : assignee.username;
+  }
+
   <template>
     {{#if this.isAssigned}}
       <p class="assigned-to">
@@ -54,10 +70,12 @@ export default class AssignedToFirstPost extends Component {
         {{#if this.assignedToUser}}
           <span class="assignee">
             <span class="assigned-to--user">
-              {{i18n
-                "discourse_assign.assigned_topic_to"
-                username=(userPrioritizedName this.assignedToUser)
-                path=(assignedToUserPath this.assignedToUser)
+              {{htmlSafe
+                (i18n
+                  "discourse_assign.assigned_topic_to"
+                  username=(this.prioritizedAssigneeName this.assignedToUser)
+                  path=(assignedToUserPath this.assignedToUser)
+                )
               }}
             </span>
           </span>
@@ -66,29 +84,40 @@ export default class AssignedToFirstPost extends Component {
         {{#if this.assignedToGroup}}
           <span class="assignee">
             <span class="assigned-to--group">
-              {{i18n
-                "discourse_assign.assigned_topic_to"
-                username=this.assignedToGroup.name
-                path=(assignedToGroupPath this.assignedToGroup)
+              {{htmlSafe
+                (i18n
+                  "discourse_assign.assigned_topic_to"
+                  username=this.assignedToGroup.name
+                  path=(assignedToGroupPath this.assignedToGroup)
+                )
               }}
             </span>
           </span>
         {{/if}}
 
-        {{#each this.indirectAssignments key="postId" as |indirectAssignment|}}
+        {{#if this.hasOnlyIndirectAssignments}}
           <span class="assign-text">
             {{i18n "discourse_assign.assigned"}}
           </span>
-          <span class="assignee">
-            <a href={{indirectAssignment.url}} class="assigned-indirectly">
-              {{i18n
-                "discourse_assign.assign_post_to_multiple"
-                post_number=indirectAssignment.postNumber
-                username=(userPrioritizedName indirectAssignment.assignee)
-              }}
-            </a>
-          </span>
-        {{/each}}
+        {{/if}}
+        {{#if this.indirectlyAssignedTo}}
+          {{#each
+            this.indirectAssignments key="postId"
+            as |indirectAssignment|
+          }}
+            <span class="assignee">
+              <a href={{indirectAssignment.url}} class="assigned-indirectly">
+                {{i18n
+                  "discourse_assign.assign_post_to_multiple"
+                  post_number=indirectAssignment.postNumber
+                  username=(this.prioritizedAssigneeName
+                    indirectAssignment.assignee
+                  )
+                }}
+              </a>
+            </span>
+          {{/each}}
+        {{/if}}
       </p>
     {{/if}}
   </template>
