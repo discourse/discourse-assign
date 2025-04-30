@@ -324,15 +324,6 @@ function initialize(api) {
     }
   }
 
-  api.addPostSmallActionClassesCallback((post) => {
-    // TODO (glimmer-post-stream): only check for .action_code once the widget code is removed
-    const actionCode = post.action_code || post.actionCode;
-
-    if (actionCode.includes("assigned") && !siteSettings.assigns_public) {
-      return ["private-assign"];
-    }
-  });
-
   api.addAdvancedSearchOptions(
     api.getCurrentUser()?.can_assign
       ? {
@@ -383,17 +374,6 @@ function initialize(api) {
         }
       }
   );
-
-  api.addPostSmallActionIcon("assigned", "user-plus");
-  api.addPostSmallActionIcon("assigned_to_post", "user-plus");
-  api.addPostSmallActionIcon("assigned_group", "group-plus");
-  api.addPostSmallActionIcon("assigned_group_to_post", "group-plus");
-  api.addPostSmallActionIcon("unassigned", "user-xmark");
-  api.addPostSmallActionIcon("unassigned_group", "group-times");
-  api.addPostSmallActionIcon("unassigned_from_post", "user-xmark");
-  api.addPostSmallActionIcon("unassigned_group_from_post", "group-times");
-  api.addPostSmallActionIcon("reassigned", "user-plus");
-  api.addPostSmallActionIcon("reassigned_group", "group-plus");
 
   api.addDiscoveryQueryParam("assigned", { replace: true, refreshModel: true });
 
@@ -487,119 +467,6 @@ function initialize(api) {
     return result;
   });
 
-  api.createWidget("assigned-to-post", {
-    html(attrs) {
-      return new RenderGlimmer(
-        this,
-        "p.assigned-to",
-        hbs`
-          <AssignedToPost @assignedToUser={{@data.assignedToUser}} @assignedToGroup={{@data.assignedToGroup}}
-                          @href={{@data.href}} @post={{@data.post}} />`,
-        {
-          assignedToUser: attrs.post.assigned_to_user,
-          assignedToGroup: attrs.post.assigned_to_group,
-          href: attrs.href,
-          post: attrs.post,
-        }
-      );
-    },
-  });
-
-  api.createWidget("assigned-to-first-post", {
-    html(attrs) {
-      const topic = attrs.topic;
-      const [assignedToUser, assignedToGroup, indirectlyAssignedTo] = [
-        topic.assigned_to_user,
-        topic.assigned_to_group,
-        topic.indirectly_assigned_to,
-      ];
-      const assigneeElements = [];
-
-      const assignedHtml = (username, path, type) => {
-        return `<span class="assigned-to--${type}">${htmlSafe(
-          i18n("discourse_assign.assigned_topic_to", {
-            username,
-            path,
-          })
-        )}</span>`;
-      };
-
-      let displayedName = "";
-      if (assignedToUser) {
-        displayedName = this.siteSettings.prioritize_full_name_in_ux
-          ? assignedToUser.name || assignedToUser.username
-          : assignedToUser.username;
-
-        assigneeElements.push(
-          h(
-            "span.assignee",
-            new RawHtml({
-              html: assignedHtml(
-                displayedName,
-                assignedToUserPath(assignedToUser),
-                "user"
-              ),
-            })
-          )
-        );
-      }
-      if (assignedToGroup) {
-        assigneeElements.push(
-          h(
-            "span.assignee",
-            new RawHtml({
-              html: assignedHtml(
-                assignedToGroup.name,
-                assignedToGroupPath(assignedToGroup),
-                "group"
-              ),
-            })
-          )
-        );
-      }
-
-      if (indirectlyAssignedTo) {
-        Object.keys(indirectlyAssignedTo).map((postId) => {
-          const assignee = indirectlyAssignedTo[postId].assigned_to;
-          const postNumber = indirectlyAssignedTo[postId].post_number;
-
-          displayedName =
-            this.siteSettings.prioritize_full_name_in_ux || !assignee.username
-              ? assignee.name || assignee.username
-              : assignee.username;
-
-          assigneeElements.push(
-            h("span.assignee", [
-              h(
-                "a",
-                {
-                  attributes: {
-                    class: "assigned-indirectly",
-                    href: `${topic.url}/${postNumber}`,
-                  },
-                },
-                i18n("discourse_assign.assign_post_to_multiple", {
-                  post_number: postNumber,
-                  username: displayedName,
-                })
-              ),
-            ])
-          );
-        });
-      }
-
-      if (!isEmpty(assigneeElements)) {
-        return h("p.assigned-to", [
-          assignedToUser ? iconNode("user-plus") : iconNode("group-plus"),
-          assignedToUser || assignedToGroup
-            ? ""
-            : h("span.assign-text", i18n("discourse_assign.assigned")),
-          assigneeElements,
-        ]);
-      }
-    },
-  });
-
   api.modifyClass(
     "model:group",
     (Superclass) =>
@@ -686,7 +553,7 @@ function initialize(api) {
       }
   );
 
-  customizePost(api);
+  customizePost(api, siteSettings);
 
   api.replaceIcon("notification.assigned", "user-plus");
 
@@ -710,7 +577,7 @@ function initialize(api) {
   api.addKeyboardShortcut("g a", "", { path: "/my/activity/assigned" });
 }
 
-function customizePost(api) {
+function customizePost(api, siteSettings) {
   api.addTrackedPostProperties("assigned_to_user", "assigned_to_group");
 
   api.modifyClass(
@@ -739,6 +606,26 @@ function customizePost(api) {
     "post-content-cooked-html",
     PostAssignmentsDisplay
   );
+
+  api.addPostSmallActionClassesCallback((post) => {
+    // TODO (glimmer-post-stream): only check for .action_code once the widget code is removed
+    const actionCode = post.action_code || post.actionCode;
+
+    if (actionCode.includes("assigned") && !siteSettings.assigns_public) {
+      return ["private-assign"];
+    }
+  });
+
+  api.addPostSmallActionIcon("assigned", "user-plus");
+  api.addPostSmallActionIcon("assigned_to_post", "user-plus");
+  api.addPostSmallActionIcon("assigned_group", "group-plus");
+  api.addPostSmallActionIcon("assigned_group_to_post", "group-plus");
+  api.addPostSmallActionIcon("unassigned", "user-xmark");
+  api.addPostSmallActionIcon("unassigned_group", "group-times");
+  api.addPostSmallActionIcon("unassigned_from_post", "user-xmark");
+  api.addPostSmallActionIcon("unassigned_group_from_post", "group-times");
+  api.addPostSmallActionIcon("reassigned", "user-plus");
+  api.addPostSmallActionIcon("reassigned_group", "group-plus");
 
   withSilencedDeprecations("discourse.post-stream-widget-overrides", () =>
     customizeWidgetPost(api)
@@ -820,7 +707,7 @@ function customizeWidgetPost(api) {
 
       let displayedName = "";
       if (assignedToUser) {
-        displayedName = !this.siteSettings.prioritize_username_in_ux
+        displayedName = this.siteSettings.prioritize_full_name_in_ux
           ? assignedToUser.name || assignedToUser.username
           : assignedToUser.username;
 
