@@ -82,171 +82,197 @@ function assignNewUserToTopic(needs) {
   });
 }
 
-acceptance("Discourse Assign | Assigned topic", function (needs) {
-  needs.user();
-  needs.settings({
-    assign_enabled: true,
-    tagging_enabled: true,
-    assigns_user_url_path: "/",
-    assigns_public: true,
-    enable_assign_status: true,
-  });
+["enabled", "disabled"].forEach((postStreamMode) => {
+  acceptance(
+    `Discourse Assign | Assigned topic (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.user();
+      needs.settings({
+        assign_enabled: true,
+        tagging_enabled: true,
+        assigns_user_url_path: "/",
+        assigns_public: true,
+        enable_assign_status: true,
+        glimmer_post_stream_mode: postStreamMode,
+      });
 
-  assignCurrentUserToTopic(needs);
+      assignCurrentUserToTopic(needs);
 
-  test("Shows user assignment info", async function (assert) {
-    updateCurrentUser({ can_assign: true });
-    await visit("/t/assignment-topic/44");
+      test("Shows user assignment info", async function (assert) {
+        updateCurrentUser({ can_assign: true });
+        await visit("/t/assignment-topic/44");
 
-    assert
-      .dom("#topic-title .assigned-to")
-      .hasText("eviltrout", "shows assignment in the header");
-    assert
-      .dom("#post_1 .assigned-to")
-      .hasText(
-        "Assigned topic to eviltrout#2 to Developers",
-        "shows assignment and indirect assignments in the first post"
-      );
-    assert.dom("#post_1 .assigned-to svg.d-icon-user-plus").exists();
-    assert.dom("#post_1 .assigned-to a[href='/']").exists();
-    assert
-      .dom(".discourse-tags .assigned-to[href='/t/28830'] span")
-      .hasAttribute("title", "Shark Doododooo", "shows topic assign notes");
-    assert
-      .dom(".discourse-tags .assigned-to[href='/p/2'] span")
-      .hasAttribute(
-        "title",
-        '<script>alert("xss")</script>',
-        "shows indirect assign notes"
-      );
-    assert
-      .dom("#topic-footer-dropdown-reassign")
-      .exists("shows reassign dropdown at the bottom of the topic");
-  });
+        assert
+          .dom("#topic-title .assigned-to")
+          .hasText("eviltrout", "shows assignment in the header");
 
-  test("Shows group assignment info", async function (assert) {
-    updateCurrentUser({ can_assign: true });
-    await visit("/t/assignment-topic/45");
+        assert
+          .dom("#post_1 .assigned-to")
+          .includesText(
+            "Assigned topic to eviltrout",
+            "shows assignment in the first post"
+          );
+        assert
+          .dom("#post_1 .assigned-to")
+          .includesText("#2 to Developers", "Also shows indirects assignments");
+        assert.dom("#post_1 .assigned-to svg.d-icon-user-plus").exists();
+        assert.dom("#post_1 .assigned-to a[href='/']").exists();
+        assert
+          .dom(".discourse-tags .assigned-to[href='/t/28830'] span")
+          .hasAttribute("title", "Shark Doododooo", "shows topic assign notes");
+        assert
+          .dom(".discourse-tags .assigned-to[href='/p/2'] span")
+          .hasAttribute(
+            "title",
+            '<script>alert("xss")</script>',
+            "shows indirect assign notes"
+          );
+        assert
+          .dom("#topic-footer-dropdown-reassign")
+          .exists("shows reassign dropdown at the bottom of the topic");
+      });
 
-    assert
-      .dom("#topic-title .assigned-to")
-      .hasText("Developers", "shows assignment in the header");
-    assert
-      .dom("#post_1 .assigned-to--group")
-      .hasText(
-        "Assigned topic to Developers",
-        "shows assignment in the first post"
-      );
-    assert.dom("#post_1 .assigned-to svg.d-icon-group-plus").exists();
-    assert
-      .dom("#post_1 .assigned-to a[href='/g/Developers/assigned/everyone']")
-      .exists();
-    assert
-      .dom("#topic-footer-dropdown-reassign")
-      .exists("shows reassign dropdown at the bottom of the topic");
-  });
+      test("Shows group assignment info", async function (assert) {
+        updateCurrentUser({ can_assign: true });
+        await visit("/t/assignment-topic/45");
 
-  test("User without assign ability cannot see footer button", async function (assert) {
-    updateCurrentUser({ can_assign: false, admin: false, moderator: false });
-    await visit("/t/assignment-topic/45");
+        assert
+          .dom("#topic-title .assigned-to")
+          .hasText("Developers", "shows assignment in the header");
+        assert
+          .dom("#post_1 .assigned-to--group")
+          .hasText(
+            "Assigned topic to Developers",
+            "shows assignment in the first post"
+          );
+        assert.dom("#post_1 .assigned-to svg.d-icon-group-plus").exists();
+        assert
+          .dom("#post_1 .assigned-to a[href='/g/Developers/assigned/everyone']")
+          .exists();
+        assert
+          .dom("#topic-footer-dropdown-reassign")
+          .exists("shows reassign dropdown at the bottom of the topic");
+      });
 
-    assert
-      .dom("#topic-footer-dropdown-reassign")
-      .doesNotExist(
-        "does not show reassign dropdown at the bottom of the topic"
-      );
-  });
+      test("User without assign ability cannot see footer button", async function (assert) {
+        updateCurrentUser({
+          can_assign: false,
+          admin: false,
+          moderator: false,
+        });
+        await visit("/t/assignment-topic/45");
 
-  test("Shows assignment notification", async function (assert) {
-    updateCurrentUser({ can_assign: true });
+        assert
+          .dom("#topic-footer-dropdown-reassign")
+          .doesNotExist(
+            "does not show reassign dropdown at the bottom of the topic"
+          );
+      });
 
-    await visit("/u/eviltrout/notifications");
+      test("Shows assignment notification", async function (assert) {
+        updateCurrentUser({ can_assign: true });
 
-    const notification = query(
-      "section.user-content .user-notifications-list li.notification"
-    );
+        await visit("/u/eviltrout/notifications");
 
-    assert.true(
-      notification.classList.contains("assigned"),
-      "with correct assigned class"
-    );
+        const notification = query(
+          "section.user-content .user-notifications-list li.notification"
+        );
 
-    assert.strictEqual(
-      notification.querySelector("a").title,
-      i18n("notifications.titles.assigned"),
-      "with correct title"
-    );
-    assert.strictEqual(
-      notification.querySelector("svg use").href["baseVal"],
-      "#user-plus",
-      "with correct icon"
-    );
-  });
-});
+        assert.true(
+          notification.classList.contains("assigned"),
+          "with correct assigned class"
+        );
 
-acceptance("Discourse Assign | Reassign topic", function (needs) {
-  needs.user();
-  needs.settings({
-    assign_enabled: true,
-    tagging_enabled: true,
-    assigns_user_url_path: "/",
-  });
+        assert.strictEqual(
+          notification.querySelector("a").title,
+          i18n("notifications.titles.assigned"),
+          "with correct title"
+        );
+        assert.strictEqual(
+          notification.querySelector("svg use").href["baseVal"],
+          "#user-plus",
+          "with correct icon"
+        );
+      });
+    }
+  );
 
-  assignNewUserToTopic(needs);
+  acceptance(
+    `Discourse Assign | Reassign topic (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.user();
+      needs.settings({
+        assign_enabled: true,
+        tagging_enabled: true,
+        assigns_user_url_path: "/",
+        glimmer_post_stream_mode: postStreamMode,
+      });
 
-  test("Reassign Footer dropdown contains reassign buttons", async function (assert) {
-    updateCurrentUser({ can_assign: true });
-    const menu = selectKit("#topic-footer-dropdown-reassign");
+      assignNewUserToTopic(needs);
 
-    await visit("/t/assignment-topic/44");
-    await menu.expand();
+      test("Reassign Footer dropdown contains reassign buttons", async function (assert) {
+        updateCurrentUser({ can_assign: true });
+        const menu = selectKit("#topic-footer-dropdown-reassign");
 
-    assert.true(menu.rowByValue("unassign").exists());
-    assert.true(menu.rowByValue("reassign").exists());
-    assert.true(menu.rowByValue("reassign-self").exists());
-  });
-});
+        await visit("/t/assignment-topic/44");
+        await menu.expand();
 
-acceptance("Discourse Assign | Reassign topic | mobile", function (needs) {
-  needs.user();
-  needs.mobileView();
-  needs.settings({
-    assign_enabled: true,
-    tagging_enabled: true,
-    assigns_user_url_path: "/",
-  });
+        assert.true(menu.rowByValue("unassign").exists());
+        assert.true(menu.rowByValue("reassign").exists());
+        assert.true(menu.rowByValue("reassign-self").exists());
+      });
+    }
+  );
 
-  assignNewUserToTopic(needs);
+  acceptance(
+    `Discourse Assign | Reassign topic | mobile (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.user();
+      needs.mobileView();
+      needs.settings({
+        assign_enabled: true,
+        tagging_enabled: true,
+        assigns_user_url_path: "/",
+        glimmer_post_stream_mode: postStreamMode,
+      });
 
-  test("Mobile Footer dropdown contains reassign buttons", async function (assert) {
-    updateCurrentUser({ can_assign: true });
+      assignNewUserToTopic(needs);
 
-    await visit("/t/assignment-topic/44");
-    await click(".topic-footer-mobile-dropdown-trigger");
+      test("Mobile Footer dropdown contains reassign buttons", async function (assert) {
+        updateCurrentUser({ can_assign: true });
 
-    assert.dom("#topic-footer-button-unassign-mobile").exists();
-    assert.dom("#topic-footer-button-reassign-self-mobile").exists();
-    assert.dom("#topic-footer-button-reassign-mobile").exists();
-  });
-});
+        await visit("/t/assignment-topic/44");
+        await click(".topic-footer-mobile-dropdown-trigger");
 
-acceptance("Discourse Assign | Reassign topic conditionals", function (needs) {
-  needs.user();
-  needs.settings({
-    assign_enabled: true,
-    tagging_enabled: true,
-    assigns_user_url_path: "/",
-  });
+        assert.dom("#topic-footer-button-unassign-mobile").exists();
+        assert.dom("#topic-footer-button-reassign-self-mobile").exists();
+        assert.dom("#topic-footer-button-reassign-mobile").exists();
+      });
+    }
+  );
 
-  assignCurrentUserToTopic(needs);
+  acceptance(
+    `Discourse Assign | Reassign topic conditionals (glimmer_post_stream_mode = ${postStreamMode})`,
+    function (needs) {
+      needs.user();
+      needs.settings({
+        assign_enabled: true,
+        tagging_enabled: true,
+        assigns_user_url_path: "/",
+        glimmer_post_stream_mode: postStreamMode,
+      });
 
-  test("Reassign Footer dropdown won't display reassign-to-self button when already assigned to current user", async function (assert) {
-    updateCurrentUser({ can_assign: true });
-    const menu = selectKit("#topic-footer-dropdown-reassign");
+      assignCurrentUserToTopic(needs);
 
-    await visit("/t/assignment-topic/44");
-    await menu.expand();
+      test("Reassign Footer dropdown won't display reassign-to-self button when already assigned to current user", async function (assert) {
+        updateCurrentUser({ can_assign: true });
+        const menu = selectKit("#topic-footer-dropdown-reassign");
 
-    assert.false(menu.rowByValue("reassign-self").exists());
-  });
+        await visit("/t/assignment-topic/44");
+        await menu.expand();
+
+        assert.false(menu.rowByValue("reassign-self").exists());
+      });
+    }
+  );
 });
