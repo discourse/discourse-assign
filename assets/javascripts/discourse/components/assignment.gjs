@@ -4,10 +4,10 @@ import { TextArea } from "@ember/legacy-built-in-components";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { not } from "truth-helpers";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ComboBox from "select-kit/components/combo-box";
-import not from "truth-helpers/helpers/not";
 import AssigneeChooser from "./assignee-chooser";
 
 export default class Assignment extends Component {
