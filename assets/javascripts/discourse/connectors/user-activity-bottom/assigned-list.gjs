@@ -4,7 +4,7 @@ import { classNames, tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
+@tagName("li")
 @classNames("user-activity-bottom-outlet", "assigned-list")
 export default class AssignedList extends Component {
   <template>
