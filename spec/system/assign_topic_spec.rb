@@ -13,6 +13,7 @@ describe "Assign | Assigning topics", type: :system do
     SiteSetting.prioritize_full_name_in_ux = false
     # The system tests in this file are flaky and auth token related so turning this on
     SiteSetting.verbose_auth_token_logging = true
+    SiteSetting.whispers_allowed_groups = [Group[:staff].id]
 
     sign_in(admin)
   end
